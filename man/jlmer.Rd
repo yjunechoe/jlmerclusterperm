@@ -2,16 +2,25 @@
 % Please edit documentation in R/jlmer.R
 \name{jlmer}
 \alias{jlmer}
+\alias{jlmer.fit}
 \title{Fit a mixed model in Julia}
 \usage{
-jlmer(julia_formula, data)
+jlmer(formula, data, family = c("gaussian", "binomial"), ...)
+
+jlmer.fit(julia_formula, model_matrix, family = c("gaussian", "binomial"), ...)
 }
 \arguments{
-\item{julia_formula}{Model formula in Julia syntax}
+\item{formula}{Model formula}
 
 \item{data}{Dataframe}
 
-\item{...}{Ignored.}
+\item{family}{A GLM family. Currently supports "gaussian" and "binomial".}
+
+\item{...}{Optional arguments to fit (\code{fast}, \code{nAGQ}, etc.)}
+
+\item{julia_formula}{From output of \code{jlmer_model_matrix()}}
+
+\item{model_matrix}{From output of \code{jlmer_model_matrix()}}
 }
 \description{
 Fit a mixed model in Julia

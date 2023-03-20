@@ -1,3 +1,12 @@
+#' Construct a model matrix and expand model formula suitable for lme4 and MixedModels
+#'
+#' @param fm Formula
+#' @param df Dataframe
+#' @param drop_terms A character vector of terms to drop from the model matrix
+#' @param zcr Whether to force zero correlation in the random effects structure. Defaults to `TRUE`.
+#'
+#' @return A list of R formula for lme4, Julia formula for MixedModels, and the model matrix as a data frame
+#'
 #' @export
 jlmer_model_matrix <- function(fm, df, drop_terms = NULL, zcr = TRUE) {
   fm_env <- attr(fm, ".Environment")
