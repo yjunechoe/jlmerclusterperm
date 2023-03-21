@@ -36,10 +36,10 @@ jlmer <- function(julia_formula, data, family = c("gaussian", "binomial"), ...) 
 #' @seealso jlmer_model_matrix
 #'
 #' @export
-to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), reformulate_opts = NULL, ...) {
+to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), reformulate_opts = list(), ...) {
 
-  mm <- do.call(jlmer_model_matrix, modifyList(reformulate_opts, list(formula, data)))
-  jlmer.fit(julia_formula = mm$julia_formula, data = mm$data, family, ...)
+  mm <- do.call(jlmer_model_matrix, modifyList(reformulate_opts, list(fm = formula, df = data)))
+  jlmer(julia_formula = mm$julia_formula, data = mm$data, family, ...)
 
 }
 

@@ -8,7 +8,7 @@ to_jlmer(
   formula,
   data,
   family = c("gaussian", "binomial"),
-  reformulate_opts = NULL,
+  reformulate_opts = list(),
   ...
 )
 }

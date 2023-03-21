@@ -1,0 +1,76 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# jlmerclusterperm
+
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+<!-- badges: end -->
+
+Julia [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) implementation of cluster-based permutation test for time series data.
+
+## Installation
+
+You can install the development version of jlmerclusterperm from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("yjunechoe/jlmerclusterperm")
+```
+
+## Setup
+
+```{r example}
+library(jlmerclusterperm)
+system.time({jlmerclusterperm_setup()})
+```
+
+## Basic example
+
+Run Julia mixed model using lme4 syntax:
+
+```{r ex-data}
+chickweight_df <- as.data.frame(ChickWeight)
+fm <- weight ~ 1 + Diet + (1 | Chick)
+coplot(
+  formula = weight ~ Time | Diet,
+  data = chickweight_df,
+  panel = function(x, y, ...) {
+    points(x, y, ...)
+    abline(lm(y ~ x), col = "steelblue", lwd = 3)
+  }
+)
+```
+
+```{r lmer-comparison}
+library(lme4)
+summary(lmer(fm, chickweight_df))
+to_jlmer(fm, chickweight_df)
+```
+
+Run Julia mixed model using after reformulating:
+
+```{r jlmer-mm-fit}
+mm <- jlmer_model_matrix(fm, chickweight_df, keep_cols = "Time")
+mm$julia_formula
+head(mm$data)
+jlmer(mm$julia_formula, mm$data)
+```
+
+Fit jlmer at each timepoint:
+
+```{r ex-jlmer-by-time}
+jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
+```
