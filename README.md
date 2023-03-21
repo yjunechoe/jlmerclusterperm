@@ -10,7 +10,9 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 <!-- badges: end -->
 
 Julia [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl)
-implementation of cluster-based permutation test for time series data.
+implementation of cluster-based permutation test for time series data,
+powered by
+[{JuliaConnectoR}](https://github.com/stefan-m-lenz/JuliaConnectoR)
 
 ## Installation
 
@@ -30,7 +32,7 @@ system.time({jlmerclusterperm_setup()})
 #> Starting Julia with 7 workers ...
 #> Running package setup scripts ...
 #>    user  system elapsed 
-#>    0.05    0.01   31.00
+#>    0.02    0.00   32.67
 ```
 
 ## Basic example
@@ -50,9 +52,10 @@ coplot(
 )
 ```
 
-<img src="man/figures/README-ex-data-1.png" width="100%" />
+<img src="man/figures/README-ex-data-1.png" width="70%" />
 
-Run Julia mixed model using lme4 syntax (only for convenience):
+Run Julia mixed model using lme4 syntax, using the convenience form
+`to_jlmer()`:
 
 ``` r
 library(lme4)
@@ -111,7 +114,8 @@ to_jlmer(fm, chickweight_df)
 #> ──────────────────────────────────────────────────
 ```
 
-Run Julia mixed model after explicitly reformulating:
+Run Julia mixed model directly in `jlmer()` after explicitly
+reformulating with `jlmer_model_matrix()`:
 
 ``` r
 mm <- jlmer_model_matrix(fm, chickweight_df, keep_cols = "Time")
@@ -139,7 +143,8 @@ jlmer(mm$julia_formula, mm$data)
 #> ──────────────────────────────────────────────────
 ```
 
-Fit jlmer at each timepoint:
+Fit jlmer at each timepoint and get a z-matrix back with
+`jlmer_by_time`:
 
 ``` r
 jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
@@ -157,7 +162,7 @@ jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
 #>   Diet4        3.818298  2.906696  2.254730  2.231461  2.759932  2.389537
 ```
 
-You can also fit a logistic regression model (produces NaN when response
+Use `family = "binomial"` for 1/0 responses (produces NaN when response
 vector is constant):
 
 ``` r
@@ -175,15 +180,4 @@ jlmer_by_time(mm$julia_formula, data_binom, time = "Time", family = "binomial")
 #>   Diet2       1.504909e+00 8.493557e-01 1.407529e-01 1.407529e-01 1.937416e-01
 #>   Diet3       1.877299e-16 6.413878e-14 3.427547e-15 3.427547e-15 3.430677e-15
 #>   Diet4       1.877299e-16 6.413878e-14 3.427547e-15 3.251656e-15 3.254626e-15
-```
-
-Performance:
-
-``` r
-system.time({jlmer(mm$julia_formula, mm$data)})
-#>    user  system elapsed 
-#>    0.00    0.00    0.87
-system.time({jlmer_by_time(mm$julia_formula, mm$data, time = "Time")})
-#>    user  system elapsed 
-#>    0.00    0.00    1.12
 ```

@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "70%"
 )
 ```
 
@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-Julia [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) implementation of cluster-based permutation test for time series data.
+Julia [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) implementation of cluster-based permutation test for time series data, powered by [{JuliaConnectoR}](https://github.com/stefan-m-lenz/JuliaConnectoR)
 
 ## Installation
 
@@ -54,7 +54,7 @@ coplot(
 )
 ```
 
-Run Julia mixed model using lme4 syntax (only for convenience):
+Run Julia mixed model using lme4 syntax, using the convenience form `to_jlmer()`:
 
 ```{r lmer-comparison}
 library(lme4)
@@ -63,30 +63,23 @@ summary(lmer(fm, chickweight_df))
 to_jlmer(fm, chickweight_df)
 ```
 
-Run Julia mixed model after explicitly reformulating:
+Run Julia mixed model directly in `jlmer()` after explicitly reformulating with `jlmer_model_matrix()`:
 
 ```{r jlmer-mm-fit}
 mm <- jlmer_model_matrix(fm, chickweight_df, keep_cols = "Time")
 jlmer(mm$julia_formula, mm$data)
 ```
 
-Fit jlmer at each timepoint:
+Fit jlmer at each timepoint and get a z-matrix back with `jlmer_by_time`:
 
 ```{r ex-jlmer-by-time}
 jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
 ```
 
-You can also fit a logistic regression model (produces NaN when response vector is constant):
+Use `family = "binomial"` for 1/0 responses (produces NaN when response vector is constant):
 
 ```{r ex-jlmer-by-time-binom}
 data_binom <- transform(mm$data, weight = as.integer(weight > median(weight)))
 jlmer_by_time(mm$julia_formula, data_binom, time = "Time", family = "binomial")
-```
-
-Performance:
-
-```{r performance}
-system.time({jlmer(mm$julia_formula, mm$data)})
-system.time({jlmer_by_time(mm$julia_formula, mm$data, time = "Time")})
 ```
 
