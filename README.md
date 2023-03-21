@@ -30,12 +30,12 @@ system.time({jlmerclusterperm_setup()})
 #> Starting Julia with 7 workers ...
 #> Running package setup scripts ...
 #>    user  system elapsed 
-#>    0.00    0.07   36.12
+#>    0.03    0.02   33.70
 ```
 
 ## Basic example
 
-Run Julia mixed model using lme4 syntax:
+Example data:
 
 ``` r
 chickweight_df <- as.data.frame(ChickWeight)
@@ -51,6 +51,8 @@ coplot(
 ```
 
 <img src="man/figures/README-ex-data-1.png" width="100%" />
+
+Run Julia mixed model using lme4 syntax (only for convenience):
 
 ``` r
 library(lme4)
@@ -113,17 +115,6 @@ Run Julia mixed model after explicitly reformulating:
 
 ``` r
 mm <- jlmer_model_matrix(fm, chickweight_df, keep_cols = "Time")
-mm$julia_formula
-#> weight ~ 1 + Diet2 + Diet3 + Diet4 + (1 | Chick)
-#> <environment: 0x00000235266444a8>
-head(mm$data)
-#>   weight Diet2 Diet3 Diet4 Chick Time
-#> 1     42     0     0     0     1    0
-#> 2     51     0     0     0     1    2
-#> 3     59     0     0     0     1    4
-#> 4     64     0     0     0     1    6
-#> 5     76     0     0     0     1    8
-#> 6     93     0     0     0     1   10
 jlmer(mm$julia_formula, mm$data)
 #> <Julia object of type LinearMixedModel{Float64}>
 #> Linear mixed model fit by maximum likelihood
@@ -151,9 +142,28 @@ jlmer(mm$julia_formula, mm$data)
 Fit jlmer at each timepoint:
 
 ``` r
-system.time({
-  jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
-})
+jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
+#>              Time
+#> Predictors              0         2         4         6         8        10
+#>   (Intercept) 171.1679337 66.283563 78.451405 48.530261 27.990931 20.435061
+#>   Diet2        -1.6709347  1.741333  2.713433  3.673967  2.478554  1.992062
+#>   Diet3        -1.4322297  2.551256  4.671226  4.740676  3.860595  3.101100
+#>   Diet4        -0.9548198  3.685147  6.547445  7.300775  5.345773  4.248827
+#>              Time
+#> Predictors           12        14        16        18        20        21
+#>   (Intercept) 16.459364 15.624203 14.347003 13.257500 12.593491 11.642034
+#>   Diet2        2.028207  1.400797  1.210453  1.459871  1.582567  1.500884
+#>   Diet3        3.194883  3.111014  3.184318  3.764490  3.979699  3.759318
+#>   Diet4        3.818298  2.906696  2.254730  2.231461  2.759932  2.389537
+```
+
+Performance:
+
+``` r
+system.time({jlmer(mm$julia_formula, mm$data)})
 #>    user  system elapsed 
-#>     0.0     0.0    13.2
+#>    0.00    0.00    0.79
+system.time({jlmer_by_time(mm$julia_formula, mm$data, time = "Time")})
+#>    user  system elapsed 
+#>    0.00    0.00    0.83
 ```

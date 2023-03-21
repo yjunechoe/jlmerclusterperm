@@ -39,7 +39,7 @@ system.time({jlmerclusterperm_setup()})
 
 ## Basic example
 
-Run Julia mixed model using lme4 syntax:
+Example data:
 
 ```{r ex-data}
 chickweight_df <- as.data.frame(ChickWeight)
@@ -54,6 +54,8 @@ coplot(
 )
 ```
 
+Run Julia mixed model using lme4 syntax (only for convenience):
+
 ```{r lmer-comparison}
 library(lme4)
 summary(lmer(fm, chickweight_df))
@@ -65,15 +67,19 @@ Run Julia mixed model after explicitly reformulating:
 
 ```{r jlmer-mm-fit}
 mm <- jlmer_model_matrix(fm, chickweight_df, keep_cols = "Time")
-mm$julia_formula
-head(mm$data)
 jlmer(mm$julia_formula, mm$data)
 ```
 
 Fit jlmer at each timepoint:
 
 ```{r ex-jlmer-by-time}
-system.time({
-  jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
-})
+jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
 ```
+
+Performance:
+
+```{r performance}
+system.time({jlmer(mm$julia_formula, mm$data)})
+system.time({jlmer_by_time(mm$julia_formula, mm$data, time = "Time")})
+```
+
