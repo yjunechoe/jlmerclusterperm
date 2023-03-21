@@ -1,37 +1,75 @@
-#' Fit a mixed model in Julia
+#' Fit a Julia mixed model
 #'
-#' @param formula Model formula
-#' @param data Dataframe
+#' @param julia_formula A formula in MixedModels.jl syntax
+#' @param data DataFrame
 #' @param family A GLM family. Currently supports "gaussian" and "binomial".
 #' @param ... Optional arguments to fit (`fast`, `nAGQ`, etc.)
 #'
-#' @export
-jlmer <- function(formula, data, family = c("gaussian", "binomial"), ...) {
-
-  mm <- jlmer_model_matrix(formula, as.data.frame(data))
-  jlmer.fit(julia_formula = mm$julia_formula, model_matrix = as.data.frame(mm$data), family, ...)
-
-}
-
-#' @param julia_formula From output of `jlmer_model_matrix()`
-#' @param model_matrix From output of `jlmer_model_matrix()`
-#' @param ... Optional arguments to fit (`fast`, `nAGQ`, etc.)
+#' @seealso jlmer_model_matrix
 #'
 #' @export
-#' @rdname jlmer
-jlmer.fit <- function(julia_formula, model_matrix, family = c("gaussian", "binomial"), ...) {
+jlmer <- function(julia_formula, data, family = c("gaussian", "binomial"), ...) {
 
   jlmer_fm <- JuliaConnectoR::juliaEval(paste0("@formula(", deparse1(julia_formula), ")"))
-  jlmer_df <- JuliaConnectoR::juliaLet("DataFrame(df)", df = model_matrix)
+  jlmer_df <- df_to_NT(data)
 
-  jmler_family <- JuliaConnectoR::juliaEval(switch(match.arg(family),
-    gaussian = "Normal()",
-    binomial = "Bernoulli()"
+  jmler_family <- JuliaConnectoR::juliaCall(switch(
+    match.arg(family), gaussian = "Normal", binomial = "Bernoulli"
   ))
 
   grouping_vars <- lapply(lme4::findbars(julia_formula), `[[`, 3)
   jlmer_groupings <- JuliaConnectoR::juliaLet("Dict(x .=> [Grouping()])", x = grouping_vars)
 
-  .jlmerclusterperm$jlmer(jlmer_fm, jlmer_df, jmler_family, jlmer_groupings, ...)
+  out <- .jlmerclusterperm$jlmer(jlmer_fm, jlmer_df, jmler_family, jlmer_groupings, ...)
+
+  out
+
+}
+
+#' Fit a Julia mixed model using lmer syntax
+#'
+#' @param formula Model formula in lme4 syntax
+#' @param data Dataframe
+#' @param reformulate_opts Other of options passed to `jlmer_model_matrix()`
+#' @inheritParams jlmer
+#'
+#' @seealso jlmer_model_matrix
+#'
+#' @export
+to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), reformulate_opts = NULL, ...) {
+
+  mm <- do.call(jlmer_model_matrix, modifyList(reformulate_opts, list(formula, data)))
+  jlmer.fit(julia_formula = mm$julia_formula, data = mm$data, family, ...)
+
+}
+
+#' Fit Julia mixed models to each time point of a timeseries data
+#'
+#' @param time The column representing time in the timeseries
+#' @inheritParams jlmer
+#'
+#' @seealso jlmer_model_matrix
+
+#' @return A Predictor x Time matrix of t-values
+#' @export
+jlmer_by_time <- function(julia_formula, data, time, family = c("gaussian", "binomial"), ...) {
+
+  jlmer_fm <- JuliaConnectoR::juliaEval(paste0("@formula(", deparse1(julia_formula), ")"))
+  jlmer_df <- JuliaConnectoR::juliaCall("DataFrame", data)
+
+  jmler_family <- JuliaConnectoR::juliaCall(switch(
+    match.arg(family), gaussian = "Normal", binomial = "Bernoulli"
+  ))
+
+  jlmer_time <- JuliaConnectoR::juliaCall("Symbol", as.character(substitute(time)))
+
+  grouping_vars <- lapply(lme4::findbars(julia_formula), `[[`, 3)
+  jlmer_groupings <- JuliaConnectoR::juliaLet("Dict(x .=> [Grouping()])", x = grouping_vars)
+
+  out <- JuliaConnectoR::juliaGet(.jlmerclusterperm$jlmer_by_time(jlmer_fm, jlmer_df, jlmer_time, jmler_family, jlmer_groupings, ...))
+
+  dimnames(out$z_matrix) <- out[c("Predictors", "Time")]
+
+  out$z_matrix
 
 }

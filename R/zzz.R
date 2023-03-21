@@ -1,3 +1,3 @@
 .onLoad <- function(...) {
-  jlmerclusterperm_setup()
+  # jlmerclusterperm_setup()
 }

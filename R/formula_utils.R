@@ -2,15 +2,16 @@
 #'
 #' @param fm Formula
 #' @param df Dataframe
+#' @param keep_cols A character vector of columns to keep from `df`
 #' @param drop_terms A character vector of terms to drop from the model matrix
-#' @param zcr Whether to force zero correlation in the random effects structure. Defaults to `TRUE`.
+#' @param zcr Whether to force zero correlation in the random effects structure. Defaults to `TRUE`
 #'
 #' @return A list of R formula for lme4, Julia formula for MixedModels, and the model matrix as a data frame
 #'
 #' @export
-jlmer_model_matrix <- function(fm, df, drop_terms = NULL, zcr = TRUE) {
+jlmer_model_matrix <- function(fm, df, keep_cols = NULL, drop_terms = NULL, zcr = TRUE) {
   fm_env <- attr(fm, ".Environment")
-  fm <- stats::as.formula(gsub("\\|\\|", "\\|", deparse1(fm)))
+  fm <- stats::as.formula(gsub("\\|\\|", "\\|", deparse1(fm)), fm_env)
   response <- fm[[2]]
   lfm <- lme4::lFormula(fm, df)
   model_matrix <- lfm$X
@@ -47,13 +48,13 @@ jlmer_model_matrix <- function(fm, df, drop_terms = NULL, zcr = TRUE) {
   }
   model_matrix_df <- as.data.frame(model_matrix)[setdiff(colnames(model_matrix), "(Intercept)")]
   colnames(model_matrix_df) <- gsub(":", "__", colnames(model_matrix_df), fixed = TRUE)
+  model_matrix_df <- cbind(lfm$fr[deparse1(response)], model_matrix_df, lfm$reTrms$flist)
+  if (!is.null(keep_cols)) {
+    model_matrix_df <- cbind(model_matrix_df, df[!is.na(df[[response]]), keep_cols, drop = FALSE])
+  }
   list(
     formula = combine_fm(re_fm_r),
     julia_formula = combine_fm(re_fm_jl),
-    data = cbind(
-      lfm$fr[deparse1(response)],
-      model_matrix_df,
-      as.data.frame(lfm$reTrms$flist)
-    )
+    data = model_matrix_df
   )
 }
