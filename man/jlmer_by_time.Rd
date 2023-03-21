@@ -21,7 +21,7 @@ jlmer_by_time(
 
 \item{family}{A GLM family. Currently supports "gaussian" and "binomial".}
 
-\item{...}{Optional arguments to fit (\code{fast}, \code{nAGQ}, etc.)}
+\item{...}{Optional arguments to fit. Defaults to \code{fast = TRUE} and \code{progress = FALSE}}
 }
 \value{
 A Predictor x Time matrix of t-values

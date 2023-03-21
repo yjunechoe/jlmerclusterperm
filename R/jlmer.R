@@ -47,6 +47,7 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), reformul
 #'
 #' @param time The column representing time in the timeseries
 #' @inheritParams jlmer
+#' @param ... Optional arguments to fit. Defaults to `fast = TRUE` and `progress = FALSE`
 #'
 #' @seealso jlmer_model_matrix
 
@@ -67,6 +68,7 @@ jlmer_by_time <- function(julia_formula, data, time, family = c("gaussian", "bin
   jlmer_groupings <- JuliaConnectoR::juliaLet("Dict(x .=> [Grouping()])", x = grouping_vars)
 
   opts <- list(...)
+  opts <- modifyList(list(progress = FALSE), opts)
   if (match.arg(family) == "binomial") {
     opts <- modifyList(list(fast = TRUE), opts)
   }

@@ -30,7 +30,7 @@ system.time({jlmerclusterperm_setup()})
 #> Starting Julia with 7 workers ...
 #> Running package setup scripts ...
 #>    user  system elapsed 
-#>    0.03    0.02   33.70
+#>    0.05    0.01   31.00
 ```
 
 ## Basic example
@@ -157,13 +157,33 @@ jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
 #>   Diet4        3.818298  2.906696  2.254730  2.231461  2.759932  2.389537
 ```
 
+You can also fit a logistic regression model (produces NaN when response
+vector is constant):
+
+``` r
+data_binom <- transform(mm$data, weight = as.integer(weight > median(weight)))
+jlmer_by_time(mm$julia_formula, data_binom, time = "Time", family = "binomial")
+#>              Time
+#> Predictors      0   2   4   6          8            10           12
+#>   (Intercept) NaN NaN NaN NaN -2.8132693 -1.976258e+00 2.292998e-01
+#>   Diet2       NaN NaN NaN NaN  0.4708979  1.256523e+00 1.819167e+00
+#>   Diet3       NaN NaN NaN NaN  1.6507716  2.551637e+00 1.819167e+00
+#>   Diet4       NaN NaN NaN NaN  2.0479509  7.195493e-17 8.144874e-16
+#>              Time
+#> Predictors              14           16           18           20           21
+#>   (Intercept) 9.348156e-01 2.061280e+00 2.676552e+00 2.676552e+00 2.574118e+00
+#>   Diet2       1.504909e+00 8.493557e-01 1.407529e-01 1.407529e-01 1.937416e-01
+#>   Diet3       1.877299e-16 6.413878e-14 3.427547e-15 3.427547e-15 3.430677e-15
+#>   Diet4       1.877299e-16 6.413878e-14 3.427547e-15 3.251656e-15 3.254626e-15
+```
+
 Performance:
 
 ``` r
 system.time({jlmer(mm$julia_formula, mm$data)})
 #>    user  system elapsed 
-#>    0.00    0.00    0.79
+#>    0.00    0.00    0.87
 system.time({jlmer_by_time(mm$julia_formula, mm$data, time = "Time")})
 #>    user  system elapsed 
-#>    0.00    0.00    0.83
+#>    0.00    0.00    1.12
 ```
