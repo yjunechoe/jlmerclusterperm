@@ -57,10 +57,11 @@ coplot(
 ```{r lmer-comparison}
 library(lme4)
 summary(lmer(fm, chickweight_df))
+
 to_jlmer(fm, chickweight_df)
 ```
 
-Run Julia mixed model using after reformulating:
+Run Julia mixed model after explicitly reformulating:
 
 ```{r jlmer-mm-fit}
 mm <- jlmer_model_matrix(fm, chickweight_df, keep_cols = "Time")
@@ -72,5 +73,7 @@ jlmer(mm$julia_formula, mm$data)
 Fit jlmer at each timepoint:
 
 ```{r ex-jlmer-by-time}
-jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
+system.time({
+  jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
+})
 ```

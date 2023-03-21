@@ -61,12 +61,20 @@ jlmer_by_time <- function(julia_formula, data, time, family = c("gaussian", "bin
     match.arg(family), gaussian = "Normal", binomial = "Bernoulli"
   ))
 
-  jlmer_time <- JuliaConnectoR::juliaCall("Symbol", as.character(substitute(time)))
+  jlmer_time <- as.character(substitute(time))
 
   grouping_vars <- lapply(lme4::findbars(julia_formula), `[[`, 3)
   jlmer_groupings <- JuliaConnectoR::juliaLet("Dict(x .=> [Grouping()])", x = grouping_vars)
 
-  out <- JuliaConnectoR::juliaGet(.jlmerclusterperm$jlmer_by_time(jlmer_fm, jlmer_df, jlmer_time, jmler_family, jlmer_groupings, ...))
+  opts <- list(...)
+  if (match.arg(family) == "binomial") {
+    opts <- modifyList(list(fast = TRUE), opts)
+  }
+
+  out <- JuliaConnectoR::juliaGet(do.call(
+    .jlmerclusterperm$jlmer_by_time,
+    c(list(jlmer_fm, jlmer_df, jlmer_time, jmler_family, jlmer_groupings), opts)
+  ))
 
   dimnames(out$z_matrix) <- out[c("Predictors", "Time")]
 

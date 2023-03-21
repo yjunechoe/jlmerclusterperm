@@ -29,12 +29,12 @@ jlmerclusterperm_setup <- function(...) {
     suppressMessages(JuliaConnectoR::startJuliaServer())
   }
   message("Running package setup scripts ...")
-  JuliaConnectoR::juliaEval(paste0('include("', system.file("julia/setup.jl", package = "jlmerclusterperm"), '")'))
-  populate_fns()
+  source_fns()
   invisible(TRUE)
 }
 
-populate_fns <- function(...) {
-  .jlmerclusterperm$jlmer <- JuliaConnectoR::juliaEval("jlmer")
-  .jlmerclusterperm$jlmer_by_time <- JuliaConnectoR::juliaEval("jlmer_by_time")
+source_fns <- function(...) {
+  JuliaConnectoR::juliaEval(paste0('include("', system.file("julia/setup.jl", package = "jlmerclusterperm"), '")'))
+  .jlmerclusterperm$jlmer <- function(...) JuliaConnectoR::juliaCall("jlmer", ...)
+  .jlmerclusterperm$jlmer_by_time <- function(...) JuliaConnectoR::juliaCall("jlmer_by_time", ...)
 }
