@@ -4,18 +4,17 @@
 \alias{jlmer_model_matrix}
 \title{Construct a model matrix and expand model formula suitable for lme4 and MixedModels}
 \usage{
-jlmer_model_matrix(fm, df, keep_cols = NULL, drop_terms = NULL, zcr = TRUE)
+jlmer_model_matrix(fm, df, cols_keep = FALSE, drop_terms = NULL)
 }
 \arguments{
 \item{fm}{Formula}
 
 \item{df}{Dataframe}
 
-\item{keep_cols}{A character vector of columns to keep from \code{df}}
+\item{cols_keep}{A character vector of additional columns to keep from \code{df} or
+\code{FALSE} to drop all and \code{TRUE} to drop none. Defaults to \code{FALSE}.}
 
-\item{drop_terms}{A character vector of terms to drop from the model matrix}
-
-\item{zcr}{Whether to force zero correlation in the random effects structure. Defaults to \code{TRUE}}
+\item{drop_terms}{A character vector of terms to drop from the model formula.}
 }
 \value{
 A list of R formula for lme4, Julia formula for MixedModels, and the model matrix as a data frame
