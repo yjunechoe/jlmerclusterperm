@@ -10,7 +10,8 @@
 #' @return A list of Predictor x Time matrix of z-values
 #' @export
 clusterpermute <- function(julia_formula, data, time, family = c("gaussian", "binomial"),
-                           nsim = 100L, threshold = 1.5, participant_col, binned = TRUE, ...) {
+                           nsim = 100L, threshold = 1.5, participant_col = "", trial_col = "",
+                           binned = TRUE, ...) {
 
   family <- match.arg(family)
   args <- prep_for_jlmer(julia_formula, data, time, family, ...)
@@ -24,7 +25,7 @@ clusterpermute <- function(julia_formula, data, time, family = c("gaussian", "bi
 
   out <- JuliaConnectoR::juliaGet(do.call(
     .jlmerclusterperm$clusterpermute,
-    c(args, nsim, threshold, participant_col, binned, opts)
+    c(args, nsim, threshold, participant_col, trial_col, binned, opts)
   ))
 
   out

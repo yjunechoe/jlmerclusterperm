@@ -1,4 +1,4 @@
-function clusterpermute(formula, data, time, family, contrasts, nsim, threshold, participant_col, binned; opts...)
+function clusterpermute(formula, data, time, family, contrasts, nsim, threshold, participant_col, trial_col, binned; opts...)
 
   response_var = formula.lhs.sym
   fm_schema = MixedModels.schema(formula, data, contrasts)
@@ -18,8 +18,9 @@ function clusterpermute(formula, data, time, family, contrasts, nsim, threshold,
   for p in 1:n_fixed
     if fixed[p] != "1"
       permute_data = copy(data)
+      shuffle_type = guess_shuffle_as(permute_data, fixed[p], participant_col, trial_col == "" ? missing : 3)
       @showprogress for i in 1:nsim
-        guess_and_permute(permute_data, fixed[p], participant_col, trial_col)
+        shuffle_as!(permute_data, fixed[p], participant_col, trial_col, shuffle_type)
         zs = _jlmer_by_time(formula, permute_data, time, family, contrasts, response_var, fixed, grouping_vars, times, n_times, false; opts...)
         res[i,:,p] = zs[p,:]
       end
@@ -37,19 +38,33 @@ function clusterpermute(formula, data, time, family, contrasts, nsim, threshold,
 
 end
 
-function guess_and_permute(df, predictor_col, participant_col, trial_col)
-  subj_pred_pair = unique(df[!,[participant_col, predictor_col]])
-  between_participant = length(unique(df[!, participant_col])) == nrow(subj_pred_pair)
-  if between_participant
+function guess_shuffle_as(df, predictor_col, participant_col, trial_col)
+  if (ismissing(trial_col))
+    return "between_participant"
+  else
+    subj_pred_pair = unique(df[!,[participant_col, predictor_col]])
+    between_participant = length(unique(df[!, participant_col])) == nrow(subj_pred_pair)
+    return between_participant ? "between_participant" : "within_participant"
+  end
+end
+
+function shuffle_as!(df, predictor_col, participant_col, trial_col, shuffle_type)
+  if shuffle_type == "between_participant"
+    subj_pred_pair = unique(df[!,[participant_col, predictor_col]])
     shuffle!(subj_pred_pair[!,predictor_col])
     select!(df, Not(predictor_col))
     leftjoin!(df, subj_pred_pair, on = participant_col)
-  else
+  elseif shuffle_type == "within_participant"
     trial_pred_pair = unique(df[!, [participant_col, trial_col, predictor_col]])
     transform!(groupby(trial_pred_pair, participant_col), predictor_col => shuffle!, renamecols = false)
     select!(df, Not(predictor_col))
     leftjoin!(df, trial_pred_pair, on = [participant_col, trial_col])
   end
+end
+
+function guess_and_shuffle_as!(df, predictor_col, participant_col, trial_col)
+  shuffle_type = guess_shuffle_as(df, predictor_col, participant_col, trial_col)
+  shuffle_as!(df, predictor_col, participant_col, trial_col, shuffle_type)
 end
 
 function find_largest_cluster(zs, time_is_point)
