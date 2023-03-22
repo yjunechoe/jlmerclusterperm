@@ -27,6 +27,12 @@ clusterpermute(
 
 \item{nsim}{Number of simulations description}
 
+\item{threshold}{z-value threshold. Defaults to \code{1.5}.}
+
+\item{participant_col}{Column representing participants in \code{data}}
+
+\item{binned}{Whether time points have been aggregated. Defaults to \code{TRUE}}
+
 \item{...}{Optional arguments to fit. Defaults to \code{fast = TRUE} and \code{progress = FALSE}.}
 }
 \value{

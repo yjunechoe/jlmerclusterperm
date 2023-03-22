@@ -4,12 +4,14 @@
 \alias{largest_clusters}
 \title{Calculate largest clusters by predictor from a z-matrix}
 \usage{
-largest_clusters(z_matrix, threshold = 1.5)
+largest_clusters(z_matrix, threshold = 1.5, binned = TRUE)
 }
 \arguments{
 \item{z_matrix}{A predictor-by-time matrix of z-values}
 
 \item{threshold}{z-value threshold. Defaults to \code{1.5}.}
+
+\item{binned}{Whether time points have been aggregated. Defaults to \code{TRUE}}
 }
 \description{
 Calculate largest clusters by predictor from a z-matrix

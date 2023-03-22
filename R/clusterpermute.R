@@ -1,6 +1,8 @@
 #' Fit Julia mixed models to each time point of a time series data
 #'
 #' @param nsim Number of simulations description
+#' @param participant_col Column representing participants in `data`
+#' @inheritParams largest_clusters
 #' @inheritParams jlmer_by_time
 #'
 #' @seealso jlmer_model_matrix

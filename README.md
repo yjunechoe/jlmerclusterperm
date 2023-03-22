@@ -32,7 +32,7 @@ system.time({jlmerclusterperm_setup()})
 #> Starting Julia with 7 workers ...
 #> Running package setup scripts ...
 #>    user  system elapsed 
-#>    0.03    0.00   37.95
+#>    0.02    0.01   35.92
 ```
 
 ## Basic example
@@ -184,7 +184,7 @@ system.time({
   )
 })
 #>    user  system elapsed 
-#>    0.00    0.01   24.31
+#>    0.00    0.01   23.71
 ```
 
 Test empirical clusters against the simulated null:
@@ -196,13 +196,13 @@ lapply(c("Diet2", "Diet3", "Diet4"), function(predictor) {
   mean(abs(null_dist) > empirical)
 })
 #> [[1]]
-#> [1] 0.063
+#> [1] 0.06
 #> 
 #> [[2]]
 #> [1] 0
 #> 
 #> [[3]]
-#> [1] 0.001
+#> [1] 0
 ```
 
 ## Formula utilities
@@ -211,11 +211,11 @@ lapply(c("Diet2", "Diet3", "Diet4"), function(predictor) {
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars))
 #> $formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x000001af7e746de8>
+#> <environment: 0x00000231d07b0dd8>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x000001af7e746de8>
+#> <environment: 0x00000231d07b0dd8>
 #> 
 #> $data
 #>                    mpg    wt  qsec wt__qsec vs
@@ -228,12 +228,12 @@ jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars))
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt || vs), head(mtcars))
 #> $formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 || vs) + (wt || vs)
-#> <environment: 0x000001af7e746de8>
+#> <environment: 0x00000231d07b0dd8>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + zerocorr(1 | vs) + zerocorr(wt | 
 #>     vs)
-#> <environment: 0x000001af7e746de8>
+#> <environment: 0x00000231d07b0dd8>
 #> 
 #> $data
 #>                    mpg    wt  qsec wt__qsec vs
@@ -246,11 +246,11 @@ jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt || vs), head(mtcars))
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), drop_terms = "wt__qsec")
 #> $formula
 #> mpg ~ 1 + wt + qsec + (1 + wt | vs)
-#> <environment: 0x000001af7e746de8>
+#> <environment: 0x00000231d07b0dd8>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + (1 + wt | vs)
-#> <environment: 0x000001af7e746de8>
+#> <environment: 0x00000231d07b0dd8>
 #> 
 #> $data
 #>                    mpg    wt  qsec vs
@@ -263,11 +263,11 @@ jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), drop_terms = "
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), cols_keep = TRUE)
 #> $formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x000001af7e746de8>
+#> <environment: 0x00000231d07b0dd8>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x000001af7e746de8>
+#> <environment: 0x00000231d07b0dd8>
 #> 
 #> $data
 #>                    mpg    wt  qsec wt__qsec vs cyl disp  hp drat am gear carb
