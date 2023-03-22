@@ -76,7 +76,7 @@ Fit jlmer at each timepoint and get a z-matrix back with `jlmer_by_time`:
 jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
 ```
 
-Use `family = "binomial"` for 1/0 responses (produces NaN when response vector is constant):
+Fit logistic regression to each time point (produces Inf/-Inf when response vector is a constant 1/0):
 
 ```{r ex-jlmer-by-time-binom}
 data_binom <- transform(mm$data, weight = as.integer(weight > median(weight)))

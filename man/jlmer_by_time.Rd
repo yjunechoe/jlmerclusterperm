@@ -2,7 +2,7 @@
 % Please edit documentation in R/jlmer.R
 \name{jlmer_by_time}
 \alias{jlmer_by_time}
-\title{Fit Julia mixed models to each time point of a timeseries data}
+\title{Fit Julia mixed models to each time point of a time series data}
 \usage{
 jlmer_by_time(
   julia_formula,
@@ -17,17 +17,17 @@ jlmer_by_time(
 
 \item{data}{DataFrame}
 
-\item{time}{The column representing time in the timeseries}
+\item{time}{Column representing time in \code{data}}
 
 \item{family}{A GLM family. Currently supports "gaussian" and "binomial".}
 
-\item{...}{Optional arguments to fit. Defaults to \code{fast = TRUE} and \code{progress = FALSE}}
+\item{...}{Optional arguments to fit. Defaults to \code{fast = TRUE} and \code{progress = FALSE}.}
 }
 \value{
 A Predictor x Time matrix of t-values
 }
 \description{
-Fit Julia mixed models to each time point of a timeseries data
+Fit Julia mixed models to each time point of a time series data
 }
 \seealso{
 jlmer_model_matrix

@@ -43,14 +43,14 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), reformul
 
 }
 
-#' Fit Julia mixed models to each time point of a timeseries data
+#' Fit Julia mixed models to each time point of a time series data
 #'
-#' @param time The column representing time in the timeseries
+#' @param time Column representing time in `data`
 #' @inheritParams jlmer
-#' @param ... Optional arguments to fit. Defaults to `fast = TRUE` and `progress = FALSE`
+#' @param ... Optional arguments to fit. Defaults to `fast = TRUE` and `progress = FALSE`.
 #'
 #' @seealso jlmer_model_matrix
-
+#'
 #' @return A Predictor x Time matrix of t-values
 #' @export
 jlmer_by_time <- function(julia_formula, data, time, family = c("gaussian", "binomial"), ...) {

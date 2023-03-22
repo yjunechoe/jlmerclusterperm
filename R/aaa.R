@@ -34,7 +34,8 @@ jlmerclusterperm_setup <- function(...) {
 }
 
 source_fns <- function(...) {
-  JuliaConnectoR::juliaEval(paste0('include("', system.file("julia/setup.jl", package = "jlmerclusterperm"), '")'))
+  jl_scripts <- list.files(system.file("julia/", package = "jlmerclusterperm"), pattern = "\\d{2}-.*\\.jl$", full.names = TRUE)
+  lapply(jl_scripts, function(x) JuliaConnectoR::juliaCall("include", x))
   .jlmerclusterperm$jlmer <- function(...) JuliaConnectoR::juliaCall("jlmer", ...)
   .jlmerclusterperm$jlmer_by_time <- function(...) JuliaConnectoR::juliaCall("jlmer_by_time", ...)
 }

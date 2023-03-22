@@ -32,7 +32,7 @@ system.time({jlmerclusterperm_setup()})
 #> Starting Julia with 7 workers ...
 #> Running package setup scripts ...
 #>    user  system elapsed 
-#>    0.05    0.01   28.02
+#>    0.04    0.03   27.36
 ```
 
 ## Basic example
@@ -162,18 +162,18 @@ jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
 #>   Diet4        3.818298  2.906696  2.254730  2.231461  2.759932  2.389537
 ```
 
-Use `family = "binomial"` for 1/0 responses (produces NaN when response
-vector is constant):
+Fit logistic regression to each time point (produces Inf/-Inf when
+response vector is a constant 1/0):
 
 ``` r
 data_binom <- transform(mm$data, weight = as.integer(weight > median(weight)))
 jlmer_by_time(mm$julia_formula, data_binom, time = "Time", family = "binomial")
 #>              Time
-#> Predictors      0   2   4   6          8            10           12
-#>   (Intercept) NaN NaN NaN NaN -2.8132693 -1.976258e+00 2.292998e-01
-#>   Diet2       NaN NaN NaN NaN  0.4708979  1.256523e+00 1.819167e+00
-#>   Diet3       NaN NaN NaN NaN  1.6507716  2.551637e+00 1.819167e+00
-#>   Diet4       NaN NaN NaN NaN  2.0479509  7.195493e-17 8.144874e-16
+#> Predictors       0    2    4    6          8            10           12
+#>   (Intercept) -Inf -Inf -Inf -Inf -2.8132693 -1.976258e+00 2.292998e-01
+#>   Diet2       -Inf -Inf -Inf -Inf  0.4708979  1.256523e+00 1.819167e+00
+#>   Diet3       -Inf -Inf -Inf -Inf  1.6507716  2.551637e+00 1.819167e+00
+#>   Diet4       -Inf -Inf -Inf -Inf  2.0479509  7.195493e-17 8.144874e-16
 #>              Time
 #> Predictors              14           16           18           20           21
 #>   (Intercept) 9.348156e-01 2.061280e+00 2.676552e+00 2.676552e+00 2.574118e+00
@@ -188,11 +188,11 @@ jlmer_by_time(mm$julia_formula, data_binom, time = "Time", family = "binomial")
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars))
 #> $formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x000001d0fe386db8>
+#> <environment: 0x00000178aae06d88>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x000001d0fe386db8>
+#> <environment: 0x00000178aae06d88>
 #> 
 #> $data
 #>                    mpg    wt  qsec wt__qsec vs
@@ -205,11 +205,11 @@ jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars))
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt || vs), head(mtcars))
 #> $formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt || vs)
-#> <environment: 0x000001d0fe386db8>
+#> <environment: 0x00000178aae06d88>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + zerocorr(1 + wt | vs)
-#> <environment: 0x000001d0fe386db8>
+#> <environment: 0x00000178aae06d88>
 #> 
 #> $data
 #>                    mpg    wt  qsec wt__qsec vs
@@ -222,11 +222,11 @@ jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt || vs), head(mtcars))
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), drop_terms = "wt__qsec")
 #> $formula
 #> mpg ~ 1 + wt + qsec + (1 + wt | vs)
-#> <environment: 0x000001d0fe386db8>
+#> <environment: 0x00000178aae06d88>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + (1 + wt | vs)
-#> <environment: 0x000001d0fe386db8>
+#> <environment: 0x00000178aae06d88>
 #> 
 #> $data
 #>                    mpg    wt  qsec vs
@@ -239,11 +239,11 @@ jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), drop_terms = "
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), cols_keep = TRUE)
 #> $formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x000001d0fe386db8>
+#> <environment: 0x00000178aae06d88>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x000001d0fe386db8>
+#> <environment: 0x00000178aae06d88>
 #> 
 #> $data
 #>                    mpg    wt  qsec wt__qsec vs cyl disp  hp drat am gear carb

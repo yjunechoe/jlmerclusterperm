@@ -1,14 +1,5 @@
-using Statistics
-using MixedModels
-using DataFrames
-using ProgressMeter
-
 function jlmer(formula, data, family, contrasts; opts...)
   fit(MixedModel, formula, data, family; contrasts = contrasts, opts...)
-end
-
-function z_value(mod)
-  mod.β ./ stderror(mod)
 end
 
 function jlmer_by_time(formula, data, time, family, contrasts; opts...)
@@ -34,9 +25,10 @@ function jlmer_by_time(formula, data, time, family, contrasts; opts...)
     response = data_at_time[!, response_var]
 
     if all(==(response[1]), response)
-      z_matrix[:,i] .= NaN
-      singular_fits[i] = NaN
-      rePCA_95_matrix[:,i] .= NaN
+      constant = response[1] == 1 ? Inf : -Inf
+      z_matrix[:,i] .= constant
+      singular_fits[i] = constant
+      rePCA_95_matrix[:,i] .= constant
     else
       time_mod = fit(MixedModel, formula, data_at_time, family; contrasts = contrasts, opts...)
       z_matrix[:,i] = z_value(time_mod)
