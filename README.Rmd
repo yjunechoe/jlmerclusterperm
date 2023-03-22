@@ -66,7 +66,7 @@ to_jlmer(fm, chickweight_df)
 Run Julia mixed model directly in `jlmer()` after explicitly reformulating with `jlmer_model_matrix()`:
 
 ```{r jlmer-mm-fit}
-mm <- jlmer_model_matrix(fm, chickweight_df, keep_cols = "Time")
+mm <- jlmer_model_matrix(fm, chickweight_df, cols_keep = "Time")
 jlmer(mm$julia_formula, mm$data)
 ```
 
@@ -82,4 +82,14 @@ Use `family = "binomial"` for 1/0 responses (produces NaN when response vector i
 data_binom <- transform(mm$data, weight = as.integer(weight > median(weight)))
 jlmer_by_time(mm$julia_formula, data_binom, time = "Time", family = "binomial")
 ```
+
+## Formula utilities
+
+```{r}
+jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars))
+jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt || vs), head(mtcars))
+jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), drop_terms = "wt__qsec")
+jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), cols_keep = TRUE)
+```
+
 

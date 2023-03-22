@@ -68,8 +68,8 @@ jlmer_model_matrix <- function(fm, df, cols_keep = FALSE, drop_terms = NULL) {
   model_matrix_df <- as.data.frame(model_matrix)[setdiff(colnames(model_matrix), "(Intercept)")]
   colnames(model_matrix_df) <- gsub(":", "__", colnames(model_matrix_df), fixed = TRUE)
   model_matrix_df <- cbind(lfm$fr[deparse1(response)], model_matrix_df, lfm$reTrms$flist)
-  if (!isTRUE(cols_keep)) {
-    if (isFALSE(cols_keep)) cols_keep <- setdiff(colnames(df), colnames(model_matrix_df))
+  if (!isFALSE(cols_keep)) {
+    if (isTRUE(cols_keep)) cols_keep <- setdiff(colnames(df), colnames(model_matrix_df))
     model_matrix_df <- cbind(model_matrix_df, df[!is.na(df[[response]]), cols_keep, drop = FALSE])
   }
   list(

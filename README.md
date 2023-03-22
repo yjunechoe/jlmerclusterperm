@@ -32,7 +32,7 @@ system.time({jlmerclusterperm_setup()})
 #> Starting Julia with 7 workers ...
 #> Running package setup scripts ...
 #>    user  system elapsed 
-#>    0.02    0.01   26.21
+#>    0.05    0.01   28.02
 ```
 
 ## Basic example
@@ -118,7 +118,7 @@ Run Julia mixed model directly in `jlmer()` after explicitly
 reformulating with `jlmer_model_matrix()`:
 
 ``` r
-mm <- jlmer_model_matrix(fm, chickweight_df, keep_cols = "Time")
+mm <- jlmer_model_matrix(fm, chickweight_df, cols_keep = "Time")
 jlmer(mm$julia_formula, mm$data)
 #> <Julia object of type LinearMixedModel{Float64}>
 #> Linear mixed model fit by maximum likelihood
@@ -180,4 +180,77 @@ jlmer_by_time(mm$julia_formula, data_binom, time = "Time", family = "binomial")
 #>   Diet2       1.504909e+00 8.493557e-01 1.407529e-01 1.407529e-01 1.937416e-01
 #>   Diet3       1.877299e-16 6.413878e-14 3.427547e-15 3.427547e-15 3.430677e-15
 #>   Diet4       1.877299e-16 6.413878e-14 3.427547e-15 3.251656e-15 3.254626e-15
+```
+
+## Formula utilities
+
+``` r
+jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars))
+#> $formula
+#> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
+#> <environment: 0x000001d0fe386db8>
+#> 
+#> $julia_formula
+#> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
+#> <environment: 0x000001d0fe386db8>
+#> 
+#> $data
+#>                    mpg    wt  qsec wt__qsec vs
+#> Mazda RX4         21.0 2.620 16.46  43.1252  0
+#> Mazda RX4 Wag     21.0 2.875 17.02  48.9325  0
+#> Datsun 710        22.8 2.320 18.61  43.1752  1
+#> Hornet 4 Drive    21.4 3.215 19.44  62.4996  1
+#> Hornet Sportabout 18.7 3.440 17.02  58.5488  0
+#> Valiant           18.1 3.460 20.22  69.9612  1
+jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt || vs), head(mtcars))
+#> $formula
+#> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt || vs)
+#> <environment: 0x000001d0fe386db8>
+#> 
+#> $julia_formula
+#> mpg ~ 1 + wt + qsec + wt__qsec + zerocorr(1 + wt | vs)
+#> <environment: 0x000001d0fe386db8>
+#> 
+#> $data
+#>                    mpg    wt  qsec wt__qsec vs
+#> Mazda RX4         21.0 2.620 16.46  43.1252  0
+#> Mazda RX4 Wag     21.0 2.875 17.02  48.9325  0
+#> Datsun 710        22.8 2.320 18.61  43.1752  1
+#> Hornet 4 Drive    21.4 3.215 19.44  62.4996  1
+#> Hornet Sportabout 18.7 3.440 17.02  58.5488  0
+#> Valiant           18.1 3.460 20.22  69.9612  1
+jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), drop_terms = "wt__qsec")
+#> $formula
+#> mpg ~ 1 + wt + qsec + (1 + wt | vs)
+#> <environment: 0x000001d0fe386db8>
+#> 
+#> $julia_formula
+#> mpg ~ 1 + wt + qsec + (1 + wt | vs)
+#> <environment: 0x000001d0fe386db8>
+#> 
+#> $data
+#>                    mpg    wt  qsec vs
+#> Mazda RX4         21.0 2.620 16.46  0
+#> Mazda RX4 Wag     21.0 2.875 17.02  0
+#> Datsun 710        22.8 2.320 18.61  1
+#> Hornet 4 Drive    21.4 3.215 19.44  1
+#> Hornet Sportabout 18.7 3.440 17.02  0
+#> Valiant           18.1 3.460 20.22  1
+jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), cols_keep = TRUE)
+#> $formula
+#> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
+#> <environment: 0x000001d0fe386db8>
+#> 
+#> $julia_formula
+#> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
+#> <environment: 0x000001d0fe386db8>
+#> 
+#> $data
+#>                    mpg    wt  qsec wt__qsec vs cyl disp  hp drat am gear carb
+#> Mazda RX4         21.0 2.620 16.46  43.1252  0   6  160 110 3.90  1    4    4
+#> Mazda RX4 Wag     21.0 2.875 17.02  48.9325  0   6  160 110 3.90  1    4    4
+#> Datsun 710        22.8 2.320 18.61  43.1752  1   4  108  93 3.85  1    4    1
+#> Hornet 4 Drive    21.4 3.215 19.44  62.4996  1   6  258 110 3.08  0    3    1
+#> Hornet Sportabout 18.7 3.440 17.02  58.5488  0   8  360 175 3.15  0    3    2
+#> Valiant           18.1 3.460 20.22  69.9612  1   6  225 105 2.76  0    3    1
 ```
