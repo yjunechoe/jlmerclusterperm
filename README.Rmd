@@ -73,14 +73,35 @@ jlmer(mm$julia_formula, mm$data)
 Fit jlmer at each timepoint and get a z-matrix back with `jlmer_by_time`:
 
 ```{r ex-jlmer-by-time}
-jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
+by_time <- jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
+by_time
 ```
 
-Fit logistic regression to each time point (produces Inf/-Inf when response vector is a constant 1/0):
+Find largest cluster:
 
-```{r ex-jlmer-by-time-binom}
-data_binom <- transform(mm$data, weight = as.integer(weight > median(weight)))
-jlmer_by_time(mm$julia_formula, data_binom, time = "Time", family = "binomial")
+```{r}
+empirical_clusters <- largest_clusters(by_time, threshold = 1.5)
+```
+
+We can think of the data as having a within-participant design, since each chick is assigned one diet. `clusterpermute()` conducts a cluster-based permutation test by randomly shuffling the assignment of diet between chicks to generate a null distribution of the largest sum-z cluster by predictor. 
+```{r}
+system.time({
+  null_dist_clusters <- clusterpermute(
+    julia_formula = mm$julia_formula, data = mm$data, time = "Time",
+    nsim = 1000, participant_col = "Chick", threshold = 1.5,
+    binned = FALSE # For non-aggregated data
+  )
+})
+```
+
+Test empirical clusters against the simulated null:
+
+```{r}
+lapply(c("Diet2", "Diet3", "Diet4"), function(predictor) {
+  empirical <- empirical_clusters[[predictor]]$sum_z
+  null_dist <- null_dist_clusters[[predictor]]
+  mean(abs(null_dist) > empirical)
+})
 ```
 
 ## Formula utilities

@@ -15,8 +15,8 @@ jlmer_model_matrix <- function(fm, df, cols_keep = FALSE, drop_terms = NULL) {
   lfm <- lme4::lFormula(fm, df)
   model_matrix <- lfm$X
   colnames(model_matrix) <- gsub(":", "__", colnames(model_matrix), fixed = TRUE)
+
   fe <- colnames(model_matrix)
-  re <- lme4::findbars(fm)
   if (!is.null(drop_terms)) {
     model_matrix <- model_matrix[, !fe %in% drop_terms, drop = FALSE]
   }
@@ -28,25 +28,17 @@ jlmer_model_matrix <- function(fm, df, cols_keep = FALSE, drop_terms = NULL) {
   }
   fe_fm <- reconstruct_fm(fe)
 
-  re_split <- split(re, sapply(re, function(x) deparse1(x[[3]])))
-  re_groups <- lapply(seq_along(re_split), function(i) {
-    terms <- re_split[[i]]
-    if (length(terms) == 1) {
-      out <- terms[[1]]
-    } else {
-      collected_terms <- sapply(terms, function(term) {
-        lhs <- term[[2]]
-        if (is.language(lhs)) lhs[[3]] else lhs
-      })
-      out <- call("||", Reduce(function(x, y) call("+", x, y), collected_terms), as.symbol(names(re_split)[i]))
-    }
-    standardized <- gsub(":", "__", deparse1(out), fixed = TRUE)
-    if (!is.null(drop_terms)) {
-      drop_terms_regex <- paste0("(^| )", paste(drop_terms, collapse = "|"), " \\+?")
-      standardized <- gsub(drop_terms_regex, "", standardized)
-      standardized <- gsub("\\+(\\|)", "|", standardized)
-    }
-    parse(text = standardized)[[1]]
+  re <- lfm$reTrms$cnms
+  re_bars <- ifelse(table(sapply(lme4::findbars(fm), function(x) deparse1(x[[3]]))) > 1, "||", "|")
+  re_groups <- lapply(seq_along(re), function(i) {
+    rhs <- names(re)[i]
+    bar <- re_bars[[rhs]]
+    lhs <- re[[i]]
+    lhs <- replace(lhs, lhs == "(Intercept)", "1")
+    lhs <- gsub(":", "__", lhs, fixed = TRUE)
+    lhs <- lhs[!lhs %in% drop_terms]
+    lhs <- reformulate(lhs)[[2]]
+    call(bar, lhs, as.symbol(rhs))
   })
 
   re_fm_r <- lapply(re_groups, function(x) call("(", x))

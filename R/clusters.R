@@ -10,8 +10,8 @@ largest_clusters <- function(z_matrix, threshold = 1.5) {
   times <- as.numeric(colnames(z_matrix))
   sign_matrix <- sign(replace(z_matrix, abs(z_matrix) < threshold, 0))
   all_clusters <- lapply(seq_len(nrow(z_matrix)), function(i) {
-    run_ids <- runs_id(xx[i,])
-    clusters <- vapply(split(x[i,], run_ids), function(z_seq) {
+    run_ids <- runs_id(sign_matrix[i,])
+    clusters <- vapply(split(z_matrix[i,], run_ids), function(z_seq) {
       z_seq_sign <- sign(z_seq[1])
       if (z_seq_sign == 0) {
         sum_z <- 0

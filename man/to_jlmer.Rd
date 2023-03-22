@@ -19,7 +19,7 @@ to_jlmer(
 
 \item{family}{A GLM family. Currently supports "gaussian" and "binomial".}
 
-\item{reformulate_opts}{Other of options passed to \code{jlmer_model_matrix()}}
+\item{reformulate_opts}{Other options passed to \code{jlmer_model_matrix()}}
 
 \item{...}{Optional arguments to fit (\code{fast}, \code{nAGQ}, etc.)}
 }

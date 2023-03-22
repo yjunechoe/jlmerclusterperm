@@ -30,7 +30,7 @@ jlmer <- function(julia_formula, data, family = c("gaussian", "binomial"), ...) 
 #'
 #' @param formula Model formula in lme4 syntax
 #' @param data Dataframe
-#' @param reformulate_opts Other of options passed to `jlmer_model_matrix()`
+#' @param reformulate_opts Other options passed to `jlmer_model_matrix()`
 #' @inheritParams jlmer
 #'
 #' @seealso jlmer_model_matrix
@@ -51,31 +51,22 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), reformul
 #'
 #' @seealso jlmer_model_matrix
 #'
-#' @return A Predictor x Time matrix of t-values
+#' @return A Predictor x Time matrix of z-values
 #' @export
 jlmer_by_time <- function(julia_formula, data, time, family = c("gaussian", "binomial"), ...) {
 
-  jlmer_fm <- JuliaConnectoR::juliaEval(paste0("@formula(", deparse1(julia_formula), ")"))
-  jlmer_df <- JuliaConnectoR::juliaCall("DataFrame", data)
-
-  jmler_family <- JuliaConnectoR::juliaCall(switch(
-    match.arg(family), gaussian = "Normal", binomial = "Bernoulli"
-  ))
-
-  jlmer_time <- as.character(substitute(time))
-
-  grouping_vars <- lapply(lme4::findbars(julia_formula), `[[`, 3)
-  jlmer_groupings <- JuliaConnectoR::juliaLet("Dict(x .=> [Grouping()])", x = grouping_vars)
+  family <- match.arg(family)
+  args <- prep_for_jlmer(julia_formula, data, time, family, ...)
 
   opts <- list(...)
   opts <- modifyList(list(progress = FALSE), opts)
-  if (match.arg(family) == "binomial") {
+  if (family == "binomial") {
     opts <- modifyList(list(fast = TRUE), opts)
   }
 
   out <- JuliaConnectoR::juliaGet(do.call(
     .jlmerclusterperm$jlmer_by_time,
-    c(list(jlmer_fm, jlmer_df, jlmer_time, jmler_family, jlmer_groupings), opts)
+    c(args, opts)
   ))
 
   out$Predictors <- replace(out$Predictors, out$Predictors == "1", "(Intercept)")
@@ -83,4 +74,23 @@ jlmer_by_time <- function(julia_formula, data, time, family = c("gaussian", "bin
 
   out$z_matrix
 
+}
+
+#' @keywords internal
+prep_for_jlmer <- function(julia_formula, data, time, family, ...) {
+
+  opts <- list(...)
+  if (is.null(opts) || any(names(opts) == "")) {
+    stop("All optional arguments to fit must be named.")
+  }
+
+  jlmer_fm <- JuliaConnectoR::juliaEval(paste0("@formula(", deparse1(julia_formula), ")"))
+  jlmer_df <- JuliaConnectoR::juliaCall("DataFrame", data)
+
+  jmler_family <- JuliaConnectoR::juliaCall(switch(family, gaussian = "Normal", binomial = "Bernoulli"))
+
+  grouping_vars <- lapply(lme4::findbars(julia_formula), `[[`, 3)
+  jlmer_groupings <- JuliaConnectoR::juliaLet("Dict(x .=> [Grouping()])", x = grouping_vars)
+
+  list(jlmer_fm, jlmer_df, time, jmler_family, jlmer_groupings)
 }

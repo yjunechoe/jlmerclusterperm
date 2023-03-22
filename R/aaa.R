@@ -38,4 +38,5 @@ source_fns <- function(...) {
   lapply(jl_scripts, function(x) JuliaConnectoR::juliaCall("include", x))
   .jlmerclusterperm$jlmer <- function(...) JuliaConnectoR::juliaCall("jlmer", ...)
   .jlmerclusterperm$jlmer_by_time <- function(...) JuliaConnectoR::juliaCall("jlmer_by_time", ...)
+  .jlmerclusterperm$clusterpermute <- function(...) JuliaConnectoR::juliaCall("clusterpermute", ...)
 }
