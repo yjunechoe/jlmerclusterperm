@@ -78,6 +78,7 @@ jlmer_by_time <- function(julia_formula, data, time, family = c("gaussian", "bin
     c(list(jlmer_fm, jlmer_df, jlmer_time, jmler_family, jlmer_groupings), opts)
   ))
 
+  out$Predictors <- replace(out$Predictors, out$Predictors == "1", "(Intercept)")
   dimnames(out$z_matrix) <- out[c("Predictors", "Time")]
 
   out$z_matrix

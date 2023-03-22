@@ -32,7 +32,7 @@ system.time({jlmerclusterperm_setup()})
 #> Starting Julia with 7 workers ...
 #> Running package setup scripts ...
 #>    user  system elapsed 
-#>    0.02    0.00   32.67
+#>    0.02    0.01   26.21
 ```
 
 ## Basic example

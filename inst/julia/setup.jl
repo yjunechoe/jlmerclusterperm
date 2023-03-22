@@ -14,12 +14,14 @@ end
 function jlmer_by_time(formula, data, time, family, contrasts; opts...)
 
   response_var = formula.lhs.sym
+  fm_schema = MixedModels.schema(formula, data, contrasts)
+  form = MixedModels.apply_schema(formula, fm_schema, MixedModel)
+  re_term = [isa(x, MixedModels.AbstractReTerm) for x in form.rhs]
+  fixed = String.(Symbol.(form.rhs[.!re_term][1].terms))
+  grouping_vars = [String(Symbol(x.rhs)) for x in form.rhs[re_term]]
+
   times = sort(unique(data[!,time]))
   n_times = length(times)
-
-  mod1 = fit(MixedModel, formula, filter(time => ==(times[5]), data), family; contrasts = contrasts, opts...)
-  fixed = mod1.feterm.cnames
-  grouping_vars = keys(VarCorr(mod1).σρ)
 
   z_matrix = zeros(length(fixed), n_times)
   singular_fits = zeros(n_times)
