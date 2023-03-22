@@ -77,13 +77,15 @@ by_time <- jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
 by_time
 ```
 
-Find largest cluster:
+Find largest cluster in the observed data:
 
 ```{r}
 empirical_clusters <- largest_clusters(by_time, threshold = 1.5)
+empirical_clusters
 ```
 
 We can think of the data as having a within-participant design, since each chick is assigned one diet. `clusterpermute()` conducts a cluster-based permutation test by randomly shuffling the assignment of diet between chicks to generate a null distribution of the largest sum-z cluster by predictor. 
+
 ```{r}
 system.time({
   null_dist_clusters <- clusterpermute(

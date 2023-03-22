@@ -2,6 +2,7 @@
 #'
 #' @param nsim Number of simulations description
 #' @param participant_col Column representing participants in `data`
+#' @param participant_col Column representing trials/items in `data`
 #' @inheritParams largest_clusters
 #' @inheritParams jlmer_by_time
 #'

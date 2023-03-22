@@ -32,7 +32,7 @@ system.time({jlmerclusterperm_setup()})
 #> Starting Julia with 7 workers ...
 #> Running package setup scripts ...
 #>    user  system elapsed 
-#>    0.02    0.01   35.92
+#>    0.04    0.03   33.20
 ```
 
 ## Basic example
@@ -163,10 +163,41 @@ by_time
 #>   Diet4        3.818298  2.906696  2.254730  2.231461  2.759932  2.389537
 ```
 
-Find largest cluster:
+Find largest cluster in the observed data:
 
 ``` r
 empirical_clusters <- largest_clusters(by_time, threshold = 1.5)
+empirical_clusters
+#> $`(Intercept)`
+#> $`(Intercept)`$cluster
+#>  [1]  1  2  3  4  5  6  7  8  9 10 11 12
+#> 
+#> $`(Intercept)`$sum_z
+#> [1] 496.7828
+#> 
+#> 
+#> $Diet2
+#> $Diet2$cluster
+#> [1] 2 3 4 5 6 7
+#> 
+#> $Diet2$sum_z
+#> [1] 14.62756
+#> 
+#> 
+#> $Diet3
+#> $Diet3$cluster
+#>  [1]  2  3  4  5  6  7  8  9 10 11 12
+#> 
+#> $Diet3$sum_z
+#> [1] 39.91857
+#> 
+#> 
+#> $Diet4
+#> $Diet4$cluster
+#>  [1]  2  3  4  5  6  7  8  9 10 11 12
+#> 
+#> $Diet4$sum_z
+#> [1] 43.48862
 ```
 
 We can think of the data as having a within-participant design, since
@@ -184,7 +215,7 @@ system.time({
   )
 })
 #>    user  system elapsed 
-#>    0.00    0.01   23.71
+#>    0.04    0.05   39.78
 ```
 
 Test empirical clusters against the simulated null:
@@ -196,7 +227,7 @@ lapply(c("Diet2", "Diet3", "Diet4"), function(predictor) {
   mean(abs(null_dist) > empirical)
 })
 #> [[1]]
-#> [1] 0.06
+#> [1] 0.068
 #> 
 #> [[2]]
 #> [1] 0
@@ -211,11 +242,11 @@ lapply(c("Diet2", "Diet3", "Diet4"), function(predictor) {
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars))
 #> $formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x00000231d07b0dd8>
+#> <environment: 0x00000253458d3dd8>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x00000231d07b0dd8>
+#> <environment: 0x00000253458d3dd8>
 #> 
 #> $data
 #>                    mpg    wt  qsec wt__qsec vs
@@ -228,12 +259,12 @@ jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars))
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt || vs), head(mtcars))
 #> $formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 || vs) + (wt || vs)
-#> <environment: 0x00000231d07b0dd8>
+#> <environment: 0x00000253458d3dd8>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + zerocorr(1 | vs) + zerocorr(wt | 
 #>     vs)
-#> <environment: 0x00000231d07b0dd8>
+#> <environment: 0x00000253458d3dd8>
 #> 
 #> $data
 #>                    mpg    wt  qsec wt__qsec vs
@@ -246,11 +277,11 @@ jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt || vs), head(mtcars))
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), drop_terms = "wt__qsec")
 #> $formula
 #> mpg ~ 1 + wt + qsec + (1 + wt | vs)
-#> <environment: 0x00000231d07b0dd8>
+#> <environment: 0x00000253458d3dd8>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + (1 + wt | vs)
-#> <environment: 0x00000231d07b0dd8>
+#> <environment: 0x00000253458d3dd8>
 #> 
 #> $data
 #>                    mpg    wt  qsec vs
@@ -263,11 +294,11 @@ jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), drop_terms = "
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), cols_keep = TRUE)
 #> $formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x00000231d07b0dd8>
+#> <environment: 0x00000253458d3dd8>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x00000231d07b0dd8>
+#> <environment: 0x00000253458d3dd8>
 #> 
 #> $data
 #>                    mpg    wt  qsec wt__qsec vs cyl disp  hp drat am gear carb

@@ -11,7 +11,8 @@ clusterpermute(
   family = c("gaussian", "binomial"),
   nsim = 100L,
   threshold = 1.5,
-  participant_col,
+  participant_col = "",
+  trial_col = "",
   binned = TRUE,
   ...
 )
@@ -29,7 +30,7 @@ clusterpermute(
 
 \item{threshold}{z-value threshold. Defaults to \code{1.5}.}
 
-\item{participant_col}{Column representing participants in \code{data}}
+\item{participant_col}{Column representing trials/items in \code{data}}
 
 \item{binned}{Whether time points have been aggregated. Defaults to \code{TRUE}}
 
