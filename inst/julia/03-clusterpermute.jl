@@ -13,8 +13,6 @@ function clusterpermute(formula, data, time, family, contrasts, nsim, threshold,
 
   n_fixed = length(fixed)
 
-  # x = zeros(nrow(data), nsim)
-
   res = zeros(nsim, n_times, n_fixed)
 
   for p in 1:n_fixed
@@ -23,15 +21,12 @@ function clusterpermute(formula, data, time, family, contrasts, nsim, threshold,
       permute_data = copy(data)
       shuffle_type = guess_shuffle_as(permute_data, predictor, participant_col, trial_col == "" ? missing : 3)
       @showprogress for i in 1:nsim
-        shuffle_as!(permute_data, predictor, participant_col, trial_col, shuffle_type)
-        # if p == 2 x[:,i] = collect(skipmissing(permute_data[!, predictor])) end
+        shuffle_as!(permute_data, shuffle_type, predictor, participant_col, trial_col)
         zs = _jlmer_by_time(formula, permute_data, time, family, contrasts, response_var, fixed, grouping_vars, times, n_times, false; opts...)
         res[i,:,p] = zs[p,:]
       end
     end
   end
-
-  # @info serialize("C:\\Users\\jchoe\\AppData\\Local\\Temp\\RtmpSy6YJk\\file6d841eb47be8", x)
 
   res = res[:, :, findall(!=("1"), fixed)]
   replace!(x -> (<(threshold) ∘ abs)(x) ? 0 : x, res)
@@ -54,7 +49,7 @@ function guess_shuffle_as(df, predictor_col, participant_col, trial_col)
   end
 end
 
-function shuffle_as!(df, predictor_col, participant_col, trial_col, shuffle_type)
+function shuffle_as!(df, shuffle_type, predictor_col, participant_col, trial_col)
   if shuffle_type == "between_participant"
     subj_pred_pair = unique(df[!,[participant_col, predictor_col]])
     shuffle!(subj_pred_pair[!,predictor_col])

@@ -106,8 +106,8 @@ sapply(c("Diet2", "Diet3", "Diet4"), function(predictor) {
 ## Formula utilities
 
 ```{r}
+jlmer_model_matrix(mpg ~ wt * qsec, head(mtcars))
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars))
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt || vs), head(mtcars))
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), drop_terms = "wt__qsec")
-jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), cols_keep = TRUE)
 ```
