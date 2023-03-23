@@ -8,7 +8,7 @@
 #'
 #' @export
 largest_clusters <- function(z_matrix, threshold = 1.5, binned = TRUE) {
-  z_matrix[z_matrix < threshold] <- 0
+  z_matrix[abs(z_matrix) < threshold] <- 0
   predictors <- rownames(z_matrix)
   clusters <- JuliaConnectoR::juliaGet(JuliaConnectoR::juliaLet(
     "map(x -> find_largest_cluster(x, time_is_point), eachrow(z_matrix))",
