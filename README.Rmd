@@ -42,31 +42,28 @@ system.time({jlmerclusterperm_setup()})
 Example data:
 
 ```{r ex-data}
-chickweight_df <- as.data.frame(ChickWeight)
+head(ChickWeight)
 fm <- weight ~ 1 + Diet + (1 | Chick)
-coplot(
-  formula = weight ~ Time | Diet,
-  data = chickweight_df,
-  panel = function(x, y, ...) {
-    points(x, y, ...)
-    abline(lm(y ~ x), col = "steelblue", lwd = 3)
-  }
-)
+```
+
+```{r}
+chickweights_m <- tapply(ChickWeight$weight, ChickWeight[c("Time", "Diet")], mean)
+matplot(chickweights_m, type = "b", lwd = 3)
 ```
 
 Run Julia mixed model using lme4 syntax, using the convenience form `to_jlmer()`:
 
 ```{r lmer-comparison}
 library(lme4)
-summary(lmer(fm, chickweight_df))
+summary(lmer(fm, ChickWeight))
 
-to_jlmer(fm, chickweight_df)
+to_jlmer(fm, ChickWeight)
 ```
 
 Run Julia mixed model directly in `jlmer()` after explicitly reformulating with `jlmer_model_matrix()`:
 
 ```{r jlmer-mm-fit}
-mm <- jlmer_model_matrix(fm, chickweight_df, cols_keep = "Time")
+mm <- jlmer_model_matrix(fm, ChickWeight, cols_keep = "Time")
 jlmer(mm$julia_formula, mm$data)
 ```
 
@@ -99,7 +96,7 @@ system.time({
 Test empirical clusters against the simulated null:
 
 ```{r}
-lapply(c("Diet2", "Diet3", "Diet4"), function(predictor) {
+sapply(c("Diet2", "Diet3", "Diet4"), function(predictor) {
   empirical <- empirical_clusters[[predictor]]$sum_z
   null_dist <- null_dist_clusters[[predictor]]
   mean(abs(null_dist) > empirical)
@@ -114,5 +111,3 @@ jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt || vs), head(mtcars))
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), drop_terms = "wt__qsec")
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), cols_keep = TRUE)
 ```
-
-

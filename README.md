@@ -32,7 +32,7 @@ system.time({jlmerclusterperm_setup()})
 #> Starting Julia with 7 workers ...
 #> Running package setup scripts ...
 #>    user  system elapsed 
-#>    0.01    0.00   49.92
+#>    0.04    0.02   33.34
 ```
 
 ## Basic example
@@ -40,19 +40,23 @@ system.time({jlmerclusterperm_setup()})
 Example data:
 
 ``` r
-chickweight_df <- as.data.frame(ChickWeight)
+head(ChickWeight)
+#>   weight Time Chick Diet
+#> 1     42    0     1    1
+#> 2     51    2     1    1
+#> 3     59    4     1    1
+#> 4     64    6     1    1
+#> 5     76    8     1    1
+#> 6     93   10     1    1
 fm <- weight ~ 1 + Diet + (1 | Chick)
-coplot(
-  formula = weight ~ Time | Diet,
-  data = chickweight_df,
-  panel = function(x, y, ...) {
-    points(x, y, ...)
-    abline(lm(y ~ x), col = "steelblue", lwd = 3)
-  }
-)
 ```
 
-<img src="man/figures/README-ex-data-1.png" width="70%" />
+``` r
+chickweights_m <- tapply(ChickWeight$weight, ChickWeight[c("Time", "Diet")], mean)
+matplot(chickweights_m, type = "b", lwd = 3)
+```
+
+<img src="man/figures/README-unnamed-chunk-2-1.png" width="70%" />
 
 Run Julia mixed model using lme4 syntax, using the convenience form
 `to_jlmer()`:
@@ -60,10 +64,10 @@ Run Julia mixed model using lme4 syntax, using the convenience form
 ``` r
 library(lme4)
 #> Loading required package: Matrix
-summary(lmer(fm, chickweight_df))
+summary(lmer(fm, ChickWeight))
 #> Linear mixed model fit by REML ['lmerMod']
 #> Formula: weight ~ 1 + Diet + (1 | Chick)
-#>    Data: chickweight_df
+#>    Data: ChickWeight
 #> 
 #> REML criterion at convergence: 6506.8
 #> 
@@ -90,7 +94,7 @@ summary(lmer(fm, chickweight_df))
 #> Diet3 -0.590  0.348       
 #> Diet4 -0.588  0.347  0.347
 
-to_jlmer(fm, chickweight_df)
+to_jlmer(fm, ChickWeight)
 #> <Julia object of type LinearMixedModel{Float64}>
 #> Linear mixed model fit by maximum likelihood
 #>  weight ~ 1 + Diet2 + Diet3 + Diet4 + (1 | Chick)
@@ -118,7 +122,7 @@ Run Julia mixed model directly in `jlmer()` after explicitly
 reformulating with `jlmer_model_matrix()`:
 
 ``` r
-mm <- jlmer_model_matrix(fm, chickweight_df, cols_keep = "Time")
+mm <- jlmer_model_matrix(fm, ChickWeight, cols_keep = "Time")
 jlmer(mm$julia_formula, mm$data)
 #> <Julia object of type LinearMixedModel{Float64}>
 #> Linear mixed model fit by maximum likelihood
@@ -215,25 +219,19 @@ system.time({
   )
 })
 #>    user  system elapsed 
-#>    0.02    0.02   16.08
+#>    0.08    0.00   23.73
 ```
 
 Test empirical clusters against the simulated null:
 
 ``` r
-lapply(c("Diet2", "Diet3", "Diet4"), function(predictor) {
+sapply(c("Diet2", "Diet3", "Diet4"), function(predictor) {
   empirical <- empirical_clusters[[predictor]]$sum_z
   null_dist <- null_dist_clusters[[predictor]]
   mean(abs(null_dist) > empirical)
 })
-#> [[1]]
-#> [1] 0.062
-#> 
-#> [[2]]
-#> [1] 0
-#> 
-#> [[3]]
-#> [1] 0
+#> Diet2 Diet3 Diet4 
+#> 0.055 0.000 0.000
 ```
 
 ## Formula utilities
@@ -242,11 +240,11 @@ lapply(c("Diet2", "Diet3", "Diet4"), function(predictor) {
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars))
 #> $formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x00000156a5f34da8>
+#> <environment: 0x0000025766033db8>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x00000156a5f34da8>
+#> <environment: 0x0000025766033db8>
 #> 
 #> $data
 #>                    mpg    wt  qsec wt__qsec vs
@@ -259,12 +257,12 @@ jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars))
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt || vs), head(mtcars))
 #> $formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 || vs) + (wt || vs)
-#> <environment: 0x00000156a5f34da8>
+#> <environment: 0x0000025766033db8>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + zerocorr(1 | vs) + zerocorr(wt | 
 #>     vs)
-#> <environment: 0x00000156a5f34da8>
+#> <environment: 0x0000025766033db8>
 #> 
 #> $data
 #>                    mpg    wt  qsec wt__qsec vs
@@ -277,11 +275,11 @@ jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt || vs), head(mtcars))
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), drop_terms = "wt__qsec")
 #> $formula
 #> mpg ~ 1 + wt + qsec + (1 + wt | vs)
-#> <environment: 0x00000156a5f34da8>
+#> <environment: 0x0000025766033db8>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + (1 + wt | vs)
-#> <environment: 0x00000156a5f34da8>
+#> <environment: 0x0000025766033db8>
 #> 
 #> $data
 #>                    mpg    wt  qsec vs
@@ -294,11 +292,11 @@ jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), drop_terms = "
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), cols_keep = TRUE)
 #> $formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x00000156a5f34da8>
+#> <environment: 0x0000025766033db8>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x00000156a5f34da8>
+#> <environment: 0x0000025766033db8>
 #> 
 #> $data
 #>                    mpg    wt  qsec wt__qsec vs cyl disp  hp drat am gear carb
