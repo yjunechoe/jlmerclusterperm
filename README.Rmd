@@ -63,7 +63,10 @@ to_jlmer(fm, ChickWeight)
 Run Julia mixed model directly in `jlmer()` after explicitly reformulating with `jlmer_model_matrix()`:
 
 ```{r jlmer-mm-fit}
-mm <- jlmer_model_matrix(fm, ChickWeight, cols_keep = "Time")
+mm <- jlmer_model_matrix(fm, ChickWeight)
+mm$julia_formula
+mm$data
+
 jlmer(mm$julia_formula, mm$data)
 ```
 

@@ -32,7 +32,7 @@ system.time({jlmerclusterperm_setup()})
 #> Starting Julia with 7 workers ...
 #> Running package setup scripts ...
 #>    user  system elapsed 
-#>    0.04    0.02   33.34
+#>    0.03    0.00   27.77
 ```
 
 ## Basic example
@@ -122,7 +122,26 @@ Run Julia mixed model directly in `jlmer()` after explicitly
 reformulating with `jlmer_model_matrix()`:
 
 ``` r
-mm <- jlmer_model_matrix(fm, ChickWeight, cols_keep = "Time")
+mm <- jlmer_model_matrix(fm, ChickWeight)
+mm$julia_formula
+#> weight ~ 1 + Diet2 + Diet3 + Diet4 + (1 | Chick)
+#> <environment: 0x00000248eb8b2d48>
+mm$data
+#> # A tibble: 578 × 7
+#>    weight Diet2 Diet3 Diet4 Chick  Time Diet 
+#>     <dbl> <dbl> <dbl> <dbl> <ord> <dbl> <fct>
+#>  1     42     0     0     0 1         0 1    
+#>  2     51     0     0     0 1         2 1    
+#>  3     59     0     0     0 1         4 1    
+#>  4     64     0     0     0 1         6 1    
+#>  5     76     0     0     0 1         8 1    
+#>  6     93     0     0     0 1        10 1    
+#>  7    106     0     0     0 1        12 1    
+#>  8    125     0     0     0 1        14 1    
+#>  9    149     0     0     0 1        16 1    
+#> 10    171     0     0     0 1        18 1    
+#> # … with 568 more rows
+
 jlmer(mm$julia_formula, mm$data)
 #> <Julia object of type LinearMixedModel{Float64}>
 #> Linear mixed model fit by maximum likelihood
@@ -219,7 +238,7 @@ system.time({
   )
 })
 #>    user  system elapsed 
-#>    0.08    0.00   23.73
+#>    0.06    0.02   25.27
 ```
 
 Test empirical clusters against the simulated null:
@@ -231,79 +250,87 @@ sapply(c("Diet2", "Diet3", "Diet4"), function(predictor) {
   mean(abs(null_dist) > empirical)
 })
 #> Diet2 Diet3 Diet4 
-#> 0.055 0.000 0.000
+#> 0.058 0.000 0.000
 ```
 
 ## Formula utilities
 
 ``` r
+jlmer_model_matrix(mpg ~ wt * qsec, head(mtcars))
+#> $formula
+#> mpg ~ 1 + wt + qsec + wt__qsec
+#> <environment: 0x00000248eb8b2d48>
+#> 
+#> $julia_formula
+#> mpg ~ 1 + wt + qsec + wt__qsec
+#> <environment: 0x00000248eb8b2d48>
+#> 
+#> $data
+#> # A tibble: 6 × 12
+#>      wt  qsec wt__qsec   mpg   cyl  disp    hp  drat    vs    am  gear  carb
+#>   <dbl> <dbl>    <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1  2.62  16.5     43.1  21       6   160   110  3.9      0     1     4     4
+#> 2  2.88  17.0     48.9  21       6   160   110  3.9      0     1     4     4
+#> 3  2.32  18.6     43.2  22.8     4   108    93  3.85     1     1     4     1
+#> 4  3.22  19.4     62.5  21.4     6   258   110  3.08     1     0     3     1
+#> 5  3.44  17.0     58.5  18.7     8   360   175  3.15     0     0     3     2
+#> 6  3.46  20.2     70.0  18.1     6   225   105  2.76     1     0     3     1
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars))
 #> $formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x0000025766033db8>
+#> <environment: 0x00000248eb8b2d48>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x0000025766033db8>
+#> <environment: 0x00000248eb8b2d48>
 #> 
 #> $data
-#>                    mpg    wt  qsec wt__qsec vs
-#> Mazda RX4         21.0 2.620 16.46  43.1252  0
-#> Mazda RX4 Wag     21.0 2.875 17.02  48.9325  0
-#> Datsun 710        22.8 2.320 18.61  43.1752  1
-#> Hornet 4 Drive    21.4 3.215 19.44  62.4996  1
-#> Hornet Sportabout 18.7 3.440 17.02  58.5488  0
-#> Valiant           18.1 3.460 20.22  69.9612  1
+#> # A tibble: 6 × 12
+#>     mpg    wt  qsec wt__qsec vs      cyl  disp    hp  drat    am  gear  carb
+#>   <dbl> <dbl> <dbl>    <dbl> <fct> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1  21    2.62  16.5     43.1 0         6   160   110  3.9      1     4     4
+#> 2  21    2.88  17.0     48.9 0         6   160   110  3.9      1     4     4
+#> 3  22.8  2.32  18.6     43.2 1         4   108    93  3.85     1     4     1
+#> 4  21.4  3.22  19.4     62.5 1         6   258   110  3.08     0     3     1
+#> 5  18.7  3.44  17.0     58.5 0         8   360   175  3.15     0     3     2
+#> 6  18.1  3.46  20.2     70.0 1         6   225   105  2.76     0     3     1
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt || vs), head(mtcars))
 #> $formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + (1 || vs) + (wt || vs)
-#> <environment: 0x0000025766033db8>
+#> <environment: 0x00000248eb8b2d48>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + wt__qsec + zerocorr(1 | vs) + zerocorr(wt | 
 #>     vs)
-#> <environment: 0x0000025766033db8>
+#> <environment: 0x00000248eb8b2d48>
 #> 
 #> $data
-#>                    mpg    wt  qsec wt__qsec vs
-#> Mazda RX4         21.0 2.620 16.46  43.1252  0
-#> Mazda RX4 Wag     21.0 2.875 17.02  48.9325  0
-#> Datsun 710        22.8 2.320 18.61  43.1752  1
-#> Hornet 4 Drive    21.4 3.215 19.44  62.4996  1
-#> Hornet Sportabout 18.7 3.440 17.02  58.5488  0
-#> Valiant           18.1 3.460 20.22  69.9612  1
+#> # A tibble: 6 × 12
+#>     mpg    wt  qsec wt__qsec vs      cyl  disp    hp  drat    am  gear  carb
+#>   <dbl> <dbl> <dbl>    <dbl> <fct> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1  21    2.62  16.5     43.1 0         6   160   110  3.9      1     4     4
+#> 2  21    2.88  17.0     48.9 0         6   160   110  3.9      1     4     4
+#> 3  22.8  2.32  18.6     43.2 1         4   108    93  3.85     1     4     1
+#> 4  21.4  3.22  19.4     62.5 1         6   258   110  3.08     0     3     1
+#> 5  18.7  3.44  17.0     58.5 0         8   360   175  3.15     0     3     2
+#> 6  18.1  3.46  20.2     70.0 1         6   225   105  2.76     0     3     1
 jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), drop_terms = "wt__qsec")
 #> $formula
 #> mpg ~ 1 + wt + qsec + (1 + wt | vs)
-#> <environment: 0x0000025766033db8>
+#> <environment: 0x00000248eb8b2d48>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + (1 + wt | vs)
-#> <environment: 0x0000025766033db8>
+#> <environment: 0x00000248eb8b2d48>
 #> 
 #> $data
-#>                    mpg    wt  qsec vs
-#> Mazda RX4         21.0 2.620 16.46  0
-#> Mazda RX4 Wag     21.0 2.875 17.02  0
-#> Datsun 710        22.8 2.320 18.61  1
-#> Hornet 4 Drive    21.4 3.215 19.44  1
-#> Hornet Sportabout 18.7 3.440 17.02  0
-#> Valiant           18.1 3.460 20.22  1
-jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), cols_keep = TRUE)
-#> $formula
-#> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x0000025766033db8>
-#> 
-#> $julia_formula
-#> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x0000025766033db8>
-#> 
-#> $data
-#>                    mpg    wt  qsec wt__qsec vs cyl disp  hp drat am gear carb
-#> Mazda RX4         21.0 2.620 16.46  43.1252  0   6  160 110 3.90  1    4    4
-#> Mazda RX4 Wag     21.0 2.875 17.02  48.9325  0   6  160 110 3.90  1    4    4
-#> Datsun 710        22.8 2.320 18.61  43.1752  1   4  108  93 3.85  1    4    1
-#> Hornet 4 Drive    21.4 3.215 19.44  62.4996  1   6  258 110 3.08  0    3    1
-#> Hornet Sportabout 18.7 3.440 17.02  58.5488  0   8  360 175 3.15  0    3    2
-#> Valiant           18.1 3.460 20.22  69.9612  1   6  225 105 2.76  0    3    1
+#> # A tibble: 6 × 11
+#>     mpg    wt  qsec vs      cyl  disp    hp  drat    am  gear  carb
+#>   <dbl> <dbl> <dbl> <fct> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1  21    2.62  16.5 0         6   160   110  3.9      1     4     4
+#> 2  21    2.88  17.0 0         6   160   110  3.9      1     4     4
+#> 3  22.8  2.32  18.6 1         4   108    93  3.85     1     4     1
+#> 4  21.4  3.22  19.4 1         6   258   110  3.08     0     3     1
+#> 5  18.7  3.44  17.0 0         8   360   175  3.15     0     3     2
+#> 6  18.1  3.46  20.2 1         6   225   105  2.76     0     3     1
 ```
