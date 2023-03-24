@@ -1,3 +1,3 @@
 function z_value(mod)
-  mod.β ./ stderror(mod)
+  coef(mod) ./ stderror(mod)
 end

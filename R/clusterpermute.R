@@ -24,9 +24,11 @@ clusterpermute <- function(julia_formula, data, time, family = c("gaussian", "bi
     opts <- modifyList(list(fast = TRUE), opts)
   }
 
+  is_mem <- !is.null(lme4::findbars(julia_formula))
+
   out <- JuliaConnectoR::juliaGet(do.call(
     .jlmerclusterperm$clusterpermute,
-    c(args, nsim, threshold, participant_col, trial_col, binned, opts)
+    c(args, nsim, threshold, participant_col, trial_col, binned, is_mem, opts)
   ))
 
   out

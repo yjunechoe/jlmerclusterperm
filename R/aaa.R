@@ -22,7 +22,6 @@ jlmerclusterperm_setup <- function(...) {
     message("Starting Julia with ", nthreads, " workers ...")
     Sys.setenv("JULIA_NUM_THREADS" = nthreads)
     suppressMessages(JuliaConnectoR::startJuliaServer())
-    # JuliaConnectoR::juliaEval(paste0("using Distributed; addprocs(", nthreads, ");"))
     Sys.unsetenv("JULIA_NUM_THREADS")
   } else {
     message("Starting Julia ...")

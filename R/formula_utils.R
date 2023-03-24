@@ -58,19 +58,24 @@ jlmer_model_matrix <- function(fm, df, drop_terms = NULL) {
     })
     combine_fm <- function(re_str) {
       expanded <- Reduce(function(x, y) call("+", x, y), c(fe_fm, re_str))
-      expanded_fm <- eval(call("~", response, expanded))
-      attr(expanded_fm, ".Environment") <- fm_env
-      expanded_fm
+      as.formula(call("~", response, expanded), fm_env)
     }
     r_fm <- combine_fm(re_fm_r)
     jl_fm <- combine_fm(re_fm_jl)
     model_matrix_df <- cbind(lfm$fr[deparse1(response)], model_matrix_df, lfm$reTrms$flist)
   } else {
-    r_fm <- jl_fm <- fe_fm
+    r_fm <- jl_fm <- as.formula(call("~", response, fe_fm), fm_env)
   }
 
-  # colnames(model_matrix_df) <- gsub(":", "__", colnames(model_matrix_df), fixed = TRUE)
-  model_matrix_df <- cbind(model_matrix_df, df[!is.na(df[[response]]), ])
+  model_matrix_df <- cbind(
+    model_matrix_df,
+    df[!is.na(df[[response]]), setdiff(colnames(df), colnames(model_matrix_df)), drop = FALSE]
+  )
+
+  if ("tibble" %in% rownames(installed.packages())) {
+    model_matrix_df <- asNamespace("tibble")$as_tibble(model_matrix_df)
+  }
+
   list(
     formula = r_fm,
     julia_formula = jl_fm,

@@ -1,37 +1,64 @@
-function clusterpermute(formula, data, time, family, contrasts, nsim, threshold, participant_col, trial_col, binned; opts...)
+function clusterpermute(formula, data, time, family, contrasts, nsim, threshold, participant_col, trial_col, binned, is_mem; opts...)
 
   response_var = formula.lhs.sym
-  fm_schema = MixedModels.schema(formula, data, contrasts)
-  form = MixedModels.apply_schema(formula, fm_schema, MixedModel)
-  re_term = [isa(x, MixedModels.AbstractReTerm) for x in form.rhs]
-  fixed = String.(Symbol.(form.rhs[.!re_term][1].terms))
-  grouping_vars = [String(Symbol(x.rhs)) for x in form.rhs[re_term]]
-  predictors = Symbol.(filter(!=("1"), fixed))
-
   times = sort(unique(data[!,time]))
   n_times = length(times)
 
-  n_fixed = length(fixed)
+  if is_mem
 
-  res = zeros(nsim, n_times, n_fixed)
+    fm_schema = MixedModels.schema(formula, data, contrasts)
+    form = MixedModels.apply_schema(formula, fm_schema, MixedModel)
+    re_term = [isa(x, MixedModels.AbstractReTerm) for x in form.rhs]
+    fixed = String.(Symbol.(form.rhs[.!re_term][1].terms))
+    grouping_vars = [String(Symbol(x.rhs)) for x in form.rhs[re_term]]
 
-  for p in 1:n_fixed
-    predictor = fixed[p]
-    if predictor != "1"
-      permute_data = copy(data)
-      shuffle_type = guess_shuffle_as(permute_data, predictor, participant_col, trial_col == "" ? missing : 3)
-      @showprogress for i in 1:nsim
-        shuffle_as!(permute_data, shuffle_type, predictor, participant_col, trial_col)
-        zs = _jlmer_by_time(formula, permute_data, time, family, contrasts, response_var, fixed, grouping_vars, times, n_times, false; opts...)
-        res[i,:,p] = zs[p,:]
+    n_fixed = length(fixed)
+    res = zeros(nsim, n_times, n_fixed)
+
+    for p in 1:n_fixed
+      predictor = fixed[p]
+      if predictor != "1"
+        permute_data = copy(data)
+        shuffle_type = guess_shuffle_as(permute_data, predictor, participant_col, trial_col == "" ? missing : 3)
+        @showprogress for i in 1:nsim
+          shuffle_as!(permute_data, shuffle_type, predictor, participant_col, trial_col)
+          zs = _jlmer_by_time(formula, permute_data, time, family, contrasts, response_var, fixed, grouping_vars, times, n_times, false; opts...)
+          res[i,:,p] = zs[p,:]
+        end
       end
     end
+
+  else
+
+    fm_schema = StatsModels.schema(formula, data)
+    form = StatsModels.apply_schema(formula, fm_schema)
+    fixed = String.(Symbol.(form.rhs.terms))
+
+    n_fixed = length(fixed)
+    res = zeros(nsim, n_times, n_fixed)
+    pg = Progress(nsim)
+
+    for p in 1:n_fixed
+      predictor = fixed[p]
+      if predictor != "1"
+        permute_data = copy(data)
+        shuffle_type = guess_shuffle_as(data, predictor, participant_col, trial_col == "" ? missing : 3)
+        for i in 1:nsim
+          shuffle_as!(permute_data, shuffle_type, predictor, participant_col, trial_col)
+          zs = _jlm_by_time(formula, permute_data, time, family, response_var, fixed, times, n_times)
+          res[i,:,p] = zs[p,:]
+          next!(pg)
+        end
+      end
+    end
+
   end
 
   res = res[:, :, findall(!=("1"), fixed)]
   replace!(x -> (<(threshold) ∘ abs)(x) ? 0 : x, res)
   time_is_point = (family isa Bernoulli) || !binned
 
+  predictors = Symbol.(filter(!=("1"), fixed))
   converges = map(p -> all.(!isnan, eachrow(res[:,:,p])), 1:length(predictors))
 
   out = map(p -> find_largest_cluster.(eachrow(res[converges[p], :, p]), Ref(true)), 1:length(predictors))

@@ -10,18 +10,10 @@
 #' @export
 jlmer <- function(julia_formula, data, family = c("gaussian", "binomial"), ...) {
 
-  jlmer_fm <- JuliaConnectoR::juliaEval(paste0("@formula(", deparse1(julia_formula), ")"))
-  jlmer_df <- df_to_NT(data)
+  family <- match.arg(family)
+  args <- prep_for_jlmer(julia_formula, data, time = NULL, family, ...)[-3]
 
-  jmler_family <- JuliaConnectoR::juliaCall(switch(
-    match.arg(family), gaussian = "Normal", binomial = "Bernoulli"
-  ))
-
-  grouping_vars <- lapply(lme4::findbars(julia_formula), `[[`, 3)
-  jlmer_groupings <- JuliaConnectoR::juliaLet("Dict(x .=> [Grouping()])", x = grouping_vars)
-
-  out <- .jlmerclusterperm$jlmer(jlmer_fm, jlmer_df, jmler_family, jlmer_groupings, ...)
-
+  out <- do.call(.jlmerclusterperm$jlmer, c(args, ...))
   out
 
 }
@@ -64,33 +56,13 @@ jlmer_by_time <- function(julia_formula, data, time, family = c("gaussian", "bin
     opts <- modifyList(list(fast = TRUE), opts)
   }
 
-  out <- JuliaConnectoR::juliaGet(do.call(
-    .jlmerclusterperm$jlmer_by_time,
-    c(args, opts)
-  ))
+  is_mem <- !is.null(lme4::findbars(julia_formula))
+
+  out <- JuliaConnectoR::juliaGet(do.call(.jlmerclusterperm$jlmer_by_time, c(args, is_mem, opts)))
 
   out$Predictors <- replace(out$Predictors, out$Predictors == "1", "(Intercept)")
   dimnames(out$z_matrix) <- out[c("Predictors", "Time")]
 
   out$z_matrix
 
-}
-
-#' @keywords internal
-prep_for_jlmer <- function(julia_formula, data, time, family, ...) {
-
-  opts <- list(...)
-  if (is.null(opts) || any(names(opts) == "")) {
-    stop("All optional arguments to fit must be named.")
-  }
-
-  jlmer_fm <- JuliaConnectoR::juliaEval(paste0("@formula(", deparse1(julia_formula), ")"))
-  jlmer_df <- JuliaConnectoR::juliaCall("DataFrame", data)
-
-  jmler_family <- JuliaConnectoR::juliaCall(switch(family, gaussian = "Normal", binomial = "Bernoulli"))
-
-  grouping_vars <- lapply(lme4::findbars(julia_formula), `[[`, 3)
-  jlmer_groupings <- JuliaConnectoR::juliaLet("Dict(x .=> [Grouping()])", x = grouping_vars)
-
-  list(jlmer_fm, jlmer_df, time, jmler_family, jlmer_groupings)
 }
