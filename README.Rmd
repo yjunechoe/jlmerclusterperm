@@ -109,8 +109,13 @@ sapply(c("Diet2", "Diet3", "Diet4"), function(predictor) {
 ## Formula utilities
 
 ```{r}
-jlmer_model_matrix(mpg ~ wt * qsec, head(mtcars))
-jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars))
-jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt || vs), head(mtcars))
-jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), drop_terms = "wt__qsec")
+mtcars_sm <- mtcars[, c(1, 6:10)]
+mtcars_sm$gear <- as.factor(mtcars_sm$gear)
+head(mtcars_sm)
+
+jlmer_model_matrix(mpg ~ wt * qsec, mtcars_sm)
+jlmer_model_matrix(mpg ~ wt * qsec + (wt * qsec | am), mtcars_sm)
+jlmer_model_matrix(mpg ~ wt * qsec + (wt * qsec || am), mtcars_sm)
+jlmer_model_matrix(mpg ~ wt * qsec + (wt * qsec || am), mtcars_sm, drop_terms = "wt")
+jlmer_model_matrix(mpg ~ gear * qsec + (gear + qsec | am), mtcars_sm)
 ```

@@ -32,7 +32,7 @@ system.time({jlmerclusterperm_setup()})
 #> Starting Julia with 7 workers ...
 #> Running package setup scripts ...
 #>    user  system elapsed 
-#>    0.03    0.00   27.77
+#>    0.01    0.02   24.03
 ```
 
 ## Basic example
@@ -125,22 +125,43 @@ reformulating with `jlmer_model_matrix()`:
 mm <- jlmer_model_matrix(fm, ChickWeight)
 mm$julia_formula
 #> weight ~ 1 + Diet2 + Diet3 + Diet4 + (1 | Chick)
-#> <environment: 0x00000248eb8b2d48>
+#> attr(,"groupings")
+#> attr(,"groupings")[[1]]
+#> [1] "Diet2" "Diet3" "Diet4"
+#> 
+#> attr(,"groupings")[[2]]
+#>  [1] "Chick.L"  "Chick.Q"  "Chick.C"  "Chick^4"  "Chick^5"  "Chick^6" 
+#>  [7] "Chick^7"  "Chick^8"  "Chick^9"  "Chick^10" "Chick^11" "Chick^12"
+#> [13] "Chick^13" "Chick^14" "Chick^15" "Chick^16" "Chick^17" "Chick^18"
+#> [19] "Chick^19" "Chick^20" "Chick^21" "Chick^22" "Chick^23" "Chick^24"
+#> [25] "Chick^25" "Chick^26" "Chick^27" "Chick^28" "Chick^29" "Chick^30"
+#> [31] "Chick^31" "Chick^32" "Chick^33" "Chick^34" "Chick^35" "Chick^36"
+#> [37] "Chick^37" "Chick^38" "Chick^39" "Chick^40" "Chick^41" "Chick^42"
+#> [43] "Chick^43" "Chick^44" "Chick^45" "Chick^46" "Chick^47" "Chick^48"
+#> [49] "Chick^49"
+#> 
+#> <environment: 0x0000013d9a4d1da8>
 mm$data
-#> # A tibble: 578 × 7
-#>    weight Diet2 Diet3 Diet4 Chick  Time Diet 
-#>     <dbl> <dbl> <dbl> <dbl> <ord> <dbl> <fct>
-#>  1     42     0     0     0 1         0 1    
-#>  2     51     0     0     0 1         2 1    
-#>  3     59     0     0     0 1         4 1    
-#>  4     64     0     0     0 1         6 1    
-#>  5     76     0     0     0 1         8 1    
-#>  6     93     0     0     0 1        10 1    
-#>  7    106     0     0     0 1        12 1    
-#>  8    125     0     0     0 1        14 1    
-#>  9    149     0     0     0 1        16 1    
-#> 10    171     0     0     0 1        18 1    
-#> # … with 568 more rows
+#> # A tibble: 578 × 56
+#>    Diet2 Diet3 Diet4 Chick.L Chick.Q Chick.C `Chick^4` `Chick^5` Chick…¹ Chick…²
+#>    <dbl> <dbl> <dbl>   <dbl>   <dbl>   <dbl>     <dbl>     <dbl>   <dbl>   <dbl>
+#>  1     0     0     0  -0.103 -0.0745   0.167   -0.0643    -0.113   0.160 -0.0217
+#>  2     0     0     0  -0.103 -0.0745   0.167   -0.0643    -0.113   0.160 -0.0217
+#>  3     0     0     0  -0.103 -0.0745   0.167   -0.0643    -0.113   0.160 -0.0217
+#>  4     0     0     0  -0.103 -0.0745   0.167   -0.0643    -0.113   0.160 -0.0217
+#>  5     0     0     0  -0.103 -0.0745   0.167   -0.0643    -0.113   0.160 -0.0217
+#>  6     0     0     0  -0.103 -0.0745   0.167   -0.0643    -0.113   0.160 -0.0217
+#>  7     0     0     0  -0.103 -0.0745   0.167   -0.0643    -0.113   0.160 -0.0217
+#>  8     0     0     0  -0.103 -0.0745   0.167   -0.0643    -0.113   0.160 -0.0217
+#>  9     0     0     0  -0.103 -0.0745   0.167   -0.0643    -0.113   0.160 -0.0217
+#> 10     0     0     0  -0.103 -0.0745   0.167   -0.0643    -0.113   0.160 -0.0217
+#> # … with 568 more rows, 46 more variables: `Chick^8` <dbl>, `Chick^9` <dbl>,
+#> #   `Chick^10` <dbl>, `Chick^11` <dbl>, `Chick^12` <dbl>, `Chick^13` <dbl>,
+#> #   `Chick^14` <dbl>, `Chick^15` <dbl>, `Chick^16` <dbl>, `Chick^17` <dbl>,
+#> #   `Chick^18` <dbl>, `Chick^19` <dbl>, `Chick^20` <dbl>, `Chick^21` <dbl>,
+#> #   `Chick^22` <dbl>, `Chick^23` <dbl>, `Chick^24` <dbl>, `Chick^25` <dbl>,
+#> #   `Chick^26` <dbl>, `Chick^27` <dbl>, `Chick^28` <dbl>, `Chick^29` <dbl>,
+#> #   `Chick^30` <dbl>, `Chick^31` <dbl>, `Chick^32` <dbl>, `Chick^33` <dbl>, …
 
 jlmer(mm$julia_formula, mm$data)
 #> <Julia object of type LinearMixedModel{Float64}>
@@ -238,7 +259,7 @@ system.time({
   )
 })
 #>    user  system elapsed 
-#>    0.06    0.02   25.27
+#>    0.01    0.00   23.78
 ```
 
 Test empirical clusters against the simulated null:
@@ -250,87 +271,162 @@ sapply(c("Diet2", "Diet3", "Diet4"), function(predictor) {
   mean(abs(null_dist) > empirical)
 })
 #> Diet2 Diet3 Diet4 
-#> 0.058 0.000 0.000
+#> 0.045 0.000 0.000
 ```
 
 ## Formula utilities
 
 ``` r
-jlmer_model_matrix(mpg ~ wt * qsec, head(mtcars))
+mtcars_sm <- mtcars[, c(1, 6:10)]
+mtcars_sm$gear <- as.factor(mtcars_sm$gear)
+head(mtcars_sm)
+#>                    mpg    wt  qsec vs am gear
+#> Mazda RX4         21.0 2.620 16.46  0  1    4
+#> Mazda RX4 Wag     21.0 2.875 17.02  0  1    4
+#> Datsun 710        22.8 2.320 18.61  1  1    4
+#> Hornet 4 Drive    21.4 3.215 19.44  1  0    3
+#> Hornet Sportabout 18.7 3.440 17.02  0  0    3
+#> Valiant           18.1 3.460 20.22  1  0    3
+
+jlmer_model_matrix(mpg ~ wt * qsec, mtcars_sm)
 #> $formula
 #> mpg ~ 1 + wt + qsec + wt__qsec
-#> <environment: 0x00000248eb8b2d48>
+#> <environment: 0x0000013d9a4d1da8>
 #> 
 #> $julia_formula
 #> mpg ~ 1 + wt + qsec + wt__qsec
-#> <environment: 0x00000248eb8b2d48>
+#> attr(,"groupings")
+#> list()
+#> <environment: 0x0000013d9a4d1da8>
 #> 
 #> $data
-#> # A tibble: 6 × 12
-#>      wt  qsec wt__qsec   mpg   cyl  disp    hp  drat    vs    am  gear  carb
-#>   <dbl> <dbl>    <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-#> 1  2.62  16.5     43.1  21       6   160   110  3.9      0     1     4     4
-#> 2  2.88  17.0     48.9  21       6   160   110  3.9      0     1     4     4
-#> 3  2.32  18.6     43.2  22.8     4   108    93  3.85     1     1     4     1
-#> 4  3.22  19.4     62.5  21.4     6   258   110  3.08     1     0     3     1
-#> 5  3.44  17.0     58.5  18.7     8   360   175  3.15     0     0     3     2
-#> 6  3.46  20.2     70.0  18.1     6   225   105  2.76     1     0     3     1
-jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars))
+#> # A tibble: 32 × 7
+#>       wt  qsec wt__qsec   mpg    vs    am gear 
+#>    <dbl> <dbl>    <dbl> <dbl> <dbl> <dbl> <fct>
+#>  1  2.62  16.5     43.1  21       0     1 4    
+#>  2  2.88  17.0     48.9  21       0     1 4    
+#>  3  2.32  18.6     43.2  22.8     1     1 4    
+#>  4  3.22  19.4     62.5  21.4     1     0 3    
+#>  5  3.44  17.0     58.5  18.7     0     0 3    
+#>  6  3.46  20.2     70.0  18.1     1     0 3    
+#>  7  3.57  15.8     56.5  14.3     0     0 3    
+#>  8  3.19  20       63.8  24.4     1     0 4    
+#>  9  3.15  22.9     72.1  22.8     1     0 4    
+#> 10  3.44  18.3     63.0  19.2     1     0 4    
+#> # … with 22 more rows
+jlmer_model_matrix(mpg ~ wt * qsec + (wt * qsec | am), mtcars_sm)
 #> $formula
-#> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x00000248eb8b2d48>
+#> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt + qsec + wt__qsec | 
+#>     am)
+#> <environment: 0x0000013d9a4d1da8>
 #> 
 #> $julia_formula
-#> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt | vs)
-#> <environment: 0x00000248eb8b2d48>
+#> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt + qsec + wt__qsec | 
+#>     am)
+#> attr(,"groupings")
+#> list()
+#> <environment: 0x0000013d9a4d1da8>
 #> 
 #> $data
-#> # A tibble: 6 × 12
-#>     mpg    wt  qsec wt__qsec vs      cyl  disp    hp  drat    am  gear  carb
-#>   <dbl> <dbl> <dbl>    <dbl> <fct> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-#> 1  21    2.62  16.5     43.1 0         6   160   110  3.9      1     4     4
-#> 2  21    2.88  17.0     48.9 0         6   160   110  3.9      1     4     4
-#> 3  22.8  2.32  18.6     43.2 1         4   108    93  3.85     1     4     1
-#> 4  21.4  3.22  19.4     62.5 1         6   258   110  3.08     0     3     1
-#> 5  18.7  3.44  17.0     58.5 0         8   360   175  3.15     0     3     2
-#> 6  18.1  3.46  20.2     70.0 1         6   225   105  2.76     0     3     1
-jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt || vs), head(mtcars))
+#> # A tibble: 32 × 7
+#>       wt  qsec wt__qsec    am   mpg    vs gear 
+#>    <dbl> <dbl>    <dbl> <dbl> <dbl> <dbl> <fct>
+#>  1  2.62  16.5     43.1     1  21       0 4    
+#>  2  2.88  17.0     48.9     1  21       0 4    
+#>  3  2.32  18.6     43.2     1  22.8     1 4    
+#>  4  3.22  19.4     62.5     0  21.4     1 3    
+#>  5  3.44  17.0     58.5     0  18.7     0 3    
+#>  6  3.46  20.2     70.0     0  18.1     1 3    
+#>  7  3.57  15.8     56.5     0  14.3     0 3    
+#>  8  3.19  20       63.8     0  24.4     1 4    
+#>  9  3.15  22.9     72.1     0  22.8     1 4    
+#> 10  3.44  18.3     63.0     0  19.2     1 4    
+#> # … with 22 more rows
+jlmer_model_matrix(mpg ~ wt * qsec + (wt * qsec || am), mtcars_sm)
 #> $formula
-#> mpg ~ 1 + wt + qsec + wt__qsec + (1 || vs) + (wt || vs)
-#> <environment: 0x00000248eb8b2d48>
+#> mpg ~ 1 + wt + qsec + wt__qsec + (1 + wt + qsec + wt__qsec || 
+#>     am)
+#> <environment: 0x0000013d9a4d1da8>
 #> 
 #> $julia_formula
-#> mpg ~ 1 + wt + qsec + wt__qsec + zerocorr(1 | vs) + zerocorr(wt | 
-#>     vs)
-#> <environment: 0x00000248eb8b2d48>
+#> mpg ~ 1 + wt + qsec + wt__qsec + zerocorr(1 + wt + qsec + wt__qsec | 
+#>     am)
+#> attr(,"groupings")
+#> list()
+#> <environment: 0x0000013d9a4d1da8>
 #> 
 #> $data
-#> # A tibble: 6 × 12
-#>     mpg    wt  qsec wt__qsec vs      cyl  disp    hp  drat    am  gear  carb
-#>   <dbl> <dbl> <dbl>    <dbl> <fct> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-#> 1  21    2.62  16.5     43.1 0         6   160   110  3.9      1     4     4
-#> 2  21    2.88  17.0     48.9 0         6   160   110  3.9      1     4     4
-#> 3  22.8  2.32  18.6     43.2 1         4   108    93  3.85     1     4     1
-#> 4  21.4  3.22  19.4     62.5 1         6   258   110  3.08     0     3     1
-#> 5  18.7  3.44  17.0     58.5 0         8   360   175  3.15     0     3     2
-#> 6  18.1  3.46  20.2     70.0 1         6   225   105  2.76     0     3     1
-jlmer_model_matrix(mpg ~ wt * qsec + (1 + wt | vs), head(mtcars), drop_terms = "wt__qsec")
+#> # A tibble: 32 × 7
+#>       wt  qsec wt__qsec    am   mpg    vs gear 
+#>    <dbl> <dbl>    <dbl> <dbl> <dbl> <dbl> <fct>
+#>  1  2.62  16.5     43.1     1  21       0 4    
+#>  2  2.88  17.0     48.9     1  21       0 4    
+#>  3  2.32  18.6     43.2     1  22.8     1 4    
+#>  4  3.22  19.4     62.5     0  21.4     1 3    
+#>  5  3.44  17.0     58.5     0  18.7     0 3    
+#>  6  3.46  20.2     70.0     0  18.1     1 3    
+#>  7  3.57  15.8     56.5     0  14.3     0 3    
+#>  8  3.19  20       63.8     0  24.4     1 4    
+#>  9  3.15  22.9     72.1     0  22.8     1 4    
+#> 10  3.44  18.3     63.0     0  19.2     1 4    
+#> # … with 22 more rows
+jlmer_model_matrix(mpg ~ wt * qsec + (wt * qsec || am), mtcars_sm, drop_terms = "wt")
 #> $formula
-#> mpg ~ 1 + wt + qsec + (1 + wt | vs)
-#> <environment: 0x00000248eb8b2d48>
+#> mpg ~ 1 + qsec + wt__qsec + (1 + qsec + wt__qsec || am)
+#> <environment: 0x0000013d9a4d1da8>
 #> 
 #> $julia_formula
-#> mpg ~ 1 + wt + qsec + (1 + wt | vs)
-#> <environment: 0x00000248eb8b2d48>
+#> mpg ~ 1 + qsec + wt__qsec + zerocorr(1 + qsec + wt__qsec | am)
+#> attr(,"groupings")
+#> list()
+#> <environment: 0x0000013d9a4d1da8>
 #> 
 #> $data
-#> # A tibble: 6 × 11
-#>     mpg    wt  qsec vs      cyl  disp    hp  drat    am  gear  carb
-#>   <dbl> <dbl> <dbl> <fct> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-#> 1  21    2.62  16.5 0         6   160   110  3.9      1     4     4
-#> 2  21    2.88  17.0 0         6   160   110  3.9      1     4     4
-#> 3  22.8  2.32  18.6 1         4   108    93  3.85     1     4     1
-#> 4  21.4  3.22  19.4 1         6   258   110  3.08     0     3     1
-#> 5  18.7  3.44  17.0 0         8   360   175  3.15     0     3     2
-#> 6  18.1  3.46  20.2 1         6   225   105  2.76     0     3     1
+#> # A tibble: 32 × 7
+#>       wt  qsec wt__qsec    am   mpg    vs gear 
+#>    <dbl> <dbl>    <dbl> <dbl> <dbl> <dbl> <fct>
+#>  1  2.62  16.5     43.1     1  21       0 4    
+#>  2  2.88  17.0     48.9     1  21       0 4    
+#>  3  2.32  18.6     43.2     1  22.8     1 4    
+#>  4  3.22  19.4     62.5     0  21.4     1 3    
+#>  5  3.44  17.0     58.5     0  18.7     0 3    
+#>  6  3.46  20.2     70.0     0  18.1     1 3    
+#>  7  3.57  15.8     56.5     0  14.3     0 3    
+#>  8  3.19  20       63.8     0  24.4     1 4    
+#>  9  3.15  22.9     72.1     0  22.8     1 4    
+#> 10  3.44  18.3     63.0     0  19.2     1 4    
+#> # … with 22 more rows
+jlmer_model_matrix(mpg ~ gear * qsec + (gear + qsec | am), mtcars_sm)
+#> $formula
+#> mpg ~ 1 + gear4 + gear5 + qsec + gear4__qsec + gear5__qsec + 
+#>     (1 + gear4 + gear5 + qsec | am)
+#> <environment: 0x0000013d9a4d1da8>
+#> 
+#> $julia_formula
+#> mpg ~ 1 + gear4 + gear5 + qsec + gear4__qsec + gear5__qsec + 
+#>     (1 + gear4 + gear5 + qsec | am)
+#> attr(,"groupings")
+#> attr(,"groupings")[[1]]
+#> [1] "gear4" "gear5"
+#> 
+#> attr(,"groupings")[[2]]
+#> [1] "gear4__qsec" "gear5__qsec"
+#> 
+#> <environment: 0x0000013d9a4d1da8>
+#> 
+#> $data
+#> # A tibble: 32 × 10
+#>    gear4 gear5  qsec gear4__qsec gear5__qsec    am   mpg    wt    vs gear 
+#>    <dbl> <dbl> <dbl>       <dbl>       <dbl> <dbl> <dbl> <dbl> <dbl> <fct>
+#>  1     1     0  16.5        16.5           0     1  21    2.62     0 4    
+#>  2     1     0  17.0        17.0           0     1  21    2.88     0 4    
+#>  3     1     0  18.6        18.6           0     1  22.8  2.32     1 4    
+#>  4     0     0  19.4         0             0     0  21.4  3.22     1 3    
+#>  5     0     0  17.0         0             0     0  18.7  3.44     0 3    
+#>  6     0     0  20.2         0             0     0  18.1  3.46     1 3    
+#>  7     0     0  15.8         0             0     0  14.3  3.57     0 3    
+#>  8     1     0  20          20             0     0  24.4  3.19     1 4    
+#>  9     1     0  22.9        22.9           0     0  22.8  3.15     1 4    
+#> 10     1     0  18.3        18.3           0     0  19.2  3.44     1 4    
+#> # … with 22 more rows
 ```

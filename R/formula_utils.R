@@ -2,6 +2,7 @@
 #'
 #' @param fm Formula
 #' @param df Dataframe
+#' @param drop_terms A character vector of individual terms to drop from the reformulated model formula.
 #'
 #' @return A list of R formula for lme4, Julia formula for MixedModels, and the model matrix as a data frame
 #'
@@ -73,7 +74,7 @@ jlmer_model_matrix <- function(fm, df, drop_terms = NULL) {
     fe_expanded <- terms(fe, keep.order = TRUE)
     fe_terms <- attr(fe_expanded, "term.labels")
     fe_terms_renamed <- unlist(renamed_terms_dict[fe_terms], use.names = FALSE)
-    if (!is.null(drop_terms)) fe_terms_renamed[!fe_terms_renamed %in% drop_terms]
+    if (!is.null(drop_terms)) fe_terms_renamed <- fe_terms_renamed[!fe_terms_renamed %in% drop_terms]
     fe_terms_renamed <- c(as.integer(has_intercept), fe_terms_renamed)
     fe_fm <- reformulate(fe_terms_renamed)[[2]]
     lfm <- lme4::lFormula(fm, df)
@@ -134,7 +135,7 @@ jlmer_model_matrix <- function(fm, df, drop_terms = NULL) {
 
   list(
     formula = r_fm,
-    jl_formula = jl_fm,
+    julia_formula = jl_fm,
     data = model_matrix_df
   )
 }
