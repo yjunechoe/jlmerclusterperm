@@ -8,6 +8,11 @@
 #'
 #' @export
 jlmer_model_matrix <- function(fm, df, drop_terms = NULL) {
+
+  # TODO: look into model.matrix(lme4::subbars(fm), df)
+  # TODO: Do complete.cases() over response and predictor cols
+  # TODO: Deal with categorical variables separately?
+
   fm_env <- attr(fm, ".Environment")
   response <- fm[[2]]
   bars <- lme4::findbars(fm)
@@ -24,13 +29,7 @@ jlmer_model_matrix <- function(fm, df, drop_terms = NULL) {
   if (!is.null(drop_terms)) {
     model_matrix <- model_matrix[, !fe %in% drop_terms, drop = FALSE]
   }
-  reconstruct_fm <- function(fm_terms) {
-    has_intercept <- "(Intercept)" %in% fm_terms
-    if (has_intercept) fm_terms <- fm_terms[fm_terms != "(Intercept)"]
-    if (!is.null(drop_terms)) fm_terms <- fm_terms[!fm_terms %in% drop_terms]
-    stats::reformulate(c(as.double(has_intercept), fm_terms))[[2]]
-  }
-  fe_fm <- reconstruct_fm(fe)
+  fe_fm <- lme4::nobars(fm)
   model_matrix_df <- as.data.frame(model_matrix)[setdiff(colnames(model_matrix), "(Intercept)")]
 
   if (has_re) {
