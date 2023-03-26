@@ -1,21 +1,27 @@
 #' Fit Julia mixed models to each time point of a time series data
 #'
 #' @param nsim Number of simulations description
-#' @param participant_col Column representing participants in `data`
-#' @param participant_col Column representing trials/items in `data`
-#' @inheritParams largest_clusters
 #' @inheritParams jlmer_by_time
 #'
-#' @seealso jlmer_model_matrix
+#' @seealso prep_jlmer_data
 #'
 #' @return A list of Predictor x Time matrix of z-values
 #' @export
-clusterpermute <- function(julia_formula, data, time, family = c("gaussian", "binomial"),
-                           nsim = 100L, threshold = 1.5, participant_col = "", trial_col = "",
-                           binned = TRUE, ...) {
+clusterpermute <- function(jlmer_data, family = c("gaussian", "binomial"),
+                           nsim = 100L, ...) {
+
+  is_mem <- jlmer_data$meta$is_mem
+  participant_col <- jlmer_data$meta$subject
+  if (is.null(jlmer_data$meta$item)) {
+    trial_col <- ""
+  } else {
+    trials <- interaction(jlmer_data$data[unlist(jlmer_data$meta[c("subject", "item")])], drop = TRUE)
+    jlmer_data$data$JLMER_TRIAL_COL <- as.integer(trials)
+    trial_col <- "JLMER_TRIAL_COL"
+  }
 
   family <- match.arg(family)
-  args <- prep_for_jlmer(julia_formula, data, time, family, ...)
+  args <- prep_for_jlmer(jlmer_data$formula$jl, jlmer_data$data, jlmer_data$meta$time, family, ...)
   nsim <- as.integer(nsim)
 
   opts <- list(...)
@@ -24,13 +30,17 @@ clusterpermute <- function(julia_formula, data, time, family = c("gaussian", "bi
     opts <- modifyList(list(fast = TRUE), opts)
   }
 
-  is_mem <- !is.null(lme4::findbars(julia_formula))
-
   out <- JuliaConnectoR::juliaGet(do.call(
     .jlmerclusterperm$clusterpermute,
-    c(args, nsim, threshold, participant_col, trial_col, binned, is_mem, opts)
+    c(args, nsim, participant_col, trial_col, is_mem, opts)
   ))
 
-  out
+  dimnames(out$z_array) <- list(
+    Sim = sprintf(paste0("%0", floor(log10(nsim)), "d"), 1:nsim),
+    Time = sort(unique(jlmer_data$data[[jlmer_data$meta$time]])),
+    Predictor = unlist(out$predictors)
+  )
+
+  out$z_array
 
 }

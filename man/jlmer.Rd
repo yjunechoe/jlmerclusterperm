@@ -4,12 +4,10 @@
 \alias{jlmer}
 \title{Fit a Julia mixed model}
 \usage{
-jlmer(julia_formula, data, family = c("gaussian", "binomial"), ...)
+jlmer(jlmer_data, family = c("gaussian", "binomial"), ...)
 }
 \arguments{
-\item{julia_formula}{A formula in MixedModels.jl syntax}
-
-\item{data}{DataFrame}
+\item{jlmer_data}{Data prepped for jlmer from \code{prep_for_jlmer()}}
 
 \item{family}{A GLM family. Currently supports "gaussian" and "binomial".}
 
@@ -19,5 +17,5 @@ jlmer(julia_formula, data, family = c("gaussian", "binomial"), ...)
 Fit a Julia mixed model
 }
 \seealso{
-jlmer_model_matrix
+prep_jlmer_data
 }

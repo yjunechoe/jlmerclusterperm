@@ -1,17 +1,16 @@
 #' Fit a Julia mixed model
 #'
-#' @param julia_formula A formula in MixedModels.jl syntax
-#' @param data DataFrame
+#' @param jlmer_data Data prepped for jlmer from `prep_for_jlmer()`
 #' @param family A GLM family. Currently supports "gaussian" and "binomial".
 #' @param ... Optional arguments to fit (`fast`, `nAGQ`, etc.)
 #'
-#' @seealso jlmer_model_matrix
+#' @seealso prep_jlmer_data
 #'
 #' @export
-jlmer <- function(julia_formula, data, family = c("gaussian", "binomial"), ...) {
+jlmer <- function(jlmer_data, family = c("gaussian", "binomial"), ...) {
 
   family <- match.arg(family)
-  args <- prep_for_jlmer(julia_formula, data, time = NULL, family, ...)[-3]
+  args <- prep_for_jlmer(jlmer_data$formula$jl, jlmer_data$data, time = NULL, family, ...)[-3]
 
   out <- do.call(.jlmerclusterperm$jlmer, c(args, ...))
   out
@@ -22,16 +21,16 @@ jlmer <- function(julia_formula, data, family = c("gaussian", "binomial"), ...) 
 #'
 #' @param formula Model formula in lme4 syntax
 #' @param data Dataframe
-#' @param reformulate_opts Other options passed to `jlmer_model_matrix()`
+#' @param prep_jlmer_opts Other options passed to `prep_jlmer_data()`
 #' @inheritParams jlmer
 #'
-#' @seealso jlmer_model_matrix
+#' @seealso prep_jlmer_data
 #'
 #' @export
-to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), reformulate_opts = list(), ...) {
+to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), prep_jlmer_opts = list(), ...) {
 
-  mm <- do.call(jlmer_model_matrix, modifyList(reformulate_opts, list(fm = formula, df = data)))
-  jlmer(julia_formula = mm$julia_formula, data = mm$data, family, ...)
+  jlmer_data <- do.call(prep_jlmer_data, modifyList(prep_jlmer_opts, list(fm = formula, df = data)))
+  jlmer(jlmer_data, family, ...)
 
 }
 
@@ -41,14 +40,14 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), reformul
 #' @inheritParams jlmer
 #' @param ... Optional arguments to fit. Defaults to `fast = TRUE` and `progress = FALSE`.
 #'
-#' @seealso jlmer_model_matrix
+#' @seealso prep_jlmer_data
 #'
 #' @return A Predictor x Time matrix of z-values
 #' @export
-jlmer_by_time <- function(julia_formula, data, time, family = c("gaussian", "binomial"), ...) {
+jlmer_by_time <- function(jlmer_data, family = c("gaussian", "binomial"), ...) {
 
   family <- match.arg(family)
-  args <- prep_for_jlmer(julia_formula, data, time, family, ...)
+  args <- prep_for_jlmer(jlmer_data$formula$jl, jlmer_data$data, time = jlmer_data$meta$time, family, ...)
 
   opts <- list(...)
   opts <- modifyList(list(progress = FALSE), opts)
@@ -56,12 +55,12 @@ jlmer_by_time <- function(julia_formula, data, time, family = c("gaussian", "bin
     opts <- modifyList(list(fast = TRUE), opts)
   }
 
-  is_mem <- !is.null(lme4::findbars(julia_formula))
+  is_mem <- jlmer_data$meta$is_mem
 
   out <- JuliaConnectoR::juliaGet(do.call(.jlmerclusterperm$jlmer_by_time, c(args, is_mem, opts)))
 
-  out$Predictors <- replace(out$Predictors, out$Predictors == "1", "(Intercept)")
   dimnames(out$z_matrix) <- out[c("Predictors", "Time")]
+  out$z_matrix <- out$z_matrix[out$Predictors != "1", , drop = FALSE]
 
   out$z_matrix
 

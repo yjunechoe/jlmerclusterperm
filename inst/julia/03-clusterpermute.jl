@@ -1,4 +1,4 @@
-function clusterpermute(formula, data, time, family, contrasts, nsim, threshold, participant_col, trial_col, binned, is_mem; opts...)
+function clusterpermute(formula, data, time, family, contrasts, nsim, participant_col, trial_col, is_mem; opts...)
 
   response_var = formula.lhs.sym
   times = sort(unique(data[!,time]))
@@ -54,15 +54,10 @@ function clusterpermute(formula, data, time, family, contrasts, nsim, threshold,
 
   end
 
-  res = res[:, :, findall(!=("1"), fixed)]
-  replace!(x -> (<(threshold) ∘ abs)(x) ? 0 : x, res)
-  time_is_point = (family isa Bernoulli) || !binned
-
   predictors = Symbol.(filter(!=("1"), fixed))
-  converges = map(p -> all.(!isnan, eachrow(res[:,:,p])), 1:length(predictors))
+  res = res[:, :, findall(!=("1"), fixed)]
 
-  out = map(p -> find_largest_cluster.(eachrow(res[converges[p], :, p]), Ref(true)), 1:length(predictors))
-  NamedTuple{Tuple(predictors)}(map(x -> Float64[y.sum_z for y in x], out))
+  (z_array = res, predictors = predictors)
 
 end
 

@@ -1,17 +1,16 @@
-#' Construct a model matrix and expand model formula suitable for lme4 and MixedModels
+#' Construct a model matrix and expand model formula suitable for MixedModels and lme4
 #'
 #' @param fm Formula
 #' @param df Dataframe
-#' @param drop_terms A character vector of individual terms to drop from the reformulated model formula.
+#' @param subject Column for subjects in the data
+#' @param item Column for items in the data
+#' @param time Column for time in the data
+#' @param drop_terms Terms to drop from the new model formula
 #'
 #' @return A list of R formula for lme4, Julia formula for MixedModels, and the model matrix as a data frame
 #'
 #' @export
-jlmer_model_matrix <- function(fm, df, drop_terms = NULL) {
-
-  # TODO: look into model.matrix(lme4::subbars(fm), df)
-  # TODO: Do complete.cases() over response and predictor cols
-  # TODO: Deal with categorical variables separately?
+prep_jlmer_data <- function(fm, df, subject = NULL, item = NULL, time = NULL, drop_terms = NULL) {
 
   fm_env <- attr(fm, ".Environment")
   fm_response <- deparse1(fm[[2]])
@@ -24,9 +23,19 @@ jlmer_model_matrix <- function(fm, df, drop_terms = NULL) {
     df_subset <- df_subset[!na_rows,]
     warning("Dropping ", na_rows, "row(s) with missing values.")
   }
-  model_matrix <- model.matrix(fm_terms, df_subset)
 
-  terms_compact <- attr(fm_terms, "term.labels")
+  re <- lme4::findbars(fm)
+  has_re <- !is.null(re)
+  if (has_re) {
+    lfm <- lme4::lFormula(fm, df)
+    fe_term_labels <- attr(terms(lme4::nobars(fm)), "term.labels")
+    model_matrix <- lfm$X
+  } else {
+    fe_term_labels <- attr(fm_terms, "term.labels")
+    model_matrix <- model.matrix(fm_terms, df_subset)
+  }
+
+  terms_compact <- fe_term_labels
   terms_expanded <- colnames(model_matrix)
   terms_grouping <- setNames(attr(model_matrix, "assign"), colnames(model_matrix))
   has_intercept <- 0 %in% terms_grouping
@@ -60,9 +69,8 @@ jlmer_model_matrix <- function(fm, df, drop_terms = NULL) {
   names(renamed_terms_dict) <- names(terms_dict)
   colnames(model_matrix) <- gsub(":", "__", colnames(model_matrix), fixed = TRUE)
   model_matrix_df <- as.data.frame(model_matrix)[setdiff(colnames(model_matrix), "(Intercept)")]
+  model_matrix_df <- cbind(df_subset[, fm_response, drop = FALSE], model_matrix_df)
 
-  re <- lme4::findbars(fm)
-  has_re <- !is.null(re)
   if (!has_re) {
     fe_terms_renamed <- unlist(renamed_terms_dict, recursive = TRUE, use.names = FALSE)
     if (!is.null(drop_terms)) fe_terms_renamed[!fe_terms_renamed %in% drop_terms]
@@ -73,17 +81,13 @@ jlmer_model_matrix <- function(fm, df, drop_terms = NULL) {
     fe <- lme4::nobars(fm)
     fe_expanded <- terms(fe, keep.order = TRUE)
     fe_terms <- attr(fe_expanded, "term.labels")
-    fe_terms_renamed <- unlist(renamed_terms_dict[fe_terms], use.names = FALSE)
+    renamed_fe_terms_dict <- renamed_terms_dict[fe_terms]
+    fe_terms_renamed <- unlist(renamed_fe_terms_dict, use.names = FALSE)
     if (!is.null(drop_terms)) fe_terms_renamed <- fe_terms_renamed[!fe_terms_renamed %in% drop_terms]
     fe_terms_renamed <- c(as.integer(has_intercept), fe_terms_renamed)
     fe_fm <- reformulate(fe_terms_renamed)[[2]]
-    lfm <- lme4::lFormula(fm, df)
     re_terms_raw <- lapply(lfm$reTrms$cnms, function(x) {
-      if ("(Intercept)" %in% x) {
-        replace(x, x == "(Intercept)", 1)
-      } else {
-        c(0, x)
-      }
+      if ("(Intercept)" %in% x) replace(x, x == "(Intercept)", 1) else c(0, x)
     })
     re_terms <- with(stack(re_terms_raw), split(values, ind))
     re_terms_renamed <- lapply(re_terms, function(x) {
@@ -103,7 +107,6 @@ jlmer_model_matrix <- function(fm, df, drop_terms = NULL) {
       lhs <- reformulate(lhs)[[2]]
       call(bar, lhs, as.symbol(rhs))
     })
-
     re_fm_r <- lapply(re_groups, function(x) call("(", x))
     re_fm_jl <- lapply(re_groups, function(x) {
       if (identical(x[[1]], quote(`|`))) {
@@ -119,25 +122,32 @@ jlmer_model_matrix <- function(fm, df, drop_terms = NULL) {
     }
     r_fm <- combine_fm(re_fm_r)
     jl_fm <- combine_fm(re_fm_jl)
+    model_matrix_df <- cbind(model_matrix_df, df[!na_rows, names(re_terms), drop = FALSE])
   }
+
+  cols_keep <- c(subject, item, time)
 
   model_matrix_df <- cbind(
     model_matrix_df,
-    df[!na_rows, setdiff(colnames(df), colnames(model_matrix_df)), drop = FALSE]
+    df[!na_rows, setdiff(cols_keep, colnames(model_matrix_df)), drop = FALSE]
   )
 
   if ("tibble" %in% rownames(installed.packages())) {
     model_matrix_df <- asNamespace("tibble")$as_tibble(model_matrix_df)
   }
 
-  groupings <- unname(renamed_terms_dict[lengths(renamed_terms_dict) > 1])
-  jl_fm <- structure(jl_fm, class = c("jl_formula", class(jl_fm)), groupings = groupings)
-
-  list(
-    formula = r_fm,
-    julia_formula = jl_fm,
-    data = model_matrix_df
+  out <- list(
+    formula = list(r = r_fm, jl = jl_fm),
+    data = model_matrix_df,
+    meta = list(
+      term_groups = unname(renamed_terms_dict),
+      subject = subject, item = item, time = time,
+      is_mem = has_re
+    )
   )
+
+  structure(out, class = c("jlmer_data", 'list'))
+
 }
 
 standardize_interaction_term <- function(x) {
@@ -149,6 +159,7 @@ split_fct_term <- function(x, y) {
 }
 
 print.jl_formula <- function(x, ...) {
-  attributes(x) <- NULL
-  print(x)
+  .x <- x
+  attributes(.x) <- NULL
+  print(.x)
 }

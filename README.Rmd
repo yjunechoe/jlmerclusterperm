@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "70%"
+  out.width = "100%"
 )
 ```
 
@@ -23,18 +23,18 @@ Julia [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) implementat
 
 ## Installation
 
-You can install the development version of jlmerclusterperm from [GitHub](https://github.com/) with:
+You can install the development version of jlmerclusterperm from [GitHub](https://github.com/yjunechoe/jlmerclusterperm) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("yjunechoe/jlmerclusterperm")
+# install.packages("remotes")
+remotes::install_github("yjunechoe/jlmerclusterperm")
 ```
 
 ## Setup
 
 ```{r example}
-library(jlmerclusterperm)
-system.time({jlmerclusterperm_setup()})
+# library(jlmerclusterperm)
+# system.time({jlmerclusterperm_setup()})
 ```
 
 ## Basic example
@@ -51,71 +51,4 @@ chickweights_m <- tapply(ChickWeight$weight, ChickWeight[c("Time", "Diet")], mea
 matplot(chickweights_m, type = "b", lwd = 3)
 ```
 
-Run Julia mixed model using lme4 syntax, using the convenience form `to_jlmer()`:
-
-```{r lmer-comparison}
-library(lme4)
-summary(lmer(fm, ChickWeight))
-
-to_jlmer(fm, ChickWeight)
-```
-
-Run Julia mixed model directly in `jlmer()` after explicitly reformulating with `jlmer_model_matrix()`:
-
-```{r jlmer-mm-fit}
-mm <- jlmer_model_matrix(fm, ChickWeight)
-mm$julia_formula
-mm$data
-
-jlmer(mm$julia_formula, mm$data)
-```
-
-Fit jlmer at each timepoint and get a z-matrix back with `jlmer_by_time`:
-
-```{r ex-jlmer-by-time}
-by_time <- jlmer_by_time(mm$julia_formula, mm$data, time = "Time")
-by_time
-```
-
-Find largest cluster in the observed data:
-
-```{r}
-empirical_clusters <- largest_clusters(by_time, threshold = 1.5)
-empirical_clusters
-```
-
-We can think of the data as having a within-participant design, since each chick is assigned one diet. `clusterpermute()` conducts a cluster-based permutation test by randomly shuffling the assignment of diet between chicks to generate a null distribution of the largest sum-z cluster by predictor. 
-
-```{r}
-system.time({
-  null_dist_clusters <- clusterpermute(
-    julia_formula = mm$julia_formula, data = mm$data, time = "Time",
-    nsim = 1000, participant_col = "Chick", threshold = 1.5,
-    binned = FALSE # For non-aggregated data
-  )
-})
-```
-
-Test empirical clusters against the simulated null:
-
-```{r}
-sapply(c("Diet2", "Diet3", "Diet4"), function(predictor) {
-  empirical <- empirical_clusters[[predictor]]$sum_z
-  null_dist <- null_dist_clusters[[predictor]]
-  mean(abs(null_dist) > empirical)
-})
-```
-
-## Formula utilities
-
-```{r}
-mtcars_sm <- mtcars[, c(1, 6:10)]
-mtcars_sm$gear <- as.factor(mtcars_sm$gear)
-head(mtcars_sm)
-
-jlmer_model_matrix(mpg ~ wt * qsec, mtcars_sm)
-jlmer_model_matrix(mpg ~ wt * qsec + (wt * qsec | am), mtcars_sm)
-jlmer_model_matrix(mpg ~ wt * qsec + (wt * qsec || am), mtcars_sm)
-jlmer_model_matrix(mpg ~ wt * qsec + (wt * qsec || am), mtcars_sm, drop_terms = "wt")
-jlmer_model_matrix(mpg ~ gear * qsec + (gear + qsec | am), mtcars_sm)
-```
+WIP

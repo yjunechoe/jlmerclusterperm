@@ -1,4 +1,4 @@
-#' Calculate largest clusters by predictor from a z-matrix
+#' Detect largest clusters by predictor from a z-matrix
 #'
 #' @param z_matrix A predictor-by-time matrix of z-values
 #' @param threshold z-value threshold. Defaults to `1.5`.
@@ -7,7 +7,7 @@
 #' @seealso jlmer_by_time
 #'
 #' @export
-largest_clusters <- function(z_matrix, threshold = 1.5, binned = TRUE) {
+detect_empirical_clusters <- function(z_matrix, threshold = 1.5, binned = TRUE) {
   z_matrix[abs(z_matrix) < threshold] <- 0
   predictors <- rownames(z_matrix)
   clusters <- JuliaConnectoR::juliaGet(JuliaConnectoR::juliaLet(
@@ -45,4 +45,10 @@ largest_clusters <- function(z_matrix, threshold = 1.5, binned = TRUE) {
   # })
   # names(all_clusters) <- rownames(z_matrix)
   # all_clusters
+}
+
+calculate_null_dist <- function(z_array, threshold = 1.5, binned = TRUE) {
+  z_list <- apply(z_array, 3, function(x) x[!is.nan(rowMeans(x)),])
+  null_dists <- lapply(z_list, function(x) unname(sapply(detect_empirical_clusters(x, threshold, binned), `[[`, "sum_z")))
+  null_dists
 }

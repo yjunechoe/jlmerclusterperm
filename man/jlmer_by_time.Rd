@@ -4,24 +4,16 @@
 \alias{jlmer_by_time}
 \title{Fit Julia mixed models to each time point of a time series data}
 \usage{
-jlmer_by_time(
-  julia_formula,
-  data,
-  time,
-  family = c("gaussian", "binomial"),
-  ...
-)
+jlmer_by_time(jlmer_data, family = c("gaussian", "binomial"), ...)
 }
 \arguments{
-\item{julia_formula}{A formula in MixedModels.jl syntax}
-
-\item{data}{DataFrame}
-
-\item{time}{Column representing time in \code{data}}
+\item{jlmer_data}{Data prepped for jlmer from \code{prep_for_jlmer()}}
 
 \item{family}{A GLM family. Currently supports "gaussian" and "binomial".}
 
 \item{...}{Optional arguments to fit. Defaults to \code{fast = TRUE} and \code{progress = FALSE}.}
+
+\item{time}{Column representing time in \code{data}}
 }
 \value{
 A Predictor x Time matrix of z-values
@@ -30,5 +22,5 @@ A Predictor x Time matrix of z-values
 Fit Julia mixed models to each time point of a time series data
 }
 \seealso{
-jlmer_model_matrix
+prep_jlmer_data
 }
