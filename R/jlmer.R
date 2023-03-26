@@ -29,14 +29,13 @@ jlmer <- function(jlmer_data, family = c("gaussian", "binomial"), ...) {
 #' @export
 to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), prep_jlmer_opts = list(), ...) {
 
-  jlmer_data <- do.call(prep_jlmer_data, modifyList(prep_jlmer_opts, list(fm = formula, df = data)))
+  jlmer_data <- do.call(prep_jlmer_data, utils::modifyList(prep_jlmer_opts, list(fm = formula, df = data)))
   jlmer(jlmer_data, family, ...)
 
 }
 
 #' Fit Julia mixed models to each time point of a time series data
 #'
-#' @param time Column representing time in `data`
 #' @inheritParams jlmer
 #' @param ... Optional arguments to fit. Defaults to `fast = TRUE` and `progress = FALSE`.
 #'
@@ -50,9 +49,9 @@ jlmer_by_time <- function(jlmer_data, family = c("gaussian", "binomial"), ...) {
   args <- prep_for_jlmer(jlmer_data$formula$jl, jlmer_data$data, time = jlmer_data$meta$time, family, ...)
 
   opts <- list(...)
-  opts <- modifyList(list(progress = FALSE), opts)
+  opts <- utils::modifyList(list(progress = FALSE), opts)
   if (family == "binomial") {
-    opts <- modifyList(list(fast = TRUE), opts)
+    opts <- utils::modifyList(list(fast = TRUE), opts)
   }
 
   is_mem <- jlmer_data$meta$is_mem

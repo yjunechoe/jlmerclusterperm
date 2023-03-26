@@ -14,11 +14,11 @@ prep_jlmer_data <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
 
   fm_env <- attr(fm, ".Environment")
   fm_response <- deparse1(fm[[2]])
-  fm_terms <- terms.formula(lme4::subbars(fm), keep.order = TRUE)
-  attr(fm_terms, "intercept") <- as.logical(attr(terms(lme4::nobars(fm)), "intercept"))
+  fm_terms <- stats::terms(lme4::subbars(fm), keep.order = TRUE)
+  attr(fm_terms, "intercept") <- as.logical(attr(stats::terms(lme4::nobars(fm)), "intercept"))
   fm_cols <- vapply(as.list(attr(fm_terms, "variables")[-1]), deparse1, character(1))
   df_subset <- df[,fm_cols]
-  na_rows <- !complete.cases(df_subset)
+  na_rows <- !stats::complete.cases(df_subset)
   if (any(na_rows)) {
     df_subset <- df_subset[!na_rows,]
     warning("Dropping ", na_rows, "row(s) with missing values.")
@@ -28,16 +28,16 @@ prep_jlmer_data <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
   has_re <- !is.null(re)
   if (has_re) {
     lfm <- lme4::lFormula(fm, df)
-    fe_term_labels <- attr(terms(lme4::nobars(fm)), "term.labels")
+    fe_term_labels <- attr(stats::terms(lme4::nobars(fm)), "term.labels")
     model_matrix <- lfm$X
   } else {
     fe_term_labels <- attr(fm_terms, "term.labels")
-    model_matrix <- model.matrix(fm_terms, df_subset)
+    model_matrix <- stats::model.matrix(fm_terms, df_subset)
   }
 
   terms_compact <- fe_term_labels
   terms_expanded <- colnames(model_matrix)
-  terms_grouping <- setNames(attr(model_matrix, "assign"), colnames(model_matrix))
+  terms_grouping <- stats::setNames(attr(model_matrix, "assign"), colnames(model_matrix))
   has_intercept <- 0 %in% terms_grouping
   terms_grouping <- terms_grouping[terms_grouping != 0]
   terms_dict <- split(names(terms_grouping), terms_grouping)
@@ -75,21 +75,21 @@ prep_jlmer_data <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
     fe_terms_renamed <- unlist(renamed_terms_dict, recursive = TRUE, use.names = FALSE)
     if (!is.null(drop_terms)) fe_terms_renamed[!fe_terms_renamed %in% drop_terms]
     fe_terms_renamed <- c(as.integer(has_intercept), fe_terms_renamed)
-    fe_fm <- reformulate(fe_terms_renamed, fm_response, env = fm_env)
+    fe_fm <- stats::reformulate(fe_terms_renamed, fm_response, env = fm_env)
     r_fm <- jl_fm <- fe_fm
   } else {
     fe <- lme4::nobars(fm)
-    fe_expanded <- terms(fe, keep.order = TRUE)
+    fe_expanded <- stats::terms(fe, keep.order = TRUE)
     fe_terms <- attr(fe_expanded, "term.labels")
     renamed_fe_terms_dict <- renamed_terms_dict[fe_terms]
     fe_terms_renamed <- unlist(renamed_fe_terms_dict, use.names = FALSE)
     if (!is.null(drop_terms)) fe_terms_renamed <- fe_terms_renamed[!fe_terms_renamed %in% drop_terms]
     fe_terms_renamed <- c(as.integer(has_intercept), fe_terms_renamed)
-    fe_fm <- reformulate(fe_terms_renamed)[[2]]
+    fe_fm <- stats::reformulate(fe_terms_renamed)[[2]]
     re_terms_raw <- lapply(lfm$reTrms$cnms, function(x) {
       if ("(Intercept)" %in% x) replace(x, x == "(Intercept)", 1) else c(0, x)
     })
-    re_terms <- with(stack(re_terms_raw), split(values, ind))
+    re_terms <- with(utils::stack(re_terms_raw), split(values, ind))
     re_terms_renamed <- lapply(re_terms, function(x) {
       renamed <- standardize_interaction_term(x)
       renamed <- renamed[renamed %in% c("0", "1", fe_terms_renamed)]
@@ -104,7 +104,7 @@ prep_jlmer_data <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
       bar <- re_bars[[rhs]]
       lhs <- re_terms_renamed[[i]]
       lhs <- gsub(":", "__", lhs, fixed = TRUE)
-      lhs <- reformulate(lhs)[[2]]
+      lhs <- stats::reformulate(lhs)[[2]]
       call(bar, lhs, as.symbol(rhs))
     })
     re_fm_r <- lapply(re_groups, function(x) call("(", x))
@@ -118,7 +118,7 @@ prep_jlmer_data <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
     })
     combine_fm <- function(re_str) {
       expanded <- Reduce(function(x, y) call("+", x, y), c(fe_fm, re_str))
-      as.formula(call("~", as.symbol(fm_response), expanded), fm_env)
+      stats::as.formula(call("~", as.symbol(fm_response), expanded), fm_env)
     }
     r_fm <- combine_fm(re_fm_r)
     jl_fm <- combine_fm(re_fm_jl)
@@ -132,7 +132,7 @@ prep_jlmer_data <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
     df[!na_rows, setdiff(cols_keep, colnames(model_matrix_df)), drop = FALSE]
   )
 
-  if ("tibble" %in% rownames(installed.packages())) {
+  if ("tibble" %in% rownames(utils::installed.packages())) {
     model_matrix_df <- asNamespace("tibble")$as_tibble(model_matrix_df)
   }
 

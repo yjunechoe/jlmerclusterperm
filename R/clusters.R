@@ -48,7 +48,7 @@ detect_empirical_clusters <- function(z_matrix, threshold = 1.5, binned = TRUE) 
 }
 
 calculate_null_dist <- function(z_array, threshold = 1.5, binned = TRUE) {
-  z_list <- apply(z_array, 3, function(x) x[!is.nan(rowMeans(x)),])
+  z_list <- apply(z_array, 3, function(x) x[!is.nan(rowMeans(x)),], simplify = FALSE)
   null_dists <- lapply(z_list, function(x) unname(sapply(detect_empirical_clusters(x, threshold, binned), `[[`, "sum_z")))
   null_dists
 }

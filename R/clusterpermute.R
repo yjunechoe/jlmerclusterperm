@@ -25,9 +25,9 @@ clusterpermute <- function(jlmer_data, family = c("gaussian", "binomial"),
   nsim <- as.integer(nsim)
 
   opts <- list(...)
-  opts <- modifyList(list(progress = FALSE), opts)
+  opts <- utils::modifyList(list(progress = FALSE), opts)
   if (family == "binomial") {
-    opts <- modifyList(list(fast = TRUE), opts)
+    opts <- utils::modifyList(list(fast = TRUE), opts)
   }
 
   out <- JuliaConnectoR::juliaGet(do.call(
