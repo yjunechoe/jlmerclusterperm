@@ -12,5 +12,7 @@ RoxygenNote: 7.2.3
 Imports: 
     utils,
     stats,
+    parallel,
     JuliaConnectoR,
-    lme4
+    lme4,
+    cli

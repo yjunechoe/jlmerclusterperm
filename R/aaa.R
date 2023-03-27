@@ -16,7 +16,7 @@ jlmerclusterperm_setup <- function(...) {
   if (Sys.getenv("JULIACONNECTOR_SERVER") != "") JuliaConnectoR::stopJulia()
   nthreads <- getOption("jlmerclusterperm.threads") %||%
     Sys.getenv("JULIA_NUM_THREADS") %||%
-    (parallel::detectCores() - 1)
+    (max(8, parallel::detectCores()) - 1)
   .jlmerclusterperm$nthreads <- nthreads
   if (nthreads > 1) {
     message("Starting Julia with ", nthreads, " workers ...")

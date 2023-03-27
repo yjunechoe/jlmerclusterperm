@@ -64,7 +64,8 @@ prep_jlmer_data <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
     } else {
       renamed <- x
     }
-    unname(renamed)
+    out <- unname(renamed)
+    out[!out %in% drop_terms]
   })
   names(renamed_terms_dict) <- names(terms_dict)
   colnames(model_matrix) <- gsub(":", "__", colnames(model_matrix), fixed = TRUE)
@@ -86,21 +87,17 @@ prep_jlmer_data <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
     if (!is.null(drop_terms)) fe_terms_renamed <- fe_terms_renamed[!fe_terms_renamed %in% drop_terms]
     fe_terms_renamed <- c(as.integer(has_intercept), fe_terms_renamed)
     fe_fm <- stats::reformulate(fe_terms_renamed)[[2]]
-    re_terms_raw <- lapply(lfm$reTrms$cnms, function(x) {
-      if ("(Intercept)" %in% x) replace(x, x == "(Intercept)", 1) else c(0, x)
-    })
-    re_terms <- with(utils::stack(re_terms_raw), split(values, ind))
-    re_terms_renamed <- lapply(re_terms, function(x) {
-      renamed <- standardize_interaction_term(x)
-      renamed <- renamed[renamed %in% c("0", "1", fe_terms_renamed)]
+    re_terms_renamed <- lapply(re, function(x) {
+      terms <- terms.formula(call("~", x[[2]]))
+      renamed <- unlist(renamed_terms_dict[attr(terms, "term.labels")], use.names = FALSE)
       if ("0" %in% fe_terms_renamed) renamed <- renamed[renamed != "1"]
       if (all(c("1", "0") %in% renamed)) renamed <- renamed[renamed != "0"]
       if (!is.null(drop_terms)) renamed <- renamed[!renamed %in% drop_terms]
-      unique(renamed)
+      unique(c(attr(terms, "intercept"), renamed))
     })
     re_bars <- ifelse(table(sapply(re, function(x) deparse1(x[[3]]))) > 1, "||", "|")
     re_groups <- lapply(seq_along(re_terms_renamed), function(i) {
-      rhs <- names(re_terms)[i]
+      rhs <- names(re_bars)[i]
       bar <- re_bars[[rhs]]
       lhs <- re_terms_renamed[[i]]
       lhs <- gsub(":", "__", lhs, fixed = TRUE)
@@ -122,7 +119,7 @@ prep_jlmer_data <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
     }
     r_fm <- combine_fm(re_fm_r)
     jl_fm <- combine_fm(re_fm_jl)
-    model_matrix_df <- cbind(model_matrix_df, df[!na_rows, names(re_terms), drop = FALSE])
+    model_matrix_df <- cbind(model_matrix_df, df[!na_rows, names(re_bars), drop = FALSE])
   }
 
   cols_keep <- c(subject, item, time)

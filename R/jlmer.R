@@ -58,9 +58,31 @@ jlmer_by_time <- function(jlmer_data, family = c("gaussian", "binomial"), ...) {
 
   out <- JuliaConnectoR::juliaGet(do.call(.jlmerclusterperm$jlmer_by_time, c(args, is_mem, opts)))
 
+  alert_diagnostics(jlmer_data, out)
+
   dimnames(out$z_matrix) <- out[c("Predictors", "Time")]
   out$z_matrix <- out$z_matrix[out$Predictors != "1", , drop = FALSE]
 
   out$z_matrix
 
+}
+
+alert_diagnostics <- function(jlmer_data, out) {
+  if (jlmer_data$meta$is_mem) {
+    singular_fits <- out$singular_fits
+    singular_fits_info <- "There were {.val {sum(singular_fits)}} singular fit{?s} ({round(mean(singular_fits) * 100, 2)}%)."
+    re_n_terms <- sapply(lme4::findbars(jlmer_data$formula$jl), function(x) setNames(length(x[[2]]), deparse1(x[[3]])))
+    if (mean(singular_fits) > .2 && any(re_n_terms > 1)) {
+      cli::cli_alert_info(paste(singular_fits_info, "Consider simplifying RE structure."))
+      cli::cli_alert_info("Average number of components estimated to capture 95% of RE variance:")
+      rePCs <- rowMeans(out$rePCA_95_matrix)
+      rePCs_info <- cli::cli_ul()
+      lapply(seq_along(out$Grouping), function(i) {
+        if (re_n_terms[out$Grouping[i]] > 1) cli::cli_li("{out$Grouping[i]}: {sprintf('%.01f', rePCs[i])}")
+      })
+      cli::cli_end(rePCs_info)
+    } else {
+      cli::cli_alert_info(singular_fits_info)
+    }
+  }
 }
