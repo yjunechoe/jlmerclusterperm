@@ -88,7 +88,7 @@ prep_jlmer_data <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
     fe_terms_renamed <- c(as.integer(has_intercept), fe_terms_renamed)
     fe_fm <- stats::reformulate(fe_terms_renamed)[[2]]
     re_terms_renamed <- lapply(re, function(x) {
-      terms <- terms.formula(call("~", x[[2]]))
+      terms <- stats::terms.formula(call("~", x[[2]]))
       renamed <- unlist(renamed_terms_dict[attr(terms, "term.labels")], use.names = FALSE)
       if ("0" %in% fe_terms_renamed) renamed <- renamed[renamed != "1"]
       if (all(c("1", "0") %in% renamed)) renamed <- renamed[renamed != "0"]

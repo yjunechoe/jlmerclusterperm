@@ -71,7 +71,7 @@ alert_diagnostics <- function(jlmer_data, out) {
   if (jlmer_data$meta$is_mem) {
     singular_fits <- out$singular_fits
     singular_fits_info <- "There were {.val {sum(singular_fits)}} singular fit{?s} ({round(mean(singular_fits) * 100, 2)}%)."
-    re_n_terms <- sapply(lme4::findbars(jlmer_data$formula$jl), function(x) setNames(length(x[[2]]), deparse1(x[[3]])))
+    re_n_terms <- sapply(lme4::findbars(jlmer_data$formula$jl), function(x) stats::setNames(length(x[[2]]), deparse1(x[[3]])))
     if (mean(singular_fits) > .2 && any(re_n_terms > 1)) {
       cli::cli_alert_info(paste(singular_fits_info, "Consider simplifying RE structure."))
       cli::cli_alert_info("Average number of components estimated to capture 95% of RE variance:")
