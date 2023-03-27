@@ -1,4 +1,4 @@
-function clusterpermute(formula, data, time, family, contrasts, nsim, participant_col, trial_col, is_mem; opts...)
+function clusterpermute(formula, data, time, family, contrasts, nsim, participant_col, trial_col, term_groups, is_mem; opts...)
 
   response_var = formula.lhs.sym
   times = sort(unique(data[!,time]))
@@ -14,6 +14,9 @@ function clusterpermute(formula, data, time, family, contrasts, nsim, participan
 
     n_fixed = length(fixed)
     res = zeros(nsim, n_times, n_fixed)
+
+    # TODO: integrate term_groups to group sims together
+    @info term_groups
 
     for p in 1:n_fixed
       predictor = fixed[p]

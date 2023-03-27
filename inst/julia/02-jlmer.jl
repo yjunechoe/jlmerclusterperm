@@ -2,6 +2,36 @@ function jlmer(formula, data, family, contrasts; opts...)
   fit(MixedModel, formula, data, family; contrasts = contrasts, opts...)
 end
 
+function jlmer_by_time(formula, data, time, family, contrasts, is_mem; opts...)
+
+  response_var = formula.lhs.sym
+  times = sort(unique(data[!,time]))
+  n_times = length(times)
+
+  if is_mem
+
+    fm_schema = MixedModels.schema(formula, data, contrasts)
+    form = MixedModels.apply_schema(formula, fm_schema, MixedModel)
+    re_term = [isa(x, MixedModels.AbstractReTerm) for x in form.rhs]
+    fixed = String.(Symbol.(form.rhs[.!re_term][1].terms))
+    grouping_vars = [String(Symbol(x.rhs)) for x in form.rhs[re_term]]
+
+    _jlmer_by_time(formula, data, time, family, contrasts, response_var, fixed, grouping_vars, times, n_times, true; opts...)
+
+  else
+
+    fm_schema = StatsModels.schema(formula, data)
+    form = StatsModels.apply_schema(formula, fm_schema)
+    fixed = String.(Symbol.(form.rhs.terms))
+
+    z_matrix = _jlm_by_time(formula, data, time, family, response_var, fixed, times, n_times)
+
+    (z_matrix = z_matrix, Predictors = fixed, Time = times)
+
+  end
+
+end
+
 function _jlmer_by_time(formula, data, time, family, contrasts,
                         response_var, fixed, grouping_vars, times, n_times, diagnose;
                         opts...)
@@ -55,36 +85,6 @@ function _jlmer_by_time(formula, data, time, family, contrasts,
     )
   else
     z_matrix
-  end
-
-end
-
-function jlmer_by_time(formula, data, time, family, contrasts, is_mem; opts...)
-
-  response_var = formula.lhs.sym
-  times = sort(unique(data[!,time]))
-  n_times = length(times)
-
-  if is_mem
-
-    fm_schema = MixedModels.schema(formula, data, contrasts)
-    form = MixedModels.apply_schema(formula, fm_schema, MixedModel)
-    re_term = [isa(x, MixedModels.AbstractReTerm) for x in form.rhs]
-    fixed = String.(Symbol.(form.rhs[.!re_term][1].terms))
-    grouping_vars = [String(Symbol(x.rhs)) for x in form.rhs[re_term]]
-
-    _jlmer_by_time(formula, data, time, family, contrasts, response_var, fixed, grouping_vars, times, n_times, true; opts...)
-
-  else
-
-    fm_schema = StatsModels.schema(formula, data)
-    form = StatsModels.apply_schema(formula, fm_schema)
-    fixed = String.(Symbol.(form.rhs.terms))
-
-    z_matrix = _jlm_by_time(formula, data, time, family, response_var, fixed, times, n_times)
-
-    (z_matrix = z_matrix, Predictors = fixed, Time = times)
-
   end
 
 end

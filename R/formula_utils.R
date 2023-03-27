@@ -39,7 +39,9 @@ prep_jlmer_data <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
   terms_expanded <- colnames(model_matrix)
   terms_grouping <- stats::setNames(attr(model_matrix, "assign"), colnames(model_matrix))
   has_intercept <- 0 %in% terms_grouping
-  terms_grouping <- terms_grouping[terms_grouping != 0]
+  if (has_intercept) {
+    terms_compact <- c(1, terms_compact)
+  }
   terms_dict <- split(names(terms_grouping), terms_grouping)
   names(terms_dict) <- terms_compact
 

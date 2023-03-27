@@ -12,6 +12,7 @@ clusterpermute <- function(jlmer_data, family = c("gaussian", "binomial"),
 
   is_mem <- jlmer_data$meta$is_mem
   participant_col <- jlmer_data$meta$subject
+  term_groups <- augment_term_groups(jlmer_data$meta$term_groups)
   if (is.null(jlmer_data$meta$item)) {
     trial_col <- ""
   } else {
@@ -32,7 +33,7 @@ clusterpermute <- function(jlmer_data, family = c("gaussian", "binomial"),
 
   out <- JuliaConnectoR::juliaGet(do.call(
     .jlmerclusterperm$clusterpermute,
-    c(args, nsim, participant_col, trial_col, is_mem, opts)
+    c(args, nsim, participant_col, trial_col, term_groups, is_mem, opts)
   ))
 
   dimnames(out$z_array) <- list(
@@ -43,4 +44,11 @@ clusterpermute <- function(jlmer_data, family = c("gaussian", "binomial"),
 
   out$z_array
 
+}
+
+augment_term_groups <- function(term_groups) {
+  grp_idx <- split(seq_len(sum(lengths(term_groups))), rep(seq_along(term_groups), times = lengths(term_groups)))
+  JuliaConnectoR::juliaLet("Tuple(x)", x = lapply(seq_along(term_groups), function (i) {
+    JuliaConnectoR::juliaLet("(p = p, i = i)", p = term_groups[[i]], i = grp_idx[[i]])
+  }))
 }
