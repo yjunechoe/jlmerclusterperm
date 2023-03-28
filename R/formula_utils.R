@@ -76,7 +76,8 @@ prep_jlmer_data <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
 
   if (!has_re) {
     fe_terms_renamed <- unlist(renamed_terms_dict, recursive = TRUE, use.names = FALSE)
-    if (!is.null(drop_terms)) fe_terms_renamed[!fe_terms_renamed %in% drop_terms]
+    fe_terms_renamed <- fe_terms_renamed[fe_terms_renamed != "(Intercept)"]
+    if (!is.null(drop_terms)) fe_terms_renamed <- fe_terms_renamed[!fe_terms_renamed %in% drop_terms]
     fe_terms_renamed <- c(as.integer(has_intercept), fe_terms_renamed)
     fe_fm <- stats::reformulate(fe_terms_renamed, fm_response, env = fm_env)
     r_fm <- jl_fm <- fe_fm

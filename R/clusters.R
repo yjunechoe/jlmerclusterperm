@@ -8,7 +8,7 @@
 #'
 #' @export
 detect_empirical_clusters <- function(z_matrix, threshold = 1.5, binned = TRUE) {
-  z_matrix[abs(z_matrix) < threshold] <- 0
+  z_matrix[abs(z_matrix) < abs(threshold)] <- 0
   predictors <- rownames(z_matrix)
   clusters <- JuliaConnectoR::juliaGet(JuliaConnectoR::juliaLet(
     "map(x -> find_largest_cluster(x, time_is_point), eachrow(z_matrix))",
@@ -47,6 +47,15 @@ detect_empirical_clusters <- function(z_matrix, threshold = 1.5, binned = TRUE) 
   # all_clusters
 }
 
+#' Calculated the simulated null distribution
+#'
+#' @param z_array A simulation-by-time-by-predictor 3D array of z-values
+#' @param threshold z-value threshold. Defaults to `1.5`.
+#' @param binned Whether time points have been aggregated. Defaults to `TRUE`
+#'
+#' @seealso clusterperm
+#'
+#' @export
 calculate_null_dist <- function(z_array, threshold = 1.5, binned = TRUE) {
   z_list <- apply(z_array, 3, function(x) x[!is.nan(rowMeans(x)),], simplify = FALSE)
   null_dists <- lapply(z_list, function(x) unname(sapply(detect_empirical_clusters(x, threshold, binned), `[[`, "sum_z")))
