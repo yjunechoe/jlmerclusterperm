@@ -12,7 +12,7 @@ jlmer <- function(jlmer_data, family = c("gaussian", "binomial"), ...) {
   family <- match.arg(family)
   args <- prep_for_jlmer(jlmer_data$formula$jl, jlmer_data$data, time = NULL, family, ...)[-3]
 
-  out <- do.call(.jlmerclusterperm$jlmer, c(args, ...))
+  out <- do.call(.jlmerclusterperm$jlmer, c(args, jlmer_data$meta$is_mem, ...))
   out
 
 }
