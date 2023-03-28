@@ -69,8 +69,11 @@ jlmer_by_time <- function(jlmer_data, family = c("gaussian", "binomial"), ...) {
 
 alert_diagnostics <- function(jlmer_data, out) {
   if (jlmer_data$meta$is_mem) {
+    if (any(out$convergence_failures)) {
+      cli::cli_alert_danger("{.val {sum(out$convergence_failures)}} convergence failure{?s}.")
+    }
     singular_fits <- out$singular_fits
-    singular_fits_info <- "There were {.val {sum(singular_fits)}} singular fit{?s} ({round(mean(singular_fits) * 100, 2)}%)."
+    singular_fits_info <- "{.val {sum(singular_fits)}} singular fit{?s} ({round(mean(singular_fits) * 100, 2)}%)."
     re_n_terms <- sapply(lme4::findbars(jlmer_data$formula$jl), function(x) stats::setNames(length(x[[2]]), deparse1(x[[3]])))
     if (mean(singular_fits) > .2 && any(re_n_terms > 1)) {
       cli::cli_alert_info(paste(singular_fits_info, "Consider simplifying RE structure."))

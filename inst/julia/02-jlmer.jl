@@ -43,6 +43,7 @@ function _jlmer_by_time(formula, data, time, family, contrasts,
   z_matrix = zeros(length(fixed), n_times)
   if diagnose
     singular_fits = zeros(n_times)
+    convergence_failures = zeros(Bool, n_times)
     rePCA_95_matrix = zeros(length(grouping_vars), n_times)
   end
 
@@ -50,40 +51,42 @@ function _jlmer_by_time(formula, data, time, family, contrasts,
     p = Progress(n_times)
   end
 
-  Threads.@threads for i = 1:n_times
+  @suppress begin
+    Threads.@threads for i = 1:n_times
 
-    data_at_time = filter(time => ==(times[i]), data)
-    response = data_at_time[!, response_var]
+      data_at_time = filter(time => ==(times[i]), data)
+      response = data_at_time[!, response_var]
 
-    if all(==(response[1]), response)
-      constant = response[1] == 1 ? Inf : -Inf
-      z_matrix[:,i] .= constant
+      if all(==(response[1]), response)
+        z_matrix[:,i] .= response[1] == 1 ? Inf : -Inf
+        if diagnose
+          convergence_failures[i] = missing
+          singular_fits[i] = missing
+          rePCA_95_matrix[:,i] .= missing
+        end
+      else
+        try
+          time_mod = fit(MixedModel, formula, data_at_time, family; contrasts = contrasts, opts...)
+          z_matrix[:,i] = z_value(time_mod)
+          if diagnose
+            singular_fits[i] = issingular(time_mod)
+            rePCA_95_matrix[:,i] = [all(isnan, x) ? 0 : findfirst(>(.95), x) for x in time_mod.rePCA]
+          end
+        catch e
+          convergence_failures[i] = true
+          z_matrix[:,i] .= NaN
+        end
+      end
+
       if diagnose
-        singular_fits[i] = constant
-        rePCA_95_matrix[:,i] .= constant
+        next!(p)
       end
-    else
-      time_mod = try
-        fit(MixedModel, formula, data_at_time, family; contrasts = contrasts, opts...)
-      catch e
-        z_matrix[:,i] .= NaN
-        continue
-      end
-      z_matrix[:,i] = z_value(time_mod)
-      if diagnose
-        singular_fits[i] = issingular(time_mod)
-        rePCA_95_matrix[:,i] = [all(isnan, x) ? 0 : findfirst(>(.95), x) for x in time_mod.rePCA]
-      end
-    end
-
-    if diagnose
-      next!(p)
     end
   end
 
   if diagnose
     (
-      singular_fits = singular_fits,
+      singular_fits = singular_fits, convergence_failures = convergence_failures,
       z_matrix = z_matrix, Predictors = fixed, Time = times,
       rePCA_95_matrix = rePCA_95_matrix, Grouping = grouping_vars
     )
