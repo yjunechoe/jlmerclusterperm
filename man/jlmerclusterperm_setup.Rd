@@ -4,10 +4,12 @@
 \alias{jlmerclusterperm_setup}
 \title{Initial setup for jlmerclusterperm package.}
 \usage{
-jlmerclusterperm_setup(...)
+jlmerclusterperm_setup(..., verbose = TRUE)
 }
 \arguments{
 \item{...}{Ignored.}
+
+\item{verbose}{Print progress and messages from Julia in the console}
 }
 \description{
 Initial setup for jlmerclusterperm package.

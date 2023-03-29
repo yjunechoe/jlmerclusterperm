@@ -42,7 +42,7 @@ start_with_threads <- function(..., max_threads = 7, verbose = TRUE) {
 }
 
 set_projenv <- function(..., verbose = TRUE) {
-  if (verbose) cli::cli_progress_step("Activating project environment")
+  if (verbose) cli::cli_progress_step("Activating package environment")
   pkgdir <- system.file("julia/", package = "jlmerclusterperm")
   JuliaConnectoR::juliaLet("cd(pkgdir)", pkgdir = pkgdir)
   JuliaConnectoR::juliaEval('using Suppressor, Pkg;')

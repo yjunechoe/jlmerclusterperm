@@ -70,12 +70,12 @@ end
 function shuffle_as!(df, shuffle_type, predictor_cols, participant_col, trial_col)
   if shuffle_type == "between_participant"
     subj_pred_pair = unique(df[!, vcat(participant_col, predictor_cols)])
-    shuffle!(subj_pred_pair[!, participant_col])
+    shuffle!(rng, subj_pred_pair[!, participant_col])
     select!(df, Not(predictor_cols))
     leftjoin!(df, subj_pred_pair, on = participant_col)
   elseif shuffle_type == "within_participant"
     trial_pred_pair = unique(df[!, vcat(participant_col, trial_col, predictor_cols)])
-    combine(groupby(trial_pred_pair, participant_col), sdf -> shuffle!(sdf[!, trial_col]))
+    combine(groupby(trial_pred_pair, participant_col), sdf -> shuffle!(rng, sdf[!, trial_col]))
     select!(df, Not(predictor_cols))
     leftjoin!(df, trial_pred_pair, on = [participant_col, trial_col])
   end
