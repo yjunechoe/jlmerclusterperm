@@ -71,8 +71,9 @@ source_jl <- function(..., verbose = TRUE) {
   .jlmerclusterperm$jlmer <- function(...) JuliaConnectoR::juliaCall("jlmer", ...)
   .jlmerclusterperm$jlmer_by_time <- function(...) JuliaConnectoR::juliaCall("jlmer_by_time", ...)
   .jlmerclusterperm$clusterpermute <- function(...) JuliaConnectoR::juliaCall("clusterpermute", ...)
+  .jlmerclusterperm$guess_shuffle_as <- function(...) JuliaConnectoR::juliaCall("guess_shuffle_as", ...)
   .jlmerclusterperm$permute_by_predictor <- function(...) JuliaConnectoR::juliaCall("permute_by_predictor", ...)
-  .jlmerclusterperm$fns_exported <- c("jlmer", "jlmer_by_time", "clusterpermute", "permute_by_predictor")
+  .jlmerclusterperm$exported_fns <- c("jlmer", "jlmer_by_time", "clusterpermute", "guess_shuffle_as", "permute_by_predictor")
 }
 
 #' @keywords internal

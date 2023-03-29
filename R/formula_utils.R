@@ -122,7 +122,8 @@ prep_jlmer_data <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
     }
     r_fm <- combine_fm(re_fm_r)
     jl_fm <- combine_fm(re_fm_jl)
-    model_matrix_df <- cbind(model_matrix_df, df[!na_rows, names(re_bars), drop = FALSE])
+    re_cols <- as.data.frame.list(lapply(df[!na_rows, names(re_bars), drop = FALSE], as.character))
+    model_matrix_df <- cbind(model_matrix_df, re_cols)
   }
 
   cols_keep <- c(subject, item, time)

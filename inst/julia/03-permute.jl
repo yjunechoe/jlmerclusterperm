@@ -29,5 +29,5 @@ end
 
 function permute_by_predictor(df, shuffle_type, predictor_cols, participant_col, trial_col, n)
   _df = copy(df)
-  map(i -> Dict(pairs(eachcol(shuffle_as!(_df, shuffle_type, predictor_cols, participant_col, trial_col)))), 1:n)
+  map(i -> shuffle_as!(_df, shuffle_type, predictor_cols, participant_col, trial_col), 1:n)
 end
