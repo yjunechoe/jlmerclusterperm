@@ -196,5 +196,3 @@ format.jlmer_spec <- function(x, ...) {
     cli::cli_rule()
   }, theme = pkg_theme)
 }
-
-jlmer_spec
