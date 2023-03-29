@@ -5,11 +5,11 @@ end
 
 function guess_shuffle_as(df, predictor_cols, participant_col, trial_col)
   if (ismissing(trial_col))
-    return "between_participant"
+    "between_participant"
   else
     subj_pred_pair = unique(df[!,vcat(participant_col, predictor_cols)])
     between_participant = length(unique(df[!, participant_col])) == nrow(subj_pred_pair)
-    return return between_participant ? "between_participant" : "within_participant"
+    between_participant ? "between_participant" : "within_participant"
   end
 end
 
@@ -25,4 +25,9 @@ function shuffle_as!(df, shuffle_type, predictor_cols, participant_col, trial_co
     select!(df, Not(predictor_cols))
     leftjoin!(df, trial_pred_pair, on = [participant_col, trial_col])
   end
+end
+
+function permute_by_predictor(df, shuffle_type, predictor_cols, participant_col, trial_col, n)
+  _df = copy(df)
+  map(i -> Dict(pairs(eachcol(shuffle_as!(_df, shuffle_type, predictor_cols, participant_col, trial_col)))), 1:n)
 end

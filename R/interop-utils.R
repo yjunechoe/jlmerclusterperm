@@ -2,6 +2,11 @@ df_to_NT <- function(df) {
   JuliaConnectoR::juliaLet("NamedTuple{Tuple(Symbol.(x))}(y)", x = colnames(df), y = unname(as.list(df)))
 }
 
+df_from_DF <- function(DF) {
+  df_str <- JuliaConnectoR::juliaGet(DF)
+  as.data.frame(df_str$columns, col.names = unlist(df_str$colindex$names, use.names = FALSE))
+}
+
 prep_for_jlmer <- function(julia_formula, data, time, family, ...) {
   opts <- list(...)
   if (is.null(opts) || any(names(opts) == "")) {

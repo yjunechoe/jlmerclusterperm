@@ -44,7 +44,7 @@ start_with_threads <- function(..., max_threads = 7, verbose = TRUE) {
 set_projenv <- function(..., verbose = TRUE) {
   if (verbose) cli::cli_progress_step("Activating package environment")
   pkgdir <- system.file("julia/", package = "jlmerclusterperm")
-  JuliaConnectoR::juliaLet("cd(pkgdir)", pkgdir = pkgdir)
+  JuliaConnectoR::juliaCall("cd", pkgdir)
   JuliaConnectoR::juliaEval('using Suppressor, Pkg;')
   JuliaConnectoR::juliaEval('@suppress Pkg.activate(".");')
   JuliaConnectoR::juliaCall('Pkg.instantiate')
@@ -68,16 +68,9 @@ source_jl <- function(..., verbose = TRUE) {
       JuliaConnectoR::juliaCall("include", jl_load)
     }
   }
-  fns_exported <- c("jlmer", "jlmer_by_time", "clusterpermute")
   .jlmerclusterperm$jlmer <- function(...) JuliaConnectoR::juliaCall("jlmer", ...)
   .jlmerclusterperm$jlmer_by_time <- function(...) JuliaConnectoR::juliaCall("jlmer_by_time", ...)
   .jlmerclusterperm$clusterpermute <- function(...) JuliaConnectoR::juliaCall("clusterpermute", ...)
-  fns_exported
-}
-
-#' @keywords internal
-dev_source <- function() {
-  jl_scripts <- list.files(system.file("julia/", package = "jlmerclusterperm"), pattern = "\\d{2}-.*\\.jl$", full.names = TRUE)
-  lapply(jl_scripts, function(x) JuliaConnectoR::juliaCall("include", x))
-  invisible(TRUE)
+  .jlmerclusterperm$permute_by_predictor <- function(...) JuliaConnectoR::juliaCall("permute_by_predictor", ...)
+  .jlmerclusterperm$fns_exported <- c("jlmer", "jlmer_by_time", "clusterpermute", "permute_by_predictor")
 }
