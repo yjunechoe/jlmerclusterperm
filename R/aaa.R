@@ -68,16 +68,20 @@ source_jl <- function(..., verbose = TRUE) {
       JuliaConnectoR::juliaCall("include", jl_load)
     }
   }
-  .jlmerclusterperm$jlmer <- function(...) JuliaConnectoR::juliaCall("jlmer", ...)
-  .jlmerclusterperm$jlmer_by_time <- function(...) JuliaConnectoR::juliaCall("jlmer_by_time", ...)
-  .jlmerclusterperm$clusterpermute <- function(...) JuliaConnectoR::juliaCall("clusterpermute", ...)
-  .jlmerclusterperm$guess_shuffle_as <- function(...) JuliaConnectoR::juliaCall("guess_shuffle_as", ...)
-  .jlmerclusterperm$permute_by_predictor <- function(...) JuliaConnectoR::juliaCall("permute_by_predictor", ...)
-  .jlmerclusterperm$exported_fns <- c("jlmer", "jlmer_by_time", "clusterpermute", "guess_shuffle_as", "permute_by_predictor")
+  exported_fns <- c("jlmer", "jlmer_by_time", "clusterpermute", "guess_shuffle_as", "permute_by_predictor")
+  for (jl_fn in exported_fns) {
+    .jlmerclusterperm[[jl_fn]] <- wrap_jl_fn(jl_fn)
+  }
+  .jlmerclusterperm$exported_fns <- exported_fns
 }
 
 #' @keywords internal
 dev_source <- function() {
   .jlmerclusterperm$opts$pkgdir <- system.file("julia/", package = "jlmerclusterperm")
   source_jl()
+}
+
+wrap_jl_fn <- function(jl_fn) {
+  force(jl_fn)
+  function(...) JuliaConnectoR::juliaCall(jl_fn, ...)
 }
