@@ -29,7 +29,6 @@ function jlmer_by_time(formula, data, time, family, contrasts, is_mem; opts...)
     fixed = String.(Symbol.(form.rhs.terms))
 
     z_matrix = _jlm_by_time(formula, data, time, family, response_var, fixed, times, n_times)
-
     (z_matrix = z_matrix, Predictors = fixed, Time = times)
 
   end
