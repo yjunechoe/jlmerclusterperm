@@ -74,3 +74,9 @@ source_jl <- function(..., verbose = TRUE) {
   .jlmerclusterperm$permute_by_predictor <- function(...) JuliaConnectoR::juliaCall("permute_by_predictor", ...)
   .jlmerclusterperm$fns_exported <- c("jlmer", "jlmer_by_time", "clusterpermute", "permute_by_predictor")
 }
+
+#' @keywords internal
+dev_source <- function() {
+  .jlmerclusterperm$opts$pkgdir <- system.file("julia/", package = "jlmerclusterperm")
+  source_jl()
+}

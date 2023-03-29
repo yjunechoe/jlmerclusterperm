@@ -7,7 +7,7 @@ permute_by_predictor <- function(jlmer_data, predictors, n = 1L, predictor_type 
   predictor_type <- match.arg(predictor_type)
   if (predictor_type == "guess") {
     predictor_type <- JuliaConnectoR::juliaCall("guess_shuffle_as", df_jl, predictors, subject, item)
-    cli::cli_alert_info("Guessed {.arg predictor_type} to be {.val {predictor_type}}.")
+    cli::cli_alert_info("Guessed {.arg predictor_type} to be {.val {predictor_type}}")
   }
   predictor_group <- Filter(function(x) any(predictors %in% x), jlmer_data$meta$term_groups)
   if (length(predictor_group) > 1) {
@@ -15,7 +15,7 @@ permute_by_predictor <- function(jlmer_data, predictors, n = 1L, predictor_type 
   } else {
     predictor_group <- predictor_group[[1]]
     if (!all(predictor_group %in% predictors)) {
-      cli::cli_alert_info("Shuffling all levels of the factor together ({.arg predictors} = {.val {predictor_group}})")
+      cli::cli_alert_info("Shuffling all levels of the factor together ({.val {predictor_group}})")
     }
     predictors <- predictor_group
   }
