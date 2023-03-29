@@ -46,12 +46,14 @@ make_jlmer_spec <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
   names(terms_dict) <- terms_compact
 
   # Renaming
-  # cross reference fm_cols
+  # split_fct_term <- function(x, y) {
+  #   ifelse(x == y, x, vapply(x, gsub, character(1), pattern = paste0(y, ""), replacement = paste0(y, "."), fixed = TRUE))
+  # }
   renamed_terms_dict <- lapply(seq_along(terms_dict), function(i) {
     nm <- names(terms_dict)[i]
     x <- terms_dict[[i]]
     if (grepl(":", nm)) {
-      renamed <- standardize_interaction_term(x)
+      renamed <- vapply(x, gsub, character(1), pattern = ":", replacement = "__", fixed = TRUE)
       # if (length(x) > 1) {
       #   nm_split <- strsplit(nm, ":", fixed = TRUE)[[1]]
       #   renamed_split <- sapply(renamed, function(x) strsplit(x, "__", fixed = TRUE)[[1]])
@@ -141,20 +143,58 @@ make_jlmer_spec <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
     formula = list(r = r_fm, jl = jl_fm),
     data = model_matrix_df,
     meta = list(
-      term_groups = unname(renamed_terms_dict),
+      term_groups = renamed_terms_dict,
       subject = subject, item = item, time = time,
       is_mem = has_re
     )
   )
 
-  structure(out, class = c("jlmer_spec", 'list'))
+  structure(out, class = "jlmer_spec")
 
 }
 
-standardize_interaction_term <- function(x) {
-  vapply(x, gsub, character(1), pattern = ":", replacement = "__", fixed = TRUE)
+print.jlmer_spec <- function(x, ...) {
+  cat(format(x, ...), sep = "\n")
 }
 
-split_fct_term <- function(x, y) {
-  ifelse(x == y, x, vapply(x, gsub, character(1), pattern = paste0(y, ""), replacement = paste0(y, "."), fixed = TRUE))
+format.jlmer_spec <- function(x, ...) {
+  pkg_theme <- list(
+    h1 = list("margin-top" = 0, fmt = function(x) cli::rule(x, line_col = "white"))
+  )
+  cli::cli_format_method({
+    cli::cli_h1("jlmer specification")
+    # Formula
+    if (do.call(identical, unname(jlmer_spec$formula))) {
+      cli::cli_text("Formula: {deparse1(x$formula$jl)}")
+    } else {
+      cli::cli_text("Formula")
+      cli::cli_ul()
+      cli::cli_li("R: {deparse1(x$formula$r)}")
+      cli::cli_li("Julia: {deparse1(x$formula$jl)}")
+      cli::cli_end()
+    }
+    # Terms
+    cli::cli_text("Terms")
+    terms <- Filter(function(term) !identical(term, "(Intercept)"), x$meta$term_groups)
+    cli::cli_ul()
+    cli::cli_dl(lapply(terms, paste, collapse = ", "), paste0("{.emph ", names(terms),"}"))
+    cli::cli_end()
+    # Grouping
+    cli::cli_text("Groupings")
+    cli::cli_ul()
+    cli::cli_dl(x$meta[c("subject", "item", "time")], paste0("{.emph ", c("Subject", "Item", "Time"),"}"))
+    cli::cli_end()
+    # Data
+    cli::cli_text("Data")
+    if (inherits(x$data, "tbl_df")) {
+      old_pillar.advice <- options(pillar.advice = FALSE)
+      print(x$data, n = 3)
+      options(old_pillar.advice)
+    } else {
+      print(x$data, max = 3 * ncol(x$data))
+    }
+    cli::cli_rule()
+  }, theme = pkg_theme)
 }
+
+jlmer_spec
