@@ -5,14 +5,14 @@
 \title{Permute data by predictor}
 \usage{
 permute_by_predictor(
-  jlmer_data,
+  jlmer_spec,
   predictors,
   predictor_type = c("guess", "between_participant", "within_participant"),
   n = 1L
 )
 }
 \arguments{
-\item{jlmer_data}{Data prepped for jlmer from \code{prep_for_jlmer()}}
+\item{jlmer_spec}{Data prepped for jlmer from \code{make_jlmer_spec()}}
 
 \item{predictors}{A vector of terms from the model. If multiple, the must form the levels of one predictor.}
 

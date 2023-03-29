@@ -7,10 +7,10 @@
 #' @param time Column for time in the data
 #' @param drop_terms Terms to drop from the new model formula
 #'
-#' @return A list of R formula for lme4, Julia formula for MixedModels, and the model matrix as a data frame
+#' @return An object of class "jlmer_spec"
 #'
 #' @export
-prep_jlmer_data <- function(fm, df, subject = NULL, item = NULL, time = NULL, drop_terms = NULL) {
+make_jlmer_spec <- function(fm, df, subject = NULL, item = NULL, time = NULL, drop_terms = NULL) {
 
   fm_env <- attr(fm, ".Environment")
   fm_response <- deparse1(fm[[2]])
@@ -147,7 +147,7 @@ prep_jlmer_data <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
     )
   )
 
-  structure(out, class = c("jlmer_data", 'list'))
+  structure(out, class = c("jlmer_spec", 'list'))
 
 }
 
@@ -157,10 +157,4 @@ standardize_interaction_term <- function(x) {
 
 split_fct_term <- function(x, y) {
   ifelse(x == y, x, vapply(x, gsub, character(1), pattern = paste0(y, ""), replacement = paste0(y, "."), fixed = TRUE))
-}
-
-print.jl_formula <- function(x, ...) {
-  .x <- x
-  attributes(.x) <- NULL
-  print(.x)
 }

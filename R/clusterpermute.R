@@ -4,29 +4,29 @@
 #' @param predictors A subset of predictors to test. Defaults to `NULL` which tests all predictors.
 #' @inheritParams jlmer_by_time
 #'
-#' @seealso prep_jlmer_data
+#' @seealso make_jlmer_spec
 #'
 #' @return A list of Predictor x Time matrix of z-values
 #' @export
-clusterpermute <- function(jlmer_data, family = c("gaussian", "binomial"),
+clusterpermute <- function(jlmer_spec, family = c("gaussian", "binomial"),
                            nsim = 100L, predictors = NULL, ...) {
 
-  is_mem <- jlmer_data$meta$is_mem
-  participant_col <- jlmer_data$meta$subject
-  term_groups <- augment_term_groups(jlmer_data$meta$term_groups)
+  is_mem <- jlmer_spec$meta$is_mem
+  participant_col <- jlmer_spec$meta$subject
+  term_groups <- augment_term_groups(jlmer_spec$meta$term_groups)
   predictors_subset <- list(as.list(predictors))
 
-  trial_col <- jlmer_data$meta$item %||% ""
-  # if (is.null(jlmer_data$meta$item)) {
+  trial_col <- jlmer_spec$meta$item %||% ""
+  # if (is.null(jlmer_spec$meta$item)) {
   #   trial_col <- ""
   # } else {
-  #   trials <- interaction(jlmer_data$data[unlist(jlmer_data$meta[c("subject", "item")])], drop = TRUE)
-  #   jlmer_data$data$JLMER_TRIAL_COL <- as.integer(trials)
+  #   trials <- interaction(jlmer_spec$data[unlist(jlmer_spec$meta[c("subject", "item")])], drop = TRUE)
+  #   jlmer_spec$data$JLMER_TRIAL_COL <- as.integer(trials)
   #   trial_col <- "JLMER_TRIAL_COL"
   # }
 
   family <- match.arg(family)
-  args <- prep_for_jlmer(jlmer_data$formula$jl, jlmer_data$data, jlmer_data$meta$time, family, ...)
+  args <- prep_for_jlmer(jlmer_spec$formula$jl, jlmer_spec$data, jlmer_spec$meta$time, family, ...)
   nsim <- as.integer(nsim)
 
   opts <- list(...)
@@ -42,7 +42,7 @@ clusterpermute <- function(jlmer_data, family = c("gaussian", "binomial"),
 
   dimnames(out$z_array) <- list(
     Sim = sprintf(paste0("%0", floor(log10(nsim)), "d"), 1:nsim),
-    Time = sort(unique(jlmer_data$data[[jlmer_data$meta$time]])),
+    Time = sort(unique(jlmer_spec$data[[jlmer_spec$meta$time]])),
     Predictor = unlist(out$predictors)
   )
 

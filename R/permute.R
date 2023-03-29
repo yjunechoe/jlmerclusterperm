@@ -7,18 +7,18 @@
 #'
 #' @return A long dataframe with `.id` column representing replication IDs.
 #' @export
-permute_by_predictor <- function(jlmer_data, predictors, predictor_type = c("guess", "between_participant", "within_participant"), n = 1L) {
-  df <- jlmer_data$data
+permute_by_predictor <- function(jlmer_spec, predictors, predictor_type = c("guess", "between_participant", "within_participant"), n = 1L) {
+  df <- jlmer_spec$data
   df_jl <- JuliaConnectoR::juliaCall("DataFrame", as.data.frame(df))
-  subject <- jlmer_data$meta$subject
-  item <- jlmer_data$meta$item
-  time <- jlmer_data$meta$time
+  subject <- jlmer_spec$meta$subject
+  item <- jlmer_spec$meta$item
+  time <- jlmer_spec$meta$time
   predictor_type <- match.arg(predictor_type)
   if (predictor_type == "guess") {
     predictor_type <- .jlmerclusterperm$guess_shuffle_as(df_jl, predictors, subject, item)
     cli::cli_alert_info("Guessed {.arg predictor_type} to be {.val {predictor_type}}")
   }
-  predictor_group <- Filter(function(x) any(predictors %in% x), jlmer_data$meta$term_groups)
+  predictor_group <- Filter(function(x) any(predictors %in% x), jlmer_spec$meta$term_groups)
   if (length(predictor_group) > 1) {
     cli::cli_abort("You can only shuffle levels of one factor at a time.")
   } else {

@@ -5,7 +5,7 @@
 \title{Fit Julia mixed models to each time point of a time series data}
 \usage{
 clusterpermute(
-  jlmer_data,
+  jlmer_spec,
   family = c("gaussian", "binomial"),
   nsim = 100L,
   predictors = NULL,
@@ -13,7 +13,7 @@ clusterpermute(
 )
 }
 \arguments{
-\item{jlmer_data}{Data prepped for jlmer from \code{prep_for_jlmer()}}
+\item{jlmer_spec}{Data prepped for jlmer from \code{make_jlmer_spec()}}
 
 \item{family}{A GLM family. Currently supports "gaussian" and "binomial".}
 
@@ -30,5 +30,5 @@ A list of Predictor x Time matrix of z-values
 Fit Julia mixed models to each time point of a time series data
 }
 \seealso{
-prep_jlmer_data
+make_jlmer_spec
 }

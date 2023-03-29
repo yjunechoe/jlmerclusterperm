@@ -8,7 +8,7 @@ to_jlmer(
   formula,
   data,
   family = c("gaussian", "binomial"),
-  prep_jlmer_opts = list(),
+  jlmer_spec_opts = list(),
   ...
 )
 }
@@ -19,7 +19,7 @@ to_jlmer(
 
 \item{family}{A GLM family. Currently supports "gaussian" and "binomial".}
 
-\item{prep_jlmer_opts}{Other options passed to \code{prep_jlmer_data()}}
+\item{jlmer_spec_opts}{Other options passed to \code{make_jlmer_spec()}}
 
 \item{...}{Optional arguments to fit (\code{fast}, \code{nAGQ}, etc.)}
 }
@@ -27,5 +27,5 @@ to_jlmer(
 Fit a Julia mixed model using lmer syntax
 }
 \seealso{
-prep_jlmer_data
+make_jlmer_spec
 }
