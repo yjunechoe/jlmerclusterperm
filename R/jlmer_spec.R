@@ -153,10 +153,12 @@ make_jlmer_spec <- function(fm, df, subject = NULL, item = NULL, time = NULL, dr
 
 }
 
+#' @export
 print.jlmer_spec <- function(x, ...) {
   cat(format(x, ...), sep = "\n")
 }
 
+#' @export
 format.jlmer_spec <- function(x, ...) {
   pkg_theme <- list(
     h1 = list("margin-top" = 0, fmt = function(x) cli::rule(x, line_col = "white"))
