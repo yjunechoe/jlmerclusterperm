@@ -12,10 +12,10 @@
 compute_empirical_clusters <- function(t_matrix, threshold = 1.5, binned = TRUE, top_n = 1L) {
   t_matrix[abs(t_matrix) <= abs(threshold)] <- 0
   predictors <- rownames(t_matrix)
-  n <- as.integer(top_n %|0|% ncol(t_matrix))
+  n <- as.integer(max(top_n %|0|% ncol(t_matrix), 1))
   largest_clusters <- .jlmerclusterperm$compute_largest_clusters(t_matrix, binned, n)
-  cluster_dfs <- rbind_DFs(JuliaConnectoR::juliaGet(largest_clusters))
-  empirical_clusters <- split(cluster_dfs[, -1], predictors[cluster_dfs$.id])
+  cluster_dfs <- df_from_DF(largest_clusters)
+  empirical_clusters <- split(cluster_dfs[, -5], predictors[cluster_dfs$id])
   structure(empirical_clusters, class = "empirical_clusters")
 }
 
@@ -28,9 +28,11 @@ compute_empirical_clusters <- function(t_matrix, threshold = 1.5, binned = TRUE,
 #'
 #' @export
 compute_largest_null_clusters <- function(t_array, threshold = 1.5, binned = TRUE) {
+  t_array[abs(t_array) <= abs(threshold)] <- 0
   null_clusters <- apply(t_array, 3, function(t_matrix) {
     t_matrix <- t_matrix[!is.nan(rowSums(t_matrix)),]
-    rbind_DFs(JuliaConnectoR::juliaGet(.jlmerclusterperm$compute_largest_clusters(t_matrix, 1.5, 1L)))
+    df_from_DF(.jlmerclusterperm$compute_largest_clusters(t_matrix, binned, 1L))
+    # rbind_DFs(JuliaConnectoR::juliaGet(.jlmerclusterperm$compute_largest_clusters(t_matrix, binned, 1L)))
   }, simplify = FALSE)
   structure(null_clusters, class = "null_clusters")
 }
