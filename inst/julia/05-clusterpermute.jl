@@ -56,17 +56,3 @@ function clusterpermute(formula, data, time, family, contrasts, nsim, participan
   (z_array = res, predictors = predictors)
 
 end
-
-function find_largest_cluster(zs, time_is_point)
-  runs = rle(sign.(zs))
-  run_inds = vcat(0, cumsum(runs[2]))
-  run_groups = getindex.(Ref(zs), (:).(run_inds[1:end-1].+1, run_inds[2:end]))
-  sum_z = (sum.(x -> isinf(x) ? 0 : x, run_groups))
-  longest_run = findmax(abs, sum_z)
-  largest_cluster = sum_z[longest_run[2]]
-  longest_run_window = run_inds[longest_run[2]] .+ collect(1:runs[2][longest_run[2]])
-  if largest_cluster == 0 || (time_is_point && length(longest_run_window) == 1)
-    return (cluster = Missing, sum_z = 0)
-  end
-  NamedTuple{(:cluster, :sum_z)}([longest_run_window, largest_cluster])
-end

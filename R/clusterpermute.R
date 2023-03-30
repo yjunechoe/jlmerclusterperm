@@ -16,7 +16,7 @@ clusterpermute <- function(jlmer_spec, family = c("gaussian", "binomial"),
   term_groups <- augment_term_groups(jlmer_spec$meta$term_groups)
   predictors_subset <- list(as.list(predictors))
 
-  trial_col <- jlmer_spec$meta$item %||% ""
+  trial_col <- jlmer_spec$meta$item %|0|% ""
   # if (is.null(jlmer_spec$meta$item)) {
   #   trial_col <- ""
   # } else {
@@ -47,7 +47,7 @@ clusterpermute <- function(jlmer_spec, family = c("gaussian", "binomial"),
   )
 
   if (!is.null(predictors)) {
-    out$z_array <- out$z_array[,,predictors, drop = FALSE]
+    out$z_array <- out$z_array[, , predictors, drop = FALSE]
   }
 
   out$z_array

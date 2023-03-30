@@ -2,9 +2,9 @@
 
 S3method(format,jlmer_spec)
 S3method(print,jlmer_spec)
-export(calculate_null_dist)
 export(clusterpermute)
-export(detect_empirical_clusters)
+export(compute_empirical_clusters)
+export(compute_largest_null_clusters)
 export(jlmer)
 export(jlmer_by_time)
 export(jlmerclusterperm_setup)

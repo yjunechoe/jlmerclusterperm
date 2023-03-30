@@ -29,13 +29,7 @@ permute_by_predictor <- function(jlmer_spec, predictors, predictor_type = c("gue
     predictors <- predictor_group
   }
   shuffled <- JuliaConnectoR::juliaGet(.jlmerclusterperm$permute_by_predictor(df_jl, predictor_type, predictors, subject, item, n))
-  col_names <- as.character(shuffled[[1]]$colindex$names)
-  shuffled_dfs <- lapply(seq_along(shuffled), function(i) {
-    shuffled_df <- as.data.frame.list(shuffled[[i]]$columns, col.names = col_names)
-    shuffled_df$.id <- i
-    shuffled_df
-  })
-  shuffled_long <- do.call(rbind, shuffled_dfs)
+  shuffled_long <- rbind_DFs(shuffled)
   class(shuffled_long) <- class(df)
-  shuffled_long[, c(".id", colnames(df))]
+  shuffled_long
 }

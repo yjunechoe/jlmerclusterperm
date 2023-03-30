@@ -166,7 +166,7 @@ format.jlmer_spec <- function(x, ...) {
   cli::cli_format_method({
     cli::cli_h1("jlmer specification")
     # Formula
-    if (do.call(identical, unname(jlmer_spec$formula))) {
+    if (do.call(identical, unname(x$formula))) {
       cli::cli_text("Formula: {deparse1(x$formula$jl)}")
     } else {
       cli::cli_text("Formula")

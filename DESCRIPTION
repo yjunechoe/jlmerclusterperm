@@ -1,10 +1,10 @@
 Package: jlmerclusterperm
-Title: Julia MixedModels.jl implementation of cluster-based permutation test for time series data
+Title: Bootstrapped cluster-based permutation analysis with MixedModels.jl
 Version: 0.0.0.9000
 Authors@R: 
     person("June", "Choe", , "jchoe001@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0701-921X"))
-Description: What the package does (one paragraph).
+Description: A Julia MixedModels.jl implementation of cluster-based permutation test for time series data.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
