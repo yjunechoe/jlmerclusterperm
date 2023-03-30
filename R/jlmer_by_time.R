@@ -42,11 +42,11 @@ alert_diagnostics <- function(jlmer_spec, out) {
     if (mean(singular_fits) > .2 && any(re_n_terms > 1)) {
       cli::cli_alert_info("Average number of components estimated to capture 95% of RE variance:")
       rePCs <- rowMeans(out$rePCA_95_matrix)
-      rePCs_info <- cli::cli_ul()
+      cli::cli_ul()
       lapply(seq_along(out$Grouping), function(i) {
         if (re_n_terms[out$Grouping[i]] > 1) cli::cli_li("{out$Grouping[i]}: {sprintf('%.01f', rePCs[i])}")
       })
-      cli::cli_end(rePCs_info)
+      cli::cli_end()
     }
   }
 }

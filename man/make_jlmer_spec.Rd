@@ -5,8 +5,8 @@
 \title{Construct a model matrix and expand model formula suitable for MixedModels and lme4}
 \usage{
 make_jlmer_spec(
-  fm,
-  df,
+  formula,
+  data,
   subject = NULL,
   item = NULL,
   time = NULL,
@@ -14,9 +14,9 @@ make_jlmer_spec(
 )
 }
 \arguments{
-\item{fm}{Formula}
+\item{formula}{Model formula in R lme4 syntax}
 
-\item{df}{Dataframe}
+\item{data}{Dataframe}
 
 \item{subject}{Column for subjects in the data}
 

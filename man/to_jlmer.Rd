@@ -2,7 +2,7 @@
 % Please edit documentation in R/jlmer.R
 \name{to_jlmer}
 \alias{to_jlmer}
-\title{Fit a Julia mixed model using lmer syntax}
+\title{Fit a Julia mixed model using lme4 syntax}
 \usage{
 to_jlmer(
   formula,
@@ -13,7 +13,7 @@ to_jlmer(
 )
 }
 \arguments{
-\item{formula}{Model formula in lme4 syntax}
+\item{formula}{Model formula in R lme4 syntax}
 
 \item{data}{Dataframe}
 
@@ -24,8 +24,8 @@ to_jlmer(
 \item{...}{Optional arguments to fit (\code{fast}, \code{nAGQ}, etc.)}
 }
 \description{
-Fit a Julia mixed model using lmer syntax
+Fit a Julia mixed model using lme4 syntax
 }
 \seealso{
-make_jlmer_spec
+make_jlmer_spec, jlmer
 }

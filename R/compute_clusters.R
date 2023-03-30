@@ -15,7 +15,8 @@ compute_empirical_clusters <- function(t_matrix, threshold = 1.5, binned = TRUE,
   n <- as.integer(top_n %|0|% ncol(t_matrix))
   largest_clusters <- .jlmerclusterperm$compute_largest_clusters(t_matrix, binned, n)
   cluster_dfs <- rbind_DFs(JuliaConnectoR::juliaGet(largest_clusters))
-  split(cluster_dfs[, -1], predictors[cluster_dfs$.id])
+  empirical_clusters <- split(cluster_dfs[, -1], predictors[cluster_dfs$.id])
+  structure(empirical_clusters, class = "empirical_clusters")
 }
 
 #' Construct a distribution of the largest cluster statistics from bootstrapped permutations
@@ -27,8 +28,9 @@ compute_empirical_clusters <- function(t_matrix, threshold = 1.5, binned = TRUE,
 #'
 #' @export
 compute_largest_null_clusters <- function(t_array, threshold = 1.5, binned = TRUE) {
-  apply(t_array, 3, function(t_matrix) {
+  null_clusters <- apply(t_array, 3, function(t_matrix) {
     t_matrix <- t_matrix[!is.nan(rowSums(t_matrix)),]
     rbind_DFs(JuliaConnectoR::juliaGet(.jlmerclusterperm$compute_largest_clusters(t_matrix, 1.5, 1L)))
   }, simplify = FALSE)
+  structure(null_clusters, class = "null_clusters")
 }
