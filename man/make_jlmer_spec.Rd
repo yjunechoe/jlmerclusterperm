@@ -27,7 +27,7 @@ make_jlmer_spec(
 \item{drop_terms}{Terms to drop from the new model formula}
 }
 \value{
-An object of class "jlmer_spec"
+An object of class \code{jlmer_spec}
 }
 \description{
 Construct a model matrix and expand model formula suitable for MixedModels and lme4

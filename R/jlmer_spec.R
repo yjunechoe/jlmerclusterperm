@@ -7,7 +7,7 @@
 #' @param time Column for time in the data
 #' @param drop_terms Terms to drop from the new model formula
 #'
-#' @return An object of class "jlmer_spec"
+#' @return An object of class `jlmer_spec`
 #'
 #' @export
 make_jlmer_spec <- function(formula, data, subject = NULL, item = NULL, time = NULL, drop_terms = NULL) {

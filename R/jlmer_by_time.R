@@ -3,7 +3,7 @@
 #' @inheritParams jlmer
 #' @param ... Optional arguments to fit. Defaults to `fast = TRUE` and `progress = FALSE`.
 #'
-#' @seealso make_jlmer_spec
+#' @seealso [jlmer()], [make_jlmer_spec()]
 #'
 #' @return A Predictor x Time matrix of z-values
 #' @export

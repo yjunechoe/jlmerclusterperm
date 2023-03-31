@@ -27,5 +27,5 @@ to_jlmer(
 Fit a Julia mixed model using lme4 syntax
 }
 \seealso{
-make_jlmer_spec, jlmer
+\code{\link[=jlmer]{jlmer()}}, \code{\link[=make_jlmer_spec]{make_jlmer_spec()}}
 }

@@ -4,7 +4,7 @@
 #' @param predictors A subset of predictors to test. Defaults to `NULL` which tests all predictors.
 #' @inheritParams jlmer_by_time
 #'
-#' @seealso make_jlmer_spec
+#' @seealso [make_jlmer_spec()]
 #'
 #' @return A list of Predictor x Time matrix of z-values
 #' @export

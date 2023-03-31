@@ -25,5 +25,5 @@ Defaults to \code{1L} which returns the largest cluster. Use \code{NULL} to retu
 Detect largest clusters from the time series data
 }
 \seealso{
-jlmer_by_time
+\code{\link[=jlmer_by_time]{jlmer_by_time()}}
 }

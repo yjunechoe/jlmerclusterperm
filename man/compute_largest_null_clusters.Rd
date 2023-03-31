@@ -17,5 +17,5 @@ compute_largest_null_clusters(t_array, threshold = 1.5, binned = TRUE)
 Construct a distribution of the largest cluster statistics from bootstrapped permutations
 }
 \seealso{
-clusterperm
+\code{\link[=clusterpermute]{clusterpermute()}}
 }

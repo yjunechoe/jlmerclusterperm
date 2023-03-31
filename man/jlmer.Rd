@@ -17,5 +17,5 @@ jlmer(jlmer_spec, family = c("gaussian", "binomial"), ...)
 Fit a Julia mixed model
 }
 \seealso{
-make_jlmer_spec
+\code{\link[=make_jlmer_spec]{make_jlmer_spec()}}
 }

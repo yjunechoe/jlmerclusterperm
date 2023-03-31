@@ -4,7 +4,7 @@
 #' @inheritParams jlmer
 #' @inheritParams make_jlmer_spec
 #'
-#' @seealso make_jlmer_spec, jlmer
+#' @seealso [jlmer()], [make_jlmer_spec()]
 #'
 #' @export
 to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_spec_opts = list(), ...) {
@@ -20,7 +20,7 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_sp
 #' @param family A GLM family. Currently supports "gaussian" and "binomial".
 #' @param ... Optional arguments to fit (`fast`, `nAGQ`, etc.)
 #'
-#' @seealso make_jlmer_spec
+#' @seealso [make_jlmer_spec()]
 #'
 #' @export
 jlmer <- function(jlmer_spec, family = c("gaussian", "binomial"), ...) {
@@ -41,7 +41,7 @@ print.jlmer_mod <- function(x, ...) {
 #' @export
 format.jlmer_mod <- function(x, ...) {
   if (JuliaConnectoR::juliaLet("x isa MixedModel", x = x)) {
-    re <- showobj_reformat(JuliaConnectoR::juliaCall('VarCorr', x))
+    re <- gsub("\n\n$", "\n", showobj_reformat(JuliaConnectoR::juliaCall('VarCorr', x)))
     fe <- showobj_reformat(JuliaConnectoR::juliaCall('coeftable', x))
     out <- c(re, fe)
   } else {

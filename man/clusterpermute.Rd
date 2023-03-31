@@ -30,5 +30,5 @@ A list of Predictor x Time matrix of z-values
 Fit Julia mixed models to each time point of a time series data
 }
 \seealso{
-make_jlmer_spec
+\code{\link[=make_jlmer_spec]{make_jlmer_spec()}}
 }
