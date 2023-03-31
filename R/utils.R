@@ -5,3 +5,7 @@ runs_id <- function(...) {
   runs <- rle(as.character(uq))$lengths
   rep(seq_along(runs), times = runs)
 }
+
+near_zero <- function(x) {
+  abs(x) < .Machine$double.eps ^ 0.5
+}

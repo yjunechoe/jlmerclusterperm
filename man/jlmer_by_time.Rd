@@ -14,7 +14,7 @@ jlmer_by_time(jlmer_spec, family = c("gaussian", "binomial"), ...)
 \item{...}{Optional arguments to fit. Defaults to \code{fast = TRUE} and \code{progress = FALSE}.}
 }
 \value{
-A Predictor x Time matrix of z-values
+A predictor-by-time matrix of cluster statistics.
 }
 \description{
 Fit Julia mixed models to each time point of a time series data

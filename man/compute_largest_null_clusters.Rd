@@ -9,7 +9,7 @@ compute_largest_null_clusters(t_array, threshold = 1.5, binned = TRUE)
 \arguments{
 \item{t_array}{A simulation-by-time-by-predictor 3D array of cluster statistics.}
 
-\item{threshold}{z-value threshold. Defaults to \code{1.5}.}
+\item{threshold}{Cluster statistic threshold. Defaults to \code{1.5}.}
 
 \item{binned}{Whether time points have been aggregated. Defaults to \code{TRUE} which allows length-1 clusters.}
 }

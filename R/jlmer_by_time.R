@@ -5,7 +5,7 @@
 #'
 #' @seealso [jlmer()], [make_jlmer_spec()]
 #'
-#' @return A Predictor x Time matrix of z-values
+#' @return A predictor-by-time matrix of cluster statistics.
 #' @export
 jlmer_by_time <- function(jlmer_spec, family = c("gaussian", "binomial"), ...) {
 

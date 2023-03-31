@@ -24,7 +24,7 @@ clusterpermute(
 \item{...}{Optional arguments to fit. Defaults to \code{fast = TRUE} and \code{progress = FALSE}.}
 }
 \value{
-A list of Predictor x Time matrix of z-values
+A simulation-by-time-by-predictor 3D array of cluster statistics.
 }
 \description{
 Fit Julia mixed models to each time point of a time series data

@@ -2,8 +2,10 @@
 
 S3method(format,jlmer_mod)
 S3method(format,jlmer_spec)
+S3method(format,null_clusters)
 S3method(print,jlmer_mod)
 S3method(print,jlmer_spec)
+S3method(print,null_clusters)
 export(clusterpermute)
 export(clusters_pvalue)
 export(compute_empirical_clusters)

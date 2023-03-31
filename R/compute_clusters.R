@@ -1,7 +1,7 @@
 #' Detect largest clusters from the time series data
 #'
 #' @param t_matrix A predictor-by-time matrix of cluster statistics.
-#' @param threshold z-value threshold. Defaults to `1.5`.
+#' @param threshold Cluster statistic threshold. Defaults to `1.5`.
 #' @param binned Whether time points have been aggregated. Defaults to `TRUE` which allows length-1 clusters.
 #' @param top_n How many clusters to return, ordered by the size of the cluster statistic.
 #'   Defaults to `1L` which returns the largest cluster. Use `NULL` to return all clusters.
@@ -45,7 +45,10 @@ compute_largest_null_clusters <- function(t_array, threshold = 1.5, binned = TRU
 #'
 #' @export
 clusters_pvalue <- function(empirical_clusters, null_clusters) {
-  empirical_statistics <- lapply(empirical_clusters, `[[`, "statistic")
-  null_distribution <- lapply(null_clusters, `[[`, "statistic")
-  sapply(names(null_distribution), function(x) mean(abs(null_distribution[[x]]) >= abs(empirical_statistics[[x]])))
+  empirical <- lapply(empirical_clusters, `[[`, "statistic")
+  null <- lapply(null_clusters, `[[`, "statistic")
+  predictors_to_test <- intersect(names(empirical), names(null))
+  sapply(predictors_to_test, function(x) {
+    mean(abs(null[[x]]) >= abs(empirical[[x]]))
+  })
 }

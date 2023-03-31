@@ -14,7 +14,7 @@ compute_empirical_clusters(
 \arguments{
 \item{t_matrix}{A predictor-by-time matrix of cluster statistics.}
 
-\item{threshold}{z-value threshold. Defaults to \code{1.5}.}
+\item{threshold}{Cluster statistic threshold. Defaults to \code{1.5}.}
 
 \item{binned}{Whether time points have been aggregated. Defaults to \code{TRUE} which allows length-1 clusters.}
 

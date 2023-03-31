@@ -164,28 +164,23 @@ print.jlmer_spec <- function(x, ...) {
 
 #' @export
 format.jlmer_spec <- function(x, ...) {
-  pkg_theme <- list(
-    h1 = list("margin-top" = 0, fmt = function(x) cli::rule(x, line_col = "white")),
-    span.el = list(color = "cyan", after = ":"),
-    span.fm = list(color = "blue")
-  )
   cli::cli_format_method({
     cli::cli_h1("jlmer specification")
     # Formula
-    cli::cli_text("{.el Formula} {.fm {deparse1(x$formula$jl)}}")
+    cli::cli_text("{.el Formula}: {.fm {deparse1(x$formula$jl)}}")
     # Terms
-    cli::cli_text("{.el Predictors}")
+    cli::cli_text("{.el Predictors}:")
     terms <- Filter(function(term) !identical(term, "(Intercept)"), x$meta$term_groups)
     cli::cli_ul()
     cli::cli_dl(lapply(terms, paste, collapse = ", "), paste0("{.emph ", names(terms),"}"))
     cli::cli_end()
     # Grouping
-    cli::cli_text("{.el Specials}")
+    cli::cli_text("{.el Specials}:")
     cli::cli_ul()
     cli::cli_dl(x$meta[c("subject", "item", "time")], paste0("{.emph ", c("Subject", "Item", "Time"),"}"))
     cli::cli_end()
     # Data
-    cli::cli_text("{.el Data}")
+    cli::cli_text("{.el Data}:")
     if (inherits(x$data, "tbl_df")) {
       old_pillar.advice <- options(pillar.advice = FALSE)
       print(x$data, n = 3)
@@ -194,5 +189,5 @@ format.jlmer_spec <- function(x, ...) {
       print(x$data, max = 3 * ncol(x$data))
     }
     cli::cli_rule()
-  }, theme = pkg_theme)
+  }, theme = .jlmerclusterperm$cli_theme)
 }

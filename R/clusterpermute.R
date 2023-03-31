@@ -6,7 +6,7 @@
 #'
 #' @seealso [make_jlmer_spec()]
 #'
-#' @return A list of Predictor x Time matrix of z-values
+#' @return A simulation-by-time-by-predictor 3D array of cluster statistics.
 #' @export
 clusterpermute <- function(jlmer_spec, family = c("gaussian", "binomial"),
                            nsim = 100L, predictors = NULL, ...) {

@@ -1,5 +1,10 @@
 #' @keywords internal
 .jlmerclusterperm <- new.env(parent = emptyenv())
+.jlmerclusterperm$cli_theme <- list(
+  h1 = list("margin-top" = 0, fmt = function(x) cli::rule(x, line_col = "white")),
+  span.el = list(color = "cyan"),
+  span.fm = list(color = "blue")
+)
 
 #' Initial setup for jlmerclusterperm package.
 #'
