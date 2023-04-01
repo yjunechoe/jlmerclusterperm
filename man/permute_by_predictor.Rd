@@ -16,9 +16,9 @@ permute_by_predictor(
 
 \item{predictors}{A vector of terms from the model. If multiple, the must form the levels of one predictor.}
 
-\item{predictor_type}{Whether the predictor is between or within participant. Default is to guess.}
+\item{predictor_type}{Whether the predictor is \code{"between_participant"} or \code{"within_participant"}. Defaults to \code{"guess"}.}
 
-\item{n}{Number of permuted data to generate}
+\item{n}{Number of permuted data to generate. Defaults to \code{1L}.}
 }
 \value{
 A long dataframe with \code{.id} column representing replication IDs.

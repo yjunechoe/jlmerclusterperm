@@ -2,8 +2,8 @@
 #'
 #' @inheritParams jlmer
 #' @param predictors A vector of terms from the model. If multiple, the must form the levels of one predictor.
-#' @param predictor_type Whether the predictor is between or within participant. Default is to guess.
-#' @param n Number of permuted data to generate
+#' @param predictor_type Whether the predictor is `"between_participant"` or `"within_participant"`. Defaults to `"guess"`.
+#' @param n Number of permuted data to generate. Defaults to `1L`.
 #'
 #' @return A long dataframe with `.id` column representing replication IDs.
 #' @export
@@ -28,7 +28,7 @@ permute_by_predictor <- function(jlmer_spec, predictors, predictor_type = c("gue
     }
     predictors <- predictor_group
   }
-  shuffled <- JuliaConnectoR::juliaGet(.jlmerclusterperm$permute_by_predictor(df_jl, predictor_type, predictors, subject, item, n))
+  shuffled <- JuliaConnectoR::juliaGet(.jlmerclusterperm$permute_by_predictor(df_jl, predictor_type, predictors, subject, item, as.integer(n)))
   shuffled_long <- rbind_DFs(shuffled)
   class(shuffled_long) <- class(df)
   shuffled_long
