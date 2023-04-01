@@ -1,4 +1,4 @@
-#' Detect largest clusters from the time series data
+#' Detect largest clusters from a time sequence of cluster statistics
 #'
 #' @param t_matrix A predictor-by-time matrix of cluster statistics.
 #' @param threshold Cluster statistic threshold. Defaults to `1.5`.
@@ -30,7 +30,7 @@ extract_empirical_clusters <- function(t_matrix, threshold = 1.5, binned = TRUE,
 #' @seealso [clusterpermute()]
 #'
 #' @export
-extract_largest_null_clusters <- function(t_array, threshold = 1.5, binned = TRUE) {
+extract_null_cluster_dists <- function(t_array, threshold = 1.5, binned = TRUE) {
   t_array[abs(t_array) <= abs(threshold)] <- 0
   null_clusters <- apply(t_array, 3, function(t_matrix) {
     t_matrix <- t_matrix[!is.nan(rowSums(t_matrix)),]
@@ -48,7 +48,7 @@ extract_largest_null_clusters <- function(t_array, threshold = 1.5, binned = TRU
 #'   Defaults to `TRUE`, which effectively includes the observed statistic in
 #'   the null distribution.
 #'
-#' @seealso [extract_empirical_clusters()], [extract_largest_null_clusters()]
+#' @seealso [extract_empirical_clusters()], [extract_null_cluster_dists()]
 #'
 #' @export
 clusters_pvalue <- function(empirical_clusters, null_clusters, add1 = TRUE) {
