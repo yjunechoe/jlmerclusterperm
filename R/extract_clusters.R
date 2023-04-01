@@ -16,7 +16,7 @@ extract_empirical_clusters <- function(t_matrix, threshold = 1.5, binned = TRUE,
   n <- as.integer(max(top_n %|0|% ncol(t_matrix), 1))
   largest_clusters <- .jlmerclusterperm$extract_clusters(t_matrix, binned, n)
   cluster_dfs <- df_from_DF(largest_clusters)
-  empirical_clusters <- split(cluster_dfs[, -5], predictors[cluster_dfs$id])
+  empirical_clusters <- split(cluster_dfs[, -5], predictors[cluster_dfs$id])[predictors]
   missing_clusters <- sapply(empirical_clusters, function(x) all(near_zero(x$statistic)))
   structure(empirical_clusters, class = "empirical_clusters",
             missing_clusters = missing_clusters, threshold = threshold, binned = binned, time = time)
@@ -55,8 +55,8 @@ clusters_pvalue <- function(empirical_clusters, null_clusters, add1 = TRUE) {
   empirical <- lapply(empirical_clusters, `[[`, "statistic")
   empirical <- Filter(function(x) !near_zero(x[1]), empirical)
   null <- lapply(null_clusters, `[[`, "statistic")
-  predictors_to_test <- intersect(names(empirical), names(null))
-  pvalues <- lapply(stats::setNames(nm = predictors_to_test), function(x) {
+  predictors_to_test <- stats::setNames(nm = names(empirical)[names(empirical) %in% names(null)])
+  pvalues <- lapply(predictors_to_test, function(x) {
     sapply(empirical[[x]], function(cluster_statistic) {
       mean(c(abs(null[[x]]) >= abs(cluster_statistic), if (add1) TRUE))
     })

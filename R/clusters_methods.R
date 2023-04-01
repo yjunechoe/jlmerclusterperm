@@ -15,7 +15,7 @@ format.empirical_clusters <- function(x, ...) {
   cli::cli_format_method({
     cli::cli_h1("{.strong empirical clusters} ({.arg threshold} = {.val {threshold}}, {.arg binned} = {.val {binned}})")
     for (i in seq_along(valid_clusters)) {
-      cli::cli_text("{.el {names(x)[[i]]}}")
+      cli::cli_text("{.el {names(valid_clusters)[[i]]}}")
       cluster_df <- valid_clusters[[i]]
       clusters <- split(cluster_df, seq_len(nrow(cluster_df)))
       names(clusters) <- paste0("[", time[cluster_df$cluster_start], ", ", time[cluster_df$cluster_end], "]")
