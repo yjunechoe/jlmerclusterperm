@@ -25,7 +25,7 @@ make_jlmer_spec <- function(formula, data, subject = NULL, item = NULL, time = N
   na_rows <- !stats::complete.cases(df_subset)
   if (any(na_rows)) {
     df_subset <- df_subset[!na_rows,]
-    warning("Dropping ", na_rows, "row(s) with missing values.")
+    cli::cli_alert_warning("Dropping {.val {na_rows}} row{?s} with missing values.")
   }
 
   re <- lme4::findbars(fm)
