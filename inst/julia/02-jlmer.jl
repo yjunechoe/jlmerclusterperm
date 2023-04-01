@@ -6,7 +6,7 @@ function jlmer(formula, data, family, contrasts, is_mem; opts...)
   end
 end
 
-function jlmer_by_time(formula, data, time, family, contrasts, is_mem; opts...)
+function compute_timewise_statistics(formula, data, time, family, contrasts, is_mem; opts...)
 
   response_var = formula.lhs.sym
   times = sort(unique(data[!,time]))
@@ -20,7 +20,7 @@ function jlmer_by_time(formula, data, time, family, contrasts, is_mem; opts...)
     fixed = String.(Symbol.(form.rhs[.!re_term][1].terms))
     grouping_vars = [String(Symbol(x.rhs)) for x in form.rhs[re_term]]
 
-    _jlmer_by_time(formula, data, time, family, contrasts, response_var, fixed, grouping_vars, times, n_times, true; opts...)
+    timewise_lme(formula, data, time, family, contrasts, response_var, fixed, grouping_vars, times, n_times, true; opts...)
 
   else
 
@@ -28,14 +28,14 @@ function jlmer_by_time(formula, data, time, family, contrasts, is_mem; opts...)
     form = StatsModels.apply_schema(formula, fm_schema)
     fixed = String.(Symbol.(form.rhs.terms))
 
-    z_matrix = _jlm_by_time(formula, data, time, family, response_var, fixed, times, n_times)
+    z_matrix = timewise_lm(formula, data, time, family, response_var, fixed, times, n_times)
     (z_matrix = z_matrix, Predictors = fixed, Time = times)
 
   end
 
 end
 
-function _jlmer_by_time(formula, data, time, family, contrasts,
+function timewise_lme(formula, data, time, family, contrasts,
                         response_var, fixed, grouping_vars, times, n_times, diagnose;
                         opts...)
 
@@ -95,7 +95,7 @@ function _jlmer_by_time(formula, data, time, family, contrasts,
 
 end
 
-function _jlm_by_time(formula, data, time, family, response_var, fixed, times, n_times)
+function timewise_lm(formula, data, time, family, response_var, fixed, times, n_times)
   z_matrix = zeros(length(fixed), n_times)
   Threads.@threads for i = 1:n_times
     data_at_time = filter(time => ==(times[i]), data)

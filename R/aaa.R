@@ -75,8 +75,8 @@ source_jl <- function(..., verbose = TRUE) {
     }
   }
   exported_fns <- c(
-    "jlmer", "jlmer_by_time",
-    "extract_clusters", "clusterpermute",
+    "jlmer", "compute_timewise_statistics",
+    "extract_clusters", "permute_timewise_statistics",
     "guess_shuffle_as", "permute_by_predictor"
   )
   for (jl_fn in exported_fns) {

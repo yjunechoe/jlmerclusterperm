@@ -17,5 +17,5 @@ extract_null_cluster_dists(t_array, threshold = 1.5, binned = TRUE)
 Construct a distribution of the largest cluster statistics from bootstrapped permutations
 }
 \seealso{
-\code{\link[=clusterpermute]{clusterpermute()}}
+\code{\link[=permute_timewise_statistics]{permute_timewise_statistics()}}
 }

@@ -2,13 +2,13 @@
 #'
 #' @param nsim Number of simulations description
 #' @param predictors A subset of predictors to test. Defaults to `NULL` which tests all predictors.
-#' @inheritParams jlmer_by_time
+#' @inheritParams compute_timewise_statistics
 #'
 #' @seealso [make_jlmer_spec()]
 #'
 #' @return A simulation-by-time-by-predictor 3D array of cluster statistics.
 #' @export
-clusterpermute <- function(jlmer_spec, family = c("gaussian", "binomial"),
+permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "binomial"),
                            nsim = 100L, predictors = NULL, ...) {
 
   is_mem <- jlmer_spec$meta$is_mem
@@ -36,7 +36,7 @@ clusterpermute <- function(jlmer_spec, family = c("gaussian", "binomial"),
   }
 
   out <- JuliaConnectoR::juliaGet(do.call(
-    .jlmerclusterperm$clusterpermute,
+    .jlmerclusterperm$permute_timewise_statistics,
     c(args, nsim, participant_col, trial_col, term_groups, predictors_subset, is_mem, opts)
   ))
 

@@ -1,4 +1,4 @@
-function clusterpermute(formula, data, time, family, contrasts, nsim, participant_col, trial_col, term_groups, predictors_subset, is_mem; opts...)
+function permute_timewise_statistics(formula, data, time, family, contrasts, nsim, participant_col, trial_col, term_groups, predictors_subset, is_mem; opts...)
 
   response_var = formula.lhs.sym
   times = sort(unique(data[!,time]))
@@ -36,10 +36,10 @@ function clusterpermute(formula, data, time, family, contrasts, nsim, participan
     for i in 1:nsim
       shuffle_as!(permute_data, shuffle_type, predictors, participant_col, trial_col)
       if is_mem
-        zs = _jlmer_by_time(formula, permute_data, time, family,
+        zs = timewise_lme(formula, permute_data, time, family,
                             contrasts, response_var, fixed, grouping_vars, times, n_times, false; opts...)
       else
-        zs = _jlm_by_time(formula, permute_data, time, family,
+        zs = timewise_lm(formula, permute_data, time, family,
                           response_var, fixed, times, n_times)
       end
       for term_ind in term_groups.i

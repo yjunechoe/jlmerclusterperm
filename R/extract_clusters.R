@@ -6,7 +6,7 @@
 #' @param top_n How many clusters to return, ordered by the size of the cluster statistic.
 #'   Defaults to `1L` which returns the largest cluster. Use `NULL` to return all clusters.
 #'
-#' @seealso [jlmer_by_time()]
+#' @seealso [compute_timewise_statistics()]
 #'
 #' @export
 extract_empirical_clusters <- function(t_matrix, threshold = 1.5, binned = TRUE, top_n = 1L) {
@@ -27,7 +27,7 @@ extract_empirical_clusters <- function(t_matrix, threshold = 1.5, binned = TRUE,
 #' @param t_array A simulation-by-time-by-predictor 3D array of cluster statistics.
 #' @inheritParams extract_empirical_clusters
 #'
-#' @seealso [clusterpermute()]
+#' @seealso [permute_timewise_statistics()]
 #'
 #' @export
 extract_null_cluster_dists <- function(t_array, threshold = 1.5, binned = TRUE) {
