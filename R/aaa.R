@@ -1,7 +1,8 @@
 #' @keywords internal
 .jlmerclusterperm <- new.env(parent = emptyenv())
 .jlmerclusterperm$cli_theme <- list(
-  h1 = list("margin-top" = 0, fmt = function(x) cli::rule(x, line_col = "white")),
+  h1 = list(`font-weight` = "regular", `margin-top` = 0, fmt = function(x) cli::rule(x, line_col = "white")),
+  span.lemph = list(color = "grey", `font-style` = "italic"),
   span.el = list(color = "cyan"),
   span.fm = list(color = "blue")
 )
@@ -75,7 +76,7 @@ source_jl <- function(..., verbose = TRUE) {
   }
   exported_fns <- c(
     "jlmer", "jlmer_by_time",
-    "compute_largest_clusters", "clusterpermute",
+    "extract_clusters", "clusterpermute",
     "guess_shuffle_as", "permute_by_predictor"
   )
   for (jl_fn in exported_fns) {

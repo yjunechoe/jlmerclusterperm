@@ -21,7 +21,7 @@ df_from_DF <- function(DF) {
 prep_for_jlmer <- function(julia_formula, data, time, family, ...) {
   opts <- list(...)
   if (is.null(opts) || any(names(opts) == "")) {
-    stop("All optional arguments to fit must be named.")
+    cli::cli_abort("All optional arguments to fit in {.arg ...} must be named.")
   }
 
   jlmer_fm <- JuliaConnectoR::juliaEval(paste0("@formula(", deparse1(julia_formula), ")"))

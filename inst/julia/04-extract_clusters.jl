@@ -1,4 +1,4 @@
-function _compute_largest_clusters(t_vec, binned, n, id)
+function _extract_clusters(t_vec, binned, n, id)
   runs = rle(sign.(t_vec))
   run_inds = vcat(0, cumsum(runs[2]))
   clusters = (:).(run_inds[1:end-1].+1, run_inds[2:end])
@@ -25,10 +25,10 @@ function _compute_largest_clusters(t_vec, binned, n, id)
   out
 end
 
-function compute_largest_clusters(t_matrix, binned, n)
+function extract_clusters(t_matrix, binned, n)
   out = Vector{DataFrame}(undef, size(t_matrix, 1))
   for i in 1:length(out)
-    out[i] = _compute_largest_clusters(t_matrix[i,:], binned, n, i)
+    out[i] = _extract_clusters(t_matrix[i,:], binned, n, i)
   end
   vcat(out...)
 end

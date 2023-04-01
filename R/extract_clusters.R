@@ -1,4 +1,4 @@
-#' Detect largest clusters from a time sequence of cluster statistics
+#' Detect largest clusters from the time series data
 #'
 #' @param t_matrix A predictor-by-time matrix of cluster statistics.
 #' @param threshold Cluster statistic threshold. Defaults to `1.5`.
@@ -14,7 +14,7 @@ extract_empirical_clusters <- function(t_matrix, threshold = 1.5, binned = TRUE,
   t_matrix[abs(t_matrix) <= abs(threshold)] <- 0
   predictors <- rownames(t_matrix)
   n <- as.integer(max(top_n %|0|% ncol(t_matrix), 1))
-  largest_clusters <- .jlmerclusterperm$extract_largest_clusters(t_matrix, binned, n)
+  largest_clusters <- .jlmerclusterperm$extract_clusters(t_matrix, binned, n)
   cluster_dfs <- df_from_DF(largest_clusters)
   empirical_clusters <- split(cluster_dfs[, -5], predictors[cluster_dfs$id])
   missing_clusters <- sapply(empirical_clusters, function(x) all(near_zero(x$statistic)))
@@ -30,7 +30,7 @@ extract_empirical_clusters <- function(t_matrix, threshold = 1.5, binned = TRUE,
 #' @seealso [clusterpermute()]
 #'
 #' @export
-extract_null_cluster_dists <- function(t_array, threshold = 1.5, binned = TRUE) {
+extract_largest_null_clusters <- function(t_array, threshold = 1.5, binned = TRUE) {
   t_array[abs(t_array) <= abs(threshold)] <- 0
   null_clusters <- apply(t_array, 3, function(t_matrix) {
     t_matrix <- t_matrix[!is.nan(rowSums(t_matrix)),]
@@ -48,7 +48,7 @@ extract_null_cluster_dists <- function(t_array, threshold = 1.5, binned = TRUE) 
 #'   Defaults to `TRUE`, which effectively includes the observed statistic in
 #'   the null distribution.
 #'
-#' @seealso [extract_empirical_clusters()], [extract_null_cluster_dists()]
+#' @seealso [extract_empirical_clusters()], [extract_largest_null_clusters()]
 #'
 #' @export
 clusters_pvalue <- function(empirical_clusters, null_clusters, add1 = TRUE) {
