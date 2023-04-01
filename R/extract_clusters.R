@@ -51,7 +51,7 @@ extract_null_cluster_dists <- function(t_array, threshold = 1.5, binned = TRUE) 
 #' @seealso [extract_empirical_clusters()], [extract_null_cluster_dists()]
 #'
 #' @export
-clusters_pvalue <- function(empirical_clusters, null_clusters, add1 = TRUE) {
+calculate_clusters_pvalues <- function(empirical_clusters, null_clusters, add1 = TRUE) {
   empirical <- lapply(empirical_clusters, `[[`, "statistic")
   empirical <- Filter(function(x) !near_zero(x[1]), empirical)
   null <- lapply(null_clusters, `[[`, "statistic")
