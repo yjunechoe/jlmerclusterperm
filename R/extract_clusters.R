@@ -17,6 +17,9 @@ extract_empirical_clusters <- function(t_matrix, threshold = 1.5, binned = TRUE,
   largest_clusters <- .jlmerclusterperm$extract_clusters(t_matrix, binned, n)
   cluster_dfs <- df_from_DF(largest_clusters)
   empirical_clusters <- split(cluster_dfs[, -5], predictors[cluster_dfs$id])[predictors]
+  empirical_clusters <- lapply(empirical_clusters, function(cluster_df) {
+    cluster_df[order(cluster_df$cluster_id), ]
+  })
   missing_clusters <- sapply(empirical_clusters, function(x) all(near_zero(x$statistic)))
   structure(empirical_clusters, class = "empirical_clusters",
             missing_clusters = missing_clusters, threshold = threshold, binned = binned, time = time)
