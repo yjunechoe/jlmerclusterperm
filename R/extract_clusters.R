@@ -48,13 +48,13 @@ extract_null_cluster_dists <- function(t_array, threshold = 1.5, binned = TRUE) 
 #' @param empirical_clusters A `empirical_clusters` object
 #' @param null_clusters A `null_clusters` object
 #' @param add1 Whether to add 1 to the numerator before calculating probability.
-#'   Defaults to `TRUE`, which effectively includes the observed statistic in
-#'   the null distribution.
+#'   Defaults to `FALSE`. Use `TRUE` to effectively include the observed statistic
+#'   as part of the null distribution (recommended with larger `nsim` prior to publishing results).
 #'
 #' @seealso [extract_empirical_clusters()], [extract_null_cluster_dists()]
 #'
 #' @export
-calculate_clusters_pvalues <- function(empirical_clusters, null_clusters, add1 = TRUE) {
+calculate_clusters_pvalues <- function(empirical_clusters, null_clusters, add1 = FALSE) {
   empirical <- lapply(empirical_clusters, `[[`, "statistic")
   empirical <- Filter(function(x) !near_zero(x[1]), empirical)
   null <- lapply(null_clusters, `[[`, "statistic")

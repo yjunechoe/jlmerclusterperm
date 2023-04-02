@@ -2,15 +2,16 @@
 #'
 #' @param formula Model formula in R lme4 syntax
 #' @param data Dataframe
-#' @param subject Column for subjects in the data
-#' @param item Column for items in the data
-#' @param time Column for time in the data
+#' @param subject Column for subjects in the data.
+#' @param trial Column for trials in the data. Must uniquely identify a time series within subject
+#'  (e.g., trials in a counterbalanced design where each subject sees exactly one trial).
+#' @param time Column for time in the data.
 #' @param drop_terms Terms to drop from the new model formula
 #'
 #' @return An object of class `jlmer_spec`
 #'
 #' @export
-make_jlmer_spec <- function(formula, data, subject = NULL, item = NULL, time = NULL, drop_terms = NULL) {
+make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = NULL, drop_terms = NULL) {
 
   # Old names
   fm <- formula
@@ -132,7 +133,7 @@ make_jlmer_spec <- function(formula, data, subject = NULL, item = NULL, time = N
     model_matrix_df <- cbind(model_matrix_df, re_cols)
   }
 
-  cols_keep <- c(subject, item, time)
+  cols_keep <- c(subject, trial, time)
 
   model_matrix_df <- cbind(
     model_matrix_df,
@@ -148,7 +149,7 @@ make_jlmer_spec <- function(formula, data, subject = NULL, item = NULL, time = N
     data = model_matrix_df,
     meta = list(
       term_groups = renamed_terms_dict,
-      subject = subject, item = item, time = time,
+      subject = subject, trial = trial, time = time,
       is_mem = has_re
     )
   )
@@ -177,7 +178,7 @@ format.jlmer_spec <- function(x, ...) {
     # Grouping
     cli::cli_text("{.el Specials}:")
     cli::cli_ul()
-    cli::cli_dl(x$meta[c("subject", "item", "time")], paste0("{.emph ", c("Subject", "Item", "Time"),"}"))
+    cli::cli_dl(x$meta[c("subject", "trial", "time")], paste0("{.emph ", c("Subject", "Trial", "Time"),"}"))
     cli::cli_end()
     # Data
     cli::cli_text("{.el Data}:")

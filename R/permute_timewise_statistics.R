@@ -13,7 +13,7 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
 
   is_mem <- jlmer_spec$meta$is_mem
   participant_col <- jlmer_spec$meta$subject
-  trial_col <- jlmer_spec$meta$item %|0|% ""
+  trial_col <- jlmer_spec$meta$trial %|0|% ""
   term_groups <- augment_term_groups(jlmer_spec$meta$term_groups)
   predictors_subset <- list(as.list(predictors))
 

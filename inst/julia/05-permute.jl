@@ -4,12 +4,16 @@ function guess_and_shuffle_as!(df, predictor_cols, participant_col, trial_col)
 end
 
 function guess_shuffle_as(df, predictor_cols, participant_col, trial_col)
-  if (ismissing(trial_col))
+  subj_pred_pair = unique(df[!,vcat(participant_col, predictor_cols)])
+  unique_combinations = length(unique(df[!, participant_col])) == nrow(subj_pred_pair)
+  if unique_combinations
     "between_participant"
   else
-    subj_pred_pair = unique(df[!,vcat(participant_col, predictor_cols)])
-    between_participant = length(unique(df[!, participant_col])) == nrow(subj_pred_pair)
-    between_participant ? "between_participant" : "within_participant"
+    if (ismissing(trial_col) || isnothing(trial_col))
+      throw("""Guessed "within_participant" but no column for `trial` supplied.""")
+    else
+      "within_participant"
+    end
   end
 end
 
@@ -29,5 +33,11 @@ end
 
 function permute_by_predictor(df, shuffle_type, predictor_cols, participant_col, trial_col, n)
   _df = copy(df)
-  map(i -> shuffle_as!(_df, shuffle_type, predictor_cols, participant_col, trial_col), 1:n)
+  out = insertcols(shuffle_as!(_df, shuffle_type, predictor_cols, participant_col, trial_col), :id => 1)
+  if (n > 1)
+    for i in 2:n
+      append!(out, insertcols(shuffle_as!(_df, shuffle_type, predictor_cols, participant_col, trial_col), :id => i))
+    end
+  end
+  select!(out, :id, Not(:id))
 end
