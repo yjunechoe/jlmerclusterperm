@@ -4,7 +4,7 @@
 \alias{calculate_clusters_pvalues}
 \title{Calculate bootstrapped p-values of clusters}
 \usage{
-calculate_clusters_pvalues(empirical_clusters, null_clusters, add1 = TRUE)
+calculate_clusters_pvalues(empirical_clusters, null_clusters, add1 = FALSE)
 }
 \arguments{
 \item{empirical_clusters}{A \code{empirical_clusters} object}
@@ -12,8 +12,8 @@ calculate_clusters_pvalues(empirical_clusters, null_clusters, add1 = TRUE)
 \item{null_clusters}{A \code{null_clusters} object}
 
 \item{add1}{Whether to add 1 to the numerator before calculating probability.
-Defaults to \code{TRUE}, which effectively includes the observed statistic in
-the null distribution.}
+Defaults to \code{FALSE}. Use \code{TRUE} to effectively include the observed statistic
+as part of the null distribution (recommended with larger \code{nsim} prior to publishing results).}
 }
 \description{
 Calculate bootstrapped p-values of clusters

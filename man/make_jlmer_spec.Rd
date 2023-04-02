@@ -8,7 +8,7 @@ make_jlmer_spec(
   formula,
   data,
   subject = NULL,
-  item = NULL,
+  trial = NULL,
   time = NULL,
   drop_terms = NULL
 )
@@ -18,11 +18,12 @@ make_jlmer_spec(
 
 \item{data}{Dataframe}
 
-\item{subject}{Column for subjects in the data}
+\item{subject}{Column for subjects or participants in the data.}
 
-\item{item}{Column for items in the data}
+\item{trial}{Column for trials in the data. Must uniquely identify a time series within subject
+(for example, the items in a counterbalanced design where each subject sees exactly one item).}
 
-\item{time}{Column for time in the data}
+\item{time}{Column for time in the data.}
 
 \item{drop_terms}{Terms to drop from the new model formula}
 }

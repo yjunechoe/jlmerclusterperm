@@ -2,9 +2,9 @@
 #'
 #' @param formula Model formula in R lme4 syntax
 #' @param data Dataframe
-#' @param subject Column for subjects in the data.
+#' @param subject Column for subjects or participants in the data.
 #' @param trial Column for trials in the data. Must uniquely identify a time series within subject
-#'  (e.g., trials in a counterbalanced design where each subject sees exactly one trial).
+#'  (for example, the items in a counterbalanced design where each subject sees exactly one item).
 #' @param time Column for time in the data.
 #' @param drop_terms Terms to drop from the new model formula
 #'
