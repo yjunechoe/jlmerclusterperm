@@ -84,13 +84,13 @@ source_jl <- function(..., verbose = TRUE) {
   .jlmerclusterperm$exported_fns <- exported_fns
 }
 
+wrap_jl_fn <- function(jl_fn) {
+  force(jl_fn)
+  function(...) JuliaConnectoR::juliaCall(jl_fn, ...)
+}
+
 #' @keywords internal
 dev_source <- function() {
   .jlmerclusterperm$opts$pkgdir <- system.file("julia/", package = "jlmerclusterperm")
   source_jl()
-}
-
-wrap_jl_fn <- function(jl_fn) {
-  force(jl_fn)
-  function(...) JuliaConnectoR::juliaCall(jl_fn, ...)
 }
