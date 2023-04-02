@@ -33,9 +33,3 @@ permute_by_predictor <- function(jlmer_spec, predictors, predictor_type = c("gue
   class(shuffled_long) <- class(df)
   shuffled_long
 }
-
-#' @export
-set_rng_counter <- function(i) {
-  JuliaConnectoR::juliaLet("set_counter!(rng, i)", i = as.integer(i))
-  invisible(i)
-}
