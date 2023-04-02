@@ -33,8 +33,7 @@ setup_with_progress <- function(..., verbose) {
 
 start_with_threads <- function(..., max_threads = 7, verbose = TRUE) {
   JULIA_NUM_THREADS <- Sys.getenv("JULIA_NUM_THREADS")
-  nthreads <- getOption("jlmerclusterperm.nthreads") %|0|%
-    JULIA_NUM_THREADS %|0|%
+  nthreads <- getOption("jlmerclusterperm.nthreads", JULIA_NUM_THREADS) %|0|%
     (min(max_threads, parallel::detectCores() - 1))
   if (verbose) cli::cli_progress_step("Starting Julia with {nthreads} thread{?s}")
   if (nthreads > 1) {
@@ -55,7 +54,8 @@ set_projenv <- function(..., verbose = TRUE) {
   JuliaConnectoR::juliaEval('@suppress Pkg.activate(".");')
   JuliaConnectoR::juliaCall('Pkg.instantiate')
   JuliaConnectoR::juliaCall("cd", getwd())
-  JuliaConnectoR::juliaEval(paste0('using Random123; rng = Threefry2x((', getOption("jlmerclusterperm.seed") %|0|% 1, ', 20))'))
+  JuliaConnectoR::juliaEval(paste0('using Random123; const rng = Threefry2x((', getOption("jlmerclusterperm.seed", 1L), ', 20))'))
+  .jlmerclusterperm$set_counter <- function(i) JuliaConnectoR::juliaLet("set_counter!(rng, i)", i)
   .jlmerclusterperm$opts$pkgdir <- pkgdir
 }
 
