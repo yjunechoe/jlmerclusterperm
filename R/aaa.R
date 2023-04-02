@@ -55,7 +55,6 @@ set_projenv <- function(..., verbose = TRUE) {
   JuliaConnectoR::juliaCall('Pkg.instantiate')
   JuliaConnectoR::juliaCall("cd", getwd())
   JuliaConnectoR::juliaEval(paste0('using Random123; const rng = Threefry2x((', getOption("jlmerclusterperm.seed", 1L), ', 20))'))
-  .jlmerclusterperm$set_counter <- function(i) JuliaConnectoR::juliaLet("set_counter!(rng, i)", i)
   .jlmerclusterperm$opts$pkgdir <- pkgdir
 }
 
