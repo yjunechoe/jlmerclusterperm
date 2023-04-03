@@ -18,7 +18,7 @@ permute_by_predictor(
 
 \item{predictor_type}{Whether the predictor is \code{"between_participant"} or \code{"within_participant"}. Defaults to \code{"guess"}.}
 
-\item{n}{Number of permuted data to generate. Defaults to \code{1L}.}
+\item{n}{Number of permuted samples of the data to generate. Defaults to \code{1L}.}
 }
 \value{
 A long dataframe with \code{.id} column representing replication IDs.
