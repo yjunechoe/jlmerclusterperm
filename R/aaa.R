@@ -20,12 +20,12 @@
 #' @export
 jlmerclusterperm_setup <- function(..., verbose = TRUE) {
   if (!JuliaConnectoR::juliaSetupOk()) cli::cli_abort("Cannot set up Julia for {.pkg jlmerclusterperm}.")
-  if (Sys.getenv("JULIACONNECTOR_SERVER") != "") JuliaConnectoR::stopJulia()
+  JuliaConnectoR::stopJulia()
   setup_with_progress(verbose = verbose)
   invisible(TRUE)
 }
 
-setup_with_progress <- function(..., verbose) {
+setup_with_progress <- function(..., verbose = TRUE) {
   start_with_threads(verbose = verbose)
   set_projenv(verbose = verbose)
   source_jl(verbose = verbose)
@@ -50,9 +50,9 @@ set_projenv <- function(..., verbose = TRUE) {
   if (verbose) cli::cli_progress_step("Activating package environment")
   pkgdir <- system.file("julia/", package = "jlmerclusterperm")
   JuliaConnectoR::juliaCall("cd", pkgdir)
-  JuliaConnectoR::juliaEval('using Suppressor, Pkg;')
-  JuliaConnectoR::juliaEval('@suppress Pkg.activate(".");')
-  JuliaConnectoR::juliaCall('Pkg.instantiate')
+  JuliaConnectoR::juliaEval('using Pkg')
+  JuliaConnectoR::juliaEval('Pkg.activate(".", io = devnull)')
+  JuliaConnectoR::juliaEval('Pkg.instantiate(io = devnull)')
   JuliaConnectoR::juliaCall("cd", getwd())
   JuliaConnectoR::juliaEval(paste0('using Random123; const rng = Threefry2x((', getOption("jlmerclusterperm.seed", 1L), ', 20))'))
   .jlmerclusterperm$opts$pkgdir <- pkgdir
