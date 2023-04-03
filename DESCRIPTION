@@ -15,4 +15,5 @@ Imports:
     parallel,
     JuliaConnectoR,
     lme4,
-    cli
+    cli,
+    generics

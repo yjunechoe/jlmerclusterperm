@@ -17,3 +17,7 @@ maybe_as_tibble <- function(x) {
     x
   }
 }
+
+backtrans_interaction <- function(x) {
+  gsub("__", ":", x, fixed = TRUE)
+}
