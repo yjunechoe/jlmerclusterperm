@@ -140,9 +140,7 @@ make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = 
     df[!na_rows, setdiff(cols_keep, colnames(model_matrix_df)), drop = FALSE]
   )
 
-  if ("tibble" %in% rownames(utils::installed.packages())) {
-    model_matrix_df <- asNamespace("tibble")$as_tibble(model_matrix_df)
-  }
+  model_matrix_df <- maybe_as_tibble(model_matrix_df)
 
   out <- list(
     formula = list(r = r_fm, jl = jl_fm),

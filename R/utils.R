@@ -9,3 +9,11 @@ runs_id <- function(...) {
 near_zero <- function(x) {
   abs(x) < .Machine$double.eps ^ 0.5
 }
+
+maybe_as_tibble <- function(x) {
+  if ("tibble" %in% rownames(utils::installed.packages())) {
+    asNamespace("tibble")$as_tibble(x)
+  } else {
+    x
+  }
+}
