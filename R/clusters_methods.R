@@ -13,7 +13,7 @@ format.empirical_clusters <- function(x, ...) {
   zero_clusters <- x[missing_clusters]
   valid_clusters <- x[!missing_clusters]
   cli::cli_format_method({
-    cli::cli_h1("{.strong empirical clusters} ({.arg threshold} = {.val {threshold}}, {.arg binned} = {.val {binned}})")
+    cli::cli_h1("empirical clusters (>{.val {threshold}})")
     for (i in seq_along(valid_clusters)) {
       cli::cli_text("{.el {names(valid_clusters)[[i]]}}")
       cluster_df <- valid_clusters[[i]]
@@ -50,7 +50,7 @@ format.null_clusters <- function(x, levels, ...) {
   binned <- attr(x, "binned")
   cluster_stats <- lapply(x, extract_null_cluster_stats, levels)
   cli::cli_format_method({
-    cli::cli_h1("{.strong null cluster statistics} ({.arg threshold} = {.val {threshold}}, {.arg binned} = {.val {binned}})")
+    cli::cli_h1("null cluster statistics (>{.val {threshold}})")
     for (i in seq_along(cluster_stats)) {
       cli::cli_text("{.el {names(x)[[i]]}}")
       cli::cli_ul()

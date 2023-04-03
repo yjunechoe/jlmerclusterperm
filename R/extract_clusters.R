@@ -13,7 +13,7 @@ extract_empirical_clusters <- function(t_matrix, threshold = 1.5, binned = TRUE,
   time <- dimnames(t_matrix)$Time
   t_matrix[abs(t_matrix) <= abs(threshold)] <- 0
   predictors <- rownames(t_matrix)
-  n <- as.integer(max(top_n %|0|% ncol(t_matrix), 1))
+  n <- as.integer(max(min(top_n, ncol(t_matrix)), 1))
   largest_clusters <- .jlmerclusterperm$extract_clusters(t_matrix, binned, n)
   cluster_dfs <- df_from_DF(largest_clusters)
   empirical_clusters <- split(cluster_dfs[, -5], predictors[cluster_dfs$id])[predictors]
