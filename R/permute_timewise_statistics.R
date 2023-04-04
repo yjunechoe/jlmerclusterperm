@@ -33,9 +33,9 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
   ))
 
   shuffle_predictor_groups <- Filter(function(x) !identical(x, "(Intercept)"), jlmer_spec$meta$term_groups)
-  counter_states <- split(out$counter_states, rep(names(shuffle_predictor_groups), each = nsim))
-  counter_states[] <- lapply(names(counter_states), function(x) {
-    list(predictors = shuffle_predictor_groups[[x]], counter = counter_states[[x]])
+  counter_states <- split(out$counter_states, rep(names(shuffle_predictor_groups), each = nsim))[names(shuffle_predictor_groups)]
+  counter_states[] <- lapply(seq_along(counter_states), function(i) {
+    list(predictors = shuffle_predictor_groups[[i]], counter = counter_states[[i]])
   })
 
   dimnames(out$z_array) <- list(
@@ -48,7 +48,7 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
     out$z_array <- out$z_array[, , predictors, drop = FALSE]
   }
 
-  structure(out$z_array, counter_states = counter_states, class = "timewise_permuted")
+  structure(out$z_array, class = "timewise_permuted", counter_states = counter_states)
 
 }
 

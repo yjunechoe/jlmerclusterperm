@@ -12,7 +12,6 @@ function permute_timewise_statistics(formula, data, time, family, contrasts, nsi
   end
 
   nsims = nsim * length(term_groups_est)
-  counter_states = zeros(nsims)
   pg = Progress(nsims)
 
   if is_mem
@@ -28,14 +27,16 @@ function permute_timewise_statistics(formula, data, time, family, contrasts, nsi
   end
 
   n_fixed = length(fixed)
+  counter_states = zeros(0)
   res = zeros(nsim, n_times, n_fixed)
 
   for term_groups in term_groups_est
     predictors = term_groups.p
-    permute_data = copy(data)
-    shuffle_type = guess_shuffle_as(permute_data, predictors, participant_col, trial_col == "" ? missing : 3)
+    # permute_data = copy(data)
+    shuffle_type = guess_shuffle_as(data, predictors, participant_col, trial_col == "" ? missing : 3)
     for i in 1:nsim
-      counter_states[i] = get_rng_counter()
+      push!(counter_states, get_rng_counter())
+      permute_data = copy(data)
       shuffle_as!(permute_data, shuffle_type, predictors, participant_col, trial_col)
       if is_mem
         zs = timewise_lme(formula, permute_data, time, family,

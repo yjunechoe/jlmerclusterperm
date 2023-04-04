@@ -35,12 +35,14 @@ extract_empirical_clusters <- function(t_matrix, threshold = 1.5, binned = TRUE,
 #' @export
 extract_null_cluster_dists <- function(t_array, threshold = 1.5, binned = TRUE) {
   time <- dimnames(t_array)$Time
+  counter_states <- attr(t_array, "counter_states")
   t_array[abs(t_array) <= abs(threshold)] <- 0
   null_clusters <- apply(t_array, 3, function(t_matrix) {
     t_matrix <- t_matrix[!is.nan(rowSums(t_matrix)),]
     largest_clusters <- df_from_DF(.jlmerclusterperm$extract_clusters(t_matrix, binned, 1L))
   }, simplify = FALSE)
-  structure(null_clusters, class = "null_clusters", threshold = threshold, binned = binned, time = time)
+  structure(null_clusters, class = "null_clusters",
+            threshold = threshold, binned = binned, time = time, counter_states = counter_states)
 }
 
 #' Calculate bootstrapped p-values of clusters

@@ -22,7 +22,7 @@ reset_rng_counter <- function() {
 }
 
 get_rng_counter <- function() {
-  JuliaConnectoR::juliaEval("Int(x.ctr1)")
+  JuliaConnectoR::juliaEval("Int(rng.ctr1)")
 }
 
 #' @rdname julia_rng

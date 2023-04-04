@@ -53,8 +53,11 @@ tidy.empirical_clusters <- function(x) {
 
 #' @export
 tidy.null_clusters <- function(x) {
+  counter_states <- attr(null_statistics, "counter_states")
   cluster_dfs <- lapply(seq_along(x), function(i) {
-    cbind(predictor = names(x)[i], x[[i]])
+    cluster_df <- cbind(predictor = names(x)[i], x[[i]])
+    cluster_df$.counter <- Filter(function(g) names(x)[i] %in% g$predictors, counter_states)[[1]]$counter
+    cluster_df
   })
   clusters_df <- do.call(rbind, cluster_dfs)
   time <- as.numeric(attr(x, "time"))
@@ -62,7 +65,7 @@ tidy.null_clusters <- function(x) {
   clusters_df$start <- time[replace_as_na(clusters_df$cluster_start, 0)]
   clusters_df$end <- time[replace_as_na(clusters_df$cluster_end, 0)]
   clusters_df$length[is.na(clusters_df$start)] <- NA
-  clusters_df <- clusters_df[c("predictor", "start", "end", "length", "statistic", "id")]
+  clusters_df <- clusters_df[c("predictor", "start", "end", "length", "statistic", ".counter")]
   maybe_as_tibble(clusters_df)
 }
 
