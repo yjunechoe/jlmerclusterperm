@@ -65,7 +65,7 @@ tidy.null_clusters <- function(x) {
   clusters_df$start <- time[replace_as_na(clusters_df$cluster_start, 0)]
   clusters_df$end <- time[replace_as_na(clusters_df$cluster_end, 0)]
   clusters_df$length[is.na(clusters_df$start)] <- NA
-  clusters_df <- clusters_df[c("predictor", "start", "end", "length", "statistic")]
+  clusters_df <- clusters_df[c("predictor", "start", "end", "length", "statistic", ".counter")]
   maybe_as_tibble(clusters_df)
 }
 
