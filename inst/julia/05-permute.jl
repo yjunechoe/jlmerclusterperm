@@ -41,3 +41,12 @@ function permute_by_predictor(df, shuffle_type, predictor_cols, participant_col,
   end
   select!(out, :id, Not(:id))
 end
+
+function permute_by_predictor_stable(df, shuffle_type, predictor_cols, participant_col, trial_col, n)
+  permute_data = copy(df)
+  out = DataFrame()
+  for i in 1:n
+    append!(out, shuffle_as!(permute_data, shuffle_type, predictor_cols, participant_col, trial_col))
+  end
+  out
+end
