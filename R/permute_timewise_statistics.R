@@ -48,7 +48,7 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
     out$z_array <- out$z_array[, , predictors, drop = FALSE]
   }
 
-  structure(out$z_array, counter_states = counter_states, class = "timewise_permuted")
+  structure(out$z_array, class = "timewise_permuted")
 
 }
 
