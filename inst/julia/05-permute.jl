@@ -53,7 +53,7 @@ function get_permuted_data_at(df, at, predictors_dict, predictor_runs_dict, part
       rng_state = get_rng_counter()
       shuffled = shuffle_as!(permute_data, shuffle_type, predictor_cols, participant_col, trial_col)
       if rng_state ∈ at
-        append!(out, insertcols(shuffled, :id => rng_state))
+        append!(out, insertcols(shuffled, Symbol(".counter") => rng_state))
       end
     end
   end

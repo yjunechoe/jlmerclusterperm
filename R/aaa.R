@@ -76,7 +76,7 @@ source_jl <- function(..., verbose = TRUE) {
   exported_fns <- c(
     "jlmer", "compute_timewise_statistics",
     "extract_clusters", "permute_timewise_statistics",
-    "guess_shuffle_as", "permute_by_predictor"
+    "guess_shuffle_as", "permute_by_predictor", "get_permuted_data_at"
   )
   for (jl_fn in exported_fns) {
     .jlmerclusterperm[[jl_fn]] <- wrap_jl_fn(jl_fn)

@@ -33,22 +33,32 @@ permute_by_predictor <- function(jlmer_spec, predictors, predictor_type = c("gue
   shuffled
 }
 
+#' Get the full permuted data sampled from the null
+#'
+#' @inheritParams jlmer
+#' @param null_clusters A `null_clusters` object.
+#' @param at A vector of `.counter` values from `tidy(null_clusters)`.
+#'
+#' @return A long dataframe of permuted data from `null_clusters` specified in `at`.
+#' @export
 get_permuted_data_at <- function(jlmer_spec, null_clusters, at) {
+  df <- jlmer_spec$data
+  subject <- jlmer_spec$meta$subject
+  trial <- jlmer_spec$meta$trial
   counter_states <- attr(null_clusters, "counter_states")
   counter_ids_list <- lapply(counter_states, `[[`, "counter")
   counter_ids <- unlist(counter_ids_list, use.names = FALSE)
   if (missing(at) || !all(at %in% counter_ids)) {
-    cli::cli_abort("All {.arg at} must be a valid {.code .counter} value from {.arg null_clusters}.")
+    cli::cli_abort("All {.arg at} values must be a valid {.code .counter} in {.code tidy(null_clusters)}.")
   } else {
     at <- as.integer(at)
   }
   counter_old <- get_rng_counter()
   set_rng_counter(min(counter_ids))
-  df <- jlmer_spec$data
   df_jl <- JuliaConnectoR::juliaCall("DataFrame", as.data.frame(jlmer_spec$data))
   predictors_dict_jl <- JuliaConnectoR::juliaLet("x.namedelements", x = lapply(counter_states, `[[`, "predictors"))
   predictor_runs_dict_jl <- JuliaConnectoR::juliaLet("x.namedelements", x = lapply(counter_states, `[[`, "counter"))
-  out <- df_from_DF(JuliaConnectoR::juliaCall("get_permuted_data_at", df_jl, at, predictors_dict_jl, predictor_runs_dict_jl, jlmer_spec$meta$subject, jlmer_spec$meta$trial))
+  out <- df_from_DF(.jlmerclusterperm$get_permuted_data_at(df_jl, at, predictors_dict_jl, predictor_runs_dict_jl, subject, trial))
   set_rng_counter(counter_old)
   class(out) <- class(df)
   out
