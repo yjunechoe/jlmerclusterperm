@@ -4,14 +4,14 @@
 \alias{julia_rng}
 \alias{set_rng_counter}
 \alias{reset_rng_counter}
-\alias{set_rng_seed}
+\alias{get_rng_counter}
 \title{RNG seed and counter for the permutation algorithm}
 \usage{
 set_rng_counter(counter)
 
 reset_rng_counter()
 
-set_rng_seed(seed)
+get_rng_counter()
 }
 \arguments{
 \item{i}{Counter number}

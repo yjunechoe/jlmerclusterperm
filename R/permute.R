@@ -56,9 +56,10 @@ get_permuted_data_at <- function(jlmer_spec, null_clusters, at) {
   counter_old <- get_rng_counter()
   set_rng_counter(min(counter_ids))
   df_jl <- JuliaConnectoR::juliaCall("DataFrame", as.data.frame(jlmer_spec$data))
-  predictors_dict_jl <- JuliaConnectoR::juliaLet("x.namedelements", x = lapply(counter_states, `[[`, "predictors"))
-  predictor_runs_dict_jl <- JuliaConnectoR::juliaLet("x.namedelements", x = lapply(counter_states, `[[`, "counter"))
-  out <- df_from_DF(.jlmerclusterperm$get_permuted_data_at(df_jl, at, predictors_dict_jl, predictor_runs_dict_jl, subject, trial))
+  predictors_jl <- JuliaConnectoR::juliaCall("Symbol.", as.list(names(counter_states)))
+  predictor_groups_jl <- JuliaConnectoR::juliaLet("x.namedelements", x = lapply(counter_states, `[[`, "predictors"))
+  predictor_runs_jl <- JuliaConnectoR::juliaLet("x.namedelements", x = lapply(counter_states, `[[`, "counter"))
+  out <- df_from_DF(.jlmerclusterperm$get_permuted_data_at(df_jl, at, predictors_jl, predictor_groups_jl, predictor_runs_jl, subject, trial))
   set_rng_counter(counter_old)
   class(out) <- class(df)
   out

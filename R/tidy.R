@@ -43,7 +43,7 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
 }
 
 #' @export
-tidy.empirical_clusters <- function(x) {
+tidy.empirical_clusters <- function(x, ...) {
   cluster_dfs <- lapply(seq_along(x), function(i) {
     cbind(predictor = names(x)[i], x[[i]])
   })
@@ -52,8 +52,8 @@ tidy.empirical_clusters <- function(x) {
 }
 
 #' @export
-tidy.null_clusters <- function(x) {
-  counter_states <- attr(null_statistics, "counter_states")
+tidy.null_clusters <- function(x, ...) {
+  counter_states <- attr(x, "counter_states")
   cluster_dfs <- lapply(seq_along(x), function(i) {
     cluster_df <- cbind(predictor = names(x)[i], x[[i]])
     cluster_df$.counter <- Filter(function(g) names(x)[i] %in% g$predictors, counter_states)[[1]]$counter

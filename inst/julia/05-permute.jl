@@ -42,15 +42,16 @@ function permute_by_predictor(df, shuffle_type, predictor_cols, participant_col,
   select!(out, :id, Not(:id))
 end
 
-function get_permuted_data_at(df, at, predictors_dict, predictor_runs_dict, participant_col, trial_col)
+function get_permuted_data_at(df, at, predictors, predictor_groups, predictor_runs, participant_col, trial_col)
   permute_data = copy(df)
   out = DataFrame()
-  for predictor in keys(predictors_dict)
-    predictor_runs = predictor_runs_dict[predictor]
-    predictor_cols = predictors_dict[predictor]
+  for predictor in predictors
+    predictor_cols = predictor_groups[predictor]
+    predictor_rl = predictor_runs[predictor]
     shuffle_type = guess_shuffle_as(df, predictor_cols, participant_col, trial_col)
-    for i in 1:length(predictor_runs)
+    for i in 1:length(predictor_rl)
       rng_state = get_rng_counter()
+      @info (predictor_cols, shuffle_type, i, predictor_rl[i], get_rng_counter())
       shuffled = shuffle_as!(permute_data, shuffle_type, predictor_cols, participant_col, trial_col)
       if rng_state ∈ at
         append!(out, insertcols(shuffled, Symbol(".counter") => rng_state))

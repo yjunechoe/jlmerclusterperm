@@ -21,12 +21,13 @@ reset_rng_counter <- function() {
   0L
 }
 
+#' @rdname julia_rng
+#' @export
 get_rng_counter <- function() {
   JuliaConnectoR::juliaEval("Int(rng.ctr1)")
 }
 
-#' @rdname julia_rng
-#' @export
+#' @keywords internal
 set_rng_seed <- function(seed) {
   seedL <- as.integer(seed)
   JuliaConnectoR::juliaEval("Random123.seed!(rng, (", seedL, ", 20))")
