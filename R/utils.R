@@ -21,3 +21,8 @@ maybe_as_tibble <- function(x) {
 backtrans_interaction <- function(x) {
   gsub("__", ":", x, fixed = TRUE)
 }
+
+replace_as_na <- function(x, y) {
+  x[x == y] <- NA
+  x
+}

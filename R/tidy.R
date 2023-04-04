@@ -42,6 +42,30 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
   maybe_as_tibble(out)
 }
 
+#' @export
+tidy.empirical_clusters <- function(x) {
+  cluster_dfs <- lapply(seq_along(x), function(i) {
+    cbind(predictor = names(x)[i], x[[i]])
+  })
+  clusters_df <- do.call(rbind, cluster_dfs)
+  maybe_as_tibble(clusters_df)
+}
+
+#' @export
+tidy.null_clusters <- function(x) {
+  cluster_dfs <- lapply(seq_along(x), function(i) {
+    cbind(predictor = names(x)[i], x[[i]])
+  })
+  clusters_df <- do.call(rbind, cluster_dfs)
+  time <- as.numeric(attr(x, "time"))
+  clusters_df$length <- clusters_df$cluster_end - clusters_df$cluster_start + 1
+  clusters_df$start <- time[replace_as_na(clusters_df$cluster_start, 0)]
+  clusters_df$end <- time[replace_as_na(clusters_df$cluster_end, 0)]
+  clusters_df$length[is.na(clusters_df$start)] <- NA
+  clusters_df <- clusters_df[c("predictor", "start", "end", "length", "statistic", "id")]
+  maybe_as_tibble(clusters_df)
+}
+
 #' @importFrom generics glance
 #' @export
 generics::glance
