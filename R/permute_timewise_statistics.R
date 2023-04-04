@@ -42,7 +42,7 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
     out$z_array <- out$z_array[, , predictors, drop = FALSE]
   }
 
-  out$z_array
+  structure(out$z_array, class = "timewise_permuted")
 
 }
 
@@ -51,4 +51,14 @@ augment_term_groups <- function(term_groups) {
   JuliaConnectoR::juliaLet("Tuple(x)", x = lapply(seq_along(term_groups), function (i) {
     JuliaConnectoR::juliaLet("(p = p, i = i)", p = as.list(term_groups[[i]]), i = as.list(grp_idx[[i]]))
   }))
+}
+
+#' @export
+print.timewise_permuted <- function(x) {
+  x_dim <- dim(x)
+  x_dimnames <- dimnames(x)
+  attributes(x) <- NULL
+  dim(x) <- x_dim
+  dimnames(x) <- x_dimnames
+  print(x)
 }

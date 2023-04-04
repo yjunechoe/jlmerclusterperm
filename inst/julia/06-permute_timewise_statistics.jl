@@ -55,7 +55,6 @@ function permute_timewise_statistics(formula, data, time, family, contrasts, nsi
   predictors = vcat(map(terms -> terms.p, term_groups_est)...)
   res = res[:, :, vcat(map(terms -> terms.i, term_groups_est)...)]
 
-  @info counter_states
   (z_array = res, predictors = predictors, counter_states = counter_states)
 
 end
