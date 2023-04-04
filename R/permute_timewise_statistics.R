@@ -60,11 +60,11 @@ augment_term_groups <- function(term_groups) {
 }
 
 #' @export
-print.timewise_permuted <- function(x) {
+print.timewise_permuted <- function(x, ...) {
   x_dim <- dim(x)
   x_dimnames <- dimnames(x)
   attributes(x) <- NULL
   dim(x) <- x_dim
   dimnames(x) <- x_dimnames
-  print(x)
+  print(x, ...)
 }
