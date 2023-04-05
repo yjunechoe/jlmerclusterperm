@@ -44,8 +44,14 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
 
 #' @export
 tidy.empirical_clusters <- function(x, ...) {
+  pvalues <- attr(x, "pvalues")
   cluster_dfs <- lapply(seq_along(x), function(i) {
-    cbind(predictor = names(x)[i], x[[i]])
+    predictor <- names(x)[i]
+    cluster_df <- cbind(predictor = predictor, x[[i]])
+    if (!is.null(pvalues)) {
+      cluster_df$pvalues <- pvalues[[predictor]]
+    }
+    cluster_df
   })
   clusters_df <- do.call(rbind, cluster_dfs)
   maybe_as_tibble(clusters_df)
