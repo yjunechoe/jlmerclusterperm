@@ -47,9 +47,7 @@ tidy.empirical_clusters <- function(x, ...) {
   pvalues <- attr(x, "pvalues")
   cluster_dfs <- lapply(seq_along(x), function(i) {
     predictor <- names(x)[i]
-    cluster_df <- cbind(predictor = predictor, x[[i]])
-    cluster_df$pvalues <- pvalues[[predictor]]
-    cluster_df
+    cbind(predictor = predictor, x[[i]], pvalue = pvalues[[predictor]])
   })
   clusters_df <- do.call(rbind, cluster_dfs)
   maybe_as_tibble(clusters_df)
