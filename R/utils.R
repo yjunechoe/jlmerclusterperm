@@ -28,6 +28,11 @@ replace_as_na <- function(x, y) {
 }
 
 make_threshold_dict <- function(term_groups, threshold) {
+  if (threshold < 0 || threshold > 1) {
+    cli::cli_abort(c(
+      '{.arg threshold} must be between {.val {0}} and {.val {1}} when {.arg statistic = {.val chisq}}'
+    ))
+  }
   threshold_dict <- utils::stack(stats::setNames(term_groups, lengths(term_groups)))
   colnames(threshold_dict) <- c("term", "df")
   threshold_dict$df <- as.integer(threshold_dict$df)
