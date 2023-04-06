@@ -1,4 +1,4 @@
-function compute_timewise_statistics(formula, data, time, family, contrasts, is_mem; opts...)
+function compute_timewise_statistics(formula, data, time, family, contrasts, statistic, is_mem; opts...)
 
   response_var = formula.lhs.sym
   times = sort(unique(data[!,time]))
@@ -27,7 +27,7 @@ function compute_timewise_statistics(formula, data, time, family, contrasts, is_
 
 end
 
-function timewise_lme(formula, data, time, family, contrasts,
+function timewise_lme(formula, data, time, family, contrasts, statistic,
                         response_var, fixed, grouping_vars, times, n_times, diagnose;
                         opts...)
 
@@ -87,7 +87,7 @@ function timewise_lme(formula, data, time, family, contrasts,
 
 end
 
-function timewise_lm(formula, data, time, family, response_var, fixed, times, n_times)
+function timewise_lm(formula, data, time, family, statistic, response_var, fixed, times, n_times)
   z_matrix = zeros(length(fixed), n_times)
   Threads.@threads for i = 1:n_times
     data_at_time = filter(time => ==(times[i]), data)
