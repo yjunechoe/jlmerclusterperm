@@ -41,16 +41,15 @@ function permute_timewise_statistics(formula, data, time, family, contrasts, nsi
     elseif statistic == "t"
       test_opts = Nothing
     end
-    @info test_opts
 
     for i in 1:nsim
       counter_states[i] = get_rng_counter()
       shuffle_as!(permute_data, shuffle_type, predictors, participant_col, trial_col)
       if is_mem
-        zs = timewise_lme(formula, permute_data, time, family, contrasts, statistic,
+        zs = timewise_lme(formula, permute_data, time, family, contrasts, statistic, test_opts,
                           response_var, fixed, grouping_vars, times, n_times, false; opts...)
       else
-        zs = timewise_lm(formula, permute_data, time, family, statistic,
+        zs = timewise_lm(formula, permute_data, time, family, statistic, test_opts,
                           response_var, fixed, times, n_times)
       end
       for term_ind in term_groups.i

@@ -1,35 +1,43 @@
-function compute_timewise_statistics(formula, data, time, family, contrasts, statistic, is_mem; opts...)
+function compute_timewise_statistics(formula, data, time, family, contrasts, term_groups, statistic, is_mem; opts...)
 
   response_var = formula.lhs.sym
   times = sort(unique(data[!,time]))
   n_times = length(times)
 
   if is_mem
-
     fm_schema = MixedModels.schema(formula, data, contrasts)
     form = MixedModels.apply_schema(formula, fm_schema, MixedModel)
     re_term = [isa(x, MixedModels.AbstractReTerm) for x in form.rhs]
     fixed = String.(Symbol.(form.rhs[.!re_term][1].terms))
     grouping_vars = [String(Symbol(x.rhs)) for x in form.rhs[re_term]]
-
-    timewise_lme(formula, data, time, family, contrasts, response_var, fixed, grouping_vars, times, n_times, true; opts...)
-
   else
-
     fm_schema = StatsModels.schema(formula, data)
     form = StatsModels.apply_schema(formula, fm_schema)
     fixed = String.(Symbol.(form.rhs.terms))
+  end
 
-    t_matrix = timewise_lm(formula, data, time, family, response_var, fixed, times, n_times)
+  if statistic == "chisq"
+    drop_terms = filter(x -> x.p != ["(Intercept)"], term_groups)
+    reduced_formula = [reduce_formula(Symbol.(x.p), form, is_mem) for x in drop_terms]
+    test_opts = (reduced_formula = reduced_formula,)
+  elseif statistic == "t"
+    test_opts = Nothing
+  end
+
+  if is_mem
+    timewise_lme(formula, data, time, family, contrasts, statistic, test_opts,
+                 response_var, fixed, grouping_vars, times, n_times, true; opts...)
+  else
+    t_matrix = timewise_lm(formula, data, time, family, statistic, test_opts,
+                           response_var, fixed, times, n_times)
     (t_matrix = t_matrix, Predictors = fixed, Time = times)
-
   end
 
 end
 
-function timewise_lme(formula, data, time, family, contrasts, statistic,
-                        response_var, fixed, grouping_vars, times, n_times, diagnose;
-                        opts...)
+function timewise_lme(formula, data, time, family, contrasts, statistic, test_opts,
+                      response_var, fixed, grouping_vars, times, n_times, diagnose;
+                      opts...)
 
   t_matrix = zeros(length(fixed), n_times)
   if diagnose
@@ -59,9 +67,26 @@ function timewise_lme(formula, data, time, family, contrasts, statistic,
         try
           time_mod = fit(MixedModel, formula, data_at_time, family; contrasts = contrasts, opts...)
 
+          # test statistic
           if statistic == "chisq"
+            drop_formula = test_opts.reduced_formula
+            if drop_formula isa Vector
+              drop1_mods = map(fm -> fit(MixedModel, fm, data_at_time, family; contrasts = contrasts, opts...), drop_formula)
+              lrtest_objs = map(x -> MixedModels.likelihoodratiotest(time_mod, x), drop1_mods)
+              chisq_vals = map(x -> x.tests.pvalues[1] < 0.05 ? x.tests.deviancediff[1] : 0, lrtest_objs)
+              if size(t_matrix)[1] > length(chisq_vals)
+                chisq_vals = [0, chisq_vals...]
+              else
+                chisq_vals = [chisq_vals...]
+              end
+              t_matrix[:,i] = chisq_vals # .* sign.(coef(time_mod))
+            else
+              lrtest_obj = MixedModels.likelihoodratiotest(time_mod, fit(MixedModel, drop_formula, data_at_time, family; contrasts = contrasts, opts...))
+              chisq_val = lrtest_obj.tests.pvalues[1] < 0.05 ? lrtest_obj.tests.deviancediff[1] : 0
+              t_matrix[:,i] .= chisq_val # make signed?
+            end
           elseif statistic == "t"
-            t_matrix[:,i] = z_value(time_mod)
+            t_matrix[:,i] = t_value(time_mod)
           end
 
           if diagnose
@@ -92,7 +117,8 @@ function timewise_lme(formula, data, time, family, contrasts, statistic,
 
 end
 
-function timewise_lm(formula, data, time, family, statistic, response_var, fixed, times, n_times)
+function timewise_lm(formula, data, time, family, statistic, test_opts,
+                     response_var, fixed, times, n_times)
   t_matrix = zeros(length(fixed), n_times)
   Threads.@threads for i = 1:n_times
     data_at_time = filter(time => ==(times[i]), data)
@@ -107,7 +133,27 @@ function timewise_lm(formula, data, time, family, statistic, response_var, fixed
         t_matrix[:,i] .= NaN
         continue
       end
-      t_matrix[:,i] = z_value(time_mod)
+
+      # test statistic
+      if statistic == "chisq"
+        drop_formula = test_opts.reduced_formula
+        if drop_formula isa Vector
+          drop1_mods = map(fm -> glm(fm, data_at_time, family), drop_formula)
+          chisq_vals = map(x -> chisq_value(lrtest(time_mod, x)), drop1_mods)
+          if size(t_matrix)[1] > length(chisq_vals)
+            chisq_vals = [0, chisq_vals...]
+          else
+            chisq_vals = [chisq_vals...]
+          end
+          t_matrix[:,i] = chisq_vals # .* sign.(coef(time_mod))
+        else
+          lrtest_obj = lrtest(time_mod, glm(test_opts.reduced_formula, data_at_time, family))
+          t_matrix[:,i] .= chisq_value(lrtest_obj) # make signed?
+        end
+      elseif statistic == "t"
+        t_matrix[:,i] = t_value(time_mod)
+      end
+
     end
   end
   t_matrix

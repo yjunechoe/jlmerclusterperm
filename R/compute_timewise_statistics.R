@@ -7,9 +7,12 @@
 #'
 #' @return A predictor-by-time matrix of cluster statistics.
 #' @export
-compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "binomial"), ...) {
+compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "binomial"), statistic = c("t", "chisq"), ...) {
 
   family <- match.arg(family)
+  statistic <- match.arg(statistic)
+  is_mem <- jlmer_spec$meta$is_mem
+  term_groups <- augment_term_groups(jlmer_spec$meta$term_groups)
   args <- prep_for_jlmer(jlmer_spec$formula$jl, jlmer_spec$data, time = jlmer_spec$meta$time, family, ...)
 
   opts <- list(...)
@@ -18,9 +21,9 @@ compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
     opts <- utils::modifyList(list(fast = TRUE), opts)
   }
 
-  is_mem <- jlmer_spec$meta$is_mem
 
-  out <- JuliaConnectoR::juliaGet(do.call(.jlmerclusterperm$compute_timewise_statistics, c(args, is_mem, opts)))
+  out <- JuliaConnectoR::juliaGet(do.call(.jlmerclusterperm$compute_timewise_statistics,
+                                          c(args, term_groups, statistic, is_mem, opts)))
 
   alert_diagnostics(jlmer_spec, out)
 

@@ -1,4 +1,4 @@
-function z_value(mod)
+function t_value(mod)
   coef(mod) ./ stderror(mod)
 end
 
@@ -20,4 +20,8 @@ reduce_formula = function(to_remove, enriched_formula, is_mem)
     new_rhs = StatsModels.collect_matrix_terms(fe_terms[fe_to_keep])
   end
   FormulaTerm(enriched_formula.lhs, new_rhs)
+end
+
+chisq_value = function(lrt)
+  lrt.pval[2] < 0.05 ? abs.(2 .* (lrt.loglikelihood[2] - lrt.loglikelihood[1])) : 0
 end
