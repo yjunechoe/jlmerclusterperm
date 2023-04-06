@@ -20,8 +20,8 @@ function compute_timewise_statistics(formula, data, time, family, contrasts, sta
     form = StatsModels.apply_schema(formula, fm_schema)
     fixed = String.(Symbol.(form.rhs.terms))
 
-    z_matrix = timewise_lm(formula, data, time, family, response_var, fixed, times, n_times)
-    (z_matrix = z_matrix, Predictors = fixed, Time = times)
+    t_matrix = timewise_lm(formula, data, time, family, response_var, fixed, times, n_times)
+    (t_matrix = t_matrix, Predictors = fixed, Time = times)
 
   end
 
@@ -31,7 +31,7 @@ function timewise_lme(formula, data, time, family, contrasts, statistic,
                         response_var, fixed, grouping_vars, times, n_times, diagnose;
                         opts...)
 
-  z_matrix = zeros(length(fixed), n_times)
+  t_matrix = zeros(length(fixed), n_times)
   if diagnose
     singular_fits = zeros(n_times)
     convergence_failures = zeros(Bool, n_times)
@@ -49,7 +49,7 @@ function timewise_lme(formula, data, time, family, contrasts, statistic,
       response = data_at_time[!, response_var]
 
       if all(==(response[1]), response)
-        z_matrix[:,i] .= response[1] == 1 ? Inf : -Inf
+        t_matrix[:,i] .= response[1] == 1 ? Inf : -Inf
         if diagnose
           convergence_failures[i] = missing
           singular_fits[i] = missing
@@ -58,14 +58,19 @@ function timewise_lme(formula, data, time, family, contrasts, statistic,
       else
         try
           time_mod = fit(MixedModel, formula, data_at_time, family; contrasts = contrasts, opts...)
-          z_matrix[:,i] = z_value(time_mod)
+
+          if statistic == "chisq"
+          elseif statistic == "t"
+            t_matrix[:,i] = z_value(time_mod)
+          end
+
           if diagnose
             singular_fits[i] = issingular(time_mod)
             rePCA_95_matrix[:,i] = [all(isnan, x) ? 0 : findfirst(>(.95), x) for x in time_mod.rePCA]
           end
         catch e
           convergence_failures[i] = true
-          z_matrix[:,i] .= NaN
+          t_matrix[:,i] .= NaN
         end
       end
 
@@ -78,32 +83,32 @@ function timewise_lme(formula, data, time, family, contrasts, statistic,
   if diagnose
     (
       singular_fits = singular_fits, convergence_failures = convergence_failures,
-      z_matrix = z_matrix, Predictors = fixed, Time = times,
+      t_matrix = t_matrix, Predictors = fixed, Time = times,
       rePCA_95_matrix = rePCA_95_matrix, Grouping = grouping_vars
     )
   else
-    z_matrix
+    t_matrix
   end
 
 end
 
 function timewise_lm(formula, data, time, family, statistic, response_var, fixed, times, n_times)
-  z_matrix = zeros(length(fixed), n_times)
+  t_matrix = zeros(length(fixed), n_times)
   Threads.@threads for i = 1:n_times
     data_at_time = filter(time => ==(times[i]), data)
     response = data_at_time[!, response_var]
     if all(==(response[1]), response)
       constant = response[1] == 1 ? Inf : -Inf
-      z_matrix[:,i] .= constant
+      t_matrix[:,i] .= constant
     else
       time_mod = try
         glm(formula, data_at_time, family)
       catch e
-        z_matrix[:,i] .= NaN
+        t_matrix[:,i] .= NaN
         continue
       end
-      z_matrix[:,i] = z_value(time_mod)
+      t_matrix[:,i] = z_value(time_mod)
     end
   end
-  z_matrix
+  t_matrix
 end
