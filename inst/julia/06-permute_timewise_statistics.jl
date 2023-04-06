@@ -34,6 +34,9 @@ function permute_timewise_statistics(formula, data, time, family, contrasts, nsi
     predictors = term_groups.p
     permute_data = copy(data)
     shuffle_type = guess_shuffle_as(permute_data, predictors, participant_col, trial_col == "" ? missing : 3)
+
+    reduced_formula = reduce_formula(Symbol.(predictors), form, is_mem)
+
     for i in 1:nsim
       counter_states[i] = get_rng_counter()
       shuffle_as!(permute_data, shuffle_type, predictors, participant_col, trial_col)
