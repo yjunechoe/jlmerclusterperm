@@ -9,8 +9,10 @@
 #' @return A simulation-by-time-by-predictor 3D array of cluster statistics.
 #' @export
 permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "binomial"),
+                                        statistic = c("t", "chisq"),
                                         nsim = 100L, predictors = NULL, ...) {
 
+  statistic <- match.arg(statistic)
   is_mem <- jlmer_spec$meta$is_mem
   participant_col <- jlmer_spec$meta$subject
   trial_col <- jlmer_spec$meta$trial %|0|% ""
@@ -29,7 +31,7 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
 
   out <- JuliaConnectoR::juliaGet(do.call(
     .jlmerclusterperm$permute_timewise_statistics,
-    c(args, nsim, participant_col, trial_col, term_groups, predictors_subset, is_mem, opts)
+    c(args, nsim, participant_col, trial_col, term_groups, predictors_subset, statistic, is_mem, opts)
   ))
 
   # shuffle_predictor_groups <- Filter(function(x) !identical(x, "(Intercept)"), jlmer_spec$meta$term_groups)

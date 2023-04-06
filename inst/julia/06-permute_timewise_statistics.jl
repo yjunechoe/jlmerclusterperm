@@ -1,4 +1,4 @@
-function permute_timewise_statistics(formula, data, time, family, contrasts, nsim, participant_col, trial_col, term_groups, predictors_subset, is_mem; opts...)
+function permute_timewise_statistics(formula, data, time, family, contrasts, nsim, participant_col, trial_col, term_groups, predictors_subset, statistic, is_mem; opts...)
 
   response_var = formula.lhs.sym
   times = sort(unique(data[!,time]))
@@ -35,7 +35,13 @@ function permute_timewise_statistics(formula, data, time, family, contrasts, nsi
     permute_data = copy(data)
     shuffle_type = guess_shuffle_as(permute_data, predictors, participant_col, trial_col == "" ? missing : 3)
 
-    reduced_formula = reduce_formula(Symbol.(predictors), form, is_mem)
+    if statistic == "chisq"
+      reduced_formula = reduce_formula(Symbol.(predictors), form, is_mem)
+      test_opts = (reduced_formula = reduced_formula,)
+    else
+      test_opts = Nothing
+    end
+    @info test_opts
 
     for i in 1:nsim
       counter_states[i] = get_rng_counter()
