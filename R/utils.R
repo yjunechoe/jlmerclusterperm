@@ -26,3 +26,11 @@ replace_as_na <- function(x, y) {
   x[x == y] <- NA
   x
 }
+
+make_threshold_dict <- function(term_groups, threshold) {
+  threshold_dict <- utils::stack(stats::setNames(term_groups, lengths(term_groups)))
+  colnames(threshold_dict) <- c("term", "df")
+  threshold_dict$df <- as.integer(threshold_dict$df)
+  threshold_dict$threshold <- stats::qchisq(p = 1 - threshold, df = threshold_dict$df)
+  threshold_dict
+}

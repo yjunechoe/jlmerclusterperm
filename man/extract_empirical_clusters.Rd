@@ -4,17 +4,12 @@
 \alias{extract_empirical_clusters}
 \title{Detect largest clusters from a time sequence of cluster statistics}
 \usage{
-extract_empirical_clusters(
-  t_matrix,
-  threshold = 1.5,
-  binned = TRUE,
-  top_n = 1L
-)
+extract_empirical_clusters(t_matrix, threshold, binned = TRUE, top_n = 1L)
 }
 \arguments{
 \item{t_matrix}{A predictor-by-time matrix of cluster statistics.}
 
-\item{threshold}{Cluster statistic threshold. Defaults to \code{1.5}.}
+\item{threshold}{Cluster statistic threshold. If statistic is \code{"chisq"}, this represents the p-value threshold from a chi-squared test.}
 
 \item{binned}{Whether time points have been aggregated. Defaults to \code{TRUE} which allows length-1 clusters.}
 

@@ -1,7 +1,7 @@
 #' Detect largest clusters from a time sequence of cluster statistics
 #'
 #' @param t_matrix A predictor-by-time matrix of cluster statistics.
-#' @param threshold Cluster statistic threshold. Defaults to `1.5`.
+#' @param threshold Cluster statistic threshold. If statistic is `"chisq"`, this represents the p-value threshold from a chi-squared test.
 #' @param binned Whether time points have been aggregated. Defaults to `TRUE` which allows length-1 clusters.
 #' @param top_n How many clusters to return, ordered by the size of the cluster statistic.
 #'   Defaults to `1L` which returns the largest cluster. Use `NULL` to return all clusters.
@@ -9,9 +9,18 @@
 #' @seealso [compute_timewise_statistics()]
 #'
 #' @export
-extract_empirical_clusters <- function(t_matrix, threshold = 1.5, binned = TRUE, top_n = 1L) {
+extract_empirical_clusters <- function(t_matrix, threshold, binned = TRUE, top_n = 1L) {
   time <- dimnames(t_matrix)$Time
-  t_matrix[abs(t_matrix) <= abs(threshold)] <- 0
+  statistic <- attr(t_matrix, "statistic")
+  if (statistic == "t") {
+    t_matrix[abs(t_matrix) <= abs(threshold)] <- 0
+  } else if (statistic == "chisq") {
+    threshold_dict <- make_threshold_dict(attr(t_matrix, "term_groups"), threshold)
+    for (predictor in dimnames(t_matrix)$Predictors) {
+      predictor_statistics <- t_matrix[predictor,]
+      t_matrix[predictor, abs(predictor_statistics) <= abs(threshold_dict[threshold_dict$term == predictor, "threshold"])] <- 0
+    }
+  }
   predictors <- rownames(t_matrix)
   n <- as.integer(max(min(top_n, ncol(t_matrix)), 1))
   largest_clusters <- .jlmerclusterperm$extract_clusters(t_matrix, binned, n)
@@ -21,8 +30,8 @@ extract_empirical_clusters <- function(t_matrix, threshold = 1.5, binned = TRUE,
     cluster_df[order(cluster_df$cluster_id), ]
   })
   missing_clusters <- sapply(empirical_clusters, function(x) all(near_zero(x$statistic)))
-  structure(empirical_clusters, class = "empirical_clusters",
-            missing_clusters = missing_clusters, threshold = threshold, binned = binned, time = time)
+  structure(empirical_clusters, class = "empirical_clusters", missing_clusters = missing_clusters,
+            statistic = statistic, threshold = threshold, binned = binned, time = time)
 }
 
 #' Construct a distribution of the largest cluster statistics from bootstrapped permutations
@@ -33,14 +42,25 @@ extract_empirical_clusters <- function(t_matrix, threshold = 1.5, binned = TRUE,
 #' @seealso [permute_timewise_statistics()]
 #'
 #' @export
-extract_null_cluster_dists <- function(t_array, threshold = 1.5, binned = TRUE) {
+extract_null_cluster_dists <- function(t_array, threshold, binned = TRUE) {
   time <- dimnames(t_array)$Time
-  t_array[abs(t_array) <= abs(threshold)] <- 0
+  statistic <- attr(t_array, "statistic")
+  if (statistic == "t") {
+    t_array[abs(t_array) <= abs(threshold)] <- 0
+  } else if (statistic == "chisq") {
+    threshold_dict <- make_threshold_dict(attr(t_array, "term_groups"), threshold)
+    for (predictor in dimnames(t_array)$Predictor) {
+      predictor_statistics <- t_array[, , predictor]
+      predictor_statistics[abs(predictor_statistics) <= abs(threshold_dict[threshold_dict$term == predictor, "threshold"])] <- 0
+      t_array[, , predictor] <- predictor_statistics
+    }
+  }
   null_clusters <- apply(t_array, 3, function(t_matrix) {
     t_matrix <- t_matrix[!is.nan(rowSums(t_matrix)),]
     largest_clusters <- df_from_DF(.jlmerclusterperm$extract_clusters(t_matrix, binned, 1L))
   }, simplify = FALSE)
-  structure(null_clusters, class = "null_clusters", threshold = threshold, binned = binned, time = time)
+  structure(null_clusters, class = "null_clusters",
+            statistic = statistic, threshold = threshold, binned = binned, time = time)
 }
 
 #' Calculate bootstrapped p-values of clusters
@@ -55,6 +75,11 @@ extract_null_cluster_dists <- function(t_array, threshold = 1.5, binned = TRUE) 
 #'
 #' @export
 calculate_clusters_pvalues <- function(empirical_clusters, null_clusters, add1 = FALSE) {
+  empirical_attrs <- attributes(empirical_clusters)
+  null_attrs <- attributes(null_clusters)
+  if (!identical(empirical_attrs[c("statistic", "threshold")], null_attrs[c("statistic", "threshold")])) {
+    cli::cli_abort("Cluster statistics between empirical and null are incomparable.")
+  }
   empirical <- lapply(empirical_clusters, `[[`, "statistic")
   empirical <- Filter(function(x) !near_zero(x[1]), empirical)
   null <- lapply(null_clusters, `[[`, "statistic")
@@ -68,3 +93,5 @@ calculate_clusters_pvalues <- function(empirical_clusters, null_clusters, add1 =
   attr(augmented, "pvalues") <- pvalues
   augmented
 }
+
+

@@ -4,12 +4,12 @@
 \alias{extract_null_cluster_dists}
 \title{Construct a distribution of the largest cluster statistics from bootstrapped permutations}
 \usage{
-extract_null_cluster_dists(t_array, threshold = 1.5, binned = TRUE)
+extract_null_cluster_dists(t_array, threshold, binned = TRUE)
 }
 \arguments{
 \item{t_array}{A simulation-by-time-by-predictor 3D array of cluster statistics.}
 
-\item{threshold}{Cluster statistic threshold. Defaults to \code{1.5}.}
+\item{threshold}{Cluster statistic threshold. If statistic is \code{"chisq"}, this represents the p-value threshold from a chi-squared test.}
 
 \item{binned}{Whether time points have been aggregated. Defaults to \code{TRUE} which allows length-1 clusters.}
 }

@@ -7,6 +7,7 @@
 permute_timewise_statistics(
   jlmer_spec,
   family = c("gaussian", "binomial"),
+  statistic = c("t", "chisq"),
   nsim = 100L,
   predictors = NULL,
   ...
@@ -16,6 +17,10 @@ permute_timewise_statistics(
 \item{jlmer_spec}{Data prepped for jlmer from \code{make_jlmer_spec()}}
 
 \item{family}{A GLM family. Currently supports "gaussian" and "binomial".}
+
+\item{statistic}{Test statistic for calculating cluster mass.
+Can be one of \code{"t"} (default) from the regression model output or
+\code{"chisq"} from a likelihood ratio test (takes about twice as long to calculate).}
 
 \item{nsim}{Number of simulations description}
 

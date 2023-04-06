@@ -1,6 +1,9 @@
 #' Fit Julia mixed models to each time point of a time series data
 #'
 #' @inheritParams jlmer
+#' @param statistic Test statistic for calculating cluster mass.
+#'  Can be one of `"t"` (default) from the regression model output or
+#'  `"chisq"` from a likelihood ratio test (takes about twice as long to calculate).
 #' @param ... Optional arguments to fit. Defaults to `fast = TRUE` and `progress = FALSE`.
 #'
 #' @seealso [jlmer()], [make_jlmer_spec()]
@@ -30,7 +33,8 @@ compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
   dimnames(out$t_matrix) <- out[c("Predictors", "Time")]
   out$t_matrix <- out$t_matrix[out$Predictors != "1", , drop = FALSE]
 
-  structure(out$t_matrix, class = "timewise_statistics", statistic = statistic)
+  structure(out$t_matrix, class = "timewise_statistics",
+            statistic = statistic, term_groups = jlmer_spec$meta$term_groups)
 
 }
 

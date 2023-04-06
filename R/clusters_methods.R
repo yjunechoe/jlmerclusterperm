@@ -8,12 +8,13 @@ format.empirical_clusters <- function(x, ...) {
   pvalues <- attr(x, "pvalues")
   missing_clusters <- attr(x, "missing_clusters")
   time <- attr(x, "time")
+  statistic <- attr(x, "statistic")
   threshold <- attr(x, "threshold")
   binned <- attr(x, "binned")
   zero_clusters <- x[missing_clusters]
   valid_clusters <- x[!missing_clusters]
   cli::cli_format_method({
-    cli::cli_h1("empirical clusters (>{.val {threshold}})")
+    cli::cli_h1(paste("empirical clusters", format_threshold(statistic)))
     for (i in seq_along(valid_clusters)) {
       cli::cli_text("{.el {names(valid_clusters)[[i]]}}")
       cluster_df <- valid_clusters[[i]]
@@ -46,11 +47,12 @@ print.null_clusters <- function(x, levels = 0.95, ...) {
 
 #' @export
 format.null_clusters <- function(x, levels, ...) {
+  statistic <- attr(x, "statistic")
   threshold <- attr(x, "threshold")
   binned <- attr(x, "binned")
   cluster_stats <- lapply(x, extract_null_cluster_stats, levels)
   cli::cli_format_method({
-    cli::cli_h1("null cluster statistics (>{.val {threshold}})")
+    cli::cli_h1(paste("null cluster statistics", format_threshold(statistic)))
     for (i in seq_along(cluster_stats)) {
       cli::cli_text("{.el {names(x)[[i]]}}")
       cli::cli_ul()
@@ -71,4 +73,12 @@ extract_null_cluster_stats <- function(x, levels) {
     paste(percent, sprintf("[%0.3f, %0.3f]", interval[1], interval[2]))
   }), collapse = ", ")
   list("Mean (SD)" = mean_se, "Coverage intervals" = cis)
+}
+
+format_threshold <- function(statistic) {
+  if (statistic == "t") {
+    "(t > {.val {threshold}})"
+  } else if (statistic == "chisq") {
+    "(chisq p < {.val {threshold}})"
+  }
 }
