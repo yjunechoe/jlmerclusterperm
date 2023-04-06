@@ -30,7 +30,7 @@ compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
   dimnames(out$t_matrix) <- out[c("Predictors", "Time")]
   out$t_matrix <- out$t_matrix[out$Predictors != "1", , drop = FALSE]
 
-  out$t_matrix
+  structure(out$t_matrix, class = "timewise_statistics", statistic = statistic)
 
 }
 

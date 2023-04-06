@@ -72,18 +72,16 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
             drop_formula = test_opts.reduced_formula
             if drop_formula isa Vector
               drop1_mods = map(fm -> fit(MixedModel, fm, data_at_time, family; contrasts = contrasts, opts...), drop_formula)
-              lrtest_objs = map(x -> MixedModels.likelihoodratiotest(time_mod, x), drop1_mods)
-              chisq_vals = map(x -> x.tests.pvalues[1] < 0.05 ? x.tests.deviancediff[1] : 0, lrtest_objs)
+              chisq_vals = map(x -> MixedModels.likelihoodratiotest(time_mod, x).tests.deviancediff[1], drop1_mods)
               if size(t_matrix)[1] > length(chisq_vals)
                 chisq_vals = [0, chisq_vals...]
               else
                 chisq_vals = [chisq_vals...]
               end
-              t_matrix[:,i] = chisq_vals # .* sign.(coef(time_mod))
+              t_matrix[:,i] = chisq_vals .* sign.(coef(time_mod))
             else
               lrtest_obj = MixedModels.likelihoodratiotest(time_mod, fit(MixedModel, drop_formula, data_at_time, family; contrasts = contrasts, opts...))
-              chisq_val = lrtest_obj.tests.pvalues[1] < 0.05 ? lrtest_obj.tests.deviancediff[1] : 0
-              t_matrix[:,i] .= chisq_val # make signed?
+              t_matrix[:,i] .= lrtest_obj.tests.deviancediff[1] # make signed?
             end
           elseif statistic == "t"
             t_matrix[:,i] = t_value(time_mod)
@@ -145,7 +143,7 @@ function timewise_lm(formula, data, time, family, statistic, test_opts,
           else
             chisq_vals = [chisq_vals...]
           end
-          t_matrix[:,i] = chisq_vals # .* sign.(coef(time_mod))
+          t_matrix[:,i] = chisq_vals .* sign.(coef(time_mod))
         else
           lrtest_obj = lrtest(time_mod, glm(test_opts.reduced_formula, data_at_time, family))
           t_matrix[:,i] .= chisq_value(lrtest_obj) # make signed?
