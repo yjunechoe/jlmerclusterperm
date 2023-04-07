@@ -8,23 +8,27 @@ NULL
 #'
 #' @rdname julia_rng
 #' @export
-set_rng_counter <- function(counter) {
-  counterL <- as.integer(counter)
+set_rng_state <- function(i) {
+  counterL <- as.integer(i)
   JuliaConnectoR::juliaLet("set_counter!(rng, i)", i = counterL)
   counterL
 }
 
 #' @rdname julia_rng
 #' @export
-reset_rng_counter <- function() {
+reset_rng_state <- function() {
   JuliaConnectoR::juliaEval("set_counter!(rng, 0)")
   0L
 }
 
-get_rng_counter <- function() {
+#' @rdname julia_rng
+#' @export
+get_rng_state <- function() {
   JuliaConnectoR::juliaEval("Int(rng.ctr1)")
 }
 
+#' @param seed Seed
+#'
 #' @rdname julia_rng
 #' @export
 set_rng_seed <- function(seed) {

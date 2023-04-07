@@ -2,19 +2,24 @@
 % Please edit documentation in R/rng_counter.R
 \name{julia_rng}
 \alias{julia_rng}
-\alias{set_rng_counter}
-\alias{reset_rng_counter}
+\alias{set_rng_state}
+\alias{reset_rng_state}
+\alias{get_rng_state}
 \alias{set_rng_seed}
 \title{RNG seed and counter for the permutation algorithm}
 \usage{
-set_rng_counter(counter)
+set_rng_state(i)
 
-reset_rng_counter()
+reset_rng_state()
+
+get_rng_state()
 
 set_rng_seed(seed)
 }
 \arguments{
 \item{i}{Counter number}
+
+\item{seed}{Seed}
 }
 \description{
 RNG seed and counter for the permutation algorithm
