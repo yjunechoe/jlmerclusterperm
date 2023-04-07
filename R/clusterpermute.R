@@ -15,7 +15,9 @@ clusterpermute <- function(jlmer_spec,
                            add1,
                            ...) {
   cli::cli_progress_step("Detecting empirical clusters and calculating cluster-mass statistics.")
+  old_opts <- julia_progress(show = FALSE)
   empirical_statistics <- suppressMessages(compute_timewise_statistics(jlmer_spec, family, statistic, ...))
+  julia_progress(show = old_opts$show)
   empirical_clusters <- extract_empirical_clusters(empirical_statistics, threshold, binned, top_n)
   cli::cli_progress_step("Sampling cluster-mass statistics from a bootstrapped null distribution.")
   null_statistics <- permute_timewise_statistics(jlmer_spec, family, statistic, nsim, predictors, ...)
