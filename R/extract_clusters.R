@@ -74,7 +74,7 @@ calculate_clusters_pvalues <- function(empirical_clusters, null_clusters, add1 =
       }
     })
     mismatch_info <- Filter(Negate(is.null), mismatch_info)
-    mismatch_info <- stats::setNames(paste0("{.el ", names(mismatch_info), "}: ", mismatch_info), rep("x", length(mismatch_info)))
+    mismatch_info <- stats::setNames(paste0("{.strong ", names(mismatch_info), "}: ", mismatch_info), rep("x", length(mismatch_info)))
     cli::cli_abort(c(
       "Cluster-mass statistics between empirical and null are not comparable.",
       "i" = "{.arg empirical_clusters} and {.arg null_clusters} must share the same {.code statistic} and {.code threshold}.",
@@ -100,7 +100,7 @@ apply_threshold <- function(timewise_statistics, statistic, threshold) {
   if (statistic == "t") {
     timewise_statistics[abs(timewise_statistics) <= abs(threshold)] <- 0
   } else if (statistic == "chisq") {
-    threshold_dict <- make_threshold_dict(attr(timewise_statistics, "term_groups"), threshold)
+    threshold_dict <- chisq_threshold_dict(attr(timewise_statistics, "term_groups"), threshold)
     predictors <- dimnames(timewise_statistics)$Predictor
     for (predictor in predictors) {
       predictor_ind <- slice.index(timewise_statistics, "Predictor") == match(predictor, predictors)
@@ -113,11 +113,9 @@ apply_threshold <- function(timewise_statistics, statistic, threshold) {
 }
 
 #' @keywords internal
-make_threshold_dict <- function(term_groups, threshold) {
+chisq_threshold_dict <- function(term_groups, threshold) {
   if (threshold < 0 || threshold > 1) {
-    cli::cli_abort(c(
-      '{.arg threshold} must be between {.val {0}} and {.val {1}} when {.arg statistic = {.val chisq}}'
-    ))
+    cli::cli_abort('{.arg threshold} must be between {.val {0}} and {.val {1}} when {.arg statistic = {.val chisq}}')
   }
   threshold_dict <- utils::stack(stats::setNames(term_groups, lengths(term_groups)))
   colnames(threshold_dict) <- c("term", "df")
