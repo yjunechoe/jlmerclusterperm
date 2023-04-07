@@ -26,7 +26,8 @@ Can be one of \code{"t"} (default) from the regression model output or
 
 \item{predictors}{A subset of predictors to test. Defaults to \code{NULL} which tests all predictors.}
 
-\item{...}{Optional arguments to fit. Defaults to \code{fast = TRUE} and \code{progress = FALSE}.}
+\item{...}{Optional arguments passed to Julia for model fitting.
+Defaults to \code{fast = TRUE} and \code{progress = FALSE}.}
 }
 \value{
 A simulation-by-time-by-predictor 3D array of cluster statistics.

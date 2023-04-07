@@ -21,7 +21,7 @@ to_jlmer(
 
 \item{jlmer_spec_opts}{Other options passed to \code{make_jlmer_spec()}}
 
-\item{...}{Optional arguments to fit (\code{fast}, \code{nAGQ}, etc.)}
+\item{...}{Optional arguments passed to Julia for model fitting.}
 }
 \description{
 Fit a Julia mixed model using lme4 syntax

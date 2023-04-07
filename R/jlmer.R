@@ -18,7 +18,7 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_sp
 #'
 #' @param jlmer_spec Data prepped for jlmer from `make_jlmer_spec()`
 #' @param family A GLM family. Currently supports "gaussian" and "binomial".
-#' @param ... Optional arguments to fit (`fast`, `nAGQ`, etc.)
+#' @param ... Optional arguments passed to Julia for model fitting.
 #'
 #' @seealso [make_jlmer_spec()]
 #'

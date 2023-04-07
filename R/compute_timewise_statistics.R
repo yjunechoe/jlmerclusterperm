@@ -4,7 +4,8 @@
 #' @param statistic Test statistic for calculating cluster mass.
 #'  Can be one of `"t"` (default) from the regression model output or
 #'  `"chisq"` from a likelihood ratio test (takes about twice as long to calculate).
-#' @param ... Optional arguments to fit. Defaults to `fast = TRUE` and `progress = FALSE`.
+#' @param ... Optional arguments passed to Julia for model fitting.
+#'  Defaults to `fast = TRUE` and `progress = FALSE`.
 #'
 #' @seealso [jlmer()], [make_jlmer_spec()]
 #'

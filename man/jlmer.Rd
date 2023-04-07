@@ -11,7 +11,7 @@ jlmer(jlmer_spec, family = c("gaussian", "binomial"), ...)
 
 \item{family}{A GLM family. Currently supports "gaussian" and "binomial".}
 
-\item{...}{Optional arguments to fit (\code{fast}, \code{nAGQ}, etc.)}
+\item{...}{Optional arguments passed to Julia for model fitting.}
 }
 \description{
 Fit a Julia mixed model
