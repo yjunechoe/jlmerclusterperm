@@ -85,7 +85,7 @@ make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = 
     fe_terms_renamed <- unlist(renamed_terms_dict, recursive = TRUE, use.names = FALSE)
     fe_terms_renamed <- fe_terms_renamed[fe_terms_renamed != "(Intercept)"]
     if (!is.null(drop_terms)) fe_terms_renamed <- fe_terms_renamed[!fe_terms_renamed %in% drop_terms]
-    fe_terms_renamed <- c(as.integer(has_intercept), fe_terms_renamed)
+    fe_terms_renamed <- as.character(c(as.integer(has_intercept), fe_terms_renamed))
     fe_fm <- stats::reformulate(fe_terms_renamed, fm_response, env = fm_env)
     r_fm <- jl_fm <- fe_fm
   } else {

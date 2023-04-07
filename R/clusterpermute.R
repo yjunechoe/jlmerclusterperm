@@ -7,7 +7,9 @@
 #' @seealso [compute_timewise_statistics()], [permute_timewise_statistics()],
 #'  [extract_empirical_clusters()], [extract_null_cluster_dists()],
 #'  [calculate_clusters_pvalues()]
+#'
 #' @export
+#' @return An `empirical_clusters` object with p-values
 clusterpermute <- function(jlmer_spec,
                            family, statistic, threshold,
                            nsim, predictors,
