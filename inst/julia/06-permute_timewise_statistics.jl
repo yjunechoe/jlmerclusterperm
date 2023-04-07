@@ -13,7 +13,7 @@ function permute_timewise_statistics(formula, data, time, family, contrasts, nsi
 
   nsims = nsim * length(term_groups_est)
   counter_states = zeros(nsims)
-  pg = Progress(nsims)
+  pg = Progress(nsims, output = pg_io, barlen = pg_width, showspeed = true)
 
   if is_mem
     fm_schema = MixedModels.schema(formula, data, contrasts)

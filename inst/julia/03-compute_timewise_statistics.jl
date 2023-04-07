@@ -47,7 +47,7 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
   end
 
   if diagnose
-    p = Progress(n_times)
+    pg = Progress(n_times, output = pg_io, barlen = pg_width, showspeed = true)
   end
 
   @suppress begin
@@ -98,7 +98,7 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
       end
 
       if diagnose
-        next!(p)
+        next!(pg)
       end
     end
   end
