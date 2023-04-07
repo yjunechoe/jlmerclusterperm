@@ -16,7 +16,7 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
   is_mem <- jlmer_spec$meta$is_mem
   participant_col <- jlmer_spec$meta$subject
   trial_col <- jlmer_spec$meta$trial %|0|% ""
-  term_groups <- augment_term_groups(jlmer_spec$meta$term_groups)
+  term_groups <- augment_term_groups(jlmer_spec$meta$term_groups, statistic)
   predictors_subset <- list(as.list(predictors))
 
   family <- match.arg(family)
@@ -55,8 +55,16 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
 
 }
 
-augment_term_groups <- function(term_groups) {
-  grp_idx <- split(seq_len(sum(lengths(term_groups))), rep(seq_along(term_groups), times = lengths(term_groups)))
+augment_term_groups <- function(term_groups, statistic) {
+  term_levels <- lengths(term_groups)
+  if (statistic == "chisq" && !all(term_levels == 1)) {
+    cli::cli_abort(c(
+      "Using {.val chisq} statistic for multi-level categorical variables is not supported.",
+      x = "Predictor{?s} {.val {names(term_groups)[term_levels != 1]}} {?is/are} expressed by more than one model term.",
+      i = "Try {.arg statistic = {.val t}} instead for a more interpretable result over individual terms."
+    ))
+  }
+  grp_idx <- split(seq_len(sum(lengths(term_groups))), rep(seq_along(term_groups), times = term_levels))
   JuliaConnectoR::juliaLet("Tuple(x)", x = lapply(seq_along(term_groups), function (i) {
     JuliaConnectoR::juliaLet("(p = p, i = i)", p = as.list(term_groups[[i]]), i = as.list(grp_idx[[i]]))
   }))

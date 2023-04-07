@@ -15,7 +15,7 @@ compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
   family <- match.arg(family)
   statistic <- match.arg(statistic)
   is_mem <- jlmer_spec$meta$is_mem
-  term_groups <- augment_term_groups(jlmer_spec$meta$term_groups)
+  term_groups <- augment_term_groups(jlmer_spec$meta$term_groups, statistic)
   args <- prep_for_jlmer(jlmer_spec$formula$jl, jlmer_spec$data, time = jlmer_spec$meta$time, family, ...)
 
   opts <- list(...)
