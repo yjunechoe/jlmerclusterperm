@@ -30,7 +30,7 @@ function compute_timewise_statistics(formula, data, time, family, contrasts, ter
   else
     t_matrix = timewise_lm(formula, data, time, family, statistic, test_opts,
                            response_var, fixed, times, n_times)
-    (t_matrix = t_matrix, Predictors = fixed, Time = times)
+    (t_matrix = t_matrix, Predictor = fixed, Time = times)
   end
 
 end
@@ -106,7 +106,7 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
   if diagnose
     (
       singular_fits = singular_fits, convergence_failures = convergence_failures,
-      t_matrix = t_matrix, Predictors = fixed, Time = times,
+      t_matrix = t_matrix, Predictor = fixed, Time = times,
       rePCA_95_matrix = rePCA_95_matrix, Grouping = grouping_vars
     )
   else

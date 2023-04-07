@@ -30,8 +30,8 @@ compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
 
   alert_diagnostics(jlmer_spec, out)
 
-  dimnames(out$t_matrix) <- out[c("Predictors", "Time")]
-  out$t_matrix <- out$t_matrix[out$Predictors != "1", , drop = FALSE]
+  dimnames(out$t_matrix) <- out[c("Predictor", "Time")]
+  out$t_matrix <- out$t_matrix[out$Predictor != "1", , drop = FALSE]
 
   structure(out$t_matrix, class = "timewise_statistics",
             statistic = statistic, term_groups = jlmer_spec$meta$term_groups)

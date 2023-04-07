@@ -20,7 +20,7 @@ extract_empirical_clusters <- function(empirical_statistics, threshold, binned =
     empirical_statistics[abs(empirical_statistics) <= abs(threshold)] <- 0
   } else if (statistic == "chisq") {
     threshold_dict <- make_threshold_dict(attr(empirical_statistics, "term_groups"), threshold)
-    for (predictor in dimnames(empirical_statistics)$Predictors) {
+    for (predictor in dimnames(empirical_statistics)$Predictor) {
       predictor_statistics <- empirical_statistics[predictor,]
       empirical_statistics[predictor, abs(predictor_statistics) <= abs(threshold_dict[threshold_dict$term == predictor, "threshold"])] <- 0
     }
@@ -114,3 +114,38 @@ make_threshold_dict <- function(term_groups, threshold) {
   threshold_dict$threshold <- stats::qchisq(p = 1 - threshold, df = threshold_dict$df)
   threshold_dict
 }
+#
+# function(timewise_statistics, threshold) {
+#   statistic <- attr(timewise_statistics, "statistic")
+#   if (statistic == "t") {
+#     empirical_statistics[abs(timewise_statistics) <= abs(threshold)] <- 0
+#   } else if (statistic == "chisq") {
+#     threshold_dict <- make_threshold_dict(attr(timewise_statistics, "term_groups"), threshold)
+#     for (predictor in dimnames(timewise_statistics)$Predictor) {
+#       predictor_statistics <- timewise_statistics[predictor,]
+#       empirical_statistics[predictor, abs(predictor_statistics) <= abs(threshold_dict[threshold_dict$term == predictor, "threshold"])] <- 0
+#     }
+#   }
+# }
+#
+# statistic <- attr(empirical_statistics, "statistic")
+# if (statistic == "t") {
+#   empirical_statistics[abs(empirical_statistics) <= abs(threshold)] <- 0
+# } else if (statistic == "chisq") {
+#   threshold_dict <- make_threshold_dict(attr(empirical_statistics, "term_groups"), threshold)
+#   for (predictor in dimnames(empirical_statistics)$Predictor) {
+#     predictor_statistics <- empirical_statistics[predictor,]
+#     empirical_statistics[predictor, abs(predictor_statistics) <= abs(threshold_dict[threshold_dict$term == predictor, "threshold"])] <- 0
+#   }
+# }
+# statistic <- attr(null_statistics, "statistic")
+# if (statistic == "t") {
+#   null_statistics[abs(null_statistics) <= abs(threshold)] <- 0
+# } else if (statistic == "chisq") {
+#   threshold_dict <- make_threshold_dict(attr(null_statistics, "term_groups"), threshold)
+#   for (predictor in dimnames(null_statistics)$Predictor) {
+#     predictor_statistics <- null_statistics[, , predictor]
+#     predictor_statistics[abs(predictor_statistics) <= abs(threshold_dict[threshold_dict$term == predictor, "threshold"])] <- 0
+#     null_statistics[, , predictor] <- predictor_statistics
+#   }
+# }
