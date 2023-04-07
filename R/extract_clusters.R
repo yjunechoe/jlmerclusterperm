@@ -65,9 +65,20 @@ calculate_clusters_pvalues <- function(empirical_clusters, null_clusters, add1 =
   empirical_attrs <- attributes(empirical_clusters)
   null_attrs <- attributes(null_clusters)
   if (!identical(empirical_attrs[c("statistic", "threshold")], null_attrs[c("statistic", "threshold")])) {
+    cluster_properties <- sapply(list(empirical_attrs, null_attrs), `[`, c("statistic", "threshold"))
+    mismatch_info <- apply(cluster_properties, 1L, function(x) {
+      if(x[[1]] != x[[2]]) {
+        x <- unlist(x, use.names = FALSE)
+        if (is.numeric(x)) x <- paste0("{", x, "}")
+        paste0("empirical uses {.val ", x[1], "} but null uses {.val ", x[2], "}.")
+      }
+    })
+    mismatch_info <- Filter(Negate(is.null), mismatch_info)
+    mismatch_info <- stats::setNames(paste0("{.el ", names(mismatch_info), "}: ", mismatch_info), rep("x", length(mismatch_info)))
     cli::cli_abort(c(
-      "Cluster statistics between empirical and null are incomparable.",
-      "i" = "{.arg empirical_clusters} and {.arg null_clusters} must share the same {.code statistic} and {.code threshold}."
+      "Cluster-mass statistics between empirical and null are not comparable.",
+      "i" = "{.arg empirical_clusters} and {.arg null_clusters} must share the same {.code statistic} and {.code threshold}.",
+      mismatch_info
     ))
   }
   empirical <- lapply(empirical_clusters, `[[`, "statistic")
