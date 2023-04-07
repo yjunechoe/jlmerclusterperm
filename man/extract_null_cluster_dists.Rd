@@ -4,14 +4,20 @@
 \alias{extract_null_cluster_dists}
 \title{Construct a distribution of the largest cluster statistics from bootstrapped permutations}
 \usage{
-extract_null_cluster_dists(t_array, threshold, binned = TRUE)
+extract_null_cluster_dists(null_statistics, threshold, binned = FALSE)
 }
 \arguments{
-\item{t_array}{A simulation-by-time-by-predictor 3D array of cluster statistics.}
+\item{null_statistics}{A simulation-by-time-by-predictor 3D array of null (permuted) timewise statistics.}
 
-\item{threshold}{Cluster statistic threshold. If statistic is \code{"chisq"}, this represents the p-value threshold from a chi-squared test.}
+\item{threshold}{The threshold value that a statistic must pass to contribute to cluster mass.
+Interpretation differs on the choice of statistic (more below):
+\itemize{
+\item If \code{statistic = "t"}, the threshold for t-value (beta/std.err) from the regression model.
+\item If \code{statistic = "chisq"}, the threshold for the p-value of chi-squared statistics from likelihood ratio tests.
+}}
 
-\item{binned}{Whether time points have been aggregated. Defaults to \code{TRUE} which allows length-1 clusters.}
+\item{binned}{Whether the data has been aggregated/collapsed into time bins. Defaults to \code{FALSE},
+which requires a cluster to span at least two time points. If \code{TRUE}, allows length-1 clusters to exist.}
 }
 \description{
 Construct a distribution of the largest cluster statistics from bootstrapped permutations

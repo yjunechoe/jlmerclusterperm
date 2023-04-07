@@ -1,29 +1,33 @@
 #' Detect largest clusters from a time sequence of cluster statistics
 #'
-#' @param t_matrix A predictor-by-time matrix of cluster statistics.
-#' @param threshold Cluster statistic threshold. If statistic is `"chisq"`, this represents the p-value threshold from a chi-squared test.
-#' @param binned Whether time points have been aggregated. Defaults to `TRUE` which allows length-1 clusters.
-#' @param top_n How many clusters to return, ordered by the size of the cluster statistic.
-#'   Defaults to `1L` which returns the largest cluster. Use `NULL` to return all clusters.
+#' @param empirical_statistics A predictor-by-time matrix of empirical timewise statistics.
+#' @param threshold The threshold value that a statistic must pass to contribute to cluster mass.
+#'  Interpretation differs on the choice of statistic (more below):
+#'  * If `statistic = "t"`, the threshold for t-value (beta/std.err) from the regression model.
+#'  * If `statistic = "chisq"`, the threshold for the p-value of chi-squared statistics from likelihood ratio tests.
+#' @param binned Whether the data has been aggregated/collapsed into time bins. Defaults to `FALSE`,
+#'  which requires a cluster to span at least two time points. If `TRUE`, allows length-1 clusters to exist.
+#' @param top_n How many clusters to return, in order of the size of the cluster statistic.
+#'  Defaults to `1` which only returns the largest cluster. Use `Inf` to return all possible clusters.
 #'
 #' @seealso [compute_timewise_statistics()]
 #'
 #' @export
-extract_empirical_clusters <- function(t_matrix, threshold, binned = TRUE, top_n = 1L) {
-  time <- dimnames(t_matrix)$Time
-  statistic <- attr(t_matrix, "statistic")
+extract_empirical_clusters <- function(empirical_statistics, threshold, binned = FALSE, top_n = 1L) {
+  time <- dimnames(empirical_statistics)$Time
+  statistic <- attr(empirical_statistics, "statistic")
   if (statistic == "t") {
-    t_matrix[abs(t_matrix) <= abs(threshold)] <- 0
+    empirical_statistics[abs(empirical_statistics) <= abs(threshold)] <- 0
   } else if (statistic == "chisq") {
-    threshold_dict <- make_threshold_dict(attr(t_matrix, "term_groups"), threshold)
-    for (predictor in dimnames(t_matrix)$Predictors) {
-      predictor_statistics <- t_matrix[predictor,]
-      t_matrix[predictor, abs(predictor_statistics) <= abs(threshold_dict[threshold_dict$term == predictor, "threshold"])] <- 0
+    threshold_dict <- make_threshold_dict(attr(empirical_statistics, "term_groups"), threshold)
+    for (predictor in dimnames(empirical_statistics)$Predictors) {
+      predictor_statistics <- empirical_statistics[predictor,]
+      empirical_statistics[predictor, abs(predictor_statistics) <= abs(threshold_dict[threshold_dict$term == predictor, "threshold"])] <- 0
     }
   }
-  predictors <- rownames(t_matrix)
-  n <- as.integer(max(min(top_n, ncol(t_matrix)), 1))
-  largest_clusters <- .jlmerclusterperm$extract_clusters(t_matrix, binned, n)
+  predictors <- rownames(empirical_statistics)
+  n <- as.integer(max(min(top_n, ncol(empirical_statistics)), 1))
+  largest_clusters <- .jlmerclusterperm$extract_clusters(empirical_statistics, binned, n)
   cluster_dfs <- df_from_DF(largest_clusters)
   empirical_clusters <- split(cluster_dfs[, -5], predictors[cluster_dfs$id])[predictors]
   empirical_clusters <- lapply(empirical_clusters, function(cluster_df) {
@@ -36,26 +40,26 @@ extract_empirical_clusters <- function(t_matrix, threshold, binned = TRUE, top_n
 
 #' Construct a distribution of the largest cluster statistics from bootstrapped permutations
 #'
-#' @param t_array A simulation-by-time-by-predictor 3D array of cluster statistics.
+#' @param null_statistics A simulation-by-time-by-predictor 3D array of null (permuted) timewise statistics.
 #' @inheritParams extract_empirical_clusters
 #'
 #' @seealso [permute_timewise_statistics()]
 #'
 #' @export
-extract_null_cluster_dists <- function(t_array, threshold, binned = TRUE) {
-  time <- dimnames(t_array)$Time
-  statistic <- attr(t_array, "statistic")
+extract_null_cluster_dists <- function(null_statistics, threshold, binned = FALSE) {
+  time <- dimnames(null_statistics)$Time
+  statistic <- attr(null_statistics, "statistic")
   if (statistic == "t") {
-    t_array[abs(t_array) <= abs(threshold)] <- 0
+    null_statistics[abs(null_statistics) <= abs(threshold)] <- 0
   } else if (statistic == "chisq") {
-    threshold_dict <- make_threshold_dict(attr(t_array, "term_groups"), threshold)
-    for (predictor in dimnames(t_array)$Predictor) {
-      predictor_statistics <- t_array[, , predictor]
+    threshold_dict <- make_threshold_dict(attr(null_statistics, "term_groups"), threshold)
+    for (predictor in dimnames(null_statistics)$Predictor) {
+      predictor_statistics <- null_statistics[, , predictor]
       predictor_statistics[abs(predictor_statistics) <= abs(threshold_dict[threshold_dict$term == predictor, "threshold"])] <- 0
-      t_array[, , predictor] <- predictor_statistics
+      null_statistics[, , predictor] <- predictor_statistics
     }
   }
-  null_clusters <- apply(t_array, 3, function(t_matrix) {
+  null_clusters <- apply(null_statistics, 3, function(t_matrix) {
     t_matrix <- t_matrix[!is.nan(rowSums(t_matrix)),]
     largest_clusters <- df_from_DF(.jlmerclusterperm$extract_clusters(t_matrix, binned, 1L))
   }, simplify = FALSE)
@@ -97,4 +101,16 @@ calculate_clusters_pvalues <- function(empirical_clusters, null_clusters, add1 =
   augmented
 }
 
-
+#' @keywords internal
+make_threshold_dict <- function(term_groups, threshold) {
+  if (threshold < 0 || threshold > 1) {
+    cli::cli_abort(c(
+      '{.arg threshold} must be between {.val {0}} and {.val {1}} when {.arg statistic = {.val chisq}}'
+    ))
+  }
+  threshold_dict <- utils::stack(stats::setNames(term_groups, lengths(term_groups)))
+  colnames(threshold_dict) <- c("term", "df")
+  threshold_dict$df <- as.integer(threshold_dict$df)
+  threshold_dict$threshold <- stats::qchisq(p = 1 - threshold, df = threshold_dict$df)
+  threshold_dict
+}

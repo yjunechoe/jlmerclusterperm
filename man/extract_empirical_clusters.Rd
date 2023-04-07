@@ -4,17 +4,28 @@
 \alias{extract_empirical_clusters}
 \title{Detect largest clusters from a time sequence of cluster statistics}
 \usage{
-extract_empirical_clusters(t_matrix, threshold, binned = TRUE, top_n = 1L)
+extract_empirical_clusters(
+  empirical_statistics,
+  threshold,
+  binned = FALSE,
+  top_n = 1L
+)
 }
 \arguments{
-\item{t_matrix}{A predictor-by-time matrix of cluster statistics.}
+\item{empirical_statistics}{A predictor-by-time matrix of empirical timewise statistics.}
 
-\item{threshold}{Cluster statistic threshold. If statistic is \code{"chisq"}, this represents the p-value threshold from a chi-squared test.}
+\item{threshold}{The threshold value that a statistic must pass to contribute to cluster mass.
+Interpretation differs on the choice of statistic (more below):
+\itemize{
+\item If \code{statistic = "t"}, the threshold for t-value (beta/std.err) from the regression model.
+\item If \code{statistic = "chisq"}, the threshold for the p-value of chi-squared statistics from likelihood ratio tests.
+}}
 
-\item{binned}{Whether time points have been aggregated. Defaults to \code{TRUE} which allows length-1 clusters.}
+\item{binned}{Whether the data has been aggregated/collapsed into time bins. Defaults to \code{FALSE},
+which requires a cluster to span at least two time points. If \code{TRUE}, allows length-1 clusters to exist.}
 
-\item{top_n}{How many clusters to return, ordered by the size of the cluster statistic.
-Defaults to \code{1L} which returns the largest cluster. Use \code{NULL} to return all clusters.}
+\item{top_n}{How many clusters to return, in order of the size of the cluster statistic.
+Defaults to \code{1} which only returns the largest cluster. Use \code{Inf} to return all possible clusters.}
 }
 \description{
 Detect largest clusters from a time sequence of cluster statistics
