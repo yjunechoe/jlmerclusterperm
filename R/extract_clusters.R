@@ -72,8 +72,8 @@ chisq_threshold_dict <- function(term_groups, threshold) {
   if (threshold < 0 || threshold > 1) {
     cli::cli_abort('{.arg threshold} must be between {.val {0}} and {.val {1}} when {.arg statistic = {.val chisq}}')
   }
-  threshold_dict <- utils::stack(stats::setNames(term_groups, lengths(term_groups)))
-  colnames(threshold_dict) <- c("term", "df")
+  threshold_dict <- utils::stack(attr(term_groups, "dfs"))
+  colnames(threshold_dict) <- c("df", "term")
   threshold_dict$df <- as.integer(threshold_dict$df)
   threshold_dict$threshold <- stats::qchisq(p = 1 - threshold, df = threshold_dict$df)
   threshold_dict

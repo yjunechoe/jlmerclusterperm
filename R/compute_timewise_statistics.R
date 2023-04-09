@@ -27,15 +27,20 @@ compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
 
 
   out <- JuliaConnectoR::juliaGet(do.call(.jlmerclusterperm$compute_timewise_statistics,
-                                          c(args, term_groups, statistic, is_mem, opts)))
+                                          c(args, term_groups$jl, statistic, is_mem, opts)))
 
   alert_diagnostics(jlmer_spec, out)
 
-  dimnames(out$t_matrix) <- out[c("Predictor", "Time")]
-  out$t_matrix <- out$t_matrix[out$Predictor != "1", , drop = FALSE]
+  if (statistic == "t") {
+    dimnames(out$t_matrix) <- out[c("Predictor", "Time")]
+    out$t_matrix <- out$t_matrix[out$Predictor != "1", , drop = FALSE]
+  } else {
+    predictors <- names(term_groups$r)
+    dimnames(out$t_matrix) <- c(list(Predictor = predictors[predictors != "1"]), out["Time"])
+  }
 
   structure(out$t_matrix, class = "timewise_statistics",
-            statistic = statistic, term_groups = jlmer_spec$meta$term_groups)
+            statistic = statistic, term_groups = term_groups$r)
 
 }
 

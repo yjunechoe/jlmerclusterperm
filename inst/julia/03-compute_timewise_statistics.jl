@@ -39,7 +39,15 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
                       response_var, fixed, grouping_vars, times, n_times, diagnose;
                       opts...)
 
-  t_matrix = zeros(length(fixed), n_times)
+  if statistic == "t"
+    t_matrix = zeros(length(fixed), n_times)
+  elseif statistic == "chisq"
+    drop_formula = test_opts.reduced_formula
+    if drop_formula isa Vector
+      t_matrix = zeros(length(drop_formula), n_times)
+    end
+  end
+
   if diagnose
     singular_fits = zeros(n_times)
     convergence_failures = zeros(Bool, n_times)
@@ -50,8 +58,9 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
     pg = Progress(n_times, output = pg_io, barlen = pg_width, showspeed = true)
   end
 
-  @suppress begin
-    Threads.@threads for i = 1:n_times
+  #@suppress begin
+    for i in 1:n_times
+    # Threads.@threads for i = 1:n_times
 
       data_at_time = filter(time => ==(times[i]), data)
       response = data_at_time[!, response_var]
@@ -69,7 +78,6 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
 
           # test statistic
           if statistic == "chisq"
-            drop_formula = test_opts.reduced_formula
             if drop_formula isa Vector
               drop1_mods = map(fm -> fit(MixedModel, fm, data_at_time, family; contrasts = contrasts, opts...), drop_formula)
               chisq_vals = map(x -> MixedModels.likelihoodratiotest(time_mod, x).tests.deviancediff[1], drop1_mods)
@@ -78,7 +86,8 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
               else
                 chisq_vals = [chisq_vals...]
               end
-              t_matrix[:,i] = chisq_vals .* sign.(coef(time_mod))
+              signed_chisq = length(chisq_vals) == length(coef(time_mod)) ? chisq_vals .* sign.(coef(time_mod)) : chisq_vals
+              t_matrix[:,i] = signed_chisq
             else
               lrtest_obj = MixedModels.likelihoodratiotest(time_mod, fit(MixedModel, drop_formula, data_at_time, family; contrasts = contrasts, opts...))
               t_matrix[:,i] .= lrtest_obj.tests.deviancediff[1] # make signed?
@@ -101,7 +110,7 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
         next!(pg)
       end
     end
-  end
+  #end
 
   if diagnose
     (
