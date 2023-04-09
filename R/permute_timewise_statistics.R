@@ -69,7 +69,7 @@ augment_term_groups <- function(term_groups, statistic) {
   term_groups_jl <- JuliaConnectoR::juliaLet("Tuple(x)", x = lapply(seq_along(term_groups), function (i) {
     JuliaConnectoR::juliaLet("(p = p, i = i)", p = as.list(term_groups[[i]]), i = as.list(grp_idx[[i]]))
   }))
-  if (statistic == "chisq" && !all(term_levels == 1)) {
+  if (statistic == "chisq") {
     # cli::cli_abort(c(
     #   "Using {.val chisq} statistic for multi-level categorical variables is not supported.",
     #   x = "Predictor{?s} {.val {names(term_groups)[term_levels != 1]}} {?is/are} expressed by more than one model term.",
