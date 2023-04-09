@@ -14,6 +14,7 @@ format.empirical_clusters <- function(x, ...) {
   binned <- attr(x, "binned")
   zero_clusters <- x[missing_clusters]
   valid_clusters <- x[!missing_clusters]
+  if (!is.null(pvalues)) valid_clusters <- valid_clusters[names(pvalues)]
   cli::cli_format_method({
     cli::cli_h1(paste("empirical clusters", format_threshold(statistic)))
     for (i in seq_along(valid_clusters)) {
