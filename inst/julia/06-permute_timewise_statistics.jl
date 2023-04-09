@@ -6,7 +6,7 @@ function permute_timewise_statistics(formula, data, time, family, contrasts, nsi
 
   predictors_exclude = ["(Intercept)"]
   if length(predictors_subset) > 0
-    term_groups_est = filter(grp -> any(in(predictors_subset), grp.p), term_groups)
+    term_groups_est = filter(grp -> any(in(predictors_subset), vcat(grp.p, grp.P)), term_groups)
   else
     term_groups_est = filter(grp -> !all(in(predictors_exclude), grp.p), term_groups)
   end
