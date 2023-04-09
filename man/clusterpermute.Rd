@@ -50,6 +50,9 @@ as part of the null distribution (recommended with larger \code{nsim} prior to p
 \item{...}{Optional arguments passed to Julia for model fitting.
 Defaults to \code{fast = TRUE} and \code{progress = FALSE}.}
 }
+\value{
+An \code{empirical_clusters} object with p-values
+}
 \description{
 Run a complete cluster-based permutation analysis
 }

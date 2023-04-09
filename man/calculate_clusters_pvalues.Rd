@@ -18,6 +18,9 @@ clusters_are_comparable(empirical_clusters, null_clusters)
 Defaults to \code{FALSE}. Use \code{TRUE} to effectively include the observed statistic
 as part of the null distribution (recommended with larger \code{nsim} prior to publishing results).}
 }
+\value{
+An \code{empirical_clusters} object with p-values
+}
 \description{
 Calculate bootstrapped p-values of clusters
 }

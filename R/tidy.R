@@ -43,6 +43,14 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
 }
 
 #' @export
+tidy.timewise_statistics <- function(x, ...) {
+  stacked <- as.data.frame.table(x, responseName = "statistic")
+  colnames(stacked) <- tolower(colnames(stacked))
+  stacked <- stacked[do.call(order, stacked[c("time", "predictor")]), intersect(c("predictor", "time", "statistic", "sim"), colnames(stacked))]
+  maybe_as_tibble(stacked)
+}
+
+#' @export
 tidy.empirical_clusters <- function(x, ...) {
   pvalues <- attr(x, "pvalues")
   cluster_dfs <- lapply(seq_along(x), function(i) {
