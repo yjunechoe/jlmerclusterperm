@@ -23,5 +23,5 @@ reduce_formula = function(to_remove, enriched_formula, is_mem)
 end
 
 chisq_value = function(lrt)
-  lrt.pval[2] < 0.05 ? abs.(2 .* (lrt.loglikelihood[2] - lrt.loglikelihood[1])) : 0
+  abs(2 * (lrt.loglikelihood[2] - lrt.loglikelihood[1]))
 end
