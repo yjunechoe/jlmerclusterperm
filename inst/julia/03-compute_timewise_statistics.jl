@@ -45,6 +45,8 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
     drop_formula = test_opts.reduced_formula
     if drop_formula isa Vector
       t_matrix = zeros(length(drop_formula), n_times)
+    else
+      t_matrix = zeros(length(fixed), n_times)
     end
   end
 
@@ -99,7 +101,9 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
             rePCA_95_matrix[:,i] = [all(isnan, x) ? 0 : findfirst(>(.95), x) for x in time_mod.rePCA]
           end
         catch e
-          convergence_failures[i] = true
+          if diagnose
+            convergence_failures[i] = true
+          end
           t_matrix[:,i] .= NaN
         end
       end

@@ -45,13 +45,21 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
     Time = sort(unique(jlmer_spec$data[[jlmer_spec$meta$time]])),
     Predictor = unlist(out$predictors)
   )
+  if (statistic == "chisq") {
+    Predictors <- jlmer_spec$meta$term_groups
+    Predictors <- Predictors[names(Predictors) != "1"]
+    pruned <- which(!duplicated(rep(names(Predictors), lengths(Predictors))))
+    out$z_array <- out$z_array[, , pruned, drop = FALSE]
+    dimnames(out$z_array)$Predictor <- names(Predictors)
+  }
 
   if (!is.null(predictors)) {
-    out$z_array <- out$z_array[, , predictors, drop = FALSE]
+    predictors_keep <- names(Filter(function(x) predictors %in% x, jlmer_spec$meta$term_groups))
+    out$z_array <- out$z_array[, , predictors_keep, drop = FALSE]
   }
 
   structure(out$z_array, class = "timewise_statistics",
-            statistic = statistic, term_groups = jlmer_spec$meta$term_groups)
+            statistic = statistic, term_groups = term_groups$r)
 
 }
 
