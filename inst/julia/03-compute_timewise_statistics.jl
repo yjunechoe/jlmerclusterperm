@@ -135,6 +135,8 @@ function timewise_lm(formula, data, time, family, statistic, test_opts,
     drop_formula = test_opts.reduced_formula
     if drop_formula isa Vector
       t_matrix = zeros(length(drop_formula), n_times)
+    else
+      t_matrix = zeros(length(fixed), n_times)
     end
   end
 
