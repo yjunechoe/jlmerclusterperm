@@ -26,8 +26,10 @@ extract_empirical_clusters <- function(empirical_statistics, threshold, binned =
     cluster_df[order(cluster_df$cluster_id), ]
   })
   missing_clusters <- sapply(empirical_clusters, function(x) all(near_zero(x$statistic)))
-  structure(empirical_clusters, class = "empirical_clusters", missing_clusters = missing_clusters,
-            statistic = statistic, threshold = threshold, binned = binned, time = time)
+  structure(empirical_clusters, class = "empirical_clusters",
+            missing_clusters = missing_clusters, statistic = statistic, threshold = threshold,
+            binned = binned, time = time,
+            term_groups = attr(empirical_statistics, "term_groups"))
 }
 
 #' Construct a distribution of the largest cluster statistics from bootstrapped permutations
@@ -47,7 +49,8 @@ extract_null_cluster_dists <- function(null_statistics, threshold, binned = FALS
     largest_clusters <- df_from_DF(.jlmerclusterperm$extract_clusters(t_matrix, binned, 1L))
   }, simplify = FALSE)
   structure(null_clusters, class = "null_clusters",
-            statistic = statistic, threshold = threshold, binned = binned, time = time)
+            statistic = statistic, threshold = threshold, binned = binned, time = time,
+            term_groups = attr(null_statistics, "term_groups"))
 }
 
 #' @keywords internal
