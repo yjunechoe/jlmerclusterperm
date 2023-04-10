@@ -43,7 +43,11 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
     t_matrix = zeros(length(fixed), n_times)
   elseif statistic == "chisq"
     drop_formula = test_opts.reduced_formula
-    t_matrix = zeros(length(drop_formula), n_times)
+    if drop_formula isa Vector
+      t_matrix = zeros(length(drop_formula), n_times)
+    else
+      t_matrix = zeros(length(fixed), n_times)
+    end
   end
 
   if diagnose
@@ -56,7 +60,7 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
     pg = Progress(n_times, output = pg_io, barlen = pg_width, showspeed = true)
   end
 
-  @suppress begin
+  #@suppress begin
     Threads.@threads for i = 1:n_times
 
       data_at_time = filter(time => ==(times[i]), data)
@@ -75,11 +79,19 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
 
           # test statistic
           if statistic == "chisq"
-            drop1_mods = map(x -> fit(MixedModel, x.fm, data_at_time, family; contrasts = contrasts, opts...), drop_formula)
-            betas = map(x -> coef(time_mod)[x.i], drop_formula)
-            chisq_vals = map(x -> MixedModels.likelihoodratiotest(time_mod, x).tests.deviancediff[1], drop1_mods)
-            signed_chisq = [chisq_vals[i] * (length(betas[i]) == 1 ? sign(betas[i][1]) : 1) for i in 1:length(chisq_vals)]
-            t_matrix[:,i] = signed_chisq
+            if drop_formula isa Vector
+              drop1_mods = map(x -> fit(MixedModel, x.fm, data_at_time, family; contrasts = contrasts, opts...), drop_formula)
+              betas = map(x -> coef(time_mod)[x.i], drop_formula)
+              chisq_vals = map(x -> MixedModels.likelihoodratiotest(time_mod, x).tests.deviancediff[1], drop1_mods)
+              signed_chisq = [chisq_vals[i] * (length(betas[i]) == 1 ? sign(betas[i][1]) : 1) for i in 1:length(chisq_vals)]
+              t_matrix[:,i] = signed_chisq
+            else
+              drop1_mod = fit(MixedModel, drop_formula.fm, data_at_time, family; contrasts = contrasts, opts...)
+              chisq_val = MixedModels.likelihoodratiotest(time_mod, drop1_mod).tests.deviancediff[1]
+              betas = coef(time_mod)[drop_formula.i]
+              signed_chisq = chisq_val * (length(betas) == 1 ? sign(betas[1]) : 1)
+              t_matrix[drop_formula.i, i] .= signed_chisq
+            end
           elseif statistic == "t"
             t_matrix[:,i] = t_value(time_mod)
           end
@@ -100,7 +112,7 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
         next!(pg)
       end
     end
-  end
+  #end
 
   if diagnose
     (
@@ -121,7 +133,11 @@ function timewise_lm(formula, data, time, family, statistic, test_opts,
     t_matrix = zeros(length(fixed), n_times)
   elseif statistic == "chisq"
     drop_formula = test_opts.reduced_formula
-    t_matrix = zeros(length(drop_formula), n_times)
+    if drop_formula isa Vector
+      t_matrix = zeros(length(drop_formula), n_times)
+    else
+      t_matrix = zeros(length(fixed), n_times)
+    end
   end
 
   Threads.@threads for i = 1:n_times
@@ -139,11 +155,18 @@ function timewise_lm(formula, data, time, family, statistic, test_opts,
       end
 
       if statistic == "chisq"
-        drop1_mods = map(x -> glm(x.fm, data_at_time, family), drop_formula)
-        betas = map(x -> coef(time_mod)[x.i], drop_formula)
-        chisq_vals = map(x -> chisq_value(lrtest(time_mod, x)), drop1_mods)
-        signed_chisq = [chisq_vals[i] * (length(betas[i]) == 1 ? sign(betas[i][1]) : 1) for i in 1:length(chisq_vals)]
-        t_matrix[:,i] = signed_chisq
+        if drop_formula isa Vector
+          drop1_mods = map(x -> glm(x.fm, data_at_time, family), drop_formula)
+          betas = map(x -> coef(time_mod)[x.i], drop_formula)
+          chisq_vals = map(x -> chisq_value(lrtest(time_mod, x)), drop1_mods)
+          signed_chisq = [chisq_vals[i] * (length(betas[i]) == 1 ? sign(betas[i][1]) : 1) for i in 1:length(chisq_vals)]
+          t_matrix[:,i] = signed_chisq
+        else
+          chisq_val = chisq_value(lrtest(time_mod, glm(drop_formula.fm, data_at_time, family)))
+          betas = coef(time_mod)[drop_formula.i]
+          signed_chisq = chisq_val * (length(betas) == 1 ? sign(betas[1]) : 1)
+          t_matrix[drop_formula.i, i] .= signed_chisq
+        end
       elseif statistic == "t"
         t_matrix[:,i] = t_value(time_mod)
       end
