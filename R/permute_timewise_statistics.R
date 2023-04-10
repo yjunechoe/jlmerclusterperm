@@ -17,7 +17,7 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
   participant_col <- jlmer_spec$meta$subject
   trial_col <- jlmer_spec$meta$trial %|0|% ""
   term_groups <- augment_term_groups(jlmer_spec$meta$term_groups, statistic)
-  predictors_subset <- list(as.list(predictors))
+  predictors_subset <- validate_predictors_subset(predictors, term_groups$r)
 
   family <- match.arg(family)
   args <- prep_for_jlmer(jlmer_spec$formula$jl, jlmer_spec$data, jlmer_spec$meta$time, family, ...)
@@ -69,19 +69,32 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
 
 }
 
+validate_predictors_subset <- function(predictors, r_term_groups) {
+  predictors_set <- unlist(r_term_groups, use.names = FALSE)
+  if (!any(predictors %in% predictors_set)) {
+    cli::cli_abort(c(
+      "Invalid selection passed to the {.arg predictor} argument.",
+      "x" = "Must choose among {.val {predictors_set}}."
+    ))
+  }
+  else {
+    list(as.list(predictors))
+  }
+}
+
 augment_term_groups <- function(term_groups, statistic) {
   term_levels <- lengths(term_groups)
   grp_idx <- split(seq_len(sum(lengths(term_groups))), rep(seq_along(term_groups), times = term_levels))
   term_groups_jl <- JuliaConnectoR::juliaLet("Tuple(x)", x = lapply(seq_along(term_groups), function (i) {
     JuliaConnectoR::juliaLet("(P = P, p = p, i = i)", P = names(term_groups)[i],  p = as.list(term_groups[[i]]), i = as.list(grp_idx[[i]]))
   }))
+  term_groups <- term_groups[names(term_groups) != "1"]
   if (statistic == "chisq") {
     # cli::cli_abort(c(
     #   "Using {.val chisq} statistic for multi-level categorical variables is not supported.",
     #   x = "Predictor{?s} {.val {names(term_groups)[term_levels != 1]}} {?is/are} expressed by more than one model term.",
     #   i = "Try {.arg statistic = {.val t}} instead for a more interpretable result over individual terms."
     # ))
-    term_groups <- term_groups[names(term_groups) != "1"]
     term_dfs <- stats::setNames(lengths(term_groups), names(term_groups))
     term_groups <- stats::setNames(nm = names(term_groups))
     attr(term_groups, "dfs") <- term_dfs
