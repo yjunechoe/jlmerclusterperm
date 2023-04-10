@@ -12,9 +12,9 @@
 #' @return An `empirical_clusters` object with p-values
 clusterpermute <- function(jlmer_spec,
                            family, statistic, threshold,
-                           nsim, predictors,
-                           binned, top_n,
-                           add1,
+                           nsim = 100L, predictors = NULL,
+                           binned = FALSE, top_n = 1L,
+                           add1 = TRUE,
                            ...) {
   cli::cli_progress_step("Detecting empirical clusters and calculating cluster-mass statistics.")
   old_opts <- julia_progress(show = FALSE)

@@ -9,11 +9,11 @@ clusterpermute(
   family,
   statistic,
   threshold,
-  nsim,
-  predictors,
-  binned,
-  top_n,
-  add1,
+  nsim = 100L,
+  predictors = NULL,
+  binned = FALSE,
+  top_n = 1L,
+  add1 = TRUE,
   ...
 )
 }
