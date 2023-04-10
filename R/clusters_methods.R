@@ -42,7 +42,7 @@ format.empirical_clusters <- function(x, ...) {
       cli::cli_alert_warning("No clusters found for {.el {names(zero_clusters)}}")
     }
     if (statistic == "chisq" && any(predictor_dfs > 1)) {
-      cli::cli_alert_info(c("* The {.val chisq} statistic for multi-level factors are unsigned."))
+      cli::cli_alert_info(c("* The {.val chisq} statistic for multi-level factors are unsigned. Use {.arg statistic = {.val t}} for a more interpretable result."))
     }
   }, theme = .jlmerclusterperm$cli_theme)
 }
@@ -71,7 +71,7 @@ format.null_clusters <- function(x, levels, ...) {
     }
     cli::cli_rule()
     if (statistic == "chisq" && any(predictor_dfs > 1)) {
-      cli::cli_alert_info(c("* The {.val chisq} statistic for multi-level factors are unsigned."))
+      cli::cli_alert_info(c("* The {.val chisq} statistic for multi-level factors are unsigned. Use {.arg statistic = {.val t}} for a more interpretable result."))
     }
   }, theme = .jlmerclusterperm$cli_theme)
 }
