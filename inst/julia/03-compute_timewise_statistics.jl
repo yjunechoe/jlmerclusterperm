@@ -18,7 +18,7 @@ function compute_timewise_statistics(formula, data, time, family, contrasts, ter
 
   if statistic == "chisq"
     drop_terms = filter(x -> x.p != ["(Intercept)"], term_groups)
-    reduced_formula = [reduce_formula(Symbol.(x.p), form, is_mem) for x in drop_terms]
+    reduced_formula = [(fm = reduce_formula(Symbol.(x.p), form, is_mem), i = x.i) for x in drop_terms]
     test_opts = (reduced_formula = reduced_formula,)
   elseif statistic == "t"
     test_opts = Nothing
@@ -43,11 +43,7 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
     t_matrix = zeros(length(fixed), n_times)
   elseif statistic == "chisq"
     drop_formula = test_opts.reduced_formula
-    if drop_formula isa Vector
-      t_matrix = zeros(length(drop_formula), n_times)
-    else
-      t_matrix = zeros(length(fixed), n_times)
-    end
+    t_matrix = zeros(length(drop_formula), n_times)
   end
 
   if diagnose
@@ -79,19 +75,11 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
 
           # test statistic
           if statistic == "chisq"
-            if drop_formula isa Vector
-              drop1_mods = map(fm -> fit(MixedModel, fm, data_at_time, family; contrasts = contrasts, opts...), drop_formula)
-              chisq_vals = map(x -> MixedModels.likelihoodratiotest(time_mod, x).tests.deviancediff[1], drop1_mods)
-              if size(t_matrix)[1] > length(chisq_vals)
-                chisq_vals = [0, chisq_vals...]
-              else
-                chisq_vals = [chisq_vals...]
-              end
-              t_matrix[:,i] = chisq_vals # make signed?
-            else
-              lrtest_obj = MixedModels.likelihoodratiotest(time_mod, fit(MixedModel, drop_formula, data_at_time, family; contrasts = contrasts, opts...))
-              t_matrix[:,i] .= lrtest_obj.tests.deviancediff[1] # make signed?
-            end
+            drop1_mods = map(x -> fit(MixedModel, x.fm, data_at_time, family; contrasts = contrasts, opts...), drop_formula)
+            betas = map(x -> coef(time_mod)[x.i], drop_formula)
+            chisq_vals = map(x -> MixedModels.likelihoodratiotest(time_mod, x).tests.deviancediff[1], drop1_mods)
+            signed_chisq = [chisq_vals[i] * (length(betas[i]) == 1 ? sign(betas[i][1]) : 1) for i in 1:length(chisq_vals)]
+            t_matrix[:,i] = signed_chisq
           elseif statistic == "t"
             t_matrix[:,i] = t_value(time_mod)
           end
@@ -133,11 +121,7 @@ function timewise_lm(formula, data, time, family, statistic, test_opts,
     t_matrix = zeros(length(fixed), n_times)
   elseif statistic == "chisq"
     drop_formula = test_opts.reduced_formula
-    if drop_formula isa Vector
-      t_matrix = zeros(length(drop_formula), n_times)
-    else
-      t_matrix = zeros(length(fixed), n_times)
-    end
+    t_matrix = zeros(length(drop_formula), n_times)
   end
 
   Threads.@threads for i = 1:n_times
@@ -154,21 +138,12 @@ function timewise_lm(formula, data, time, family, statistic, test_opts,
         continue
       end
 
-      # test statistic
       if statistic == "chisq"
-        if drop_formula isa Vector
-          drop1_mods = map(fm -> glm(fm, data_at_time, family), drop_formula)
-          chisq_vals = map(x -> chisq_value(lrtest(time_mod, x)), drop1_mods)
-          if size(t_matrix)[1] > length(chisq_vals)
-            chisq_vals = [0, chisq_vals...]
-          else
-            chisq_vals = [chisq_vals...]
-          end
-          t_matrix[:,i] = chisq_vals # make signed?
-        else
-          lrtest_obj = lrtest(time_mod, glm(test_opts.reduced_formula, data_at_time, family))
-          t_matrix[:,i] .= chisq_value(lrtest_obj) # make signed?
-        end
+        drop1_mods = map(x -> glm(x.fm, data_at_time, family), drop_formula)
+        betas = map(x -> coef(time_mod)[x.i], drop_formula)
+        chisq_vals = map(x -> chisq_value(lrtest(time_mod, x)), drop1_mods)
+        signed_chisq = [chisq_vals[i] * (length(betas[i]) == 1 ? sign(betas[i][1]) : 1) for i in 1:length(chisq_vals)]
+        t_matrix[:,i] = signed_chisq
       elseif statistic == "t"
         t_matrix[:,i] = t_value(time_mod)
       end
