@@ -8,6 +8,7 @@ format.empirical_clusters <- function(x, ...) {
   pvalues <- attr(x, "pvalues")
   missing_clusters <- attr(x, "missing_clusters")
   term_groups <- attr(x, "term_groups")
+  predictor_dfs <- attr(term_groups, 'dfs')
   time <- attr(x, "time")
   statistic <- attr(x, "statistic")
   threshold <- attr(x, "threshold")
@@ -19,7 +20,7 @@ format.empirical_clusters <- function(x, ...) {
     cli::cli_h1(paste("empirical clusters", format_threshold(statistic)))
     for (i in seq_along(valid_clusters)) {
       predictor <- names(valid_clusters)[[i]]
-      cli::cli_text("{.el {predictor}}", if (statistic == "chisq") " ({.emph df = {attr(term_groups, 'dfs')[[predictor]]}})")
+      cli::cli_text("{.el {predictor}}", if (statistic == "chisq") " ({.emph df = {predictor_dfs[[predictor]]}}){?*}")
       cluster_df <- valid_clusters[[i]]
       clusters <- split(cluster_df, seq_len(nrow(cluster_df)))
       names(clusters) <- paste0("[", time[cluster_df$cluster_start], ", ", time[cluster_df$cluster_end], "]")
@@ -40,6 +41,9 @@ format.empirical_clusters <- function(x, ...) {
     if (length(zero_clusters) > 0) {
       cli::cli_alert_warning("No clusters found for {.el {names(zero_clusters)}}")
     }
+    if (statistic == "chisq" && any(predictor_dfs > 1)) {
+      cli::cli_alert_info(c("* The {.val chisq} statistic for multi-level factors are unsigned."))
+    }
   }, theme = .jlmerclusterperm$cli_theme)
 }
 
@@ -51,6 +55,7 @@ print.null_clusters <- function(x, levels = 0.95, ...) {
 #' @export
 format.null_clusters <- function(x, levels, ...) {
   term_groups <- attr(x, "term_groups")
+  predictor_dfs <- attr(term_groups, 'dfs')
   statistic <- attr(x, "statistic")
   threshold <- attr(x, "threshold")
   binned <- attr(x, "binned")
@@ -59,12 +64,15 @@ format.null_clusters <- function(x, levels, ...) {
     cli::cli_h1(paste("null cluster statistics", format_threshold(statistic)))
     for (i in seq_along(cluster_stats)) {
       predictor <- names(x)[[i]]
-      cli::cli_text("{.el {predictor}}", if (statistic == "chisq") " ({.emph df = {attr(term_groups, 'dfs')[[predictor]]}})")
+      cli::cli_text("{.el {predictor}}", if (statistic == "chisq") " ({.emph df = {predictor_dfs[[predictor]]}}){?*}")
       cli::cli_ul()
       cli::cli_dl(cluster_stats[[i]])
       cli::cli_end()
     }
     cli::cli_rule()
+    if (statistic == "chisq" && any(predictor_dfs > 1)) {
+      cli::cli_alert_info(c("* The {.val chisq} statistic for multi-level factors are unsigned."))
+    }
   }, theme = .jlmerclusterperm$cli_theme)
 }
 
