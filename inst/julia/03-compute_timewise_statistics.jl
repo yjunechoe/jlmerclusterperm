@@ -60,7 +60,7 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
     pg = Progress(n_times, output = pg_io, barlen = pg_width, showspeed = true)
   end
 
-  #@suppress begin
+  @suppress begin
     Threads.@threads for i = 1:n_times
 
       data_at_time = filter(time => ==(times[i]), data)
@@ -112,7 +112,7 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
         next!(pg)
       end
     end
-  #end
+  end
 
   if diagnose
     (
