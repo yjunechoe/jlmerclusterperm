@@ -24,7 +24,7 @@ Can be one of \code{"t"} (default) from the regression model output or
 
 \item{nsim}{Number of simulations description}
 
-\item{predictors}{A subset of predictors to test. Defaults to \code{NULL} which tests all predictors.}
+\item{predictors}{(Optional) a subset of predictors to test. Defaults to \code{NULL} which tests all predictors.}
 
 \item{...}{Optional arguments passed to Julia for model fitting.
 Defaults to \code{fast = TRUE} and \code{progress = FALSE}.}

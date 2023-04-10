@@ -35,7 +35,7 @@ Interpretation differs on the choice of statistic (more below):
 
 \item{nsim}{Number of simulations description}
 
-\item{predictors}{A subset of predictors to test. Defaults to \code{NULL} which tests all predictors.}
+\item{predictors}{(Optional) a subset of predictors to test. Defaults to \code{NULL} which tests all predictors.}
 
 \item{binned}{Whether the data has been aggregated/collapsed into time bins. Defaults to \code{FALSE},
 which requires a cluster to span at least two time points. If \code{TRUE}, allows length-1 clusters to exist.}

@@ -46,6 +46,7 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
 tidy.timewise_statistics <- function(x, ...) {
   stacked <- as.data.frame.table(x, responseName = "statistic")
   colnames(stacked) <- tolower(colnames(stacked))
+  stacked$time <- as.numeric(levels(stacked$time))[stacked$time]
   stacked <- stacked[do.call(order, stacked[c("time", "predictor")]), intersect(c("predictor", "time", "statistic", "sim"), colnames(stacked))]
   maybe_as_tibble(stacked)
 }
@@ -55,7 +56,9 @@ tidy.empirical_clusters <- function(x, ...) {
   pvalues <- attr(x, "pvalues")
   cluster_dfs <- lapply(seq_along(x), function(i) {
     predictor <- names(x)[i]
-    cbind(predictor = predictor, x[[i]], pvalue = pvalues[[predictor]])
+    cluster_df <- cbind(predictor = predictor, x[[i]])
+    cluster_df$pvalue <- pvalues[[predictor]]
+    cluster_df
   })
   clusters_df <- do.call(rbind, cluster_dfs)
   maybe_as_tibble(clusters_df)
