@@ -1,7 +1,7 @@
 #' Fit Julia mixed models to each time point of a time series data
 #'
 #' @param nsim Number of simulations description
-#' @param predictors A subset of predictors to test. Defaults to `NULL` which tests all predictors.
+#' @param predictors (Optional) a subset of predictors to test. Defaults to `NULL` which tests all predictors.
 #' @inheritParams compute_timewise_statistics
 #'
 #' @seealso [make_jlmer_spec()]
@@ -71,7 +71,7 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
 
 validate_predictors_subset <- function(predictors, r_term_groups) {
   predictors_set <- unlist(r_term_groups, use.names = FALSE)
-  if (!any(predictors %in% predictors_set)) {
+  if (!is.null(predictors) && !any(predictors %in% predictors_set)) {
     cli::cli_abort(c(
       "Invalid selection passed to the {.arg predictor} argument.",
       "x" = "Must choose among {.val {predictors_set}}."
