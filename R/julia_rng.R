@@ -1,5 +1,7 @@
 #' RNG seed and counter for the permutation algorithm
 #'
+#' Experimental.
+#'
 #' @name julia_rng
 #' @keywords internal
 NULL

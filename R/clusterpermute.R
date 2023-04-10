@@ -23,7 +23,7 @@ clusterpermute <- function(jlmer_spec,
   empirical_clusters <- extract_empirical_clusters(empirical_statistics, threshold, binned, top_n)
   cli::cli_progress_step("Sampling cluster-mass statistics from a bootstrapped null distribution.")
   null_statistics <- permute_timewise_statistics(jlmer_spec, family, statistic, nsim, predictors, ...)
-  null_clusters <- extract_null_cluster_dists(null_statistics, threshold, binned)
+  null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold, binned)
   cli::cli_progress_step("Calculating the probability of the observed cluster-mass statistics.")
-  calculate_clusters_pvalues(empirical_clusters, null_clusters, add1)
+  calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1)
 }

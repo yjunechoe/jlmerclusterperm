@@ -3,8 +3,8 @@
 #' @param empirical_clusters A `empirical_clusters` object
 #' @param null_clusters A `null_clusters` object
 #' @param add1 Whether to add 1 to the numerator before calculating probability.
-#'   Defaults to `FALSE`. Use `TRUE` to effectively include the observed statistic
-#'   as part of the null distribution (recommended with larger `nsim` prior to publishing results).
+#'   Use `TRUE` to effectively count the observed statistic as part of the permuted
+#'   null distribution (recommended with larger `nsim` prior to publishing results).
 #'
 #' @seealso [extract_empirical_clusters()], [extract_null_cluster_dists()]
 #'

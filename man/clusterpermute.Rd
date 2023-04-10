@@ -44,8 +44,8 @@ which requires a cluster to span at least two time points. If \code{TRUE}, allow
 Defaults to \code{1} which only returns the largest cluster. Use \code{Inf} to return all possible clusters.}
 
 \item{add1}{Whether to add 1 to the numerator before calculating probability.
-Defaults to \code{FALSE}. Use \code{TRUE} to effectively include the observed statistic
-as part of the null distribution (recommended with larger \code{nsim} prior to publishing results).}
+Use \code{TRUE} to effectively count the observed statistic as part of the permuted
+null distribution (recommended with larger \code{nsim} prior to publishing results).}
 
 \item{...}{Optional arguments passed to Julia for model fitting.
 Defaults to \code{fast = TRUE} and \code{progress = FALSE}.}

@@ -61,7 +61,7 @@ format.null_clusters <- function(x, levels, ...) {
   binned <- attr(x, "binned")
   cluster_stats <- lapply(x, extract_null_cluster_stats, levels)
   cli::cli_format_method({
-    cli::cli_h1(paste("null cluster statistics", format_threshold(statistic)))
+    cli::cli_h1(paste("null cluster-mass distribution", format_threshold(statistic)))
     for (i in seq_along(cluster_stats)) {
       predictor <- names(x)[[i]]
       cli::cli_text("{.el {predictor}}", if (statistic == "chisq") " ({.emph df = {predictor_dfs[[predictor]]}}){?*}")
