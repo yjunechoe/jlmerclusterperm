@@ -67,7 +67,7 @@ tidy.empirical_clusters <- function(x, ...) {
 }
 
 #' @export
-tidy.null_clusters <- function(x, ...) {
+tidy.null_cluster_dists <- function(x, ...) {
   cluster_dfs <- lapply(seq_along(x), function(i) {
     cbind(predictor = names(x)[i], x[[i]])
   })

@@ -44,11 +44,11 @@ extract_null_cluster_dists <- function(null_statistics, threshold, binned = FALS
   time <- dimnames(null_statistics)$Time
   statistic <- attr(null_statistics, "statistic")
   null_statistics <- apply_threshold(null_statistics, statistic, threshold)
-  null_clusters <- apply(null_statistics, 3, function(t_matrix) {
+  null_cluster_dists <- apply(null_statistics, 3, function(t_matrix) {
     t_matrix <- t_matrix[!is.nan(rowSums(t_matrix)),]
     largest_clusters <- df_from_DF(.jlmerclusterperm$extract_clusters(t_matrix, binned, 1L))
   }, simplify = FALSE)
-  structure(null_clusters, class = "null_clusters",
+  structure(null_cluster_dists, class = "null_cluster_dists",
             statistic = statistic, threshold = threshold, binned = binned, time = time,
             term_groups = attr(null_statistics, "term_groups"))
 }

@@ -48,12 +48,12 @@ format.empirical_clusters <- function(x, ...) {
 }
 
 #' @export
-print.null_clusters <- function(x, levels = 0.95, ...) {
+print.null_cluster_dists <- function(x, levels = 0.95, ...) {
   cat(format(x, levels, ...), sep = "\n")
 }
 
 #' @export
-format.null_clusters <- function(x, levels, ...) {
+format.null_cluster_dists <- function(x, levels, ...) {
   term_groups <- attr(x, "term_groups")
   predictor_dfs <- attr(term_groups, 'dfs')
   statistic <- attr(x, "statistic")
