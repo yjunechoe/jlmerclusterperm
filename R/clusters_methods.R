@@ -64,7 +64,7 @@ format.null_cluster_dists <- function(x, levels, ...) {
     cli::cli_h1(paste("null cluster-mass distribution", format_threshold(statistic)))
     for (i in seq_along(cluster_stats)) {
       predictor <- names(x)[[i]]
-      cli::cli_text("{.el {predictor}} (n = {.val {cluster_stats[[i]]$n}}", if (statistic == "chisq") ", {.emph df = {.val {predictor_dfs[[predictor]]}}}{?*}", ")")
+      cli::cli_text("{.el {predictor}} (n = {cluster_stats[[i]]$n}", if (statistic == "chisq") ", {.emph df = {predictor_dfs[[predictor]]}}{?*}", ")")
       cli::cli_ul()
       cli::cli_dl(cluster_stats[[i]][1:2])
       cli::cli_end()

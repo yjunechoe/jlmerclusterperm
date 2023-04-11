@@ -77,7 +77,6 @@ check_convergence_failures <- function(z_array) {
     convergence_failures <- unique(which(convergence_failures_pos, arr.ind = TRUE)[, c("Predictor", "Sim")])
     convergence_failure_table <- table(convergence_failures[,"Predictor"])
     names(convergence_failure_table) <- dimnames(z_array)$Predictor[as.integer(names(convergence_failure_table))]
-    convergence_failure_table[] <- paste0("{.val {", convergence_failure_table, "}}")
     cli::cli_alert_info("Convergence errors encountered (out of {.arg nsim = {.val {nrow(z_array)}}}) while bootstrapping the following {cli::qty(names(convergence_failure_table))}predictor{?s}:")
     cli::cli_div(theme = .jlmerclusterperm$cli_theme)
     cli::cli_ul()
