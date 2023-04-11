@@ -64,9 +64,28 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
     ))
   }
 
-  structure(out$z_array, class = "timewise_statistics",
-            statistic = statistic, term_groups = term_groups$r)
+  convergence_failures <- check_convergence_failures(out$z_array)
 
+  structure(out$z_array, class = "timewise_statistics",
+            statistic = statistic, term_groups = term_groups$r, convergence_failures = convergence_failures)
+
+}
+
+check_convergence_failures <- function(z_array) {
+  convergence_failures_pos <- is.nan(z_array)
+  if (any(convergence_failures_pos)) {
+    convergence_failures <- unique(which(convergence_failures_pos, arr.ind = TRUE)[, c("Predictor", "Sim")])
+    convergence_failure_table <- table(convergence_failures[,"Predictor"])
+    names(convergence_failure_table) <- dimnames(z_array)$Predictor[as.integer(names(convergence_failure_table))]
+    convergence_failure_table[] <- paste0("{.val {", convergence_failure_table, "}}")
+    cli::cli_alert_info("Convergence errors encountered (out of {.arg nsim = {.val {nrow(z_array)}}}) while bootstrapping the following {cli::qty(names(convergence_failure_table))}predictor{?s}:")
+    cli::cli_div(theme = .jlmerclusterperm$cli_theme)
+    cli::cli_ul()
+    cli::cli_dl(as.list(convergence_failure_table), labels = paste0("{.el ", names(convergence_failure_table), "}"))
+    cli::cli_end()
+    cli::cli_end()
+    convergence_failures[do.call(order, asplit(convergence_failures, 2)), ]
+  }
 }
 
 validate_predictors_subset <- function(predictors, r_term_groups) {

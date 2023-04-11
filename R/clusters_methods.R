@@ -64,9 +64,9 @@ format.null_clusters <- function(x, levels, ...) {
     cli::cli_h1(paste("null cluster-mass distribution", format_threshold(statistic)))
     for (i in seq_along(cluster_stats)) {
       predictor <- names(x)[[i]]
-      cli::cli_text("{.el {predictor}}", if (statistic == "chisq") " ({.emph df = {predictor_dfs[[predictor]]}}){?*}")
+      cli::cli_text("{.el {predictor}} (n = {.val {cluster_stats[[i]]$n}}", if (statistic == "chisq") ", {.emph df = {.val {predictor_dfs[[predictor]]}}}{?*}", ")")
       cli::cli_ul()
-      cli::cli_dl(cluster_stats[[i]])
+      cli::cli_dl(cluster_stats[[i]][1:2])
       cli::cli_end()
     }
     cli::cli_rule()
@@ -85,7 +85,7 @@ extract_null_cluster_stats <- function(x, levels) {
     interval <- stats::quantile(statistics, bounds)
     paste(percent, sprintf("[%0.3f, %0.3f]", interval[1], interval[2]))
   }), collapse = ", ")
-  list("Mean (SD)" = mean_se, "Coverage intervals" = cis)
+  list("Mean (SD)" = mean_se, "Coverage intervals" = cis, n = nrow(x))
 }
 
 format_threshold <- function(statistic) {
