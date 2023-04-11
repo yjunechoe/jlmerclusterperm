@@ -5,14 +5,18 @@
 \alias{clusters_are_comparable}
 \title{Calculate bootstrapped p-values of clusters}
 \usage{
-calculate_clusters_pvalues(empirical_clusters, null_clusters, add1 = FALSE)
+calculate_clusters_pvalues(
+  empirical_clusters,
+  null_cluster_dists,
+  add1 = FALSE
+)
 
-clusters_are_comparable(empirical_clusters, null_clusters)
+clusters_are_comparable(empirical_clusters, null_cluster_dists)
 }
 \arguments{
 \item{empirical_clusters}{A \code{empirical_clusters} object}
 
-\item{null_clusters}{A \code{null_clusters} object}
+\item{null_cluster_dists}{A \code{null_cluster_dists} object}
 
 \item{add1}{Whether to add 1 to the numerator before calculating probability.
 Use \code{TRUE} to effectively count the observed statistic as part of the permuted
