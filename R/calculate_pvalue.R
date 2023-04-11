@@ -29,6 +29,9 @@ calculate_clusters_pvalues <- function(empirical_clusters, null_clusters, add1 =
 #' @rdname calculate_clusters_pvalues
 #' @export
 clusters_are_comparable <- function(empirical_clusters, null_clusters) {
+  if (class(empirical_clusters) != "empirical_clusters" || class(null_clusters) != "null_clusters") {
+    cli::cli_abort("Can only compare object of class {.cls empirical_clusters} against object of class {.cls null_clusters}")
+  }
   empirical_attrs <- attributes(empirical_clusters)
   null_attrs <- attributes(null_clusters)
   if (!identical(empirical_attrs[c("statistic", "threshold")], null_attrs[c("statistic", "threshold")])) {
