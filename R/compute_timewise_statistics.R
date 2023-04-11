@@ -45,10 +45,13 @@ compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
 }
 
 alert_diagnostics <- function(jlmer_spec, out) {
+  if (any(out$convergence_failures)) {
+    cli::cli_alert_danger(c(
+      "{.val {sum(out$convergence_failures)}} convergence failure{?s} at the following timepoint{?s}: ",
+      "{.val {out$Time[out$convergence_failures]}}."
+    ))
+  }
   if (jlmer_spec$meta$is_mem) {
-    if (any(out$convergence_failures)) {
-      cli::cli_alert_warning("{.val {sum(out$convergence_failures)}} convergence failure{?s}.")
-    }
     singular_fits <- out$singular_fits
     cli::cli_alert_info("{.val {sum(singular_fits)}} singular fit{?s} ({round(mean(singular_fits) * 100, 2)}%).")
     re_n_terms <- sapply(lme4::findbars(jlmer_spec$formula$jl), function(x) stats::setNames(length(x[[2]]), deparse1(x[[3]])))

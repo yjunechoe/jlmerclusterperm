@@ -25,12 +25,14 @@ function compute_timewise_statistics(formula, data, time, family, contrasts, ter
   end
 
   if is_mem
-    timewise_lme(formula, data, time, family, contrasts, statistic, test_opts,
-                 response_var, fixed, grouping_vars, times, n_times, true; opts...)
+    timewise_stats = timewise_lme(formula, data, time, family, contrasts, statistic, test_opts,
+                                  response_var, fixed, grouping_vars, times, n_times, true; opts...)
+    timewise_stats
   else
-    t_matrix = timewise_lm(formula, data, time, family, statistic, test_opts,
-                           response_var, fixed, times, n_times)
-    (t_matrix = t_matrix, Predictor = fixed, Time = times)
+    timewise_stats = timewise_lm(formula, data, time, family, statistic, test_opts,
+                                 response_var, fixed, times, n_times)
+    (t_matrix = timewise_stats.t_matrix, convergence_failures = timewise_stats.convergence_failures,
+     Predictor = fixed, Time = times)
   end
 
 end
@@ -50,9 +52,9 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
     end
   end
 
+  convergence_failures = zeros(Bool, n_times)
   if diagnose
     singular_fits = zeros(n_times)
-    convergence_failures = zeros(Bool, n_times)
     rePCA_95_matrix = zeros(length(grouping_vars), n_times)
   end
 
@@ -68,15 +70,14 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
 
       if all(==(response[1]), response)
         t_matrix[:,i] .= response[1] == 1 ? Inf : -Inf
+        convergence_failures[i] = missing
         if diagnose
-          convergence_failures[i] = missing
           singular_fits[i] = missing
           rePCA_95_matrix[:,i] .= missing
         end
       else
         try
           time_mod = fit(MixedModel, formula, data_at_time, family; contrasts = contrasts, opts...)
-
           # test statistic
           if statistic == "chisq"
             if drop_formula isa Vector
@@ -101,9 +102,7 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
             rePCA_95_matrix[:,i] = [all(isnan, x) ? 0 : findfirst(>(.95), x) for x in time_mod.rePCA]
           end
         catch e
-          if diagnose
-            convergence_failures[i] = true
-          end
+          convergence_failures[i] = true
           t_matrix[:,i] .= NaN
         end
       end
@@ -121,7 +120,7 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
       rePCA_95_matrix = rePCA_95_matrix, Grouping = grouping_vars
     )
   else
-    t_matrix
+    (t_matrix = t_matrix, convergence_failures = convergence_failures)
   end
 
 end
@@ -140,6 +139,8 @@ function timewise_lm(formula, data, time, family, statistic, test_opts,
     end
   end
 
+  convergence_failures = zeros(Bool, n_times)
+
   Threads.@threads for i = 1:n_times
     data_at_time = filter(time => ==(times[i]), data)
     response = data_at_time[!, response_var]
@@ -147,31 +148,30 @@ function timewise_lm(formula, data, time, family, statistic, test_opts,
       constant = response[1] == 1 ? Inf : -Inf
       t_matrix[:,i] .= constant
     else
-      time_mod = try
-        glm(formula, data_at_time, family)
+      try
+        time_mod = glm(formula, data_at_time, family)
+        if statistic == "chisq"
+          if drop_formula isa Vector
+            drop1_mods = map(x -> glm(x.fm, data_at_time, family), drop_formula)
+            betas = map(x -> coef(time_mod)[x.i], drop_formula)
+            chisq_vals = map(x -> chisq_value(lrtest(time_mod, x)), drop1_mods)
+            signed_chisq = [chisq_vals[i] * (length(betas[i]) == 1 ? sign(betas[i][1]) : 1) for i in 1:length(chisq_vals)]
+            t_matrix[:,i] = signed_chisq
+          else
+            chisq_val = chisq_value(lrtest(time_mod, glm(drop_formula.fm, data_at_time, family)))
+            betas = coef(time_mod)[drop_formula.i]
+            signed_chisq = chisq_val * (length(betas) == 1 ? sign(betas[1]) : 1)
+            t_matrix[drop_formula.i, i] .= signed_chisq
+          end
+        elseif statistic == "t"
+          t_matrix[:,i] = t_value(time_mod)
+        end
       catch e
+        convergence_failures[i] = true
         t_matrix[:,i] .= NaN
         continue
       end
-
-      if statistic == "chisq"
-        if drop_formula isa Vector
-          drop1_mods = map(x -> glm(x.fm, data_at_time, family), drop_formula)
-          betas = map(x -> coef(time_mod)[x.i], drop_formula)
-          chisq_vals = map(x -> chisq_value(lrtest(time_mod, x)), drop1_mods)
-          signed_chisq = [chisq_vals[i] * (length(betas[i]) == 1 ? sign(betas[i][1]) : 1) for i in 1:length(chisq_vals)]
-          t_matrix[:,i] = signed_chisq
-        else
-          chisq_val = chisq_value(lrtest(time_mod, glm(drop_formula.fm, data_at_time, family)))
-          betas = coef(time_mod)[drop_formula.i]
-          signed_chisq = chisq_val * (length(betas) == 1 ? sign(betas[1]) : 1)
-          t_matrix[drop_formula.i, i] .= signed_chisq
-        end
-      elseif statistic == "t"
-        t_matrix[:,i] = t_value(time_mod)
-      end
-
     end
   end
-  t_matrix
+  (t_matrix = t_matrix, convergence_failures = convergence_failures)
 end
