@@ -17,7 +17,9 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
     })
     re_cor <- lapply(re_flatten, function(g) {
       re_terms <- backtrans_interaction(names(g[[1]]))
-      re_term_matrix <- outer(re_terms, re_terms, function(i, j) paste0(i, ".", j))
+      re_term_matrix <- outer(re_terms, re_terms, function(i, j) {
+        sapply(seq_along(i), function(ind) paste0(sort(c(i[ind], j[ind]))[1], ".", sort(c(i[ind], j[ind]))[2]) )
+      })
       re_cor_terms <- re_term_matrix[lower.tri(re_term_matrix)]
       if (!is.null(g[[2]])) {
         stats::setNames(g[[2]], paste0("cor__", re_cor_terms))
@@ -28,7 +30,10 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
       data.frame(group = names(re)[i], term = names(re[[i]]), estimate = unname(re[[i]]))
     })
     re_df <- do.call(rbind, re_dfs)
-    re_df <- re_df[do.call(order, re_df[, c("group", "term")]), ]
+    sigma <- JuliaConnectoR::juliaLet("x.sigma", x = x)
+    if (!is.na(sigma)) {
+      re_df <- rbind(re_df, data.frame(group = "Residual", term = "sd__Observation", estimate = sigma))
+    }
     if (effects == "ran_pars") {
       out <- re_df
     } else {
