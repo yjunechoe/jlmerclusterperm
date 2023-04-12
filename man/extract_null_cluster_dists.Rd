@@ -2,14 +2,14 @@
 % Please edit documentation in R/extract_clusters.R
 \name{extract_null_cluster_dists}
 \alias{extract_null_cluster_dists}
-\title{Construct a distribution of the largest cluster statistics from bootstrapped permutations}
+\title{Construct a null distribution of cluster-mass statistics from bootstrapped permutations}
 \usage{
 extract_null_cluster_dists(null_statistics, threshold, binned = FALSE)
 }
 \arguments{
 \item{null_statistics}{A simulation-by-time-by-predictor 3D array of null (permuted) timewise statistics.}
 
-\item{threshold}{The threshold value that a statistic must pass to contribute to cluster mass.
+\item{threshold}{The threshold value that the statistic must pass to contribute to cluster mass.
 Interpretation differs on the choice of statistic (more below):
 \itemize{
 \item If \code{statistic = "t"}, the threshold for t-value (beta/std.err) from the regression model.
@@ -19,8 +19,11 @@ Interpretation differs on the choice of statistic (more below):
 \item{binned}{Whether the data has been aggregated/collapsed into time bins. Defaults to \code{FALSE},
 which requires a cluster to span at least two time points. If \code{TRUE}, allows length-1 clusters to exist.}
 }
+\value{
+A \code{null_cluster_dists} object.
+}
 \description{
-Construct a distribution of the largest cluster statistics from bootstrapped permutations
+Construct a null distribution of cluster-mass statistics from bootstrapped permutations
 }
 \seealso{
 \code{\link[=permute_timewise_statistics]{permute_timewise_statistics()}}

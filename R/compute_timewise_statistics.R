@@ -9,7 +9,7 @@
 #'
 #' @seealso [jlmer()], [make_jlmer_spec()]
 #'
-#' @return A predictor-by-time matrix of cluster statistics.
+#' @return A predictor-by-time matrix of cluster statistics, of class `timewise_statistics`.
 #' @export
 compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "binomial"), statistic = c("t", "chisq"), ...) {
 

@@ -9,7 +9,7 @@
 #' @seealso [extract_empirical_clusters()], [extract_null_cluster_dists()]
 #'
 #' @export
-#' @return An `empirical_clusters` object with p-values
+#' @return An `empirical_clusters` object augmented with p-values.
 calculate_clusters_pvalues <- function(empirical_clusters, null_cluster_dists, add1 = FALSE) {
   clusters_are_comparable(empirical_clusters, null_cluster_dists)
   empirical <- lapply(empirical_clusters, `[[`, "statistic")

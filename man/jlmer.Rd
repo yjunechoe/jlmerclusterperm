@@ -13,6 +13,9 @@ jlmer(jlmer_spec, family = c("gaussian", "binomial"), ...)
 
 \item{...}{Optional arguments passed to Julia for model fitting.}
 }
+\value{
+A \code{jlmer_mod} object.
+}
 \description{
 Fit a Julia mixed model
 }

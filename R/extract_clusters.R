@@ -1,17 +1,18 @@
 #' Detect largest clusters from a time sequence of cluster statistics
 #'
 #' @param empirical_statistics A predictor-by-time matrix of empirical timewise statistics.
-#' @param threshold The threshold value that a statistic must pass to contribute to cluster mass.
+#' @param threshold The threshold value that the statistic must pass to contribute to cluster mass.
 #'  Interpretation differs on the choice of statistic (more below):
 #'  * If `statistic = "t"`, the threshold for t-value (beta/std.err) from the regression model.
 #'  * If `statistic = "chisq"`, the threshold for the p-value of chi-squared statistics from likelihood ratio tests.
 #' @param binned Whether the data has been aggregated/collapsed into time bins. Defaults to `FALSE`,
 #'  which requires a cluster to span at least two time points. If `TRUE`, allows length-1 clusters to exist.
-#' @param top_n How many clusters to return, in order of the size of the cluster statistic.
+#' @param top_n How many clusters to return, in the order of the size of the cluster-mass statistic.
 #'  Defaults to `Inf` which return all detected clusters.
 #'
 #' @seealso [compute_timewise_statistics()]
 #'
+#' @return An `empirical_clusters` object.
 #' @export
 extract_empirical_clusters <- function(empirical_statistics, threshold, binned = FALSE, top_n = Inf) {
   time <- dimnames(empirical_statistics)$Time
@@ -32,13 +33,14 @@ extract_empirical_clusters <- function(empirical_statistics, threshold, binned =
             term_groups = attr(empirical_statistics, "term_groups"))
 }
 
-#' Construct a distribution of the largest cluster statistics from bootstrapped permutations
+#' Construct a null distribution of cluster-mass statistics from bootstrapped permutations
 #'
 #' @param null_statistics A simulation-by-time-by-predictor 3D array of null (permuted) timewise statistics.
 #' @inheritParams extract_empirical_clusters
 #'
 #' @seealso [permute_timewise_statistics()]
 #'
+#' @return A `null_cluster_dists` object.
 #' @export
 extract_null_cluster_dists <- function(null_statistics, threshold, binned = FALSE) {
   time <- dimnames(null_statistics)$Time

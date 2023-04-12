@@ -1,14 +1,14 @@
-#' Construct a model matrix and expand model formula suitable for MixedModels and lme4
+#' Create a specifications object for fitting regression models in Julia
 #'
-#' @param formula Model formula in R lme4 syntax
-#' @param data Dataframe
-#' @param subject Column for subjects or participants in the data.
+#' @param formula Model formula in R syntax
+#' @param data A data frame
+#' @param subject Column for subjects in the data.
 #' @param trial Column for trials in the data. Must uniquely identify a time series within subject
-#'  (for example, the items in a counterbalanced design where each subject sees exactly one item).
+#'  (for example, the column for items in a counterbalanced design where each subject sees exactly one item).
 #' @param time Column for time in the data.
-#' @param drop_terms Terms to drop from the new model formula
+#' @param drop_terms (Optional) any terms to drop from the reconstructed model formula
 #'
-#' @return An object of class `jlmer_spec`
+#' @return An object of class `jlmer_spec`.
 #'
 #' @export
 make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = NULL, drop_terms = NULL) {

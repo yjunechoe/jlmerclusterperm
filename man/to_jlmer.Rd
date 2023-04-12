@@ -13,15 +13,18 @@ to_jlmer(
 )
 }
 \arguments{
-\item{formula}{Model formula in R lme4 syntax}
+\item{formula}{Model formula in R syntax}
 
-\item{data}{Dataframe}
+\item{data}{A data frame}
 
 \item{family}{A GLM family. Currently supports "gaussian" and "binomial".}
 
 \item{jlmer_spec_opts}{Other options passed to \code{make_jlmer_spec()}}
 
 \item{...}{Optional arguments passed to Julia for model fitting.}
+}
+\value{
+A \code{jlmer_mod} object.
 }
 \description{
 Fit a Julia mixed model using lme4 syntax

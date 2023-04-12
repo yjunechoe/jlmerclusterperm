@@ -24,7 +24,7 @@ Can be one of \code{"t"} (default) from the regression model output or
 Defaults to \code{fast = TRUE} and \code{progress = FALSE}.}
 }
 \value{
-A predictor-by-time matrix of cluster statistics.
+A predictor-by-time matrix of cluster statistics, of class \code{timewise_statistics}.
 }
 \description{
 Fit Julia mixed models to each time point of a time series data

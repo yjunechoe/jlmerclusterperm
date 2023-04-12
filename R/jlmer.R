@@ -6,6 +6,7 @@
 #'
 #' @seealso [jlmer()], [make_jlmer_spec()]
 #'
+#' @return A `jlmer_mod` object.
 #' @export
 to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_spec_opts = list(), ...) {
 
@@ -22,6 +23,7 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_sp
 #'
 #' @seealso [make_jlmer_spec()]
 #'
+#' @return A `jlmer_mod` object.
 #' @export
 jlmer <- function(jlmer_spec, family = c("gaussian", "binomial"), ...) {
 

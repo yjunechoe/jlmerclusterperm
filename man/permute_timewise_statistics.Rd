@@ -2,7 +2,7 @@
 % Please edit documentation in R/permute_timewise_statistics.R
 \name{permute_timewise_statistics}
 \alias{permute_timewise_statistics}
-\title{Fit Julia mixed models to each time point of a time series data}
+\title{Simulate a null distribution of cluster-mass statistics}
 \usage{
 permute_timewise_statistics(
   jlmer_spec,
@@ -30,10 +30,10 @@ Can be one of \code{"t"} (default) from the regression model output or
 Defaults to \code{fast = TRUE} and \code{progress = FALSE}.}
 }
 \value{
-A simulation-by-time-by-predictor 3D array of cluster statistics.
+A simulation-by-time-by-predictor 3D array of cluster statistics, of class \code{timewise_statistics}.
 }
 \description{
-Fit Julia mixed models to each time point of a time series data
+Simulate a null distribution of cluster-mass statistics
 }
 \seealso{
 \code{\link[=make_jlmer_spec]{make_jlmer_spec()}}

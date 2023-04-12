@@ -23,7 +23,7 @@ Use \code{TRUE} to effectively count the observed statistic as part of the permu
 null distribution (recommended with larger \code{nsim} prior to publishing results).}
 }
 \value{
-An \code{empirical_clusters} object with p-values
+An \code{empirical_clusters} object augmented with p-values.
 }
 \description{
 Calculate bootstrapped p-values of clusters

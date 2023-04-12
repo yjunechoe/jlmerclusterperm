@@ -2,7 +2,7 @@
 % Please edit documentation in R/permute.R
 \name{permute_by_predictor}
 \alias{permute_by_predictor}
-\title{Permute data by predictor}
+\title{Permute data by predictor while respecting the temporal structure of the observations}
 \usage{
 permute_by_predictor(
   jlmer_spec,
@@ -21,8 +21,8 @@ permute_by_predictor(
 \item{n}{Number of permuted samples of the data to generate. Defaults to \code{1L}.}
 }
 \value{
-A long dataframe with \code{.id} column representing replication IDs.
+A long dataframe of permuted re-samples with \code{.id} column representing replication IDs.
 }
 \description{
-Permute data by predictor
+Permute data by predictor while respecting the temporal structure of the observations
 }

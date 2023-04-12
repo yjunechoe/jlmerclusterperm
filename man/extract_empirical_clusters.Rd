@@ -8,13 +8,13 @@ extract_empirical_clusters(
   empirical_statistics,
   threshold,
   binned = FALSE,
-  top_n = 1L
+  top_n = Inf
 )
 }
 \arguments{
 \item{empirical_statistics}{A predictor-by-time matrix of empirical timewise statistics.}
 
-\item{threshold}{The threshold value that a statistic must pass to contribute to cluster mass.
+\item{threshold}{The threshold value that the statistic must pass to contribute to cluster mass.
 Interpretation differs on the choice of statistic (more below):
 \itemize{
 \item If \code{statistic = "t"}, the threshold for t-value (beta/std.err) from the regression model.
@@ -24,8 +24,11 @@ Interpretation differs on the choice of statistic (more below):
 \item{binned}{Whether the data has been aggregated/collapsed into time bins. Defaults to \code{FALSE},
 which requires a cluster to span at least two time points. If \code{TRUE}, allows length-1 clusters to exist.}
 
-\item{top_n}{How many clusters to return, in order of the size of the cluster statistic.
-Defaults to \code{1} which only returns the largest cluster. Use \code{Inf} to return all possible clusters.}
+\item{top_n}{How many clusters to return, in the order of the size of the cluster-mass statistic.
+Defaults to \code{Inf} which return all detected clusters.}
+}
+\value{
+An \code{empirical_clusters} object.
 }
 \description{
 Detect largest clusters from a time sequence of cluster statistics

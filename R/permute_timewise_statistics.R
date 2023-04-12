@@ -1,4 +1,4 @@
-#' Fit Julia mixed models to each time point of a time series data
+#' Simulate a null distribution of cluster-mass statistics
 #'
 #' @param nsim Number of simulations description
 #' @param predictors (Optional) a subset of predictors to test. Defaults to `NULL` which tests all predictors.
@@ -6,7 +6,7 @@
 #'
 #' @seealso [make_jlmer_spec()]
 #'
-#' @return A simulation-by-time-by-predictor 3D array of cluster statistics.
+#' @return A simulation-by-time-by-predictor 3D array of cluster statistics, of class `timewise_statistics`.
 #' @export
 permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "binomial"),
                                         statistic = c("t", "chisq"),

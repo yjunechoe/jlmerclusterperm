@@ -1,4 +1,4 @@
-#' Run a complete cluster-based permutation analysis
+#' Conduct a cluster-based permutation test
 #'
 #' @inheritParams permute_timewise_statistics
 #' @inheritParams extract_empirical_clusters

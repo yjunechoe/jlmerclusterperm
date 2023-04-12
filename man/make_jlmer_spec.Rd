@@ -2,7 +2,7 @@
 % Please edit documentation in R/jlmer_spec.R
 \name{make_jlmer_spec}
 \alias{make_jlmer_spec}
-\title{Construct a model matrix and expand model formula suitable for MixedModels and lme4}
+\title{Create a specifications object for fitting regression models in Julia}
 \usage{
 make_jlmer_spec(
   formula,
@@ -14,22 +14,22 @@ make_jlmer_spec(
 )
 }
 \arguments{
-\item{formula}{Model formula in R lme4 syntax}
+\item{formula}{Model formula in R syntax}
 
-\item{data}{Dataframe}
+\item{data}{A data frame}
 
-\item{subject}{Column for subjects or participants in the data.}
+\item{subject}{Column for subjects in the data.}
 
 \item{trial}{Column for trials in the data. Must uniquely identify a time series within subject
-(for example, the items in a counterbalanced design where each subject sees exactly one item).}
+(for example, the column for items in a counterbalanced design where each subject sees exactly one item).}
 
 \item{time}{Column for time in the data.}
 
-\item{drop_terms}{Terms to drop from the new model formula}
+\item{drop_terms}{(Optional) any terms to drop from the reconstructed model formula}
 }
 \value{
-An object of class \code{jlmer_spec}
+An object of class \code{jlmer_spec}.
 }
 \description{
-Construct a model matrix and expand model formula suitable for MixedModels and lme4
+Create a specifications object for fitting regression models in Julia
 }

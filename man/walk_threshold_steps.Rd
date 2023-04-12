@@ -20,8 +20,8 @@ walk_threshold_steps(
 
 \item{threshold_steps}{A vector of threshold values to test}
 
-\item{top_n}{How many clusters to return, in order of the size of the cluster statistic.
-Defaults to \code{1} which only returns the largest cluster. Use \code{Inf} to return all possible clusters.}
+\item{top_n}{How many clusters to return, in the order of the size of the cluster-mass statistic.
+Defaults to \code{Inf} which return all detected clusters.}
 
 \item{binned}{Whether the data has been aggregated/collapsed into time bins. Defaults to \code{FALSE},
 which requires a cluster to span at least two time points. If \code{TRUE}, allows length-1 clusters to exist.}
@@ -31,7 +31,7 @@ Use \code{TRUE} to effectively count the observed statistic as part of the permu
 null distribution (recommended with larger \code{nsim} prior to publishing results).}
 }
 \value{
-A data frame of clusters-mass statistics
+A data frame of predictor clusters-mass statistics by threshold.
 }
 \description{
 Test cluster-mass probabilities over a range of threshold values

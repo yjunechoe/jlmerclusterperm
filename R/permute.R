@@ -1,11 +1,11 @@
-#' Permute data by predictor
+#' Permute data by predictor while respecting the temporal structure of the observations
 #'
 #' @inheritParams jlmer
 #' @param predictors A vector of terms from the model. If multiple, the must form the levels of one predictor.
 #' @param predictor_type Whether the predictor is `"between_participant"` or `"within_participant"`. Defaults to `"guess"`.
 #' @param n Number of permuted samples of the data to generate. Defaults to `1L`.
 #'
-#' @return A long dataframe with `.id` column representing replication IDs.
+#' @return A long dataframe of permuted re-samples with `.id` column representing replication IDs.
 #' @export
 permute_by_predictor <- function(jlmer_spec, predictors, predictor_type = c("guess", "between_participant", "within_participant"), n = 1L) {
   df <- jlmer_spec$data

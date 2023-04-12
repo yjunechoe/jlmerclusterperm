@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-Julia [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) implementation of cluster-based permutation test for time series data, powered by [{JuliaConnectoR}](https://github.com/stefan-m-lenz/JuliaConnectoR)
+Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) implementation of bootstrapped cluster-based permutation analysis for time series data, powered by [{JuliaConnectoR}](https://github.com/stefan-m-lenz/JuliaConnectoR)
 
 ## Installation
 
@@ -30,4 +30,38 @@ You can install the development version of jlmerclusterperm from [GitHub](https:
 remotes::install_github("yjunechoe/jlmerclusterperm")
 ```
 
+Using `jlmerclusterperm` requires a prior installation of Julia, which can be downloaded from either the [official website](https://julialang.org/) or via the command line utility [juliaup](https://github.com/JuliaLang/juliaup). Julia version >=1.8 is required and >=1.9 is preferred for its substantial compiler/runtime improvements.
+
+Before using functions from `jlmerclusterperm`, an initial setup step is required via calling `jlmerclusterperm_setup()`. This will launch Julia with some number of threads (controlled via `options("jlmerclusterperm.nthreads")`) and install necessary Julia package dependencies (this only happens once and should take about 15-30 minutes). Every call to `jlmerclusterperm_setup()` after the initial setup incurs a small overhead (around 30 seconds to 1 minute) after which you will get access to multi-threaded, blazingly-fast functions in the package.
+
+```{r setup}
+# Both lines must be run for a new R session
+library(jlmerclusterperm)
+jlmerclusterperm_setup()
+```
+
+## Example walkthrough
+
 WIP...
+
+## Notes on R-Julia interoperability
+
+All `jlmerclusterperm` functions collect Julia objects as R objects, except `jlmer` and `to_jlmer` which return either GLM.jl or MixedModels.jl fitted model objects.
+
+```{r jmod}
+jmod <- to_jlmer(Reaction ~ Days + (Days | Subject), sleepstudy)
+jmod
+```
+
+You can use functions from `JuliaConnectoR` to interact with these (pointers to) Julia objects:
+
+```{r}
+library(JuliaConnectoR)
+juliaLet("x.rePCA", x = jmod)
+
+# For {marginaleffects} / {emmeans} features
+juliaEval("using Effects")
+# For converting to R {lme4} objects
+juliaEval("using JellyMe4")
+```
+

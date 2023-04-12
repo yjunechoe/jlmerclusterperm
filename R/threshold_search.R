@@ -5,7 +5,7 @@
 #' @inheritParams extract_null_cluster_dists
 #' @inheritParams calculate_clusters_pvalues
 #'
-#' @return A data frame of clusters-mass statistics
+#' @return A data frame of predictor clusters-mass statistics by threshold.
 #' @export
 walk_threshold_steps <- function(empirical_statistics, null_statistics, threshold_steps,
                                  top_n = Inf, binned = FALSE, add1 = TRUE) {
