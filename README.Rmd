@@ -46,22 +46,41 @@ WIP...
 
 ## Notes on R-Julia interoperability
 
-All `jlmerclusterperm` functions collect Julia objects as R objects, except `jlmer` and `to_jlmer` which return either GLM.jl or MixedModels.jl fitted model objects.
+All `jlmerclusterperm` functions collect Julia objects as R objects, except `jlmer` and `to_jlmer` which return GLM.jl or MixedModels.jl fitted model objects.
 
-```{r jmod}
-jmod <- to_jlmer(Reaction ~ Days + (Days | Subject), sleepstudy)
+```{r to-jlmer}
+jmod <- to_jlmer(Reaction ~ Days + (Days | Subject), lme4::sleepstudy)
 jmod
+```
+
+Model output should be comparable to `{lme4}` models:
+
+```{r lmer-comparison}
+library(lme4)
+rmod <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
+summary(rmod)
 ```
 
 You can use functions from `JuliaConnectoR` to interact with these (pointers to) Julia objects:
 
-```{r}
+```{r julia-interop}
 library(JuliaConnectoR)
 juliaLet("x.rePCA", x = jmod)
-
-# For {marginaleffects} / {emmeans} features
-juliaEval("using Effects")
-# For converting to R {lme4} objects
-juliaEval("using JellyMe4")
+juliaCall("issingular", jmod)
+juliaLet("OptSummary(x)", x = jmod)
 ```
 
+You can alsi call functions from other Julia packages that you have installed. For example, [Effects.jl](https://github.com/beacon-biosignals/Effects.jl) can be useful for [`marginaleffects`](https://github.com/vincentarelbundock/marginaleffects)/[`emmeans`](https://github.com/rvlenth/emmeans) features:
+
+```{r effects-jl}
+juliaEval("using Effects")
+juliaLet("effects(x.namedelements, y)", x = list(Days = unique(sleepstudy$Days)), y = jmod)
+```
+
+The following packages are loaded into the Julia environment via `jlmerclusterperm_setup()`:
+
+```{r proj-toml}
+cat(readLines(system.file(package = "jlmerclusterperm", "julia", "Project.toml")), sep = "\n")
+```
+
+If you wish to use other Julia packages like Effects.jl, it is recommend to add them into the general registry in a fresh Julia session as opposed to `Pkg.add()`-ing from R using the `JuliaConnectoR` interface, as that may pollute the `jlmerclusterperm` project environment.

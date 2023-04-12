@@ -88,12 +88,14 @@ generics::glance
 #' @export
 glance.jlmer_mod <- function(x, ...) {
   nobs <- JuliaConnectoR::juliaCall("nobs", x)
+  sigma <- JuliaConnectoR::juliaLet("x.sigma", x = x) %|0|% 1
+  logLik <- JuliaConnectoR::juliaCall("loglikelihood", x)
   AIC <- JuliaConnectoR::juliaCall("aic", x)
   BIC <- JuliaConnectoR::juliaCall("bic", x)
   deviance <- JuliaConnectoR::juliaCall("deviance", x)
   dof <- JuliaConnectoR::juliaCall("dof", x)
   out <- data.frame(
-    nobs = nobs, AIC = AIC, BIC = BIC,
+    nobs = nobs, sigma = sigma, logLik = logLik, AIC = AIC, BIC = BIC,
     deviance = deviance, df.residual = nobs - dof
   )
   maybe_as_tibble(out)
