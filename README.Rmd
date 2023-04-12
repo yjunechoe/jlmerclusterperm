@@ -37,7 +37,7 @@ Before using functions from `jlmerclusterperm`, an initial setup step is require
 ```{r setup}
 # Both lines must be run
 library(jlmerclusterperm)
-system.time(jlmerclusterperm_setup())
+system.time(jlmerclusterperm_setup(verbose = FALSE))
 ```
 
 ## Example walkthrough

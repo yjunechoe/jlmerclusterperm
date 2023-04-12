@@ -45,12 +45,9 @@ the package.
 ``` r
 # Both lines must be run
 library(jlmerclusterperm)
-system.time(jlmerclusterperm_setup())
-#> ℹ Starting Julia with 7 threads✔ Starting Julia with 7 threads [4.8s]
-#> ℹ Activating package environment✔ Activating package environment [5.8s]
-#> ℹ Running package setup scripts (1/15)ℹ Running package setup scripts (5/15)ℹ Running package setup scripts (6/15)ℹ Running package setup scripts (7/15)ℹ Running package setup scripts (8/15)ℹ Running package setup scripts (9/15)ℹ Running package setup scripts (11/15)✔ Running package setup scripts (15/15) [21.6s]
+system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.18    0.00   32.55
+#>    0.00    0.00   29.51
 ```
 
 ## Example walkthrough
