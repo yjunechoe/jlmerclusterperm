@@ -13,7 +13,7 @@ Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and
 [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl)
 implementation of bootstrapped cluster-based permutation analysis for
 time series data, powered by
-[{JuliaConnectoR}](https://github.com/stefan-m-lenz/JuliaConnectoR)
+[`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR)
 
 ## Installation
 
@@ -37,17 +37,20 @@ required via calling `jlmerclusterperm_setup()`. This will launch Julia
 with some number of threads (controlled via
 `options("jlmerclusterperm.nthreads")`) and install necessary Julia
 package dependencies (this only happens once and should take about 15-30
-minutes). Every call to `jlmerclusterperm_setup()` after the initial
-setup incurs a small overhead (around 30 seconds to 1 minute) after
-which you will get access to multi-threaded, blazingly-fast functions in
-the package.
+minutes).
+
+Calls to `jlmerclusterperm_setup()` after the initial setup incurs an
+overhead of around 30 seconds and you will experience small delays at
+first from Julia’s [just-in-time
+compilation](https://docs.julialang.org/en/v1/). Afterwards you can
+enjoy the blazingly-fast functions from the package.
 
 ``` r
 # Both lines must be run
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.00    0.00   29.51
+#>    0.02    0.02   23.40
 ```
 
 ## Example walkthrough
@@ -65,7 +68,7 @@ jmod <- to_jlmer(Reaction ~ Days + (Days | Subject), lme4::sleepstudy)
 jmod
 #> Variance components:
 #>             Column    Variance Std.Dev.   Corr.
-#> Subject  (Intercept)  565.51067 23.78047
+#> Subject  (Intercept)  565.51066 23.78047
 #>          Days          32.68212  5.71683 +0.08
 #> Residual              654.94145 25.59182
 #>  ──────────────────────────────────────────────────
@@ -85,7 +88,6 @@ Model output should be comparable to `{lme4}` models:
 
 ``` r
 library(lme4)
-#> Warning: package 'lme4' was built under R version 4.2.3
 #> Loading required package: Matrix
 rmod <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
 summary(rmod)
@@ -116,14 +118,15 @@ summary(rmod)
 #> Days -0.138
 ```
 
-You can use functions from `JuliaConnectoR` to interact with these
-(pointers to) Julia objects:
+You can use functions from
+[`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR) to
+interact with these (pointers to) Julia objects:
 
 ``` r
 library(JuliaConnectoR)
 juliaLet("x.rePCA", x = jmod)
 #> <Julia object of type NamedTuple{(:Subject,), Tuple{Vector{Float64}}}>
-#> (Subject = [0.5406660833474893, 1.0],)
+#> (Subject = [0.5406660465696776, 1.0],)
 juliaCall("issingular", jmod)
 #> [1] FALSE
 ```
@@ -177,3 +180,37 @@ it is recommend to install them in the global library in a fresh Julia
 session as opposed to `Pkg.add()`-ing from R using the `JuliaConnectoR`
 interface, as that may pollute the `jlmerclusterperm` project
 environment (if this happens, just re-install `jlmerclusterperm`).
+
+Version info:
+
+``` r
+R.version
+#>                _                                
+#> platform       x86_64-w64-mingw32               
+#> arch           x86_64                           
+#> os             mingw32                          
+#> crt            ucrt                             
+#> system         x86_64, mingw32                  
+#> status                                          
+#> major          4                                
+#> minor          2.2                              
+#> year           2022                             
+#> month          10                               
+#> day            31                               
+#> svn rev        83211                            
+#> language       R                                
+#> version.string R version 4.2.2 (2022-10-31 ucrt)
+#> nickname       Innocent and Trusting
+juliaCall("versioninfo")
+#> Julia Version 1.9.0-rc2
+#> Commit 72aec423c2 (2023-04-01 10:41 UTC)
+#> Platform Info:
+#>   OS: Windows (x86_64-w64-mingw32)
+#>   CPU: 8 × 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
+#>   WORD_SIZE: 64
+#>   LIBM: libopenlibm
+#>   LLVM: libLLVM-14.0.6 (ORCJIT, tigerlake)
+#>   Threads: 7 on 8 virtual cores
+#> Environment:
+#>   JULIA_NUM_THREADS = 7
+```

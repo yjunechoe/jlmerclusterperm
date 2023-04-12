@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) implementation of bootstrapped cluster-based permutation analysis for time series data, powered by [{JuliaConnectoR}](https://github.com/stefan-m-lenz/JuliaConnectoR)
+Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) implementation of bootstrapped cluster-based permutation analysis for time series data, powered by [`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR)
 
 ## Installation
 
@@ -32,7 +32,9 @@ remotes::install_github("yjunechoe/jlmerclusterperm")
 
 Using `jlmerclusterperm` requires a prior installation of Julia, which can be downloaded from either the [official website](https://julialang.org/) or via the command line utility [juliaup](https://github.com/JuliaLang/juliaup). Julia version >=1.8 is required and >=1.9 is preferred for its substantial compiler/runtime improvements.
 
-Before using functions from `jlmerclusterperm`, an initial setup step is required via calling `jlmerclusterperm_setup()`. This will launch Julia with some number of threads (controlled via `options("jlmerclusterperm.nthreads")`) and install necessary Julia package dependencies (this only happens once and should take about 15-30 minutes). Every call to `jlmerclusterperm_setup()` after the initial setup incurs a small overhead (around 30 seconds to 1 minute) after which you will get access to multi-threaded, blazingly-fast functions in the package.
+Before using functions from `jlmerclusterperm`, an initial setup step is required via calling `jlmerclusterperm_setup()`. This will launch Julia with some number of threads (controlled via `options("jlmerclusterperm.nthreads")`) and install necessary Julia package dependencies (this only happens once and should take about 15-30 minutes).
+
+Calls to `jlmerclusterperm_setup()` after the initial setup incurs an overhead of around 30 seconds and you will experience small delays at first from Julia's [just-in-time compilation](https://docs.julialang.org/en/v1/). Afterwards you can enjoy the blazingly-fast functions from the package.
 
 ```{r setup}
 # Both lines must be run
@@ -56,13 +58,13 @@ glance(jmod) # see also `tidy()`
 
 Model output should be comparable to `{lme4}` models:
 
-```{r lmer-comparison}
+```{r lmer-comparison, warning = FALSE}
 library(lme4)
 rmod <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
 summary(rmod)
 ```
 
-You can use functions from `JuliaConnectoR` to interact with these (pointers to) Julia objects:
+You can use functions from [`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR) to interact with these (pointers to) Julia objects:
 
 ```{r julia-interop}
 library(JuliaConnectoR)
@@ -84,3 +86,11 @@ cat(readLines(system.file(package = "jlmerclusterperm", "julia", "Project.toml")
 ```
 
 If you wish to use other Julia packages not listed here like Effects.jl, it is recommend to install them in the global library in a fresh Julia session as opposed to `Pkg.add()`-ing from R using the `JuliaConnectoR` interface, as that may pollute the `jlmerclusterperm` project environment (if this happens, just re-install `jlmerclusterperm`).
+
+Version info:
+
+```{r}
+R.version
+juliaCall("versioninfo")
+```
+
