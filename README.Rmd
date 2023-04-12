@@ -35,9 +35,9 @@ Using `jlmerclusterperm` requires a prior installation of Julia, which can be do
 Before using functions from `jlmerclusterperm`, an initial setup step is required via calling `jlmerclusterperm_setup()`. This will launch Julia with some number of threads (controlled via `options("jlmerclusterperm.nthreads")`) and install necessary Julia package dependencies (this only happens once and should take about 15-30 minutes). Every call to `jlmerclusterperm_setup()` after the initial setup incurs a small overhead (around 30 seconds to 1 minute) after which you will get access to multi-threaded, blazingly-fast functions in the package.
 
 ```{r setup}
-# Both lines must be run for a new R session
+# Both lines must be run
 library(jlmerclusterperm)
-jlmerclusterperm_setup()
+system.time(jlmerclusterperm_setup())
 ```
 
 ## Example walkthrough
