@@ -18,20 +18,20 @@ RoxygenNote: 7.2.3
 VignetteBuilder: 
     knitr
 Imports: 
-    utils,
-    stats,
-    parallel,
+    cli,
+    generics,
     JuliaConnectoR,
     lme4,
-    cli,
-    generics
+    parallel,
+    stats,
+    utils
 Suggests:
-    knitr,
-    tibble,
+    broom,
+    broom.mixed,
     dplyr,
     ggplot2,
-    broom,
-    broom.mixed
+    knitr,
+    tibble
 Collate:
     'aaa.R'
     'utils.R'

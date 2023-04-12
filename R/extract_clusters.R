@@ -8,12 +8,12 @@
 #' @param binned Whether the data has been aggregated/collapsed into time bins. Defaults to `FALSE`,
 #'  which requires a cluster to span at least two time points. If `TRUE`, allows length-1 clusters to exist.
 #' @param top_n How many clusters to return, in order of the size of the cluster statistic.
-#'  Defaults to `1` which only returns the largest cluster. Use `Inf` to return all possible clusters.
+#'  Defaults to `Inf` which return all detected clusters.
 #'
 #' @seealso [compute_timewise_statistics()]
 #'
 #' @export
-extract_empirical_clusters <- function(empirical_statistics, threshold, binned = FALSE, top_n = 1L) {
+extract_empirical_clusters <- function(empirical_statistics, threshold, binned = FALSE, top_n = Inf) {
   time <- dimnames(empirical_statistics)$Time
   statistic <- attr(empirical_statistics, "statistic")
   empirical_statistics <- apply_threshold(empirical_statistics, statistic, threshold)

@@ -30,25 +30,4 @@ You can install the development version of jlmerclusterperm from [GitHub](https:
 remotes::install_github("yjunechoe/jlmerclusterperm")
 ```
 
-## Setup
-
-```{r example}
-# library(jlmerclusterperm)
-# system.time({jlmerclusterperm_setup()})
-```
-
-## Basic example
-
-Example data:
-
-```{r ex-data}
-head(ChickWeight)
-fm <- weight ~ 1 + Diet + (1 | Chick)
-```
-
-```{r}
-chickweights_m <- tapply(ChickWeight$weight, ChickWeight[c("Time", "Diet")], mean)
-matplot(chickweights_m, type = "b", lwd = 3)
-```
-
-WIP
+WIP...
