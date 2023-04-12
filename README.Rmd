@@ -34,7 +34,7 @@ Using `jlmerclusterperm` requires a prior installation of Julia, which can be do
 
 Before using functions from `jlmerclusterperm`, an initial setup step is required via calling `jlmerclusterperm_setup()`. This will launch Julia with some number of threads (controlled via `options("jlmerclusterperm.nthreads")`) and install necessary Julia package dependencies (this only happens once and should take about 15-30 minutes).
 
-Calls to `jlmerclusterperm_setup()` after the initial setup incurs an overhead of around 30 seconds and you will experience small delays at first from Julia's [just-in-time compilation](https://docs.julialang.org/en/v1/). Afterwards you can enjoy the blazingly-fast functions from the package.
+Subsequent calls to `jlmerclusterperm_setup()` incurs an overhead of around 30 seconds and you will experience small delays for first-time function calls due to Julia's [just-in-time compilation](https://docs.julialang.org/en/v1/). Afterwards you can enjoy the blazingly-fast functions from the package.
 
 ```{r setup}
 # Both lines must be run
@@ -58,7 +58,7 @@ glance(jmod) # see also `tidy()`
 
 Model output should be comparable to `{lme4}` models:
 
-```{r lmer-comparison, warning = FALSE}
+```{r lmer-comparison, warning=FALSE, message=FALSE}
 library(lme4)
 rmod <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
 summary(rmod)

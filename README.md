@@ -39,9 +39,9 @@ with some number of threads (controlled via
 package dependencies (this only happens once and should take about 15-30
 minutes).
 
-Calls to `jlmerclusterperm_setup()` after the initial setup incurs an
-overhead of around 30 seconds and you will experience small delays at
-first from Julia’s [just-in-time
+Subsequent calls to `jlmerclusterperm_setup()` incurs an overhead of
+around 30 seconds and you will experience small delays for first-time
+function calls due to Julia’s [just-in-time
 compilation](https://docs.julialang.org/en/v1/). Afterwards you can
 enjoy the blazingly-fast functions from the package.
 
@@ -50,7 +50,7 @@ enjoy the blazingly-fast functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.02    0.02   23.40
+#>    0.00    0.03   21.48
 ```
 
 ## Example walkthrough
@@ -88,7 +88,6 @@ Model output should be comparable to `{lme4}` models:
 
 ``` r
 library(lme4)
-#> Loading required package: Matrix
 rmod <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
 summary(rmod)
 #> Linear mixed model fit by REML ['lmerMod']
