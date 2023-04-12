@@ -51,6 +51,7 @@ All `jlmerclusterperm` functions collect Julia objects as R objects, except `jlm
 ```{r to-jlmer}
 jmod <- to_jlmer(Reaction ~ Days + (Days | Subject), lme4::sleepstudy)
 jmod
+glance(jmod) # see also `tidy()`
 ```
 
 Model output should be comparable to `{lme4}` models:
@@ -67,10 +68,9 @@ You can use functions from `JuliaConnectoR` to interact with these (pointers to)
 library(JuliaConnectoR)
 juliaLet("x.rePCA", x = jmod)
 juliaCall("issingular", jmod)
-juliaLet("OptSummary(x)", x = jmod)
 ```
 
-You can alsi call functions from other Julia packages that you have installed. For example, [Effects.jl](https://github.com/beacon-biosignals/Effects.jl) can be useful for [`marginaleffects`](https://github.com/vincentarelbundock/marginaleffects)/[`emmeans`](https://github.com/rvlenth/emmeans) features:
+You can also call functions from other Julia packages that you already have installed. For example, [Effects.jl](https://github.com/beacon-biosignals/Effects.jl) may be useful for [`marginaleffects`](https://github.com/vincentarelbundock/marginaleffects)/[`emmeans`](https://github.com/rvlenth/emmeans) features:
 
 ```{r effects-jl}
 juliaEval("using Effects")
@@ -83,4 +83,4 @@ The following packages are loaded into the Julia environment via `jlmerclusterpe
 cat(readLines(system.file(package = "jlmerclusterperm", "julia", "Project.toml")), sep = "\n")
 ```
 
-If you wish to use other Julia packages like Effects.jl, it is recommend to add them into the general registry in a fresh Julia session as opposed to `Pkg.add()`-ing from R using the `JuliaConnectoR` interface, as that may pollute the `jlmerclusterperm` project environment.
+If you wish to use other Julia packages not listed here like Effects.jl, it is recommend to install them in the global library in a fresh Julia session as opposed to `Pkg.add()`-ing from R using the `JuliaConnectoR` interface, as that may pollute the `jlmerclusterperm` project environment (if this happens, just re-install `jlmerclusterperm`).
