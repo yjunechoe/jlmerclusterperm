@@ -4,7 +4,7 @@
 \alias{jlmer}
 \title{Fit a Julia mixed model}
 \usage{
-jlmer(jlmer_spec, family = c("gaussian", "binomial"), ...)
+jlmer(jlmer_spec, family = c("gaussian", "binomial"), ..., progress = FALSE)
 }
 \arguments{
 \item{jlmer_spec}{Data prepped for jlmer from \code{make_jlmer_spec()}}
@@ -12,6 +12,8 @@ jlmer(jlmer_spec, family = c("gaussian", "binomial"), ...)
 \item{family}{A GLM family. Currently supports "gaussian" and "binomial".}
 
 \item{...}{Optional arguments passed to Julia for model fitting.}
+
+\item{progress}{If \code{TRUE}, prints the timing of iterations.}
 }
 \value{
 A \code{jlmer_mod} object.

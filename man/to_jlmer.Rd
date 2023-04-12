@@ -9,7 +9,8 @@ to_jlmer(
   data,
   family = c("gaussian", "binomial"),
   jlmer_spec_opts = list(),
-  ...
+  ...,
+  progress = FALSE
 )
 }
 \arguments{
@@ -19,9 +20,11 @@ to_jlmer(
 
 \item{family}{A GLM family. Currently supports "gaussian" and "binomial".}
 
-\item{jlmer_spec_opts}{Other options passed to \code{make_jlmer_spec()}}
+\item{jlmer_spec_opts}{List of options passed to \code{make_jlmer_spec()}}
 
 \item{...}{Optional arguments passed to Julia for model fitting.}
+
+\item{progress}{If \code{TRUE}, prints the timing of iterations.}
 }
 \value{
 A \code{jlmer_mod} object.
