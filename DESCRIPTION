@@ -1,22 +1,22 @@
 Package: jlmerclusterperm
-Title: Bootstrapped cluster-based permutation analysis for time series data with GLM.jl and MixedModels.jl
+Title: Bootstrapped cluster-based permutation analysis for time series
+    data with GLM.jl and MixedModels.jl
 Version: 0.1.0
-Authors@R: c(
+Authors@R: 
     person("June", "Choe", , "jchoe001@gmail.com", role = c("aut", "cre"),
-               comment = c(ORCID = "0000-0002-0701-921X")))
-Description: A Julia-based implementation of fast cluster-based permutation tests for time series data using mixed-effects models.
-    Provides a modular interface for the steps of calculating timewise statistics, extracting clusters, and calculating p-values.
-    Calls MixedModels.jl and GLM.jl to fit regression models using JuliaConnectoR (requires Julia installation).
+           comment = c(ORCID = "0000-0002-0701-921X"))
+Description: A Julia-based implementation of fast cluster-based
+    permutation tests for time series data using mixed-effects models.
+    Provides a modular interface for the steps of calculating timewise
+    statistics, extracting clusters, and calculating p-values.  Calls
+    MixedModels.jl and GLM.jl to fit regression models using
+    JuliaConnectoR (requires Julia installation).
 License: MIT + file LICENSE
-URL: https://github.com/yjunechoe/jlmerclusterperm, https://yjunechoe.github.io/jlmerclusterperm/
+URL: https://github.com/yjunechoe/jlmerclusterperm,
+    https://yjunechoe.github.io/jlmerclusterperm/
 BugReports: https://github.com/yjunechoe/jlmerclusterperm/issues
 Depends:
     R (>= 3.5)
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
-VignetteBuilder: 
-    knitr
 Imports: 
     cli,
     generics,
@@ -32,6 +32,11 @@ Suggests:
     ggplot2,
     knitr,
     tibble
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
 Collate:
     'jlmerclusterperm-package.R'
     'aaa.R'
