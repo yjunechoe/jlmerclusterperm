@@ -2,7 +2,7 @@
 #'
 #' @param empirical_clusters A `empirical_clusters` object
 #' @param null_cluster_dists A `null_cluster_dists` object
-#' @param add1 Whether to add 1 to the numerator before calculating probability.
+#' @param add1 Whether to add 1 to the numerator and denominator when calculating the p-value.
 #'   Use `TRUE` to effectively count the observed statistic as part of the permuted
 #'   null distribution (recommended with larger `nsim` prior to publishing results).
 #'

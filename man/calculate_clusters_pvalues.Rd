@@ -18,7 +18,7 @@ clusters_are_comparable(empirical_clusters, null_cluster_dists)
 
 \item{null_cluster_dists}{A \code{null_cluster_dists} object}
 
-\item{add1}{Whether to add 1 to the numerator before calculating probability.
+\item{add1}{Whether to add 1 to the numerator and denominator when calculating the p-value.
 Use \code{TRUE} to effectively count the observed statistic as part of the permuted
 null distribution (recommended with larger \code{nsim} prior to publishing results).}
 }

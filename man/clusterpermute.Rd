@@ -43,7 +43,7 @@ which requires a cluster to span at least two time points. If \code{TRUE}, allow
 \item{top_n}{How many clusters to return, in the order of the size of the cluster-mass statistic.
 Defaults to \code{Inf} which return all detected clusters.}
 
-\item{add1}{Whether to add 1 to the numerator before calculating probability.
+\item{add1}{Whether to add 1 to the numerator and denominator when calculating the p-value.
 Use \code{TRUE} to effectively count the observed statistic as part of the permuted
 null distribution (recommended with larger \code{nsim} prior to publishing results).}
 

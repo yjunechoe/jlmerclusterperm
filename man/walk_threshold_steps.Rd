@@ -26,7 +26,7 @@ Defaults to \code{Inf} which return all detected clusters.}
 \item{binned}{Whether the data has been aggregated/collapsed into time bins. Defaults to \code{FALSE},
 which requires a cluster to span at least two time points. If \code{TRUE}, allows length-1 clusters to exist.}
 
-\item{add1}{Whether to add 1 to the numerator before calculating probability.
+\item{add1}{Whether to add 1 to the numerator and denominator when calculating the p-value.
 Use \code{TRUE} to effectively count the observed statistic as part of the permuted
 null distribution (recommended with larger \code{nsim} prior to publishing results).}
 }
