@@ -9,7 +9,7 @@
 #'  [calculate_clusters_pvalues()]
 #'
 #' @export
-#' @return An `empirical_clusters` object with p-values
+#' @return A list of `null_cluster_dists` and `empirical_clusters` with p-values
 clusterpermute <- function(jlmer_spec,
                            family = c("gaussian", "binomial"),
                            statistic = c("t", "chisq"),
@@ -33,5 +33,6 @@ clusterpermute <- function(jlmer_spec,
   null_statistics <- permute_timewise_statistics(jlmer_spec, family, statistic, nsim, predictors, ...)
   null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold, binned)
   cli::cli_progress_step("Calculating the probability of the observed cluster-mass statistics.")
-  calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1)
+  empirical_clusters_p <- calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1)
+  list(null_cluster_dists = null_cluster_dists, empirical_clusters = empirical_clusters_p)
 }

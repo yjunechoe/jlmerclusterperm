@@ -13,6 +13,7 @@
 #' @export
 compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "binomial"), statistic = c("t", "chisq"), ...) {
 
+  check_arg_class(jlmer_spec, "jlmer_spec")
   family <- match.arg(family)
   statistic <- match.arg(statistic)
   is_mem <- jlmer_spec$meta$is_mem

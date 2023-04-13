@@ -164,7 +164,7 @@ print.jlmer_spec <- function(x, ...) {
 #' @export
 format.jlmer_spec <- function(x, ...) {
   cli::cli_format_method({
-    cli::cli_h1("{.strong jlmer specification}")
+    cli::cli_rule(left = "{.strong jlmer specification}", right = "{.cls jlmer_spec}")
     # Formula
     cli::cli_text("{.el Formula}: {.fm {deparse1(x$formula$jl)}}")
     # Terms

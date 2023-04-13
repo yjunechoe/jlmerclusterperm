@@ -17,7 +17,7 @@ format.empirical_clusters <- function(x, ...) {
   valid_clusters <- x[!missing_clusters]
   if (!is.null(pvalues)) valid_clusters <- valid_clusters[names(pvalues)]
   cli::cli_format_method({
-    cli::cli_h1(paste("empirical clusters", format_threshold(statistic)))
+    cli::cli_rule(left = paste("{.strong Empirical clusters}", format_threshold(statistic)), right = "{.cls empirical_clusters}")
     for (i in seq_along(valid_clusters)) {
       predictor <- names(valid_clusters)[[i]]
       cli::cli_text("{.el {predictor}}", if (statistic == "chisq") " ({.emph df = {predictor_dfs[[predictor]]}}){?*}")
@@ -61,7 +61,7 @@ format.null_cluster_dists <- function(x, levels, ...) {
   binned <- attr(x, "binned")
   cluster_stats <- lapply(x, extract_null_cluster_stats, levels)
   cli::cli_format_method({
-    cli::cli_h1(paste("null cluster-mass distribution", format_threshold(statistic)))
+    cli::cli_rule(left = paste("{.strong Null cluster-mass distribution}", format_threshold(statistic)), right = "{.cls null_cluster_dists}")
     for (i in seq_along(cluster_stats)) {
       predictor <- names(x)[[i]]
       cli::cli_text("{.el {predictor}} (n = {cluster_stats[[i]]$n}", if (statistic == "chisq") ", {.emph df = {predictor_dfs[[predictor]]}}{?*}", ")")

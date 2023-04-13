@@ -12,6 +12,7 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
                                         statistic = c("t", "chisq"),
                                         nsim = 100L, predictors = NULL, ...) {
 
+  check_arg_class(jlmer_spec, "jlmer_spec")
   statistic <- match.arg(statistic)
   is_mem <- jlmer_spec$meta$is_mem
   participant_col <- jlmer_spec$meta$subject

@@ -28,6 +28,7 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_sp
 #' @export
 jlmer <- function(jlmer_spec, family = c("gaussian", "binomial"), ..., progress = FALSE) {
 
+  check_arg_class(jlmer_spec, "jlmer_spec")
   family <- match.arg(family)
   args <- prep_for_jlmer(jlmer_spec, family = family, ...)[-3]
 

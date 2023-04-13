@@ -51,7 +51,7 @@ null distribution (recommended with larger \code{nsim} prior to publishing resul
 Defaults to \code{fast = TRUE} (when \code{family = "binomial"}) and \code{progress = FALSE}.}
 }
 \value{
-An \code{empirical_clusters} object with p-values
+A list of \code{null_cluster_dists} and \code{empirical_clusters} with p-values
 }
 \description{
 Conduct a cluster-based permutation test
