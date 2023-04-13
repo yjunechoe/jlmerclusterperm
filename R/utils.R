@@ -28,7 +28,7 @@ replace_as_na <- function(x, y) {
 }
 
 check_arg_class <- function(x, x_class, x_arg = x_class) {
-  if (!is(x, x_class)) {
+  if (!inherits(x, x_class)) {
     cli::cli_abort(c(
       "{.arg x_arg} must be a {.cls x_class} object, not a {.cls {class(x)}}"
     ))
