@@ -50,7 +50,7 @@ enjoy the blazingly-fast functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.00    0.03   21.48
+#>    0.00    0.03   19.98
 ```
 
 ## Example walkthrough
@@ -66,6 +66,7 @@ fitted model objects.
 ``` r
 jmod <- to_jlmer(Reaction ~ Days + (Days | Subject), lme4::sleepstudy)
 jmod
+#> <Julia object of type LinearMixedModel{Float64}>
 #> Variance components:
 #>             Column    Variance Std.Dev.   Corr.
 #> Subject  (Intercept)  565.51066 23.78047
@@ -132,9 +133,8 @@ juliaCall("issingular", jmod)
 
 You can also call functions from other Julia packages that you already
 have installed. For example,
-[Effects.jl](https://github.com/beacon-biosignals/Effects.jl) may be
-useful for
-[`marginaleffects`](https://github.com/vincentarelbundock/marginaleffects)/[`emmeans`](https://github.com/rvlenth/emmeans)
+[Effects.jl](https://github.com/beacon-biosignals/Effects.jl) for its
+[`marginaleffects`](https://github.com/vincentarelbundock/marginaleffects)/[`emmeans`](https://github.com/rvlenth/emmeans)-like
 features:
 
 ``` r
@@ -178,38 +178,4 @@ If you wish to use other Julia packages not listed here like Effects.jl,
 it is recommend to install them in the global library in a fresh Julia
 session as opposed to `Pkg.add()`-ing from R using the `JuliaConnectoR`
 interface, as that may pollute the `jlmerclusterperm` project
-environment (if this happens, just re-install `jlmerclusterperm`).
-
-Version info:
-
-``` r
-R.version
-#>                _                                
-#> platform       x86_64-w64-mingw32               
-#> arch           x86_64                           
-#> os             mingw32                          
-#> crt            ucrt                             
-#> system         x86_64, mingw32                  
-#> status                                          
-#> major          4                                
-#> minor          2.2                              
-#> year           2022                             
-#> month          10                               
-#> day            31                               
-#> svn rev        83211                            
-#> language       R                                
-#> version.string R version 4.2.2 (2022-10-31 ucrt)
-#> nickname       Innocent and Trusting
-juliaCall("versioninfo")
-#> Julia Version 1.9.0-rc2
-#> Commit 72aec423c2 (2023-04-01 10:41 UTC)
-#> Platform Info:
-#>   OS: Windows (x86_64-w64-mingw32)
-#>   CPU: 8 × 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
-#>   WORD_SIZE: 64
-#>   LIBM: libopenlibm
-#>   LLVM: libLLVM-14.0.6 (ORCJIT, tigerlake)
-#>   Threads: 7 on 8 virtual cores
-#> Environment:
-#>   JULIA_NUM_THREADS = 7
-```
+environment (if this happens, just re-install the package).

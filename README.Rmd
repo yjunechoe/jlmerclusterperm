@@ -72,7 +72,7 @@ juliaLet("x.rePCA", x = jmod)
 juliaCall("issingular", jmod)
 ```
 
-You can also call functions from other Julia packages that you already have installed. For example, [Effects.jl](https://github.com/beacon-biosignals/Effects.jl) may be useful for [`marginaleffects`](https://github.com/vincentarelbundock/marginaleffects)/[`emmeans`](https://github.com/rvlenth/emmeans) features:
+You can also call functions from other Julia packages that you already have installed. For example, [Effects.jl](https://github.com/beacon-biosignals/Effects.jl) for its [`marginaleffects`](https://github.com/vincentarelbundock/marginaleffects)/[`emmeans`](https://github.com/rvlenth/emmeans)-like features:
 
 ```{r effects-jl}
 juliaEval("using Effects")
@@ -85,12 +85,4 @@ The following packages are loaded into the Julia environment via `jlmerclusterpe
 cat(readLines(system.file(package = "jlmerclusterperm", "julia", "Project.toml")), sep = "\n")
 ```
 
-If you wish to use other Julia packages not listed here like Effects.jl, it is recommend to install them in the global library in a fresh Julia session as opposed to `Pkg.add()`-ing from R using the `JuliaConnectoR` interface, as that may pollute the `jlmerclusterperm` project environment (if this happens, just re-install `jlmerclusterperm`).
-
-Version info:
-
-```{r}
-R.version
-juliaCall("versioninfo")
-```
-
+If you wish to use other Julia packages not listed here like Effects.jl, it is recommend to install them in the global library in a fresh Julia session as opposed to `Pkg.add()`-ing from R using the `JuliaConnectoR` interface, as that may pollute the `jlmerclusterperm` project environment (if this happens, just re-install the package).

@@ -43,6 +43,7 @@ print.jlmer_mod <- function(x, ...) {
 
 #' @export
 format.jlmer_mod <- function(x, ...) {
+  cat("<Julia object of type ", JuliaConnectoR::juliaCall("typeof", x), ">\n", sep = "")
   if (JuliaConnectoR::juliaLet("x isa MixedModel", x = x)) {
     re <- gsub("\n\n$", "\n", showobj_reformat(JuliaConnectoR::juliaCall('VarCorr', x)))
     fe <- showobj_reformat(JuliaConnectoR::juliaCall('coeftable', x))
