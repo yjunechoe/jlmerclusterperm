@@ -11,11 +11,19 @@
 #' @export
 #' @return An `empirical_clusters` object with p-values
 clusterpermute <- function(jlmer_spec,
-                           family, statistic, threshold,
-                           nsim = 100L, predictors = NULL,
-                           binned = FALSE, top_n = 1L,
+                           family = c("gaussian", "binomial"),
+                           statistic = c("t", "chisq"),
+                           threshold,
+                           nsim = 100L,
+                           predictors = NULL,
+                           binned = FALSE,
+                           top_n = Inf,
                            add1 = TRUE,
                            ...) {
+  family <- match.arg(family)
+  statistic <- match.arg(statistic)
+  jlmer_spec$.backdoor$prepped_for_jlmer <- prep_for_jlmer(jlmer_spec, family, ...)
+  jlmer_spec$.backdoor$augmented_term_groups <- augment_term_groups(jlmer_spec, statistic)
   cli::cli_progress_step("Detecting empirical clusters and calculating cluster-mass statistics.")
   old_opts <- julia_progress(show = FALSE)
   empirical_statistics <- suppressMessages(compute_timewise_statistics(jlmer_spec, family, statistic, ...))

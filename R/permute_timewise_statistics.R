@@ -16,11 +16,11 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
   is_mem <- jlmer_spec$meta$is_mem
   participant_col <- jlmer_spec$meta$subject
   trial_col <- jlmer_spec$meta$trial %|0|% ""
-  term_groups <- augment_term_groups(jlmer_spec$meta$term_groups, statistic)
+  term_groups <- augment_term_groups(jlmer_spec, statistic)
   predictors_subset <- validate_predictors_subset(predictors, term_groups$r)
 
   family <- match.arg(family)
-  args <- prep_for_jlmer(jlmer_spec$formula$jl, jlmer_spec$data, jlmer_spec$meta$time, family, ...)
+  args <- prep_for_jlmer(jlmer_spec, family = family, ...)
   nsim <- as.integer(nsim)
 
   opts <- list(...)
@@ -100,7 +100,11 @@ validate_predictors_subset <- function(predictors, r_term_groups) {
   }
 }
 
-augment_term_groups <- function(term_groups, statistic) {
+augment_term_groups <- function(jlmer_spec, statistic) {
+
+  if (!is.null(jlmer_spec$.backdoor$augmented_term_groups)) return(jlmer_spec$.backdoor$augmented_term_groups)
+
+  term_groups <- jlmer_spec$meta$term_groups
   term_levels <- lengths(term_groups)
   grp_idx <- split(seq_len(sum(lengths(term_groups))), rep(seq_along(term_groups), times = term_levels))
   term_groups_jl <- JuliaConnectoR::juliaLet("Tuple(x)", x = lapply(seq_along(term_groups), function (i) {

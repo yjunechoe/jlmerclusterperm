@@ -21,7 +21,7 @@ Can be one of \code{"t"} (default) from the regression model output or
 \code{"chisq"} from a likelihood ratio test (takes about twice as long to calculate).}
 
 \item{...}{Optional arguments passed to Julia for model fitting.
-Defaults to \code{fast = TRUE} and \code{progress = FALSE}.}
+Defaults to \code{fast = TRUE} (when \code{family = "binomial"}) and \code{progress = FALSE}.}
 }
 \value{
 A predictor-by-time matrix of cluster statistics, of class \code{timewise_statistics}.

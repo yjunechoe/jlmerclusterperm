@@ -23,7 +23,14 @@ df_from_DF <- function(DF) {
   as.data.frame(df_str$columns, col.names = unlist(df_str$colindex$names, use.names = FALSE))
 }
 
-prep_for_jlmer <- function(julia_formula, data, time, family, ...) {
+prep_for_jlmer <- function(jlmer_spec, family, ...) {
+
+  if (!is.null(jlmer_spec$.backdoor$prepped_for_jlmer)) return(jlmer_spec$.backdoor$prepped_for_jlmer)
+
+  julia_formula <- jlmer_spec$formula$jl
+  data <- jlmer_spec$data
+  time <- jlmer_spec$meta$time
+
   opts <- list(...)
   if (is.null(opts) || any(names(opts) == "")) {
     cli::cli_abort("All optional arguments to fit in {.arg ...} must be named.")

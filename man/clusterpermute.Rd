@@ -6,13 +6,13 @@
 \usage{
 clusterpermute(
   jlmer_spec,
-  family,
-  statistic,
+  family = c("gaussian", "binomial"),
+  statistic = c("t", "chisq"),
   threshold,
   nsim = 100L,
   predictors = NULL,
   binned = FALSE,
-  top_n = 1L,
+  top_n = Inf,
   add1 = TRUE,
   ...
 )
@@ -48,7 +48,7 @@ Use \code{TRUE} to effectively count the observed statistic as part of the permu
 null distribution (recommended with larger \code{nsim} prior to publishing results).}
 
 \item{...}{Optional arguments passed to Julia for model fitting.
-Defaults to \code{fast = TRUE} and \code{progress = FALSE}.}
+Defaults to \code{fast = TRUE} (when \code{family = "binomial"}) and \code{progress = FALSE}.}
 }
 \value{
 An \code{empirical_clusters} object with p-values

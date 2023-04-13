@@ -5,7 +5,7 @@
 #'  Can be one of `"t"` (default) from the regression model output or
 #'  `"chisq"` from a likelihood ratio test (takes about twice as long to calculate).
 #' @param ... Optional arguments passed to Julia for model fitting.
-#'  Defaults to `fast = TRUE` and `progress = FALSE`.
+#'  Defaults to `fast = TRUE` (when `family = "binomial"`) and `progress = FALSE`.
 #'
 #' @seealso [jlmer()], [make_jlmer_spec()]
 #'
@@ -16,8 +16,8 @@ compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
   family <- match.arg(family)
   statistic <- match.arg(statistic)
   is_mem <- jlmer_spec$meta$is_mem
-  term_groups <- augment_term_groups(jlmer_spec$meta$term_groups, statistic)
-  args <- prep_for_jlmer(jlmer_spec$formula$jl, jlmer_spec$data, time = jlmer_spec$meta$time, family, ...)
+  term_groups <- augment_term_groups(jlmer_spec, statistic)
+  args <- prep_for_jlmer(jlmer_spec, family = family, ...)
 
   opts <- list(...)
   opts <- utils::modifyList(list(progress = FALSE), opts)
