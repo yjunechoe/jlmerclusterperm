@@ -8,7 +8,8 @@ Description: A Julia-based implementation of fast cluster-based permutation test
     Provides a modular interface for the steps of calculating timewise statistics, extracting clusters, and calculating p-values.
     Calls MixedModels.jl and GLM.jl to fit regression models using JuliaConnectoR (requires Julia installation).
 License: MIT + file LICENSE
-URL: https://github.com/yjunechoe/jlmerclusterperm
+URL: https://github.com/yjunechoe/jlmerclusterperm,
+    https://yjunechoe.github.io/jlmerclusterperm/
 BugReports: https://github.com/yjunechoe/jlmerclusterperm/issues
 Depends:
     R (>= 3.5)
