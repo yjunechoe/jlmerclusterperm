@@ -15,7 +15,7 @@ calculate_clusters_pvalues <- function(empirical_clusters, null_cluster_dists, a
   empirical <- lapply(empirical_clusters, `[[`, "statistic")
   empirical <- Filter(function(x) !near_zero(x[1]), empirical)
   null <- lapply(null_cluster_dists, `[[`, "statistic")
-  predictors_to_test <- stats::setNames(nm = names(empirical)[names(empirical) %in% names(null)])
+  predictors_to_test <- setNames(nm = names(empirical)[names(empirical) %in% names(null)])
   pvalues <- lapply(predictors_to_test, function(x) {
     sapply(empirical[[x]], function(cluster_statistic) {
       mean(c(abs(null[[x]]) >= abs(cluster_statistic), if (add1) TRUE))
@@ -44,7 +44,7 @@ clusters_are_comparable <- function(empirical_clusters, null_cluster_dists) {
       }
     })
     mismatch_info <- Filter(Negate(is.null), mismatch_info)
-    mismatch_info <- stats::setNames(paste0("{.strong ", names(mismatch_info), "}: ", mismatch_info), rep("x", length(mismatch_info)))
+    mismatch_info <- setNames(paste0("{.strong ", names(mismatch_info), "}: ", mismatch_info), rep("x", length(mismatch_info)))
     cli::cli_abort(c(
       "Cluster-mass statistics between empirical and null are not comparable.",
       "i" = "{.arg empirical_clusters} and {.arg null_cluster_dists} must share the same {.code statistic} and {.code threshold}.",

@@ -13,7 +13,7 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
     vc <- JuliaConnectoR::juliaGet(JuliaConnectoR::juliaCall("VarCorr", x))[[1]]
     re_flatten <- lapply(vc, function(g) lapply(g, unlist))
     re_sd <- lapply(re_flatten, function(g) {
-      stats::setNames(g[[1]], paste0("sd__", backtrans_interaction(names(g[[1]]))))
+      setNames(g[[1]], paste0("sd__", backtrans_interaction(names(g[[1]]))))
     })
     re_cor <- lapply(re_flatten, function(g) {
       re_terms <- backtrans_interaction(names(g[[1]]))
@@ -22,7 +22,7 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
       })
       re_cor_terms <- re_term_matrix[lower.tri(re_term_matrix)]
       if (!is.null(g[[2]])) {
-        stats::setNames(g[[2]], paste0("cor__", re_cor_terms))
+        setNames(g[[2]], paste0("cor__", re_cor_terms))
       }
     })
     re <- Filter(Negate(is.null), c(re_sd, re_cor))

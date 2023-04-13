@@ -2,7 +2,7 @@
 % Please edit documentation in R/compute_timewise_statistics.R
 \name{compute_timewise_statistics}
 \alias{compute_timewise_statistics}
-\title{Fit Julia mixed models to each time point of a time series data}
+\title{Fit Julia regression models to each time point of a time series data}
 \usage{
 compute_timewise_statistics(
   jlmer_spec,
@@ -27,7 +27,7 @@ Defaults to \code{fast = TRUE} and \code{progress = FALSE}.}
 A predictor-by-time matrix of cluster statistics, of class \code{timewise_statistics}.
 }
 \description{
-Fit Julia mixed models to each time point of a time series data
+Fit Julia regression models to each time point of a time series data
 }
 \seealso{
 \code{\link[=jlmer]{jlmer()}}, \code{\link[=make_jlmer_spec]{make_jlmer_spec()}}

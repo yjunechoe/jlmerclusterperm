@@ -1,4 +1,4 @@
-#' Detect largest clusters from a time sequence of cluster statistics
+#' Detect largest clusters from a time sequence of predictor statistics
 #'
 #' @param empirical_statistics A predictor-by-time matrix of empirical timewise statistics.
 #' @param threshold The threshold value that the statistic must pass to contribute to cluster mass.

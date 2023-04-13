@@ -2,7 +2,7 @@
 % Please edit documentation in R/extract_clusters.R
 \name{extract_empirical_clusters}
 \alias{extract_empirical_clusters}
-\title{Detect largest clusters from a time sequence of cluster statistics}
+\title{Detect largest clusters from a time sequence of predictor statistics}
 \usage{
 extract_empirical_clusters(
   empirical_statistics,
@@ -31,7 +31,7 @@ Defaults to \code{Inf} which return all detected clusters.}
 An \code{empirical_clusters} object.
 }
 \description{
-Detect largest clusters from a time sequence of cluster statistics
+Detect largest clusters from a time sequence of predictor statistics
 }
 \seealso{
 \code{\link[=compute_timewise_statistics]{compute_timewise_statistics()}}

@@ -33,6 +33,7 @@ Suggests:
     knitr,
     tibble
 Collate:
+    'jlmerclusterperm-package.R'
     'aaa.R'
     'utils.R'
     'interop-utils.R'

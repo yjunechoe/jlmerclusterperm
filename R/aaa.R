@@ -7,7 +7,7 @@
   span.fm = list(color = "blue")
 )
 
-#' Initial setup for jlmerclusterperm package.
+#' Initial setup for the jlmerclusterperm package
 #'
 #' @param ... Ignored.
 #' @param verbose Print progress and messages from Julia in the console

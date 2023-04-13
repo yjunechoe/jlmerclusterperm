@@ -2,7 +2,7 @@
 % Please edit documentation in R/jlmer.R
 \name{jlmer}
 \alias{jlmer}
-\title{Fit a Julia mixed model}
+\title{Fit a Julia regression model using jlmer specifications}
 \usage{
 jlmer(jlmer_spec, family = c("gaussian", "binomial"), ..., progress = FALSE)
 }
@@ -19,7 +19,7 @@ jlmer(jlmer_spec, family = c("gaussian", "binomial"), ..., progress = FALSE)
 A \code{jlmer_mod} object.
 }
 \description{
-Fit a Julia mixed model
+Fit a Julia regression model using jlmer specifications
 }
 \seealso{
 \code{\link[=make_jlmer_spec]{make_jlmer_spec()}}

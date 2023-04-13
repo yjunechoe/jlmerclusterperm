@@ -2,7 +2,7 @@
 % Please edit documentation in R/aaa.R
 \name{jlmerclusterperm_setup}
 \alias{jlmerclusterperm_setup}
-\title{Initial setup for jlmerclusterperm package.}
+\title{Initial setup for the jlmerclusterperm package}
 \usage{
 jlmerclusterperm_setup(..., verbose = TRUE)
 }
@@ -12,7 +12,7 @@ jlmerclusterperm_setup(..., verbose = TRUE)
 \item{verbose}{Print progress and messages from Julia in the console}
 }
 \description{
-Initial setup for jlmerclusterperm package.
+Initial setup for the jlmerclusterperm package
 }
 \examples{
 \dontrun{

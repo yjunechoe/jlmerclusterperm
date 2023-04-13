@@ -113,8 +113,8 @@ augment_term_groups <- function(term_groups, statistic) {
     #   x = "Predictor{?s} {.val {names(term_groups)[term_levels != 1]}} {?is/are} expressed by more than one model term.",
     #   i = "Try {.arg statistic = {.val t}} instead for a more interpretable result over individual terms."
     # ))
-    term_dfs <- stats::setNames(lengths(term_groups), names(term_groups))
-    term_groups <- stats::setNames(nm = names(term_groups))
+    term_dfs <- setNames(lengths(term_groups), names(term_groups))
+    term_groups <- setNames(nm = names(term_groups))
     attr(term_groups, "dfs") <- term_dfs
   }
   list(r = term_groups, jl = term_groups_jl)

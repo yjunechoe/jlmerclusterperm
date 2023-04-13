@@ -2,7 +2,7 @@
 % Please edit documentation in R/jlmer.R
 \name{to_jlmer}
 \alias{to_jlmer}
-\title{Fit a Julia mixed model using lme4 syntax}
+\title{Fit a Julia regression model using lme4 syntax}
 \usage{
 to_jlmer(
   formula,
@@ -30,7 +30,7 @@ to_jlmer(
 A \code{jlmer_mod} object.
 }
 \description{
-Fit a Julia mixed model using lme4 syntax
+Fit a Julia regression model using lme4 syntax
 }
 \seealso{
 \code{\link[=jlmer]{jlmer()}}, \code{\link[=make_jlmer_spec]{make_jlmer_spec()}}

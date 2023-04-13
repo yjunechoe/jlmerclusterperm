@@ -1,4 +1,4 @@
-#' Fit a Julia mixed model using lme4 syntax
+#' Fit a Julia regression model using lme4 syntax
 #'
 #' @param jlmer_spec_opts List of options passed to `make_jlmer_spec()`
 #' @inheritParams jlmer
@@ -15,7 +15,7 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_sp
 
 }
 
-#' Fit a Julia mixed model
+#' Fit a Julia regression model using jlmer specifications
 #'
 #' @param jlmer_spec Data prepped for jlmer from `make_jlmer_spec()`
 #' @param family A GLM family. Currently supports "gaussian" and "binomial".
