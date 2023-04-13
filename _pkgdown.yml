@@ -1,4 +1,60 @@
 url: https://yjunechoe.github.io/jlmerclusterperm/
+
+home:
+  title: jlmerclusterperm
+  description: Julia implementation of bootstrapped cluster-based permutation analysis for time series data
+
+authors:
+  June Choe:
+    href: https://yjunechoe.github.io
+
 template:
   bootstrap: 5
+  bootswatch: flatly
+  bslib:
+    base_font: {google: "Atkinson Hyperlegible"}
 
+reference:
+- title: Interface to Julia GLM.jl and MixedModels.jl
+  contents:
+  - jlmerclusterperm_setup
+  - make_jlmer_spec
+  - jlmer
+  - to_jlmer
+
+- title: Cluster-based permutation analysis
+- subtitle: Empirical clusters
+  desc: >
+    Detecting empirical clusters from the observed timeseries data using regression models
+  contents:
+  - compute_timewise_statistics
+  - extract_empirical_clusters
+- subtitle: Null distribution
+  desc: >
+    Constructing the null distribution of cluster-mass statistics via bootstrapped permutations
+  contents:
+  - permute_by_predictor
+  - permute_timewise_statistics
+  - extract_null_cluster_dists
+- subtitle: Hypothesis test
+  desc: >
+    Testing the probability of observed cluster-mass statistic vs. the null distribution
+  contents:
+  - calculate_clusters_pvalues
+  - walk_threshold_steps
+- subtitle: All in one go
+  contents:
+  - clusterpermute
+
+- title: Interoperability utilities
+  contents:
+  - julia_progress
+
+figures:
+  dev: ragg::agg_png
+  dpi: 150
+  dev.args: []
+  fig.ext: png
+  fig.height: ~
+  fig.retina: 2
+  bg: "white"

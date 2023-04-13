@@ -2,7 +2,7 @@
 % Please edit documentation in R/extract_clusters.R
 \name{extract_null_cluster_dists}
 \alias{extract_null_cluster_dists}
-\title{Construct a null distribution of cluster-mass statistics from bootstrapped permutations}
+\title{Construct a null distribution of cluster-mass statistics}
 \usage{
 extract_null_cluster_dists(null_statistics, threshold, binned = FALSE)
 }
@@ -23,7 +23,7 @@ which requires a cluster to span at least two time points. If \code{TRUE}, allow
 A \code{null_cluster_dists} object.
 }
 \description{
-Construct a null distribution of cluster-mass statistics from bootstrapped permutations
+Construct a null distribution of cluster-mass statistics
 }
 \seealso{
 \code{\link[=permute_timewise_statistics]{permute_timewise_statistics()}}

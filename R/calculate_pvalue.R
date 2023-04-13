@@ -1,4 +1,4 @@
-#' Calculate bootstrapped p-values of clusters
+#' Calculate bootstrapped p-values of cluster-mass statistics
 #'
 #' @param empirical_clusters A `empirical_clusters` object
 #' @param null_cluster_dists A `null_cluster_dists` object

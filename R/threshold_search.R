@@ -1,4 +1,4 @@
-#' Test cluster-mass probabilities over a range of threshold values
+#' Test the probability of cluster-mass statistics over a range of threshold values
 #'
 #' @param threshold_steps A vector of threshold values to test
 #' @inheritParams extract_empirical_clusters

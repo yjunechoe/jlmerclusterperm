@@ -2,7 +2,7 @@
 % Please edit documentation in R/threshold_search.R
 \name{walk_threshold_steps}
 \alias{walk_threshold_steps}
-\title{Test cluster-mass probabilities over a range of threshold values}
+\title{Test the probability of cluster-mass statistics over a range of threshold values}
 \usage{
 walk_threshold_steps(
   empirical_statistics,
@@ -34,5 +34,5 @@ null distribution (recommended with larger \code{nsim} prior to publishing resul
 A data frame of predictor clusters-mass statistics by threshold.
 }
 \description{
-Test cluster-mass probabilities over a range of threshold values
+Test the probability of cluster-mass statistics over a range of threshold values
 }

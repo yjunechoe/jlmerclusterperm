@@ -2,7 +2,7 @@
 % Please edit documentation in R/permute_timewise_statistics.R
 \name{permute_timewise_statistics}
 \alias{permute_timewise_statistics}
-\title{Simulate a null distribution of cluster-mass statistics}
+\title{Simulate cluster-mass statistics via bootstrapped permutations}
 \usage{
 permute_timewise_statistics(
   jlmer_spec,
@@ -33,7 +33,7 @@ Defaults to \code{fast = TRUE} and \code{progress = FALSE}.}
 A simulation-by-time-by-predictor 3D array of cluster statistics, of class \code{timewise_statistics}.
 }
 \description{
-Simulate a null distribution of cluster-mass statistics
+Simulate cluster-mass statistics via bootstrapped permutations
 }
 \seealso{
 \code{\link[=make_jlmer_spec]{make_jlmer_spec()}}

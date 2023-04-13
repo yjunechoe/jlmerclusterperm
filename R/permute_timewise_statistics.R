@@ -1,4 +1,4 @@
-#' Simulate a null distribution of cluster-mass statistics
+#' Simulate cluster-mass statistics via bootstrapped permutations
 #'
 #' @param nsim Number of simulations description
 #' @param predictors (Optional) a subset of predictors to test. Defaults to `NULL` which tests all predictors.

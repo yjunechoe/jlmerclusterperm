@@ -3,7 +3,7 @@
 \name{calculate_clusters_pvalues}
 \alias{calculate_clusters_pvalues}
 \alias{clusters_are_comparable}
-\title{Calculate bootstrapped p-values of clusters}
+\title{Calculate bootstrapped p-values of cluster-mass statistics}
 \usage{
 calculate_clusters_pvalues(
   empirical_clusters,
@@ -26,7 +26,7 @@ null distribution (recommended with larger \code{nsim} prior to publishing resul
 An \code{empirical_clusters} object augmented with p-values.
 }
 \description{
-Calculate bootstrapped p-values of clusters
+Calculate bootstrapped p-values of cluster-mass statistics
 }
 \seealso{
 \code{\link[=extract_empirical_clusters]{extract_empirical_clusters()}}, \code{\link[=extract_null_cluster_dists]{extract_null_cluster_dists()}}

@@ -33,7 +33,7 @@ extract_empirical_clusters <- function(empirical_statistics, threshold, binned =
             term_groups = attr(empirical_statistics, "term_groups"))
 }
 
-#' Construct a null distribution of cluster-mass statistics from bootstrapped permutations
+#' Construct a null distribution of cluster-mass statistics
 #'
 #' @param null_statistics A simulation-by-time-by-predictor 3D array of null (permuted) timewise statistics.
 #' @inheritParams extract_empirical_clusters

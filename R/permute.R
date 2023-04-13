@@ -1,4 +1,4 @@
-#' Permute data by predictor while respecting the temporal structure of the observations
+#' Permute data while respecting grouping structure of observations
 #'
 #' @inheritParams jlmer
 #' @param predictors A vector of terms from the model. If multiple, the must form the levels of one predictor.
