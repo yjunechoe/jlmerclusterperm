@@ -15,7 +15,7 @@ template:
     base_font: {google: "Atkinson Hyperlegible"}
 
 reference:
-- title: Interface to Julia GLM.jl and MixedModels.jl
+- title: Interface to Julia regression modelling
   contents:
   - jlmerclusterperm_setup
   - make_jlmer_spec
