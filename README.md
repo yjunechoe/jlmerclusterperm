@@ -16,9 +16,7 @@ implementation of bootstrapped cluster-based permutation analysis for
 time series data, powered by
 [`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR).
 
-![Image of a cluster-based permutation test showing empirical and null
-cluster statistics from observed
-data.](man/figures/clusterpermute_slide.png)
+![](man/figures/clusterpermute_slice.png)
 
 ## Installation
 
@@ -53,7 +51,7 @@ enjoy blazingly-fast functions from the package.
 ``` r
 # Both lines must be run
 library(jlmerclusterperm)
-system.time(jlmerclusterperm_setup(verbose = FALSE))
+jlmerclusterperm_setup(verbose = FALSE)
 ```
 
 ## Example walkthrough

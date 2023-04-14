@@ -22,13 +22,7 @@ knitr::opts_chunk$set(
 
 Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) implementation of bootstrapped cluster-based permutation analysis for time series data, powered by [`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR).
 
-```{r, echo = FALSE, results='asis'}
-if (identical(Sys.getenv("IN_PKGDOWN"), "true")) {
-  cat("![Animation of a cluster-based permutation test where each frame steps through a range of t-thresholds.](man/figures/clusterpermute_animation.gif)")
-} else {
-  cat("![Image of a cluster-based permutation test showing empirical and null cluster statistics from observed data.](man/figures/clusterpermute_slide.png)")
-}
-```
+![](man/figures/clusterpermute_slice.png)
 
 ## Installation
 
@@ -48,7 +42,7 @@ Subsequent calls to `jlmerclusterperm_setup()` incur a small overhead of around 
 ```{r setup, eval = FALSE}
 # Both lines must be run
 library(jlmerclusterperm)
-system.time(jlmerclusterperm_setup(verbose = FALSE))
+jlmerclusterperm_setup(verbose = FALSE)
 ```
 
 ## Example walkthrough
