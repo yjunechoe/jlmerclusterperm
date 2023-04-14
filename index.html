@@ -78,9 +78,7 @@
 <!-- badges: start -->
 
 <p>Julia <a href="https://github.com/JuliaStats/GLM.jl" class="external-link">GLM.jl</a> and <a href="https://github.com/JuliaStats/MixedModels.jl" class="external-link">MixedModels.jl</a> implementation of bootstrapped cluster-based permutation analysis for time series data, powered by <a href="https://github.com/stefan-m-lenz/JuliaConnectoR" class="external-link"><code>JuliaConnectoR</code></a>.</p>
-<div class="figure">
-<img src="reference/figures/clusterpermute_animation.gif" alt=""><p class="caption">Animation of a cluster-based permutation test where each frame steps through a range of t-thresholds.</p>
-</div>
+<p><img src="reference/figures/clusterpermute_slice.png"></p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -94,9 +92,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Both lines must be run</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">jlmerclusterperm</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu"><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.02    0.02   23.07</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example-walkthrough">Example walkthrough<a class="anchor" aria-label="anchor" href="#example-walkthrough"></a>
