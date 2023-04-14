@@ -3,8 +3,8 @@
 .jlmerclusterperm$cli_theme <- list(
   h1 = list(`font-weight` = "regular", `margin-top` = 0, fmt = function(x) cli::rule(x, line_col = "white")),
   span.lemph = list(color = "grey", `font-style` = "italic"),
-  span.el = list(color = "cyan"),
-  span.fm = list(color = "blue")
+  span.el = list(color = "green"),
+  span.fm = list()
 )
 
 #' Initial setup for the jlmerclusterperm package

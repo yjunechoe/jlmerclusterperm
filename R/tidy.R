@@ -74,7 +74,8 @@ tidy.empirical_clusters <- function(x, ...) {
   clusters_df$length <- clusters_df$cluster_end - clusters_df$cluster_start + 1
   clusters_df$start <- time[clusters_df$cluster_start]
   clusters_df$end <- time[clusters_df$cluster_end]
-  clusters_df <- clusters_df[intersect(c("predictor", "id", "start", "end", "length", "statistic", "pvalue"), names(clusters_df))]
+  clusters_df$sum_statistic <- clusters_df$statistic
+  clusters_df <- clusters_df[intersect(c("predictor", "id", "start", "end", "length", "sum_statistic", "pvalue"), names(clusters_df))]
   maybe_as_tibble(clusters_df)
 }
 
@@ -90,7 +91,8 @@ tidy.null_cluster_dists <- function(x, ...) {
   clusters_df$end <- time[replace_as_na(clusters_df$cluster_end, 0)]
   clusters_df$length[is.na(clusters_df$start)] <- NA
   clusters_df$sim <- as.factor(zero_pad(clusters_df$id))
-  clusters_df <- clusters_df[c("predictor", "start", "end", "length", "statistic", "sim")]
+  clusters_df$sum_statistic <- clusters_df$statistic
+  clusters_df <- clusters_df[c("predictor", "start", "end", "length", "sum_statistic", "sim")]
   maybe_as_tibble(clusters_df)
 }
 
@@ -101,14 +103,21 @@ generics::glance
 #' @export
 glance.jlmer_mod <- function(x, ...) {
   nobs <- JuliaConnectoR::juliaCall("nobs", x)
-  sigma <- JuliaConnectoR::juliaLet("x.sigma", x = x) %|0|% 1
-  logLik <- JuliaConnectoR::juliaCall("loglikelihood", x)
-  AIC <- JuliaConnectoR::juliaCall("aic", x)
-  BIC <- JuliaConnectoR::juliaCall("bic", x)
+  sigma <- JuliaConnectoR::juliaLet("x.sigma", x = x) %|0|% NA
+  ll <- if (JuliaConnectoR::juliaLet("x isa MixedModel && x.optsum.REML", x = x)) {
+    list(logLik = NA, AIC = NA, BIC = NA)
+  } else {
+    list(
+      logLik = JuliaConnectoR::juliaCall("loglikelihood", x),
+      AIC = JuliaConnectoR::juliaCall("aic", x),
+      BIC = JuliaConnectoR::juliaCall("bic", x)
+    )
+  }
   deviance <- JuliaConnectoR::juliaCall("deviance", x)
   dof <- JuliaConnectoR::juliaCall("dof", x)
   out <- data.frame(
-    nobs = nobs, sigma = sigma, logLik = logLik, AIC = AIC, BIC = BIC,
+    nobs = nobs, sigma = sigma,
+    logLik = ll$logLik, AIC = ll$AIC, BIC = ll$BIC,
     deviance = deviance, df.residual = nobs - dof
   )
   maybe_as_tibble(out)

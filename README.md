@@ -14,7 +14,7 @@ Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and
 [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl)
 implementation of bootstrapped cluster-based permutation analysis for
 time series data, powered by
-[`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR)
+[`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR).
 
 ## Installation
 
@@ -51,7 +51,7 @@ enjoy blazingly-fast functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.06    0.03   20.36
+#>    0.00    0.02   19.94
 ```
 
 ## Example walkthrough
@@ -172,6 +172,7 @@ cat(readLines(system.file(package = "jlmerclusterperm", "julia", "Project.toml")
 
 If you wish to use other Julia packages not listed here like Effects.jl,
 it is recommend to install them in the global library in a fresh Julia
-session as opposed to `Pkg.add()`-ing using the `JuliaConnectoR`
+session as opposed to `Pkg.add()`-ing using the
+[`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR)
 interface, as that may pollute the `jlmerclusterperm` project
 environment (if this happens, just re-install the package).

@@ -24,12 +24,14 @@ make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = 
   if (!is.null(special_cols) && !all(special_cols %in% colnames(data))) {
     cli::cli_abort("Column{?s} {.val {special_cols[!special_cols %in% colnames(data)]}} not found in {.arg data}")
   }
-  time_diffs <- diff(unique(data[[time]]))
-  if (!all(time_diffs == time_diffs[1])) {
-    cli::cli_alert_warning(c(
-      "Sampling rate for the {.arg time} column {.val {time}} is not constant - ",
-      "may affect interpretability of results."
-    ))
+  if (!is.null(time)) {
+    time_diffs <- diff(unique(data[[time]]))
+    if (!all(time_diffs == time_diffs[1])) {
+      cli::cli_alert_warning(c(
+        "Sampling rate for the {.arg time} column {.val {time}} is not constant - ",
+        "may affect interpretability of results."
+      ))
+    }
   }
 
   # Formula reconstruction

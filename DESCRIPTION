@@ -32,6 +32,7 @@ Suggests:
     forcats,
     ggplot2,
     knitr,
+    rmarkdown,
     tibble
 VignetteBuilder: 
     knitr

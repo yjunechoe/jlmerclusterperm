@@ -14,7 +14,8 @@ clusterpermute(
   binned = FALSE,
   top_n = Inf,
   add1 = TRUE,
-  ...
+  ...,
+  progress = TRUE
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ null distribution (recommended with larger \code{nsim} prior to publishing resul
 
 \item{...}{Optional arguments passed to Julia for model fitting.
 Defaults to \code{fast = TRUE} (when \code{family = "binomial"}) and \code{progress = FALSE}.}
+
+\item{progress}{Defaults to \code{TRUE}, which prints progress on each step of the cluster permutation test.}
 }
 \value{
 A list of \code{null_cluster_dists} and \code{empirical_clusters} with p-values

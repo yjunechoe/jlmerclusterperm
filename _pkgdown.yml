@@ -52,7 +52,7 @@ reference:
 
 figures:
   dev: ragg::agg_png
-  dpi: 150
+  dpi: 96
   dev.args: []
   fig.ext: png
   fig.height: ~
