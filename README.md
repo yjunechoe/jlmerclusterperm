@@ -51,7 +51,7 @@ enjoy blazingly-fast functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.00    0.05   24.32
+#>    0.02    0.00   24.31
 ```
 
 ## Example walkthrough
@@ -135,22 +135,16 @@ features:
 
 ``` r
 juliaEval("using Effects")
-juliaLet("effects(x.namedelements, y)", x = list(Days = unique(sleepstudy$Days)), y = jmod)
+juliaLet("effects(x.namedelements, y)", x = list(Days = 2:5), y = jmod)
 #> <Julia object of type DataFrame>
-#> 10×5 DataFrame
-#>  Row │ Days     Reaction  err       lower    upper
-#>      │ Float64  Float64   Float64   Float64  Float64
-#> ─────┼───────────────────────────────────────────────
-#>    1 │     0.0   251.405   6.8246   244.581  258.23
-#>    2 │     1.0   261.872   6.78693  255.085  268.659
-#>    3 │     2.0   272.34    7.09427  265.245  279.434
-#>    4 │     3.0   282.807   7.70544  275.102  290.512
-#>    5 │     4.0   293.274   8.55557  284.719  301.83
-#>    6 │     5.0   303.742   9.58128  294.16   313.323
-#>    7 │     6.0   314.209  10.7323   303.476  324.941
-#>    8 │     7.0   324.676  11.9726   312.703  336.649
-#>    9 │     8.0   335.143  13.2772   321.866  348.421
-#>   10 │     9.0   345.611  14.6288   330.982  360.239
+#> 4×5 DataFrame
+#>  Row │ Days   Reaction  err      lower    upper
+#>      │ Int64  Float64   Float64  Float64  Float64
+#> ─────┼────────────────────────────────────────────
+#>    1 │     2   272.34   7.09427  265.245  279.434
+#>    2 │     3   282.807  7.70544  275.102  290.512
+#>    3 │     4   293.274  8.55557  284.719  301.83
+#>    4 │     5   303.742  9.58128  294.16   313.323
 ```
 
 The following packages are loaded into the Julia environment via

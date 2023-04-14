@@ -76,7 +76,7 @@ You can also call functions from other Julia packages that you already have inst
 
 ```{r effects-jl}
 juliaEval("using Effects")
-juliaLet("effects(x.namedelements, y)", x = list(Days = unique(sleepstudy$Days)), y = jmod)
+juliaLet("effects(x.namedelements, y)", x = list(Days = 2:5), y = jmod)
 ```
 
 The following packages are loaded into the Julia environment via `jlmerclusterperm_setup()`:
