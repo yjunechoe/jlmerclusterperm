@@ -42,9 +42,18 @@ juliaCall("issingular", jmod)
 
 You can also call functions from other Julia packages that you already have installed. For example, [Effects.jl](https://github.com/beacon-biosignals/Effects.jl) for its [`marginaleffects`](https://github.com/vincentarelbundock/marginaleffects)/[`emmeans`](https://github.com/rvlenth/emmeans)-like features:
 
-```{r effects-jl}
+```{r effects-jl, eval = FALSE}
 juliaEval("using Effects")
 juliaLet("effects(x.namedelements, y)", x = list(Days = 2:5), y = jmod)
+#> <Julia object of type DataFrame>
+#> 4×5 DataFrame
+#>  Row │ Days   Reaction  err      lower    upper
+#>      │ Int64  Float64   Float64  Float64  Float64
+#> ─────┼────────────────────────────────────────────
+#>    1 │     2   272.34   7.09427  265.245  279.434
+#>    2 │     3   282.807  7.70544  275.102  290.512
+#>    3 │     4   293.274  8.55557  284.719  301.83
+#>    4 │     5   303.742  9.58128  294.16   313.323
 ```
 
 The following packages are loaded into the Julia environment via `jlmerclusterperm_setup()`:
