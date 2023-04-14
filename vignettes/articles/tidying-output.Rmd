@@ -16,7 +16,7 @@ This vignette showcases `tidy()` and other ways of collecting `{jlmerclusterperm
 
 ```{r setup}
 library(jlmerclusterperm)
-system.time(jlmerclusterperm_setup(verbose = FALSE))
+jlmerclusterperm_setup(verbose = FALSE)
 julia_progress(show = FALSE)
 ```
 
@@ -34,7 +34,7 @@ ggplot(chickweights, aes(Time, weight, color = diet)) +
   theme_minimal(base_size = 18)
 ```
 
-The jlmer specification object used in this vignette:
+The jlmer specification object used for this showcase:
 
 ```{r}
 jlmer_spec <- make_jlmer_spec(

@@ -50,6 +50,15 @@ reference:
   contents:
   - julia_progress
 
+articles:
+- title: Topics
+  navbar: Topics
+  contents:
+  - articles/tidying-output
+- title: Case Studies
+  navbar: Case Studies
+  contents:
+
 figures:
   dev: ragg::agg_png
   dpi: 96

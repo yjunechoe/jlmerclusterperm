@@ -51,7 +51,7 @@ enjoy blazingly-fast functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.00    0.02   19.94
+#>    0.00    0.00   26.76
 ```
 
 ## Example walkthrough
