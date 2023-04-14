@@ -27,6 +27,11 @@ replace_as_na <- function(x, y) {
   x
 }
 
+zero_pad <- function(x, y) {
+  if (missing(y)) y <- max(x)
+  sprintf(paste0("%0", floor(log10(y)) + 1, "d"), x)
+}
+
 check_arg_class <- function(x, x_class, x_arg = x_class) {
   if (!inherits(x, x_class)) {
     cli::cli_abort(c(

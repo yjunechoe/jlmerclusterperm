@@ -68,6 +68,11 @@ tidy.empirical_clusters <- function(x, ...) {
     cluster_df
   })
   clusters_df <- do.call(rbind, cluster_dfs)
+  time <- as.numeric(attr(x, "time"))
+  clusters_df$length <- clusters_df$cluster_end - clusters_df$cluster_start + 1
+  clusters_df$start <- time[clusters_df$cluster_start]
+  clusters_df$end <- time[clusters_df$cluster_end]
+  clusters_df <- clusters_df[c("predictor", "cluster_id", "start", "end", "length", "statistic")]
   maybe_as_tibble(clusters_df)
 }
 
@@ -82,7 +87,8 @@ tidy.null_cluster_dists <- function(x, ...) {
   clusters_df$start <- time[replace_as_na(clusters_df$cluster_start, 0)]
   clusters_df$end <- time[replace_as_na(clusters_df$cluster_end, 0)]
   clusters_df$length[is.na(clusters_df$start)] <- NA
-  clusters_df <- clusters_df[c("predictor", "start", "end", "length", "statistic", "id")]
+  clusters_df$sim <- as.factor(zero_pad(clusters_df$id))
+  clusters_df <- clusters_df[c("predictor", "start", "end", "length", "statistic", "sim")]
   maybe_as_tibble(clusters_df)
 }
 

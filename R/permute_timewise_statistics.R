@@ -42,7 +42,7 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
   # })
 
   dimnames(out$z_array) <- list(
-    Sim = sprintf(paste0("%0", floor(log10(nsim)), "d"), 1:nsim),
+    Sim = as.factor(zero_pad(1:nsim)),
     Time = sort(unique(jlmer_spec$data[[jlmer_spec$meta$time]])),
     Predictor = unlist(out$predictors)
   )
