@@ -51,7 +51,7 @@ enjoy blazingly-fast functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.00    0.00   26.76
+#>    0.02    0.01   19.89
 ```
 
 ## Example walkthrough
@@ -65,19 +65,19 @@ except `jlmer()` and `to_jlmer()` which return GLM.jl or MixedModels.jl
 fitted model objects.
 
 ``` r
-jmod <- to_jlmer(Reaction ~ Days + (Days | Subject), lme4::sleepstudy)
+jmod <- to_jlmer(Reaction ~ Days + (Days | Subject), lme4::sleepstudy, REML = TRUE)
 jmod # try `glance()` and `tidy()`
 #> <Julia object of type LinearMixedModel{Float64}>
 #> Variance components:
 #>             Column    Variance Std.Dev.   Corr.
-#> Subject  (Intercept)  565.51066 23.78047
-#>          Days          32.68212  5.71683 +0.08
-#> Residual              654.94145 25.59182
+#> Subject  (Intercept)  612.10016 24.74066
+#>          Days          35.07171  5.92214 +0.07
+#> Residual              654.94001 25.59180
 #>  ──────────────────────────────────────────────────
 #>                 Coef.  Std. Error      z  Pr(>|z|)
 #> ──────────────────────────────────────────────────
-#> (Intercept)  251.405      6.63226  37.91    <1e-99
-#> Days          10.4673     1.50224   6.97    <1e-11
+#> (Intercept)  251.405      6.8246   36.84    <1e-99
+#> Days          10.4673     1.54579   6.77    <1e-10
 #> ──────────────────────────────────────────────────
 ```
 
@@ -122,7 +122,7 @@ interact with these (pointers to) Julia objects:
 library(JuliaConnectoR)
 juliaLet("x.rePCA", x = jmod)
 #> <Julia object of type NamedTuple{(:Subject,), Tuple{Vector{Float64}}}>
-#> (Subject = [0.5406660465696776, 1.0],)
+#> (Subject = [0.5327756182832276, 1.0],)
 juliaCall("issingular", jmod)
 #> [1] FALSE
 ```
@@ -141,16 +141,16 @@ juliaLet("effects(x.namedelements, y)", x = list(Days = unique(sleepstudy$Days))
 #>  Row │ Days     Reaction  err       lower    upper
 #>      │ Float64  Float64   Float64   Float64  Float64
 #> ─────┼───────────────────────────────────────────────
-#>    1 │     0.0   251.405   6.63226  244.773  258.037
-#>    2 │     1.0   261.872   6.59566  255.277  268.468
-#>    3 │     2.0   272.34    6.89435  265.445  279.234
-#>    4 │     3.0   282.807   7.48832  275.319  290.295
-#>    5 │     4.0   293.274   8.31451  284.96   301.589
-#>    6 │     5.0   303.742   9.31132  294.43   313.053
-#>    7 │     6.0   314.209  10.4299   303.779  324.639
-#>    8 │     7.0   324.676  11.6353   313.041  336.311
-#>    9 │     8.0   335.143  12.9031   322.24   348.046
-#>   10 │     9.0   345.611  14.2167   331.394  359.827
+#>    1 │     0.0   251.405   6.8246   244.581  258.23
+#>    2 │     1.0   261.872   6.78693  255.085  268.659
+#>    3 │     2.0   272.34    7.09427  265.245  279.434
+#>    4 │     3.0   282.807   7.70544  275.102  290.512
+#>    5 │     4.0   293.274   8.55557  284.719  301.83
+#>    6 │     5.0   303.742   9.58128  294.16   313.323
+#>    7 │     6.0   314.209  10.7323   303.476  324.941
+#>    8 │     7.0   324.676  11.9726   312.703  336.649
+#>    9 │     8.0   335.143  13.2772   321.866  348.421
+#>   10 │     9.0   345.611  14.6288   330.982  360.239
 ```
 
 The following packages are loaded into the Julia environment via

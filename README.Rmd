@@ -52,7 +52,7 @@ WIP...
 All `jlmerclusterperm` functions collect Julia objects as R objects, except `jlmer()` and `to_jlmer()` which return GLM.jl or MixedModels.jl fitted model objects.
 
 ```{r to-jlmer}
-jmod <- to_jlmer(Reaction ~ Days + (Days | Subject), lme4::sleepstudy)
+jmod <- to_jlmer(Reaction ~ Days + (Days | Subject), lme4::sleepstudy, REML = TRUE)
 jmod # try `glance()` and `tidy()`
 ```
 
