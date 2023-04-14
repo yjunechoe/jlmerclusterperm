@@ -54,7 +54,7 @@ function timewise_lme(formula, data, time, family, contrasts, statistic, test_op
 
   convergence_failures = zeros(Bool, n_times)
   if diagnose
-    singular_fits = zeros(n_times)
+    singular_fits = zeros(Bool, n_times)
     rePCA_95_matrix = zeros(length(grouping_vars), n_times)
   end
 
