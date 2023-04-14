@@ -51,3 +51,9 @@ details {
   outline: 2px solid #38566F;
   padding: 1rem 1rem 0.5rem 1rem;
 }
+
+p.caption {
+  text-align: center;
+  color: grey;
+  font-size: .9em;
+}
