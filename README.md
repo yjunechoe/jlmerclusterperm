@@ -28,7 +28,7 @@ remotes::install_github("yjunechoe/jlmerclusterperm")
 
 Using `jlmerclusterperm` requires a prior installation of Julia, which
 can be downloaded from either the [official
-website](https://julialang.org/) or via the command line utility
+website](https://julialang.org/) or using the command line utility
 [juliaup](https://github.com/JuliaLang/juliaup). Julia version \>=1.8 is
 required and \>=1.9 is preferred for its substantial compiler/runtime
 improvements.
@@ -36,22 +36,22 @@ improvements.
 Before using functions from `jlmerclusterperm`, an initial setup step is
 required via calling `jlmerclusterperm_setup()`. This will launch Julia
 with some number of threads (controlled via
-`options("jlmerclusterperm.nthreads")`) and install necessary Julia
-package dependencies (this only happens once and should take about 15-30
+`options("jlmerclusterperm.nthreads")`) and install necessary package
+dependencies (this only happens once and should take about 15-30
 minutes).
 
-Subsequent calls to `jlmerclusterperm_setup()` incurs an overhead of
-around 30 seconds and you will experience small delays for first-time
+Subsequent calls to `jlmerclusterperm_setup()` incur a small overhead of
+around 30 seconds and there will be slight delays for first-time
 function calls due to Julia’s [just-in-time
 compilation](https://docs.julialang.org/en/v1/). Afterwards you can
-enjoy the blazingly-fast functions from the package.
+enjoy blazingly-fast functions from the package.
 
 ``` r
 # Both lines must be run
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.00    0.03   19.52
+#>    0.06    0.03   20.36
 ```
 
 ## Example walkthrough
@@ -61,12 +61,12 @@ WIP…
 ## Notes on R-Julia interoperability
 
 All `jlmerclusterperm` functions collect Julia objects as R objects,
-except `jlmer` and `to_jlmer` which return GLM.jl or MixedModels.jl
+except `jlmer()` and `to_jlmer()` which return GLM.jl or MixedModels.jl
 fitted model objects.
 
 ``` r
 jmod <- to_jlmer(Reaction ~ Days + (Days | Subject), lme4::sleepstudy)
-jmod
+jmod # try `glance()` and `tidy()`
 #> <Julia object of type LinearMixedModel{Float64}>
 #> Variance components:
 #>             Column    Variance Std.Dev.   Corr.
@@ -79,14 +79,9 @@ jmod
 #> (Intercept)  251.405      6.63226  37.91    <1e-99
 #> Days          10.4673     1.50224   6.97    <1e-11
 #> ──────────────────────────────────────────────────
-glance(jmod) # see also `tidy()`
-#> # A tibble: 1 × 7
-#>    nobs sigma logLik   AIC   BIC deviance df.residual
-#>   <int> <dbl>  <dbl> <dbl> <dbl>    <dbl>       <int>
-#> 1   180  25.6  -876. 1764. 1783.    1752.         174
 ```
 
-Model output should be comparable to `{lme4}` models:
+Model output should be comparable to that of `{lme4}` models:
 
 ``` r
 library(lme4)
@@ -119,7 +114,7 @@ summary(rmod)
 #> Days -0.138
 ```
 
-You can use functions from
+Use functions from
 [`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR) to
 interact with these (pointers to) Julia objects:
 
@@ -177,6 +172,6 @@ cat(readLines(system.file(package = "jlmerclusterperm", "julia", "Project.toml")
 
 If you wish to use other Julia packages not listed here like Effects.jl,
 it is recommend to install them in the global library in a fresh Julia
-session as opposed to `Pkg.add()`-ing from R using the `JuliaConnectoR`
+session as opposed to `Pkg.add()`-ing using the `JuliaConnectoR`
 interface, as that may pollute the `jlmerclusterperm` project
 environment (if this happens, just re-install the package).

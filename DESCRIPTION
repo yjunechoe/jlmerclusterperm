@@ -29,6 +29,7 @@ Suggests:
     broom,
     broom.mixed,
     dplyr,
+    forcats,
     ggplot2,
     knitr,
     tibble

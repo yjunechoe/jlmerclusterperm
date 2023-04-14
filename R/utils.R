@@ -1,11 +1,5 @@
 `%|0|%` <- function(lhs, rhs) if (is.null(lhs) || identical(lhs, "") || length(lhs) == 0 || is.na(lhs)) rhs else lhs
 
-runs_id <- function(...) {
-  uq <- interaction(..., drop = TRUE)
-  runs <- rle(as.character(uq))$lengths
-  rep(seq_along(runs), times = runs)
-}
-
 near_zero <- function(x) {
   abs(x) < .Machine$double.eps^0.5
 }
@@ -35,8 +29,8 @@ zero_pad <- function(x, y) {
 check_arg_class <- function(x, x_class, x_arg = x_class) {
   if (!inherits(x, x_class)) {
     cli::cli_abort(c(
-      "{.arg x_arg} must be a {.cls x_class} object, not a {.cls {class(x)}}"
+      "{.arg {x_arg}} must be a {.cls {x_class}} object, not a {.cls {class(x)}}"
     ))
   }
-  TRUE
+  invisible(TRUE)
 }

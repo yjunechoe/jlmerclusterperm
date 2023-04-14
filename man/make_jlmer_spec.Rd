@@ -10,7 +10,8 @@ make_jlmer_spec(
   subject = NULL,
   trial = NULL,
   time = NULL,
-  drop_terms = NULL
+  drop_terms = NULL,
+  ...
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ make_jlmer_spec(
 \item{time}{Column for time in the data.}
 
 \item{drop_terms}{(Optional) any terms to drop from the reconstructed model formula}
+
+\item{...}{Unused, for extensibility.}
 }
 \value{
 An object of class \code{jlmer_spec}.

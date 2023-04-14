@@ -7,21 +7,38 @@
 #'  (for example, the column for items in a counterbalanced design where each subject sees exactly one item).
 #' @param time Column for time in the data.
 #' @param drop_terms (Optional) any terms to drop from the reconstructed model formula
+#' @param ... Unused, for extensibility.
 #'
 #' @return An object of class `jlmer_spec`.
 #'
 #' @export
-make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = NULL, drop_terms = NULL) {
+make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = NULL, drop_terms = NULL, ...) {
   # Old names
   fm <- formula
   df <- data
 
+  # Validation
+  check_arg_class(formula, "formula")
+  check_arg_class(data, "data.frame", "data")
+  special_cols <- c(subject, trial, time)
+  if (!is.null(special_cols) && !all(special_cols %in% colnames(data))) {
+    cli::cli_abort("Column{?s} {.val {special_cols[!special_cols %in% colnames(data)]}} not found in {.arg data}")
+  }
+  time_diffs <- diff(unique(data[[time]]))
+  if (!all(time_diffs == time_diffs[1])) {
+    cli::cli_alert_warning(c(
+      "Sampling rate for the {.arg time} column {.val {time}} is not constant - ",
+      "may affect interpretability of results."
+    ))
+  }
+
+  # Formula reconstruction
   fm_env <- attr(fm, ".Environment")
   fm_response <- deparse1(fm[[2]])
   fm_terms <- stats::terms(lme4::subbars(fm), keep.order = TRUE)
   attr(fm_terms, "intercept") <- as.logical(attr(stats::terms(lme4::nobars(fm)), "intercept"))
   fm_cols <- vapply(as.list(attr(fm_terms, "variables")[-1]), deparse1, character(1))
-  df_subset <- df[, fm_cols]
+  df_subset <- df[, fm_cols, drop = FALSE]
   na_rows <- !stats::complete.cases(df_subset)
   if (any(na_rows)) {
     df_subset <- df_subset[!na_rows, ]
