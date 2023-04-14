@@ -52,6 +52,7 @@ tidy.timewise_statistics <- function(x, ...) {
   stacked <- as.data.frame.table(x, responseName = "statistic")
   colnames(stacked) <- tolower(colnames(stacked))
   stacked$time <- as.numeric(levels(stacked$time))[stacked$time]
+  stacked$predictor <- as.character(stacked$predictor)
   stacked <- stacked[do.call(order, stacked[c("time", "predictor")]), intersect(c("predictor", "time", "statistic", "sim"), colnames(stacked))]
   maybe_as_tibble(stacked)
 }
@@ -69,10 +70,11 @@ tidy.empirical_clusters <- function(x, ...) {
   })
   clusters_df <- do.call(rbind, cluster_dfs)
   time <- as.numeric(attr(x, "time"))
+  clusters_df$id <- factor(zero_pad(clusters_df$cluster_id))
   clusters_df$length <- clusters_df$cluster_end - clusters_df$cluster_start + 1
   clusters_df$start <- time[clusters_df$cluster_start]
   clusters_df$end <- time[clusters_df$cluster_end]
-  clusters_df <- clusters_df[c("predictor", "cluster_id", "start", "end", "length", "statistic")]
+  clusters_df <- clusters_df[intersect(c("predictor", "id", "start", "end", "length", "statistic", "pvalue"), names(clusters_df))]
   maybe_as_tibble(clusters_df)
 }
 
