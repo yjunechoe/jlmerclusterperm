@@ -5,6 +5,7 @@ title: "Julia interface"
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  eval = FALSE,
   comment = "#>"
 )
 ```
@@ -22,6 +23,18 @@ All `jlmerclusterperm` functions collect Julia objects as R objects, except `jlm
 ```{r to-jlmer}
 jmod <- to_jlmer(Reaction ~ Days + (Days | Subject), lme4::sleepstudy)
 jmod
+#> <Julia object of type LinearMixedModel{Float64}>
+#> Variance components:
+#>             Column    Variance Std.Dev.   Corr.
+#> Subject  (Intercept)  565.51067 23.78047
+#>          Days          32.68212  5.71683 +0.08
+#> Residual              654.94145 25.59182
+#>  ──────────────────────────────────────────────────
+#>                 Coef.  Std. Error      z  Pr(>|z|)
+#> ──────────────────────────────────────────────────
+#> (Intercept)  251.405      6.63226  37.91    <1e-99
+#> Days          10.4673     1.50224   6.97    <1e-11
+#> ──────────────────────────────────────────────────
 ```
 
 You can use functions from [`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR) to interact with these (pointers to) Julia objects:
@@ -29,12 +42,15 @@ You can use functions from [`JuliaConnectoR`](https://github.com/stefan-m-lenz/J
 ```{r julia-interop}
 library(JuliaConnectoR)
 juliaLet("x.rePCA", x = jmod)
+#> <Julia object of type NamedTuple{(:Subject,), Tuple{Vector{Float64}}}>
+#> (Subject = [0.5406660682947617, 1.0],)
 juliaCall("issingular", jmod)
+#> [1] FALSE
 ```
 
 You can also call functions from other Julia packages that you already have installed. For example, [Effects.jl](https://github.com/beacon-biosignals/Effects.jl) for its [`marginaleffects`](https://github.com/vincentarelbundock/marginaleffects)/[`emmeans`](https://github.com/rvlenth/emmeans)-like features:
 
-```{r effects-jl, eval = FALSE}
+```{r effects-jl}
 juliaEval("using Effects")
 juliaLet("effects(x.namedelements, y)", x = list(Days = 2:5), y = jmod)
 #> <Julia object of type DataFrame>
@@ -50,7 +66,7 @@ juliaLet("effects(x.namedelements, y)", x = list(Days = 2:5), y = jmod)
 
 The following packages are loaded into the Julia environment via `jlmerclusterperm_setup()`:
 
-```{r proj-toml}
+```{r proj-toml, eval = TRUE}
 cat(readLines(system.file("julia/Project.toml", package = "jlmerclusterperm")), sep = "\n")
 ```
 
