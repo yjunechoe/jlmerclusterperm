@@ -63,6 +63,7 @@ articles:
   navbar: Topics
   contents:
   - articles/tidying-output
+  - articles/julia-interface
 - title: Case Studies
   navbar: Case Studies
   contents:

@@ -1,0 +1,56 @@
+---
+title: "Julia interface"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(jlmerclusterperm)
+jlmerclusterperm_setup(verbose = FALSE)
+julia_progress(show = FALSE)
+```
+
+## Notes on R-Julia interoperability
+
+All `jlmerclusterperm` functions collect Julia objects as R objects, except `jlmer()` and `to_jlmer()` which return GLM.jl or MixedModels.jl fitted model objects.
+
+```{r to-jlmer}
+jmod <- to_jlmer(Reaction ~ Days + (Days | Subject), lme4::sleepstudy, REML = TRUE)
+jmod
+```
+
+Model output should be comparable to that of `{lme4}` models:
+
+```{r lmer-comparison, warning=FALSE, message=FALSE}
+library(lme4)
+rmod <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
+summary(rmod)
+```
+
+You can use functions from [`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR) to interact with these (pointers to) Julia objects:
+
+```{r julia-interop}
+library(JuliaConnectoR)
+juliaLet("x.rePCA", x = jmod)
+juliaCall("issingular", jmod)
+```
+
+You can also call functions from other Julia packages that you already have installed. For example, [Effects.jl](https://github.com/beacon-biosignals/Effects.jl) for its [`marginaleffects`](https://github.com/vincentarelbundock/marginaleffects)/[`emmeans`](https://github.com/rvlenth/emmeans)-like features:
+
+```{r effects-jl}
+juliaEval("using Effects")
+juliaLet("effects(x.namedelements, y)", x = list(Days = 2:5), y = jmod)
+```
+
+The following packages are loaded into the Julia environment via `jlmerclusterperm_setup()`:
+
+```{r proj-toml}
+cat(readLines(system.file(package = "jlmerclusterperm", "julia", "Project.toml")), sep = "\n")
+```
+
+If you wish to use other Julia packages not listed here like Effects.jl, it is recommend to install them in the global library in a fresh Julia session as opposed to `Pkg.add()`-ing using the [`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR) interface, as that may pollute the `jlmerclusterperm` project environment (if this happens, just re-install the package).
