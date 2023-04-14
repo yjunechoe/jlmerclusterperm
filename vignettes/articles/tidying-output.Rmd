@@ -25,8 +25,8 @@ Minimal example data:
 ```{r MWE-setup, message = FALSE, warning = FALSE}
 library(dplyr, warn.conflicts = FALSE)
 library(ggplot2)
-chickweights <- as_tibble(ChickWeight) %>% 
-  mutate(diet = forcats::fct_collapse(Diet, A = c(1, 3), B = c(2, 4))) %>% 
+chickweights <- as_tibble(ChickWeight) %>%
+  mutate(diet = forcats::fct_collapse(Diet, A = c(1, 3), B = c(2, 4))) %>%
   filter(Time %in% 0:20)
 ggplot(chickweights, aes(Time, weight, color = diet)) +
   stat_summary(fun.args = list(mult = 1.96)) +
@@ -110,8 +110,8 @@ tidy(null_cluster_dists)
 The output of `tidy(null_statistics)` and `tidy(null_cluster_dists)` form a relational data. For example, you can use `left_join()` to find the time wise statistics of the permuted data with the most extreme cluster-mass statistic:
 
 ```{r largest_permuted_cluster}
-largest_permuted_cluster <- tidy(null_cluster_dists) %>% 
-  slice(which.max(abs(sum_statistic))) %>% 
+largest_permuted_cluster <- tidy(null_cluster_dists) %>%
+  slice(which.max(abs(sum_statistic))) %>%
   left_join(tidy(null_statistics), by = c("predictor", "sim"))
 largest_permuted_cluster
 ```
@@ -119,8 +119,8 @@ largest_permuted_cluster
 Note that the `sum_statistic` is simply the sum of the `statistic` values over the span of the largest cluster:
 
 ```{r sum_statistic-by-hand}
-largest_permuted_cluster %>% 
-  filter(between(time, start, end)) %>% 
+largest_permuted_cluster %>%
+  filter(between(time, start, end)) %>%
   summarize(sum_statistic = unique(sum_statistic), sum(statistic))
 ```
 
@@ -142,7 +142,7 @@ tidy(tested_clusters)
 Note that the p-value for this cluster is `r tidy(tested_clusters)$pvalue` because there are `r as.integer(tidy(tested_clusters)$pvalue * 1000)` samples from the null that are as or more extreme than the observed:
 
 ```{r pvalue-by-hand}
-tidy(null_cluster_dists) %>% 
+tidy(null_cluster_dists) %>%
   filter(abs(sum_statistic) >= abs(tidy(tested_clusters)$sum_statistic))
 ```
 

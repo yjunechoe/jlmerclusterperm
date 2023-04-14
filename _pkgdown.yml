@@ -15,6 +15,7 @@ template:
     base_font: {google: "Atkinson Hyperlegible"}
 
 reference:
+
 - title: Interface to Julia regression modelling
   contents:
   - jlmerclusterperm_setup
@@ -45,6 +46,11 @@ reference:
 - subtitle: All in one go
   contents:
   - clusterpermute
+
+- titie: Tidiers
+  contents:
+  - starts_with('tidy')
+  - starts_with('glance')
 
 - title: Interop utilities
   contents:

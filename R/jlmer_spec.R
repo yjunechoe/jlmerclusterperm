@@ -192,7 +192,7 @@ format.jlmer_spec <- function(x, ...) {
       cli::cli_dl(lapply(terms, paste, collapse = ", "), paste0("{.emph ", names(terms), "}"))
       cli::cli_end()
       # Grouping
-      cli::cli_text("{.el Specials}:")
+      cli::cli_text("{.el Groupings}:")
       cli::cli_ul()
       cli::cli_dl(x$meta[c("subject", "trial", "time")], paste0("{.emph ", c("Subject", "Trial", "Time"), "}"))
       cli::cli_end()
