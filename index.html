@@ -40,6 +40,12 @@
 <li class="nav-item">
   <a class="nav-link" href="reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="articles/tidying_output.html">Tidying output</a>
+  </div>
+</li>
 <li class="nav-item">
   <a class="nav-link" href="news/index.html">Changelog</a>
 </li>
@@ -67,7 +73,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>Julia <a href="https://github.com/JuliaStats/GLM.jl" class="external-link">GLM.jl</a> and <a href="https://github.com/JuliaStats/MixedModels.jl" class="external-link">MixedModels.jl</a> implementation of bootstrapped cluster-based permutation analysis for time series data, powered by <a href="https://github.com/stefan-m-lenz/JuliaConnectoR" class="external-link"><code>JuliaConnectoR</code></a></p>
+<p>Julia <a href="https://github.com/JuliaStats/GLM.jl" class="external-link">GLM.jl</a> and <a href="https://github.com/JuliaStats/MixedModels.jl" class="external-link">MixedModels.jl</a> implementation of bootstrapped cluster-based permutation analysis for time series data, powered by <a href="https://github.com/stefan-m-lenz/JuliaConnectoR" class="external-link"><code>JuliaConnectoR</code></a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -83,7 +89,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">jlmerclusterperm</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu"><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.06    0.03   20.36</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.00    0.02   19.94</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example-walkthrough">Example walkthrough<a class="anchor" aria-label="anchor" href="#example-walkthrough"></a>
@@ -179,7 +185,7 @@
 <span><span class="co">#&gt; StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"</span></span>
 <span><span class="co">#&gt; StatsModels = "3eaba693-59b7-5ba5-a881-562e759f1c8d"</span></span>
 <span><span class="co">#&gt; Suppressor = "fd094767-a336-5f1f-9728-57cf17d0bbfb"</span></span></code></pre></div>
-<p>If you wish to use other Julia packages not listed here like Effects.jl, it is recommend to install them in the global library in a fresh Julia session as opposed to <code>Pkg.add()</code>-ing using the <code>JuliaConnectoR</code> interface, as that may pollute the <code>jlmerclusterperm</code> project environment (if this happens, just re-install the package).</p>
+<p>If you wish to use other Julia packages not listed here like Effects.jl, it is recommend to install them in the global library in a fresh Julia session as opposed to <code>Pkg.add()</code>-ing using the <a href="https://github.com/stefan-m-lenz/JuliaConnectoR" class="external-link"><code>JuliaConnectoR</code></a> interface, as that may pollute the <code>jlmerclusterperm</code> project environment (if this happens, just re-install the package).</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
