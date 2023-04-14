@@ -2,6 +2,17 @@
 #' @export
 generics::tidy
 
+#' Tidier methods for Julia regression models
+#'
+#' @param x An object of class `jlmer_mod`
+#' @param effects One of "var_model", "ran_pars", or "fixed"
+#' @param ... Unused
+#'
+#' @name julia_model_tidiers
+NULL
+
+#' @rdname julia_model_tidiers
+#' @method tidy jlmer_mod
 #' @export
 tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...) {
   out <- df_from_DF(JuliaConnectoR::juliaLet("DataFrame(coeftable(x))", x = x))[, 1:5]
@@ -47,6 +58,15 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
   maybe_as_tibble(out)
 }
 
+#' Tidiers for cluster permutation test objects
+#'
+#' @param x A `timewise_statistics`, `empirical_clusters`, or `null_clusters` object
+#' @param ... Unused
+#'
+#' @name cluster_permutation_tidiers
+
+#' @rdname cluster_permutation_tidiers
+#' @method tidy timewise_statistics
 #' @export
 tidy.timewise_statistics <- function(x, ...) {
   stacked <- as.data.frame.table(x, responseName = "statistic")
@@ -57,6 +77,8 @@ tidy.timewise_statistics <- function(x, ...) {
   maybe_as_tibble(stacked)
 }
 
+#' @rdname cluster_permutation_tidiers
+#' @method tidy empirical_clusters
 #' @export
 tidy.empirical_clusters <- function(x, ...) {
   pvalues <- attr(x, "pvalues")
@@ -79,6 +101,8 @@ tidy.empirical_clusters <- function(x, ...) {
   maybe_as_tibble(clusters_df)
 }
 
+#' @rdname cluster_permutation_tidiers
+#' @method tidy null_cluster_dists
 #' @export
 tidy.null_cluster_dists <- function(x, ...) {
   cluster_dfs <- lapply(seq_along(x), function(i) {
@@ -100,6 +124,8 @@ tidy.null_cluster_dists <- function(x, ...) {
 #' @export
 generics::glance
 
+#' @rdname julia_model_tidiers
+#' @method glance jlmer_mod
 #' @export
 glance.jlmer_mod <- function(x, ...) {
   nobs <- JuliaConnectoR::juliaCall("nobs", x)

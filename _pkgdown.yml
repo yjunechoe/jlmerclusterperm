@@ -47,10 +47,12 @@ reference:
   contents:
   - clusterpermute
 
-- titie: Tidiers
+- title: Tidiers
+  desc: >
+    Methods for collecting jlmerclusterperm objects as tidy data
   contents:
-  - starts_with('tidy')
-  - starts_with('glance')
+  - cluster_permutation_tidiers
+  - julia_model_tidiers
 
 - title: Interop utilities
   contents:
