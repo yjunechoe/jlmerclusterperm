@@ -28,6 +28,9 @@
     <loc>https://yjunechoe.github.io/jlmerclusterperm/reference/calculate_clusters_pvalues.html</loc>
   </url>
   <url>
+    <loc>https://yjunechoe.github.io/jlmerclusterperm/reference/cluster_permutation_tidiers.html</loc>
+  </url>
+  <url>
     <loc>https://yjunechoe.github.io/jlmerclusterperm/reference/clusterpermute.html</loc>
   </url>
   <url>
@@ -50,6 +53,9 @@
   </url>
   <url>
     <loc>https://yjunechoe.github.io/jlmerclusterperm/reference/jlmerclusterperm_setup.html</loc>
+  </url>
+  <url>
+    <loc>https://yjunechoe.github.io/jlmerclusterperm/reference/julia_model_tidiers.html</loc>
   </url>
   <url>
     <loc>https://yjunechoe.github.io/jlmerclusterperm/reference/julia_progress.html</loc>
