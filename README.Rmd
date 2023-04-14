@@ -26,8 +26,7 @@ Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https:
 if (identical(Sys.getenv("IN_PKGDOWN"), "true")) {
   cat("![Animation of a cluster-based permutation test where each frame steps through a range of t-thresholds.](man/figures/clusterpermute_animation.gif)")
 } else {
-  cat("![Image of a cluster-based permutation test showing empirical and null cluster statistics from observed data.](man/figures/clusterpermute_slide.png)
-")
+  cat("![Image of a cluster-based permutation test showing empirical and null cluster statistics from observed data.](man/figures/clusterpermute_slide.png)")
 }
 ```
 

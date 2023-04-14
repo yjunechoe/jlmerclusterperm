@@ -1,8 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -13,7 +8,6 @@ editor_options:
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml)
-
 <!-- badges: end -->
 
 Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and
@@ -52,7 +46,7 @@ minutes).
 
 Subsequent calls to `jlmerclusterperm_setup()` incur a small overhead of
 around 30 seconds and there will be slight delays for first-time
-function calls due to Julia's [just-in-time
+function calls due to Julia’s [just-in-time
 compilation](https://docs.julialang.org/en/v1/). Afterwards you can
 enjoy blazingly-fast functions from the package.
 
@@ -64,4 +58,4 @@ system.time(jlmerclusterperm_setup(verbose = FALSE))
 
 ## Example walkthrough
 
-WIP...
+WIP…
