@@ -12,7 +12,6 @@
 #'
 #' @export
 make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = NULL, drop_terms = NULL) {
-
   # Old names
   fm <- formula
   df <- data
@@ -22,10 +21,10 @@ make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = 
   fm_terms <- stats::terms(lme4::subbars(fm), keep.order = TRUE)
   attr(fm_terms, "intercept") <- as.logical(attr(stats::terms(lme4::nobars(fm)), "intercept"))
   fm_cols <- vapply(as.list(attr(fm_terms, "variables")[-1]), deparse1, character(1))
-  df_subset <- df[,fm_cols]
+  df_subset <- df[, fm_cols]
   na_rows <- !stats::complete.cases(df_subset)
   if (any(na_rows)) {
-    df_subset <- df_subset[!na_rows,]
+    df_subset <- df_subset[!na_rows, ]
     cli::cli_alert_warning("Dropping {.val {na_rows}} row{?s} with missing values.")
   }
 
@@ -104,7 +103,7 @@ make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = 
       if (!is.null(drop_terms)) renamed <- renamed[!renamed %in% drop_terms]
       unique(c(attr(terms, "intercept"), renamed))
     })
-    re_terms_regrouped <- lapply(split(re_terms_renamed,  sapply(re, function(x) deparse(x[[3]]))), unlist, use.names = FALSE)
+    re_terms_regrouped <- lapply(split(re_terms_renamed, sapply(re, function(x) deparse(x[[3]]))), unlist, use.names = FALSE)
     re_bars <- ifelse(table(sapply(re, function(x) deparse1(x[[3]]))) > 1, "||", "|")
     re_groups <- lapply(names(re_terms_regrouped), function(x) {
       bar <- re_bars[[x]]
@@ -153,7 +152,6 @@ make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = 
   )
 
   structure(out, class = "jlmer_spec")
-
 }
 
 #' @export
@@ -163,30 +161,33 @@ print.jlmer_spec <- function(x, ...) {
 
 #' @export
 format.jlmer_spec <- function(x, ...) {
-  cli::cli_format_method({
-    cli::cli_rule(left = "{.strong jlmer specification}", right = "{.cls jlmer_spec}")
-    # Formula
-    cli::cli_text("{.el Formula}: {.fm {deparse1(x$formula$jl)}}")
-    # Terms
-    cli::cli_text("{.el Predictors}:")
-    terms <- Filter(function(term) !identical(term, "(Intercept)"), x$meta$term_groups)
-    cli::cli_ul()
-    cli::cli_dl(lapply(terms, paste, collapse = ", "), paste0("{.emph ", names(terms),"}"))
-    cli::cli_end()
-    # Grouping
-    cli::cli_text("{.el Specials}:")
-    cli::cli_ul()
-    cli::cli_dl(x$meta[c("subject", "trial", "time")], paste0("{.emph ", c("Subject", "Trial", "Time"),"}"))
-    cli::cli_end()
-    # Data
-    cli::cli_text("{.el Data}:")
-    if (inherits(x$data, "tbl_df")) {
-      old_pillar.advice <- options(pillar.advice = FALSE)
-      print(x$data, n = 3)
-      options(old_pillar.advice)
-    } else {
-      print(x$data, max = 3 * ncol(x$data))
-    }
-    cli::cli_rule()
-  }, theme = .jlmerclusterperm$cli_theme)
+  cli::cli_format_method(
+    {
+      cli::cli_rule(left = "{.strong jlmer specification}", right = "{.cls jlmer_spec}")
+      # Formula
+      cli::cli_text("{.el Formula}: {.fm {deparse1(x$formula$jl)}}")
+      # Terms
+      cli::cli_text("{.el Predictors}:")
+      terms <- Filter(function(term) !identical(term, "(Intercept)"), x$meta$term_groups)
+      cli::cli_ul()
+      cli::cli_dl(lapply(terms, paste, collapse = ", "), paste0("{.emph ", names(terms), "}"))
+      cli::cli_end()
+      # Grouping
+      cli::cli_text("{.el Specials}:")
+      cli::cli_ul()
+      cli::cli_dl(x$meta[c("subject", "trial", "time")], paste0("{.emph ", c("Subject", "Trial", "Time"), "}"))
+      cli::cli_end()
+      # Data
+      cli::cli_text("{.el Data}:")
+      if (inherits(x$data, "tbl_df")) {
+        old_pillar.advice <- options(pillar.advice = FALSE)
+        print(x$data, n = 3)
+        options(old_pillar.advice)
+      } else {
+        print(x$data, max = 3 * ncol(x$data))
+      }
+      cli::cli_rule()
+    },
+    theme = .jlmerclusterperm$cli_theme
+  )
 }

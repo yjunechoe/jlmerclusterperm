@@ -12,8 +12,8 @@ julia_progress <- function(show, width) {
       width <- show$width
       show <- show$show
     }
-    JuliaConnectoR::juliaEval(paste0('pg_io = ', if (show) "stderr" else "devnull"))
+    JuliaConnectoR::juliaEval(paste0("pg_io = ", if (show) "stderr" else "devnull"))
   }
-  if (!missing(width)) JuliaConnectoR::juliaEval(paste0('pg_width = ', width - 50))
+  if (!missing(width)) JuliaConnectoR::juliaEval(paste0("pg_width = ", width - 50))
   invisible(strip_JLTYPE(old_opts))
 }

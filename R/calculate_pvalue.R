@@ -37,7 +37,7 @@ clusters_are_comparable <- function(empirical_clusters, null_cluster_dists) {
   if (!identical(empirical_attrs[c("statistic", "threshold")], null_attrs[c("statistic", "threshold")])) {
     cluster_properties <- sapply(list(empirical_attrs, null_attrs), `[`, c("statistic", "threshold"))
     mismatch_info <- apply(cluster_properties, 1L, function(x) {
-      if(x[[1]] != x[[2]]) {
+      if (x[[1]] != x[[2]]) {
         x <- unlist(x, use.names = FALSE)
         if (is.numeric(x)) x <- paste0("{", x, "}")
         paste0("empirical uses {.val ", x[1], "} but null uses {.val ", x[2], "}.")

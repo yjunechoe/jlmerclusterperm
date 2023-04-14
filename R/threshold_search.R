@@ -11,7 +11,9 @@ walk_threshold_steps <- function(empirical_statistics, null_statistics, threshol
                                  top_n = Inf, binned = FALSE, add1 = TRUE) {
   test_threshold <- function(threshold) {
     empirical <- extract_empirical_clusters(empirical_statistics, threshold = threshold, binned = binned, top_n = top_n)
-    if (all(attr(empirical, "missing_clusters"))) return(NULL)
+    if (all(attr(empirical, "missing_clusters"))) {
+      return(NULL)
+    }
     null <- extract_null_cluster_dists(null_statistics, threshold = threshold, binned = binned)
     out <- tidy(calculate_clusters_pvalues(empirical, null, add1 = TRUE))
     out[!is.na(out$pvalue), ]

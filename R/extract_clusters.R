@@ -27,10 +27,12 @@ extract_empirical_clusters <- function(empirical_statistics, threshold, binned =
     cluster_df[order(cluster_df$cluster_id), ]
   })
   missing_clusters <- sapply(empirical_clusters, function(x) all(near_zero(x$statistic)))
-  structure(empirical_clusters, class = "empirical_clusters",
-            missing_clusters = missing_clusters, statistic = statistic, threshold = threshold,
-            binned = binned, time = time,
-            term_groups = attr(empirical_statistics, "term_groups"))
+  structure(empirical_clusters,
+    class = "empirical_clusters",
+    missing_clusters = missing_clusters, statistic = statistic, threshold = threshold,
+    binned = binned, time = time,
+    term_groups = attr(empirical_statistics, "term_groups")
+  )
 }
 
 #' Construct a null distribution of cluster-mass statistics
@@ -47,12 +49,14 @@ extract_null_cluster_dists <- function(null_statistics, threshold, binned = FALS
   statistic <- attr(null_statistics, "statistic")
   null_statistics <- apply_threshold(null_statistics, statistic, threshold)
   null_cluster_dists <- apply(null_statistics, 3, function(t_matrix) {
-    t_matrix <- t_matrix[!is.nan(rowSums(t_matrix)),]
+    t_matrix <- t_matrix[!is.nan(rowSums(t_matrix)), ]
     largest_clusters <- df_from_DF(.jlmerclusterperm$extract_clusters(t_matrix, binned, 1L))
   }, simplify = FALSE)
-  structure(null_cluster_dists, class = "null_cluster_dists",
-            statistic = statistic, threshold = threshold, binned = binned, time = time,
-            term_groups = attr(null_statistics, "term_groups"))
+  structure(null_cluster_dists,
+    class = "null_cluster_dists",
+    statistic = statistic, threshold = threshold, binned = binned, time = time,
+    term_groups = attr(null_statistics, "term_groups")
+  )
 }
 
 #' @keywords internal
@@ -75,7 +79,7 @@ apply_threshold <- function(timewise_statistics, statistic, threshold) {
 #' @keywords internal
 chisq_threshold_dict <- function(term_groups, threshold) {
   if (threshold < 0 || threshold > 1) {
-    cli::cli_abort('{.arg threshold} must be between {.val {0}} and {.val {1}} when {.arg statistic = {.val chisq}}')
+    cli::cli_abort("{.arg threshold} must be between {.val {0}} and {.val {1}} when {.arg statistic = {.val chisq}}")
   }
   threshold_dict <- utils::stack(attr(term_groups, "dfs"))
   colnames(threshold_dict) <- c("df", "term")

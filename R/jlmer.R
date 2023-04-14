@@ -9,10 +9,8 @@
 #' @return A `jlmer_mod` object.
 #' @export
 to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_spec_opts = list(), ..., progress = FALSE) {
-
   jlmer_spec <- do.call(make_jlmer_spec, utils::modifyList(jlmer_spec_opts, list(formula = formula, data = data)))
   jlmer(jlmer_spec, family, ...)
-
 }
 
 #' Fit a Julia regression model using jlmer specifications
@@ -27,14 +25,12 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_sp
 #' @return A `jlmer_mod` object.
 #' @export
 jlmer <- function(jlmer_spec, family = c("gaussian", "binomial"), ..., progress = FALSE) {
-
   check_arg_class(jlmer_spec, "jlmer_spec")
   family <- match.arg(family)
   args <- prep_for_jlmer(jlmer_spec, family = family, ...)[-3]
 
   mod <- do.call(.jlmerclusterperm$jlmer, c(args, jlmer_spec$meta$is_mem, progress = progress, ...))
   structure(mod, class = c("jlmer_mod", class(mod)))
-
 }
 
 #' @export
@@ -46,11 +42,11 @@ print.jlmer_mod <- function(x, ...) {
 format.jlmer_mod <- function(x, ...) {
   cat("<Julia object of type ", JuliaConnectoR::juliaCall("typeof", x), ">\n", sep = "")
   if (JuliaConnectoR::juliaLet("x isa MixedModel", x = x)) {
-    re <- gsub("\n\n$", "\n", showobj_reformat(JuliaConnectoR::juliaCall('VarCorr', x)))
-    fe <- showobj_reformat(JuliaConnectoR::juliaCall('coeftable', x))
+    re <- gsub("\n\n$", "\n", showobj_reformat(JuliaConnectoR::juliaCall("VarCorr", x)))
+    fe <- showobj_reformat(JuliaConnectoR::juliaCall("coeftable", x))
     out <- c(re, fe)
   } else {
-    out <- showobj_reformat(JuliaConnectoR::juliaCall('coeftable', x))
+    out <- showobj_reformat(JuliaConnectoR::juliaCall("coeftable", x))
   }
   out
 }

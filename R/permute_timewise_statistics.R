@@ -11,7 +11,6 @@
 permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "binomial"),
                                         statistic = c("t", "chisq"),
                                         nsim = 100L, predictors = NULL, ...) {
-
   check_arg_class(jlmer_spec, "jlmer_spec")
   statistic <- match.arg(statistic)
   is_mem <- jlmer_spec$meta$is_mem
@@ -67,16 +66,17 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
 
   convergence_failures <- check_convergence_failures(out$z_array)
 
-  structure(out$z_array, class = "timewise_statistics",
-            statistic = statistic, term_groups = term_groups$r, convergence_failures = convergence_failures)
-
+  structure(out$z_array,
+    class = "timewise_statistics",
+    statistic = statistic, term_groups = term_groups$r, convergence_failures = convergence_failures
+  )
 }
 
 check_convergence_failures <- function(z_array) {
   convergence_failures_pos <- is.nan(z_array)
   if (any(convergence_failures_pos)) {
     convergence_failures <- unique(which(convergence_failures_pos, arr.ind = TRUE)[, c("Predictor", "Sim")])
-    convergence_failure_table <- table(convergence_failures[,"Predictor"])
+    convergence_failure_table <- table(convergence_failures[, "Predictor"])
     names(convergence_failure_table) <- dimnames(z_array)$Predictor[as.integer(names(convergence_failure_table))]
     cli::cli_alert_info("Convergence errors encountered (out of {.arg nsim = {.val {nrow(z_array)}}}) while bootstrapping the following {cli::qty(names(convergence_failure_table))}predictor{?s}:")
     cli::cli_div(theme = .jlmerclusterperm$cli_theme)
@@ -95,21 +95,21 @@ validate_predictors_subset <- function(predictors, r_term_groups) {
       "Invalid selection passed to the {.arg predictor} argument.",
       "x" = "Must choose among {.val {predictors_set}}."
     ))
-  }
-  else {
+  } else {
     list(as.list(predictors))
   }
 }
 
 augment_term_groups <- function(jlmer_spec, statistic) {
-
-  if (!is.null(jlmer_spec$.backdoor$augmented_term_groups)) return(jlmer_spec$.backdoor$augmented_term_groups)
+  if (!is.null(jlmer_spec$.backdoor$augmented_term_groups)) {
+    return(jlmer_spec$.backdoor$augmented_term_groups)
+  }
 
   term_groups <- jlmer_spec$meta$term_groups
   term_levels <- lengths(term_groups)
   grp_idx <- split(seq_len(sum(lengths(term_groups))), rep(seq_along(term_groups), times = term_levels))
-  term_groups_jl <- JuliaConnectoR::juliaLet("Tuple(x)", x = lapply(seq_along(term_groups), function (i) {
-    JuliaConnectoR::juliaLet("(P = P, p = p, i = i)", P = names(term_groups)[i],  p = as.list(term_groups[[i]]), i = as.list(grp_idx[[i]]))
+  term_groups_jl <- JuliaConnectoR::juliaLet("Tuple(x)", x = lapply(seq_along(term_groups), function(i) {
+    JuliaConnectoR::juliaLet("(P = P, p = p, i = i)", P = names(term_groups)[i], p = as.list(term_groups[[i]]), i = as.list(grp_idx[[i]]))
   }))
   term_groups <- term_groups[names(term_groups) != "1"]
   if (statistic == "chisq") {

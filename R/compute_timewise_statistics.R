@@ -12,7 +12,6 @@
 #' @return A predictor-by-time matrix of cluster statistics, of class `timewise_statistics`.
 #' @export
 compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "binomial"), statistic = c("t", "chisq"), ...) {
-
   check_arg_class(jlmer_spec, "jlmer_spec")
   family <- match.arg(family)
   statistic <- match.arg(statistic)
@@ -27,8 +26,10 @@ compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
   }
 
 
-  out <- JuliaConnectoR::juliaGet(do.call(.jlmerclusterperm$compute_timewise_statistics,
-                                          c(args, term_groups$jl, statistic, is_mem, opts)))
+  out <- JuliaConnectoR::juliaGet(do.call(
+    .jlmerclusterperm$compute_timewise_statistics,
+    c(args, term_groups$jl, statistic, is_mem, opts)
+  ))
 
   alert_diagnostics(jlmer_spec, out)
 
@@ -40,9 +41,10 @@ compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
     dimnames(out$t_matrix) <- c(list(Predictor = Predictors[Predictors != "1"]), out["Time"])
   }
 
-  structure(out$t_matrix, class = "timewise_statistics",
-            statistic = statistic, term_groups = term_groups$r)
-
+  structure(out$t_matrix,
+    class = "timewise_statistics",
+    statistic = statistic, term_groups = term_groups$r
+  )
 }
 
 alert_diagnostics <- function(jlmer_spec, out) {
