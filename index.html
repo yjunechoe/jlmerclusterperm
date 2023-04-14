@@ -92,7 +92,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">jlmerclusterperm</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu"><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.00    0.00   26.76</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.02    0.01   19.89</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example-walkthrough">Example walkthrough<a class="anchor" aria-label="anchor" href="#example-walkthrough"></a>
@@ -104,19 +104,19 @@
 </h2>
 <p>All <code>jlmerclusterperm</code> functions collect Julia objects as R objects, except <code><a href="reference/jlmer.html">jlmer()</a></code> and <code><a href="reference/to_jlmer.html">to_jlmer()</a></code> which return GLM.jl or MixedModels.jl fitted model objects.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">jmod</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/to_jlmer.html">to_jlmer</a></span><span class="op">(</span><span class="va">Reaction</span> <span class="op">~</span> <span class="va">Days</span> <span class="op">+</span> <span class="op">(</span><span class="va">Days</span> <span class="op">|</span> <span class="va">Subject</span><span class="op">)</span>, <span class="fu">lme4</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/lme4/man/sleepstudy.html" class="external-link">sleepstudy</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">jmod</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/to_jlmer.html">to_jlmer</a></span><span class="op">(</span><span class="va">Reaction</span> <span class="op">~</span> <span class="va">Days</span> <span class="op">+</span> <span class="op">(</span><span class="va">Days</span> <span class="op">|</span> <span class="va">Subject</span><span class="op">)</span>, <span class="fu">lme4</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/lme4/man/sleepstudy.html" class="external-link">sleepstudy</a></span>, REML <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">jmod</span> <span class="co"># try `glance()` and `tidy()`</span></span>
 <span><span class="co">#&gt; &lt;Julia object of type LinearMixedModel{Float64}&gt;</span></span>
 <span><span class="co">#&gt; Variance components:</span></span>
 <span><span class="co">#&gt;             Column    Variance Std.Dev.   Corr.</span></span>
-<span><span class="co">#&gt; Subject  (Intercept)  565.51066 23.78047</span></span>
-<span><span class="co">#&gt;          Days          32.68212  5.71683 +0.08</span></span>
-<span><span class="co">#&gt; Residual              654.94145 25.59182</span></span>
+<span><span class="co">#&gt; Subject  (Intercept)  612.10016 24.74066</span></span>
+<span><span class="co">#&gt;          Days          35.07171  5.92214 +0.07</span></span>
+<span><span class="co">#&gt; Residual              654.94001 25.59180</span></span>
 <span><span class="co">#&gt;  ──────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt;                 Coef.  Std. Error      z  Pr(&gt;|z|)</span></span>
 <span><span class="co">#&gt; ──────────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt; (Intercept)  251.405      6.63226  37.91    &lt;1e-99</span></span>
-<span><span class="co">#&gt; Days          10.4673     1.50224   6.97    &lt;1e-11</span></span>
+<span><span class="co">#&gt; (Intercept)  251.405      6.8246   36.84    &lt;1e-99</span></span>
+<span><span class="co">#&gt; Days          10.4673     1.54579   6.77    &lt;1e-10</span></span>
 <span><span class="co">#&gt; ──────────────────────────────────────────────────</span></span></code></pre></div>
 <p>Model output should be comparable to that of <a href="https://github.com/lme4/lme4/" class="external-link">lme4</a> models:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -153,7 +153,7 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">JuliaConnectoR</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/JuliaConnectoR/man/juliaLet.html" class="external-link">juliaLet</a></span><span class="op">(</span><span class="st">"x.rePCA"</span>, x <span class="op">=</span> <span class="va">jmod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;Julia object of type NamedTuple{(:Subject,), Tuple{Vector{Float64}}}&gt;</span></span>
-<span><span class="co">#&gt; (Subject = [0.5406660465696776, 1.0],)</span></span>
+<span><span class="co">#&gt; (Subject = [0.5327756182832276, 1.0],)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/JuliaConnectoR/man/juliaCall.html" class="external-link">juliaCall</a></span><span class="op">(</span><span class="st">"issingular"</span>, <span class="va">jmod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
 <p>You can also call functions from other Julia packages that you already have installed. For example, <a href="https://github.com/beacon-biosignals/Effects.jl" class="external-link">Effects.jl</a> for its <a href="https://github.com/vincentarelbundock/marginaleffects" class="external-link"><code>marginaleffects</code></a>/<a href="https://github.com/rvlenth/emmeans" class="external-link"><code>emmeans</code></a>-like features:</p>
@@ -165,16 +165,16 @@
 <span><span class="co">#&gt;  Row │ Days     Reaction  err       lower    upper</span></span>
 <span><span class="co">#&gt;      │ Float64  Float64   Float64   Float64  Float64</span></span>
 <span><span class="co">#&gt; ─────┼───────────────────────────────────────────────</span></span>
-<span><span class="co">#&gt;    1 │     0.0   251.405   6.63226  244.773  258.037</span></span>
-<span><span class="co">#&gt;    2 │     1.0   261.872   6.59566  255.277  268.468</span></span>
-<span><span class="co">#&gt;    3 │     2.0   272.34    6.89435  265.445  279.234</span></span>
-<span><span class="co">#&gt;    4 │     3.0   282.807   7.48832  275.319  290.295</span></span>
-<span><span class="co">#&gt;    5 │     4.0   293.274   8.31451  284.96   301.589</span></span>
-<span><span class="co">#&gt;    6 │     5.0   303.742   9.31132  294.43   313.053</span></span>
-<span><span class="co">#&gt;    7 │     6.0   314.209  10.4299   303.779  324.639</span></span>
-<span><span class="co">#&gt;    8 │     7.0   324.676  11.6353   313.041  336.311</span></span>
-<span><span class="co">#&gt;    9 │     8.0   335.143  12.9031   322.24   348.046</span></span>
-<span><span class="co">#&gt;   10 │     9.0   345.611  14.2167   331.394  359.827</span></span></code></pre></div>
+<span><span class="co">#&gt;    1 │     0.0   251.405   6.8246   244.581  258.23</span></span>
+<span><span class="co">#&gt;    2 │     1.0   261.872   6.78693  255.085  268.659</span></span>
+<span><span class="co">#&gt;    3 │     2.0   272.34    7.09427  265.245  279.434</span></span>
+<span><span class="co">#&gt;    4 │     3.0   282.807   7.70544  275.102  290.512</span></span>
+<span><span class="co">#&gt;    5 │     4.0   293.274   8.55557  284.719  301.83</span></span>
+<span><span class="co">#&gt;    6 │     5.0   303.742   9.58128  294.16   313.323</span></span>
+<span><span class="co">#&gt;    7 │     6.0   314.209  10.7323   303.476  324.941</span></span>
+<span><span class="co">#&gt;    8 │     7.0   324.676  11.9726   312.703  336.649</span></span>
+<span><span class="co">#&gt;    9 │     8.0   335.143  13.2772   321.866  348.421</span></span>
+<span><span class="co">#&gt;   10 │     9.0   345.611  14.6288   330.982  360.239</span></span></code></pre></div>
 <p>The following packages are loaded into the Julia environment via <code><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup()</a></code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"jlmerclusterperm"</span>, <span class="st">"julia"</span>, <span class="st">"Project.toml"</span><span class="op">)</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span></span>
