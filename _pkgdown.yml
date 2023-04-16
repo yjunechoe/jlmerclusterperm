@@ -67,6 +67,7 @@ articles:
 - title: Case Studies
   navbar: Case Studies
   contents:
+  - articles/Garrison-et-al-2020
 
 figures:
   dev: ragg::agg_png

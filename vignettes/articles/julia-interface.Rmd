@@ -64,6 +64,14 @@ juliaLet("effects(x.namedelements, y)", x = list(Days = 2:5), y = jmod)
 #>    4 │     5   303.742  9.58128  294.16   313.323
 ```
 
+Note that `jlmer()` and `to_lmer()` are just conveniences for sanity checking the steps of a cluster-based permutation test, and thus should not be used as a general interface to fitting regression models in Julia for more serious analyses.
+
+## Julia global options
+
+All functions involved in the cluster-based permutation analysis print progress bars that update in real time in the console. The function `julia_progress()` controls whether to `show` the progress bar and the `width` of the printed progress bar.
+
+## The Julia environment
+
 The following packages are loaded into the Julia environment via `jlmerclusterperm_setup()`:
 
 ```{r proj-toml, eval = TRUE}

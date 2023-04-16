@@ -149,10 +149,11 @@ tidy(null_cluster_dists) %>%
 In the case of the one-fell-swoop function `clusterpermute()`, the `<null_cluster_dists>` object and the `<empirical_clusters>` object are returned in a list:
 
 ```{r clusterpermute}
-# Timing it for fun this time
+# Timing the entire process this time
 system.time({
   full_test <- clusterpermute(jlmer_spec, threshold = 1, nsim = 1000, progress = FALSE)
 })
+names(full_test)
 full_test$null_cluster_dists
 full_test$empirical_clusters
 ```
