@@ -1,5 +1,7 @@
 ---
 title: "Garrison et al. 2020"
+description: |
+  A walkthrough of basic package features and the components of a CPA
 ---
 
 ```{r, include = FALSE}
@@ -24,7 +26,7 @@ The following set-up code reads in the data and prepares it for analysis:
 
 ```{r data-prep, message=FALSE, warning=FALSE}
 library(dplyr)
-library(peekbankr)
+library(peekbankr) # remotes::install_github("langcog/peekbankr")
 
 # Load data
 aoi_timepoints <- get_aoi_timepoints(dataset_name = "garrison_bergelson_2020")
@@ -187,22 +189,15 @@ CPA_agg <- clusterpermute(
   nsim = 100,
   progress = FALSE # Suppress printing of progress for vignette
 )
+CPA_agg
 ```
 
 The result is a list of two elements:
 
 1) A `<null_cluster_dists>` object which holds information about the distribution of the bootstrapped cluster-mass statistics from random permutations of the data:
 
-    ```{r CPA_agg-null}
-CPA_agg$null_cluster_dists
-    ```
-
 2) An `<empirical_clusters>` object which holds per-predictor information about the clusters detected, and their p-values after significance testing against the null:
     
-    ```{r}
-CPA_agg$empirical_clusters
-    ```
-
 The output is explained more in the next section, but for presented purposes simply note that the results are very similar to that reported in [Katie Von Holzen's tutorial](https://kvonholzen.github.io/Macquarie_Presentation_buddy.html), copied below.
 
 ```{r, echo = FALSE}
@@ -525,7 +520,7 @@ CPA_trial$empirical_clusters
 CPA_agg$empirical_clusters
 ```
 
-These appear to converge at a higher `nsim` for this data set. Here, we use `reset_rng_state()` to make them generate the same permutations and time the 1000-simulation runs:
+These appear to converge at a higher `nsim` for this data set. We also time the 1000-simulation runs to showcase the speed of `jlmerclusterperm`.
 
 ```{r CPA_agg_1000}
 system.time({
@@ -535,7 +530,7 @@ system.time({
     nsim = 1000, top_n = 1, progress = FALSE
   )
 })
-CPA_agg_1000$empirical_clusters
+CPA_agg_1000
 ```
 
 ```{r CPA_trial_1000}
@@ -546,5 +541,7 @@ system.time({
     nsim = 1000, top_n = 1, progress = FALSE
   )
 })
-CPA_trial_1000$empirical_clusters
+CPA_trial_1000
 ```
+
+Note the use `reset_rng_state()`, which makes the two CPAs generate the same permutations of the observed data.

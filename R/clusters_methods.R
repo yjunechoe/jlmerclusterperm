@@ -56,7 +56,7 @@ print.null_cluster_dists <- function(x, levels = 0.95, ...) {
 }
 
 #' @export
-format.null_cluster_dists <- function(x, levels, ...) {
+format.null_cluster_dists <- function(x, levels = 0.95, ...) {
   term_groups <- attr(x, "term_groups")
   predictor_dfs <- attr(term_groups, "dfs")
   statistic <- attr(x, "statistic")

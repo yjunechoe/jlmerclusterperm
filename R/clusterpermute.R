@@ -36,5 +36,16 @@ clusterpermute <- function(jlmer_spec,
   null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold, binned)
   if (progress) cli::cli_progress_step("Calculating the probability of the observed cluster-mass statistics.")
   empirical_clusters_p <- calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1)
-  list(null_cluster_dists = null_cluster_dists, empirical_clusters = empirical_clusters_p)
+  structure(list(null_cluster_dists = null_cluster_dists, empirical_clusters = empirical_clusters_p), class = "CPA_out")
+}
+
+#' @export
+print.CPA_out <- function(x, ...) {
+  cat(
+    "$null_cluster_dists",
+    format(x$null_cluster_dists, ...),
+    "\n$empirical_clusters",
+    format(x$empirical_clusters, ...),
+    sep = "\n"
+  )
 }
