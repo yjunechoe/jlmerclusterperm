@@ -48,6 +48,7 @@
     <a class="dropdown-item" href="../articles/julia-interface.html">Julia interface</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
+    <a class="dropdown-item" href="../articles/Garrison-et-al-2020.html">Garrison et al. 2020</a>
   </div>
 </li>
 <li class="nav-item">
@@ -105,7 +106,7 @@ return GLM.jl or MixedModels.jl fitted model objects.</p>
 <span><span class="co">#&gt; Subject  (Intercept)  565.51067 23.78047</span></span>
 <span><span class="co">#&gt;          Days          32.68212  5.71683 +0.08</span></span>
 <span><span class="co">#&gt; Residual              654.94145 25.59182</span></span>
-<span><span class="co">#&gt;  ──────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt; ──────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt;                 Coef.  Std. Error      z  Pr(&gt;|z|)</span></span>
 <span><span class="co">#&gt; ──────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; (Intercept)  251.405      6.63226  37.91    &lt;1e-99</span></span>
@@ -136,6 +137,23 @@ features:</p>
 <span><span class="co">#&gt;    2 │     3   282.807  7.70544  275.102  290.512</span></span>
 <span><span class="co">#&gt;    3 │     4   293.274  8.55557  284.719  301.83</span></span>
 <span><span class="co">#&gt;    4 │     5   303.742  9.58128  294.16   313.323</span></span></code></pre></div>
+<p>Note that <code><a href="../reference/jlmer.html">jlmer()</a></code> and <code>to_lmer()</code> are just
+conveniences for sanity checking the steps of a cluster-based
+permutation test, and thus should not be used as a general interface to
+fitting regression models in Julia for more serious analyses.</p>
+</div>
+<div class="section level2">
+<h2 id="julia-global-options">Julia global options<a class="anchor" aria-label="anchor" href="#julia-global-options"></a>
+</h2>
+<p>All functions involved in the cluster-based permutation analysis
+print progress bars that update in real time in the console. The
+function <code><a href="../reference/julia_progress.html">julia_progress()</a></code> controls whether to
+<code>show</code> the progress bar and the <code>width</code> of the
+printed progress bar.</p>
+</div>
+<div class="section level2">
+<h2 id="the-julia-environment">The Julia environment<a class="anchor" aria-label="anchor" href="#the-julia-environment"></a>
+</h2>
 <p>The following packages are loaded into the Julia environment via
 <code><a href="../reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -168,7 +186,8 @@ fresh Julia session as opposed to <code>Pkg.add()</code>-ing using the
 interface, as that may pollute the <code>jlmerclusterperm</code> project
 environment (if this happens, just re-install the package).</p>
 </div>
-  </main>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
