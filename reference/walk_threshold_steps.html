@@ -68,7 +68,8 @@
 <span>  <span class="va">threshold_steps</span>,</span>
 <span>  top_n <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  binned <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  add1 <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  add1 <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  progress <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -100,6 +101,10 @@ which requires a cluster to span at least two time points. If <code>TRUE</code>,
 <dd><p>Whether to add 1 to the numerator and denominator when calculating the p-value.
 Use <code>TRUE</code> to effectively count the observed statistic as part of the permuted
 null distribution (recommended with larger <code>nsim</code> prior to publishing results).</p></dd>
+
+
+<dt>progress</dt>
+<dd><p>Whether to display a progress bar</p></dd>
 
 </dl></div>
     <div class="section level2">
