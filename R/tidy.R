@@ -87,10 +87,13 @@ tidy.empirical_clusters <- function(x, ...) {
     cluster_df <- cbind(predictor = predictor, x[[i]])
     if (!is.null(pvalues[[predictor]])) {
       cluster_df$pvalue <- pvalues[[predictor]]
+    } else if (!is.null(pvalues)) {
+      cluster_df$pvalue <- NA
     }
     cluster_df
   })
   clusters_df <- do.call(rbind, cluster_dfs)
+  clusters_df <- clusters_df[clusters_df$cluster_id != 0, ]
   time <- as.numeric(attr(x, "time"))
   clusters_df$id <- factor(zero_pad(clusters_df$cluster_id))
   clusters_df$length <- clusters_df$cluster_end - clusters_df$cluster_start + 1

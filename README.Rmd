@@ -39,12 +39,133 @@ Before using functions from `jlmerclusterperm`, an initial setup step is require
 
 Subsequent calls to `jlmerclusterperm_setup()` incur a small overhead of around 30 seconds and there will be slight delays for first-time function calls due to Julia's [just-in-time compilation](https://docs.julialang.org/en/v1/). Afterwards you can enjoy blazingly-fast functions from the package.
 
-```{r setup, eval = FALSE}
+```{r setup}
 # Both lines must be run
 library(jlmerclusterperm)
-jlmerclusterperm_setup(verbose = FALSE)
+system.time(jlmerclusterperm_setup(verbose = FALSE))
 ```
 
-## Examples
+See the [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles/) page for in-depth tutorials and case study vignettes.
 
-See the [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles/) page for tutorials and case study vignettes.
+## Quick tour of package functionalities
+
+### Complete CPA with `clusterpermute()`
+
+A time series data:
+
+```{r chickweight, message = FALSE}
+chickweights <- ChickWeight
+chickweights$Time <- as.integer(factor(chickweights$Time))
+matplot(
+  tapply(chickweights$weight, chickweights[c("Time", "Diet")], mean),
+  type = "b", lwd = 3, ylab = "Weight", xlab = "Time"
+)
+```
+
+Preparing a specification object:
+
+```{r chickweights_spec}
+chickweights_spec <- make_jlmer_spec(
+  formula = weight ~ 1 + Diet,
+  data = chickweights,
+  subject = "Chick", time = "Time"
+)
+chickweights_spec
+```
+
+Cluster-based permutation test:
+
+```{r CPA}
+set_rng_state(123L)
+clusterpermute(
+  chickweights_spec,
+  threshold = 2.5,
+  nsim = 100,
+  progress = FALSE
+)$empirical_clusters
+```
+
+Using custom contrast coding:
+
+```{r chickweights_helm}
+chickweights_helm <- chickweights
+contrasts(chickweights_helm$Diet) <- contr.helmert(4)
+colnames(contrasts(chickweights_helm$Diet)) <- c("1v2", "12v3", "123v4")
+contrasts(chickweights_helm$Diet)
+```
+
+```{r chickweights_helm_spec}
+chickweights_helm_spec <- make_jlmer_spec(
+  formula = weight ~ 1 + Diet,
+  data = chickweights_helm,
+  subject = "Chick", time = "Time"
+)
+set_rng_state(123L)
+clusterpermute(
+  chickweights_helm_spec,
+  threshold = 2.5,
+  nsim = 100,
+  progress = FALSE
+)$empirical_clusters
+```
+
+With random effects:
+
+```{r chickweights_re_spec}
+chickweights_re_spec <- make_jlmer_spec(
+  formula = weight ~ 1 + Diet + (1 | Chick),
+  data = chickweights,
+  subject = "Chick", time = "Time"
+)
+set_rng_state(123L)
+clusterpermute(
+  chickweights_re_spec,
+  threshold = 2.5,
+  nsim = 100,
+  progress = FALSE
+)$empirical_clusters
+```
+
+### Components of a CPA
+
+Time-wise statistics of the data:
+
+```{r empirical_statistics}
+empirical_statistics <- compute_timewise_statistics(chickweights_spec)
+tidy(empirical_statistics)
+```
+
+```{r plot-empirical_statistics}
+matplot(t(empirical_statistics), type = "l", ylab = "t-value")
+abline(h = 2.5, lty = 3)
+```
+
+Empirical clusters:
+
+```{r empirical_clusters}
+empirical_clusters <- extract_empirical_clusters(empirical_statistics, threshold = 2.5)
+empirical_clusters
+```
+
+Simulating the null:
+
+```{r null_statistics}
+set_rng_state(123L)
+null_statistics <- permute_timewise_statistics(chickweights_spec, nsim = 100)
+null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2.5)
+```
+
+Significance testing:
+
+```{r calculate_clusters_pvalues}
+calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1 = TRUE)
+```
+
+Testing a range of thresholds values:
+
+```{r walk_threshold_steps}
+walk_threshold_steps(
+  empirical_statistics,null_statistics,
+  threshold_steps = c(2, 2.5, 3)
+)
+```

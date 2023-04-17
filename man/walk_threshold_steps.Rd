@@ -10,7 +10,8 @@ walk_threshold_steps(
   threshold_steps,
   top_n = Inf,
   binned = FALSE,
-  add1 = TRUE
+  add1 = TRUE,
+  progress = TRUE
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ which requires a cluster to span at least two time points. If \code{TRUE}, allow
 \item{add1}{Whether to add 1 to the numerator and denominator when calculating the p-value.
 Use \code{TRUE} to effectively count the observed statistic as part of the permuted
 null distribution (recommended with larger \code{nsim} prior to publishing results).}
+
+\item{progress}{Whether to display a progress bar}
 }
 \value{
 A data frame of predictor clusters-mass statistics by threshold.

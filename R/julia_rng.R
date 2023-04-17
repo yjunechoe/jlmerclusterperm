@@ -13,14 +13,14 @@ NULL
 set_rng_state <- function(i) {
   counterL <- as.integer(i)
   JuliaConnectoR::juliaLet("set_counter!(rng, i)", i = counterL)
-  counterL
+  invisible(counterL)
 }
 
 #' @rdname julia_rng
 #' @export
 reset_rng_state <- function() {
   JuliaConnectoR::juliaEval("set_counter!(rng, 0)")
-  0L
+  invisible(0L)
 }
 
 #' @rdname julia_rng
@@ -35,6 +35,6 @@ get_rng_state <- function() {
 #' @export
 set_rng_seed <- function(seed) {
   seedL <- as.integer(seed)
-  JuliaConnectoR::juliaEval("Random123.seed!(rng, (", seedL, ", 20))")
-  seedL
+  JuliaConnectoR::juliaEval(paste0("Random123.seed!(rng, (", seedL, ", 20))"))
+  invisible(seedL)
 }
