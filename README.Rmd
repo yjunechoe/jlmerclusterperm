@@ -45,8 +45,6 @@ library(jlmerclusterperm)
 jlmerclusterperm_setup(verbose = FALSE)
 ```
 
-## Quick demonstration
+## Examples
 
-The function `clusterpermute()` runs a full cluster-based permutation analysis
-
-WIP...
+See the [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles/) page for tutorials and case study vignettes.

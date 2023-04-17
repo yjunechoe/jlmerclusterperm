@@ -54,6 +54,8 @@ library(jlmerclusterperm)
 jlmerclusterperm_setup(verbose = FALSE)
 ```
 
-## Example walkthrough
+## Examples
 
-WIP…
+See the
+[Articles](https://yjunechoe.github.io/jlmerclusterperm/articles/) page
+for tutorials and case study vignettes.

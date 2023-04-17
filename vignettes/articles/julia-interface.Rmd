@@ -1,5 +1,7 @@
 ---
 title: "Julia interface"
+description: |
+  Interacting with Julia regression models from R using {JuliaConnectoR}
 ---
 
 ```{r, include = FALSE}
@@ -69,6 +71,28 @@ Note that `jlmer()` and `to_lmer()` are just conveniences for sanity checking th
 ## Julia global options
 
 All functions involved in the cluster-based permutation analysis print progress bars that update in real time in the console. The function `julia_progress()` controls whether to `show` the progress bar and the `width` of the printed progress bar.
+
+```{r julia_progress}
+# Set Julia progress options and save old state
+old_progress_opts <- julia_progress(show = FALSE, width = 30)
+old_progress_opts
+#> $show
+#> [1] TRUE
+#>
+#> $width
+#> [1] 50
+print( julia_progress() )
+#> $show
+#> [1] FALSE
+#>
+#> $width
+#> [1] 30
+
+# Restored old state
+julia_progress(old_progress_opts)
+identical(old_progress_opts, julia_progress())
+#> [1] TRUE
+```
 
 ## The Julia environment
 

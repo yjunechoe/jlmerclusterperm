@@ -1,5 +1,7 @@
 ---
 title: "Tidying output"
+description: |
+  Collecting {jlmerclusterperm} objects as tidy data frames
 ---
 
 ```{r, include = FALSE}
@@ -153,9 +155,7 @@ In the case of the one-fell-swoop function `clusterpermute()`, the `<null_cluste
 system.time({
   full_test <- clusterpermute(jlmer_spec, threshold = 1, nsim = 1000, progress = FALSE)
 })
-names(full_test)
-full_test$null_cluster_dists
-full_test$empirical_clusters
+full_test
 ```
 
 You can `tidy()` the elements of this list with `lapply()` or `purrr::map()`:
