@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 
 The data comes from an eye-tracking study by [Garrison et al. (2020)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7456569/) "Familiarity plays a small role in noun comprehension at 12-18 months", by way of the [peekbankr](https://langcog.github.io/peekbank-website/) corpus package.
 
-The original study used a growth curve model to analyze children's looks to an object when it was **familiar** ("own") vs. unfamiliar ("Other") at different **ages** (median-split into "younger" and "older" groups). We will not be replicating that specific analysis here.
+The original study used a growth curve model to analyze children's looks to an object when it was **familiar** ("own") vs. unfamiliar ("other") at different **ages** (median-split into "younger" and "older" groups). We will not be replicating that specific analysis here.
 
 Instead, we will follow [Katie Von Holzen's tutorial](https://kvonholzen.github.io/Macquarie_Presentation_buddy.html) which used this dataset to conduct a simpler, cluster-based permutation analysis (CPA) of differences between the two age groups in the proportion of looks to the target. The tutorial used the [eyetrackingR](http://www.eyetracking-r.com/) package for both [data preparation](http://www.eyetracking-r.com/vignettes/preparing_your_data) and [CPA](http://www.eyetracking-r.com/vignettes/divergence), but this vignette will use `{dplyr}` and `jlmerclusterperm` for those tasks, respectively.
 
@@ -46,9 +46,9 @@ ts_data <- ts_window |>
   mutate(
     target = aoi == "target",
     missing = aoi == "missing",
-    age = factor(age_binned, c("Older", "Younger"))
+    age = factor(age_binned, c("Younger", "Older"))
   ) |>
-  select(age, subject_id, trial_id, time = t_norm, target, missing)
+  select(subject_id, age, trial_id, time = t_norm, target, missing)
 
 # Data of subject mean proportions
 ts_data_agg <- ts_data |>
@@ -58,7 +58,7 @@ ts_data_agg <- ts_data |>
 # Trial-level 0-1 data
 ts_data_trials <- ts_data %>%
   filter(!missing) %>%
-  select(-missing) %>%
+  select(subject_id, age, trial_id, time, target) %>%
   mutate(target = as.integer(target))
 ```
 
@@ -67,7 +67,7 @@ ts_data_trials <- ts_data %>%
 The data `ts_data_agg` that I will be using to replicate the tutorial has just 4 columns which are relevant for the cluster-permutation analysis:
 
 - `subject_id`: Unique identifier for subjects
-- `age`: A between-participant factor variable (`"Older"` vs. `"Younger"`)
+- `age`: A between-participant factor variable (`"Younger"`, `"Older"`)
 - `time`: A continuous measure of time from 0-3975
 - `prop`: A by-subject proportion of looks to the target object
 
@@ -95,7 +95,7 @@ tutorial_fig
 
 ## Outline
 
-This case study will highlight 5 features of doing a CPA with `jlmerclusterperm`:
+This case study vignette showcases four features of doing a CPA with `jlmerclusterperm`:
 
 1) Prepping data for CPA using `make_jlmer_spec()`
 
@@ -103,9 +103,8 @@ This case study will highlight 5 features of doing a CPA with `jlmerclusterperm`
 
 3) A modular, step-by-step approach to CPA
 
-4) A logistic regression approach over non-aggregated data of 1s and 0s
+4) Using logistic regression over trial-level data of 1s and 0s
 
-5) A mixed-effects model implementation of (3)
 
 Load the package and start the Julia instance with `jlmerclusterperm_setup()` before proceeding.
 
@@ -117,9 +116,9 @@ jlmerclusterperm_setup(verbose = FALSE)
 
 ## A) Prepping a specification object
 
-Conducting a cluster-based permutation analysis in `jlmerclusterm` starts with creating an object, which holds information about the data relevant for a CPA.
+Conducting a cluster-based permutation analysis in `jlmerclusterm` starts with creating a special **specification object**, which compiles information necessary for a CPA.
 
-The function `make_jlmer_spec()` returns the specification object of class `<jlmer_spec>`, which minimally requires two arguments:
+The function `make_jlmer_spec()` returns the specification object of class `<jlmer_spec>` and minimally requires two arguments:
 
 - `formula`: An R regression model formula
 - `data`: A data frame
@@ -133,17 +132,17 @@ simple_spec
 
 The printed display includes four pieces of information about the specification object:
 
-1) **Formula**: The model formula in Julia syntax. Here, it looks similar to the formula we provided, but with the contrasts "spelled out" (`age` becomes `ageYounger`)
+1) **Formula**: The model formula in Julia syntax. Here, it looks similar to the formula we provided, but with the contrasts "spelled out" (`age` becomes `ageOlder`)
 
-2) **Predictors**: A list of predictors in the form of ( _original_: <expanded> ). In this case, there is one predictor `age` which is expanded to `ageYounger` because "Older" is the reference level.
+2) **Predictors**: A list of predictors in the form of ( _original_ : expanded ). In this case, there is one predictor `age` which is expanded to `ageOlder` because it's treatment coded with "Younger" as the reference level.
 
 3) **Groupings**: These should be specified in the call to `make_jlmer_spec()`. They are empty for `simple_spec` because we only provided the `formula` and `data`.
 
-4) **Data**: A transformed dataframe whose columns are terms in the expanded formula. Note that contrast coding has been applied for discrete variables for `age` - it is now `ageYounger` with 0s representing "Older" and 1s representing "Younger".
+4) **Data**: A transformed dataframe whose columns are terms in the expanded formula. Note that contrast coding has been applied for discrete variables for `age` - it is now `ageOlder` with 0s representing "Younger" and 1s representing "Older".
 
-I start with this bare specification object because, while it lacks the necessary information for a CPA, we can use this for `jlmerclusterperm`'s simple interface to Julia regression models.
+We start with this bare specification object because, while it lacks some parts for a CPA, we can use this for `jlmerclusterperm`'s simple interface to Julia regression models.
 
-The function `jlmer()` takes this specification object as input and returns a Julia regression model. This model represents a "global" model fitted over the entire data, oblivious to its time-series properties.
+The function `jlmer()` takes this specification object as input and returns a Julia regression model. This model represents a "global" model fitted over the entire data, collapsing across time.
 
 ```{r global_jmod}
 global_jmod <- jlmer(simple_spec)
@@ -159,15 +158,10 @@ tidy(global_rmod)
 ```
 
 <div class="callout" style="font-size:0.9em">
-We raise this tangent on `jlmer()` because we recommended sanity-checking the design and output of a global model prior to using the same model specifications for CPA. This is especially the case when `make_jlmer_spec()` internally converts the formula and data to be suitable for regression modelling in Julia - you want to make sure that the output is comparable to what you would expect in R. The global model can also tell you the upper bound for model complexity - if the global model has singular fit, the time-wise models fitted to subsets of the data likely will do too.
+We raise this tangent on `jlmer()` because we recommend sanity-checking the design and output of a global model prior to using the same model specifications for a CPA. Because regression models are fit in Julia "under the hood", you want to make sure that the output is comparable to what you would expect in R. The global model can also tell you the upper bound for model complexity. For example, if the global model has singular fit, the time-wise models fitted to subsets of the data likely will do too.
 </div>
 
 Functions for CPA also take a `<jlmer_spec>` object but require information about time (to calculate time-wise statistics) and subject/trial (for bootstrapped permutation). The `ts_data_agg` data does not have trial-level information because it has been summarized by subject, so we just leave that out.
-
-<div class="callout" style="font-size:0.9em">
-For CPA, `trial` can be ommitted from the `<jlmer_spec>` object only if each time sample/bin is uniquely identified by subject. Otherwise, `trial` should be a column in the data that uniquely identifies each time values within subject (for example, a column for items in a counterbalanced designed where participant sees every item in only one of its variants).
-</div>
-
 
 ```{r ts_data_agg_spec}
 ts_data_agg_spec <- make_jlmer_spec(
@@ -178,13 +172,17 @@ ts_data_agg_spec <- make_jlmer_spec(
 ts_data_agg_spec
 ```
 
+<div class="callout" style="font-size:0.9em">
+The `trial` argument can be omitted from the `<jlmer_spec>` object only if each time sample/bin is uniquely identified by subject. Otherwise, `trial` should be a column in the data that uniquely identifies each time values within subject (for example, a column for items in a counterbalanced designed where participant sees every item in only one of its variants).
+</div>
+
 ## B) CPA with `clusterpermute()`
 
-The `clusterpermute()` function runs a CPA in one go, using information from a `<jlmer_spec>` object. In addition to the specification object, you must also supply the (t-value) threshold and the number of simulations:
+The `clusterpermute()` function runs a CPA in one go, using information from a `<jlmer_spec>` object. In addition to the specification object, you must also supply the (t-value) threshold and the number of simulations to run:
 
 ```{r clusterpermute}
 CPA_agg <- clusterpermute(
-  jlmer_spec = ts_data_agg_spec,
+  ts_data_agg_spec,
   threshold = 2,
   nsim = 100,
   progress = FALSE # Suppress printing of progress for vignette
@@ -193,7 +191,7 @@ CPA_agg <- clusterpermute(
 
 The result is a list of two elements:
 
-1) A `<null_cluster_dists>` object which holds information about the distribution of bootstrapped cluster-mass statistics:
+1) A `<null_cluster_dists>` object which holds information about the distribution of the bootstrapped cluster-mass statistics from random permutations of the data:
 
     ```{r CPA_agg-null}
 CPA_agg$null_cluster_dists
@@ -205,11 +203,11 @@ CPA_agg$null_cluster_dists
 CPA_agg$empirical_clusters
     ```
 
-This output explained more in the next section, but for presented purposes simply note that the results are very similar to that reported in [Katie Von Holzen's tutorial](https://kvonholzen.github.io/Macquarie_Presentation_buddy.html), copied below. The minor numerical differences are due to the stochastic nature of the permutation.
+The output is explained more in the next section, but for presented purposes simply note that the results are very similar to that reported in [Katie Von Holzen's tutorial](https://kvonholzen.github.io/Macquarie_Presentation_buddy.html), copied below.
 
 ```{r, echo = FALSE}
-cat("
-## Test Type:    t.test
+cat(
+"## Test Type:    t.test
 ## Predictor:    age_binned
 ## Formula:  Prop ~ age_binned
 ## Null Distribution   ======
@@ -221,13 +219,15 @@ cat("
 ## 1       1  Positive    74.723687       850    1550       0.051
 ## 2       2  Positive     6.905622      2725    2800       0.405
 ## 3       3  Positive    46.294644      3500    3925       0.111
-")
+"
+)
 ```
 
+The minor numerical differences are due to the stochastic nature of the permutation test and because we're comparing t-tests in R to regression models in Julia.
 
 ## C) A step-by-step approach
 
-The `clusterpermute()` function consists of five parts, which are all standalone functions in the package:
+The `clusterpermute()` function showcased above consists of five parts, all of which are also standalone functions in the package:
 
 - `compute_timewise_statistics()`
 - `extract_empirical_clusters()`
@@ -235,13 +235,13 @@ The `clusterpermute()` function consists of five parts, which are all standalone
 - `extract_null_cluster_dists()`
 - `calculate_clusters_pvalues()`
 
-These functions are called internally by `clusterpermute()` and correspond to the algorithmic steps of the statistical test. While `clusterpermute()` obviates the need to think about these individual components, knowing them gives you a greater flexibility over the procedure.
+These functions correspond to the algorithmic steps of the statistical test. While `clusterpermute()` obviates the need to think about these individual components, knowing them gives you a greater flexibility over the procedure.
 
 This section walks through the CPA step-by-step using these functions.
 
 ### 1) Empirical clusters
 
-The `compute_timewise_statistics()` function takes a `<jlmer_spec>` object and returns a matrix t-values for each predictor (row) from models fitted to each time point (column). 
+The `compute_timewise_statistics()` function takes a `<jlmer_spec>` object and returns the **timewise statistics** in the form of a matrix where each row is a predictor and each column is a time point: 
 
 ```{r timewise_statistics}
 empirical_statistics <- compute_timewise_statistics(ts_data_agg_spec)
@@ -249,25 +249,25 @@ dim(empirical_statistics)
 empirical_statistics[1, 1:5, drop = FALSE] # First 5 time points
 ```
 
-For example we see that at 25ms, the t-value for `age` is `r round(empirical_statistics[1,2], 3)` - this is consistent with the figure we replicated above which show the two lines overlapping.
+For example we see that at 25ms, the t-value for `age` is `r round(empirical_statistics[1,2], 3)`. This is consistent with the figure from the tutorial replicated above which show the two lines mostly overlapping.
 
 Just for demonstration purposes, we use `to_jlmer()` quickly fit a model using the same formula to just the data at 25ms. We see that the t-value for `age` from this model is exactly the same as what we saw above:
 
 ```{r jlmer-timepoint}
 to_jlmer(prop ~ 1 + age, data = filter(ts_data_agg, time == 25)) %>%
   tidy() %>%
-  filter(term == "ageYounger") %>%
+  filter(term == "ageOlder") %>%
   pull(statistic)
 ```
 
-We then construct clusters from these timewise statistics from the observed time series data. Clusters are defined as a continuous span of statistics whose absolute value pass a certain threshold (and are all of the same sign). The `extract_empirical_clusters()` function takes the timewise statistics and a threshold to do just that:
+We then construct the **empirical clusters** from the timewise statistics. Clusters are defined as a continuous span of statistics of the same sign whose absolute value passes a certain threshold. The `extract_empirical_clusters()` function takes the timewise statistics and a threshold to do just that:
 
 ```{r extract_empirical_clusters}
 empirical_clusters <- extract_empirical_clusters(empirical_statistics, threshold = 2)
 empirical_clusters
 ```
 
-With a t-value threshold of 2, we detect three clusters in the data for the main effect of age (`ageYounger`). The numbers in brackets show the span of the cluster and the number to the right show the sum of the t-values in the cluster (a.k.a. the **cluster-mass statistic**). 
+With a t-value threshold of 2, we detect three clusters in the data for the main effect of age (`ageOlder`). The numbers in brackets show the span of the cluster and the number to the right show the sum of the t-values in the cluster (a.k.a. the **cluster-mass statistic**). 
 
 We can collect this `<empirical_clusters>` object as a data frame with `tidy()`:
 
@@ -276,7 +276,7 @@ empirical_clusters_df <- tidy(empirical_clusters)
 empirical_clusters_df
 ```
 
-And add it to the figure as well:
+And add it to the figure above:
 
 ```{r tutorial_fig-eclusters, message=FALSE}
 tutorial_fig +
@@ -297,15 +297,13 @@ tutorial_fig +
   )
 ```
 
-But by this point we do not know whether the size of the clusters (in sum of t-values) that we observe are probable by chance. We need to compare against a null distribution for the answer.
+But by this point we do not know whether the size of the clusters that we observe are probable by chance. We need to simulate the null to calculate this probability.
 
 ### 2) Null distribution
 
-The `permute_timewise_statistics()` takes a specification object and the number of data to simulate via bootstrapped permutation.
+The `permute_timewise_statistics()` function takes a specification object and the number of bootstrapped permutation of the data to simulate (via the `nsim` argument).
 
-The permutation algorithm preserves the grouping structures of the data as specified in the specification object; when testing a between-subject predictor like `age`, the age groups of participants are random swapped while preserving the temporal structure of the data.
-
-The returned 3-dimensional array is like the output of `compute_timewise_statistics()` except with the additional dimension representing simulations:
+The returned 3-dimensional array is like the output of `compute_timewise_statistics()` except with an additional dimension representing each simulation:
 
 ```{r null_statistics}
 null_statistics <- permute_timewise_statistics(ts_data_agg_spec, nsim = 100)
@@ -315,23 +313,27 @@ dim(null_statistics)
 null_statistics[1:3, 1:5, 1, drop = FALSE]
 ```
 
-The null distribution is a collection of the _largest_ cluster-mass statistic from each simulated data. If no clusters are detected in a simulation, it contributes a cluster-mass of zero. 
+<div class="callout" style="font-size:0.9em">
+The permutation algorithm preserves the grouping structures of the data as specified in the specification object. For example, when testing a between-subject predictor like `age`, the age groups of participants are random swapped while preserving the temporal structure of the data.
+</div>
 
-We use the `extract_null_cluster_dists()` function to do this, using the same threshold value of 2 to allow comparison with the empirical clusters:
+The null distribution is a collection of the _largest_ cluster-mass statistic from each simulated data. If no clusters are detected in a simulation, it contributes a cluster-mass of _zero_ to the null.
+
+We use `extract_null_cluster_dists()` to construct the null distribution, using the same threshold value of 2 to allow for a comparison with the empirical clusters:
 
 ```{r null_cluster_dists}
 null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2)
 null_cluster_dists
 ```
 
-The returned `<null_cluster_dists>` object prints summary statistics. You can you `tidy()` to collect the samples from the null into a data frame:
+When printed, the returned `<null_cluster_dists>` object shows summary statistics. You can use `tidy()` to collect the samples from the null into a data frame:
 
 ```{r null_cluster_dists_df}
 null_cluster_dists_df <- tidy(null_cluster_dists)
 null_cluster_dists_df
 ```
 
-This can also be plotted:
+The null distribution can be plotted like so:
 
 ```{r plot-null_cluster_dists}
 plot(
@@ -340,16 +342,20 @@ plot(
 )
 ```
 
-Now all that is left is to test the probability of observing cluster-mass statistics as extreme as that of the detected clusters in `empirical_clusters` from `null_cluster_dists`.
+Now all that is left is to test the probability of observing cluster-mass statistics as extreme as that of the detected clusters in `empirical_clusters`, using `null_cluster_dists` as reference.
 
 ### 3) Significance test
 
-The `calculate_clusters_pvalues()` function computes the p-value for each cluster and returns an augmented `<empirical_clusters>` object:
+The `calculate_clusters_pvalues()` function computes the p-value for each empirical cluster and returns an augmented `<empirical_clusters>` object:
 
 ```{r empirical_clusters_tested}
 empirical_clusters_tested <- calculate_clusters_pvalues(empirical_clusters, null_cluster_dists)
 empirical_clusters_tested
 ```
+
+<div class="callout" style="font-size:0.9em">
+Again, the p-values are slightly different because the test is stochastic. A separate vignette covers issues of replicability, seed, and rng.
+</div>
 
 When collected with `tidy()`, the p-values are added as a column:
 
@@ -357,20 +363,188 @@ When collected with `tidy()`, the p-values are added as a column:
 tidy(empirical_clusters_tested)
 ```
 
-Note that when reporting the pvalues, it's customary to adding 1 to the numerator and denominator. This is because the observed data, however unlikely, is itself one particular arrangement (permutation) of the data. This is controlled via the `add1` argument - it is false by default in `calculate_clusters_pvalues()` but true by default in `clusterpermute()`.
+Note that when reporting pvalues, it's customary to add 1 to the numerator and denominator. This is because the observed data, however unlikely, is itself one particular arrangement (permutation) of the data. This is controlled via the `add1` argument - it is false by default in `calculate_clusters_pvalues()` but true in `clusterpermute()`.
 
 ```{r add1-calculate_clusters_pvalues}
 calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1 = TRUE)
 ```
 
-This completes the full picture: the pvalue-augmented `<empirical_clusters>` object, along with the `<null_clusters_object>` object, are also what the `clusterpermute()` function returned above.
+We have now come full circle: the pvalue-augmented `<empirical_clusters>` object, along with the `<null_cluster_dists>` object, are also what the `clusterpermute()` function returned above.
 
 ## D) As logistic regression
 
-## E) With random effects
+### Aggregated vs. trial-level data
 
-subject means = complete pooling
+The data that we have been using so far is an _aggregated_ data which collapsed across trials within each subject. In other words, there is exactly one measure of the _proportion_ of looks to the target per time point within subject:
 
-binom FE = higher temporal resolution but no pooling
+```{r agg}
+nrow(ts_data_agg)
+ts_data_agg %>% 
+  distinct(subject_id, time) %>% 
+  nrow()
+```
 
-binom RE = best of both worlds
+It is possible to also fit a **logistic regression model** over the trial-level measure of "hits" (1s and 0s) on the target area of interest. This un-aggregated, trial-level data comes from the data preparation code at the top of this vignette.
+
+```{r unagg}
+ts_data_trials
+```
+
+To demonstrate the relationship between the two data sets:
+
+```{r}
+identical(
+  ts_data_agg,
+  ts_data_trials %>% 
+    group_by(subject_id, age, time) %>% 
+    summarize(prop = mean(target), .groups = "drop")
+)
+```
+
+The specification object for fitting logistic regression models to the trial-level data requires two changes from the original:
+
+1) The formula must predict the binary `target` variable, instead of `prop`
+
+2) A `trial` grouping must be specified to uniquely identify each time point within each subject
+
+The following is the appropriate `<jlmer_spec>` object for a CPA using logistic regression:
+
+```{r ts_data_trial_spec}
+ts_data_trial_spec <- make_jlmer_spec(
+  formula = target ~ 1 + age, data = ts_data_trials,
+  subject = "subject_id", trial = "trial_id", time = "time"
+)
+ts_data_trial_spec
+```
+
+Again, we sanity check with a global model using `family = "binomial"`:
+
+```{r global_jmod_binom}
+global_jmod_binom <- jlmer(ts_data_trial_spec, family = "binomial")
+tidy(global_jmod_binom)
+```
+
+The estimates are similar to that of `global_jmod` in the previous section, but in log-odds.
+
+### Repeating the CPA with logistic regression
+
+We repeat the same procedure from above but use our new specification object and set `family = "binomial"`:
+
+```{r binom-clusterpermute}
+empirical_statistics_binom <- compute_timewise_statistics(ts_data_trial_spec, family = "binomial")
+empirical_clusters_binom <- extract_empirical_clusters(empirical_statistics_binom, threshold = 2)
+empirical_clusters_binom
+```
+
+Instead of `r nrow(empirical_clusters_df)` clusters, we now detect `r nrow(empirical_clusters_binom[[1]])`. We can annotate the detected clusters on the time series data as we did above:
+
+<details>
+<summary>Plotting code</summary>
+
+```{r tutorial_fig-eclusters_binom, eval=FALSE}
+empirical_clusters_binom_df <- tidy(empirical_clusters_binom)
+tutorial_fig +
+  geom_segment(
+    aes(x = start, xend = end, y = -Inf, yend = -Inf),
+    linewidth = 10, color = "steelblue",
+    inherit.aes = FALSE,
+    data = empirical_clusters_binom_df
+  ) +
+  geom_text(
+    aes(
+      y = -Inf, x = start + (end - start) / 2,
+      label = paste("Cluster", id)
+    ),
+    vjust = -2,
+    inherit.aes = FALSE,
+    data = empirical_clusters_binom_df
+  )
+```
+
+</details>
+
+```{r tutorial_fig-eclusters_binom, eval=TRUE, message=FALSE}
+```
+
+The differences we see between the aggregated vs. trial-level data here are completely expected and follow straightforwardly from the following two facts:
+
+1) The cluster-mass statistic is derived from the size of **t-values** at each time point, not the **effect size**. By virtue of the unaggregated `ts_data_trials` data having more number of observations, the t-values are overall _inflated_ where there is a difference in means (we also see this in the output of `global_jmod` vs. `global_jmod_binom` as well).
+
+2) Whereas the aggregated data reflects a **complete pooling** over trial-level variation, the binomial model over trial-level data performs **no pooling** and treats each trial as independent. Thus, if a certain item in the experiment show an _outlier_ effect at one time point, for example, then that will strongly influence the mass of any cluster spanning over that given time point.
+
+The first issue (inflated statistics) is trivial and just takes a matter of adjusting the threshold. In fact, this is good because by "stretching out" the t-statistics, we get a higher _resolution_ for the shape of the timewise statistics. However. the second issue (no pooling) is troubling because it can _warp_ the fundamental shape of the timewise statistics.
+
+We diagnose these factors by visualizing the **timewise statistics**. We also plot timewise statistics from the aggregated data for comparison:
+
+```{r timewise_statistics_fig}
+timewise_statistics_fig <- ggplot(mapping = aes(time, statistic)) +
+  geom_hline(aes(yintercept = 0)) +
+  geom_line(
+    aes(color = "aggregated"), linewidth = 1.5,
+    data = tidy(empirical_statistics)
+  ) +
+  geom_line(
+    aes(color = "trial-level"), linewidth = 1.5,
+    data = tidy(empirical_statistics_binom)
+  )
+timewise_statistics_fig +
+  geom_vline(
+    aes(xintercept = time),
+    data = tidy(empirical_statistics_binom) %>% 
+      slice(which.max(abs(statistic)))
+  )
+```
+
+We see that the trial-level binomial model has overall inflated t-values, as well as more pronounced "peaks" (specifically the maximum at 1300ms). A separate vignette covers a middle-ground, *partial pooling* approaching using mixed-effects models, and its consequences for CPA.
+
+For present purposes, we raise the threshold to a value (of `2.8`) which gets us close to detecting at least the same _largest_ cluster from `empirical_statistics`, spanning 850ms-1525ms:
+
+```{r empirical_clusters_binom2}
+empirical_clusters_binom2 <- extract_empirical_clusters(empirical_statistics_binom, threshold = 2.8)
+empirical_clusters_binom2
+```
+
+We run the cluster permutation test with this threshold for just the largest cluster:
+
+```{r CPA_trial}
+CPA_trial <- clusterpermute(
+  ts_data_trial_spec,
+  family = "binomial",
+  threshold = 2.8,
+  nsim = 100,
+  top_n = 1,       # Just test the largest cluster
+  progress = FALSE # Suppress printing of progress for vignette
+)
+```
+
+This gives us a pvalue for the cluster spanning from 850ms to 1525ms that is similar to the one reported for the aggregated data:
+
+```{r CPA_trial-result}
+CPA_trial$empirical_clusters
+
+CPA_agg$empirical_clusters
+```
+
+These appear to converge at a higher `nsim` for this data set. Here, we use `reset_rng_state()` to make them generate the same permutations and time the 1000-simulation runs:
+
+```{r CPA_agg_1000}
+system.time({
+  reset_rng_state()
+  CPA_agg_1000 <- clusterpermute(
+    ts_data_agg_spec, threshold = 2,
+    nsim = 1000, top_n = 1, progress = FALSE
+  )
+})
+CPA_agg_1000$empirical_clusters
+```
+
+```{r CPA_trial_1000}
+system.time({
+  reset_rng_state()
+  CPA_trial_1000 <- clusterpermute(
+    ts_data_trial_spec, family = "binomial", threshold = 2.8,
+    nsim = 1000, top_n = 1, progress = FALSE
+  )
+})
+CPA_trial_1000$empirical_clusters
+```
