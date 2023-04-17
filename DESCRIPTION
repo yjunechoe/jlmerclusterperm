@@ -37,6 +37,8 @@ Suggests:
     tibble
 VignetteBuilder: 
     knitr
+Remotes: 
+    langcog/peekbankr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
@@ -59,5 +61,3 @@ Collate:
     'threshold_search.R'
     'tidy.R'
     'zzz.R'
-Remotes:  
-    langcog/peekbankr
