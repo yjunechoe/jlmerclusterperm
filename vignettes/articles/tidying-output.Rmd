@@ -13,6 +13,7 @@ knitr::opts_chunk$set(
 
 This vignette showcases `tidy()` and other ways of collecting `{jlmerclusterperm}` objects as [tidy data](https://r4ds.had.co.nz/tidy-data.html).
 
+See more tutorials and vignettes on the [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles) page.
 
 ### Setup
 

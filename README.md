@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![Development
+Version](https://img.shields.io/badge/devel%20version-0.1.0-blue.svg)](https://github.com/yjunechoe/jlmerclusterperm)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml)
@@ -12,13 +14,13 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 
 Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and
 [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl)
-implementation of bootstrapped cluster-based permutation analysis for
-time series data, powered by
+implementation of bootstrapped cluster-based permutation analysis (CPA)
+for time series data, powered by
 [`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR).
 
 ![](man/figures/clusterpermute_slice.png)
 
-## Installation
+## Installation and usage
 
 You can install the development version of jlmerclusterperm from
 [GitHub](https://github.com/yjunechoe/jlmerclusterperm) with:
@@ -53,11 +55,12 @@ enjoy blazingly-fast functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.02    0.01   28.00
+#>    0.00    0.04   27.94
 ```
 
 See the
 [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles/) page
+on the [package website](https://github.com/yjunechoe/jlmerclusterperm)
 for in-depth tutorials and case study vignettes.
 
 ## Quick tour of package functionalities
@@ -212,7 +215,7 @@ tidy(empirical_statistics)
 ```
 
 ``` r
-matplot(t(empirical_statistics), type = "l", ylab = "t-value")
+matplot(t(empirical_statistics), type = "l", lwd = 3, ylab = "t-value")
 abline(h = 2.5, lty = 3)
 ```
 
@@ -239,6 +242,18 @@ Simulating the null:
 set_rng_state(123L)
 null_statistics <- permute_timewise_statistics(chickweights_spec, nsim = 100)
 null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2.5)
+null_cluster_dists
+#> ── Null cluster-mass distribution (t > 2.5) ──────────── <null_cluster_dists> ──
+#> Diet2 (n = 100)
+#>   Mean (SD): -0.039 (1.89)
+#>   Coverage intervals: 95% [-2.862, 0.000]
+#> Diet3 (n = 100)
+#>   Mean (SD): -0.129 (2.02)
+#>   Coverage intervals: 95% [0.000, 0.000]
+#> Diet4 (n = 100)
+#>   Mean (SD): 0.296 (3.21)
+#>   Coverage intervals: 95% [0.000, 5.797]
+#> ────────────────────────────────────────────────────────────────────────────────
 ```
 
 Significance testing:
@@ -255,11 +270,11 @@ calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1 = TRUE)
 #> ────────────────────────────────────────────────────────────────────────────────
 ```
 
-Testing a range of thresholds values:
+Testing a range of threshold values:
 
 ``` r
 walk_threshold_steps(
-  empirical_statistics,null_statistics,
+  empirical_statistics, null_statistics,
   threshold_steps = c(2, 2.5, 3)
 )
 #> # A tibble: 9 × 8

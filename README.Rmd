@@ -16,15 +16,16 @@ knitr::opts_chunk$set(
 # jlmerclusterperm
 
 <!-- badges: start -->
+[![Development Version](https://img.shields.io/badge/devel%20version-0.1.0-blue.svg)](https://github.com/yjunechoe/jlmerclusterperm)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) implementation of bootstrapped cluster-based permutation analysis for time series data, powered by [`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR).
+Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) implementation of bootstrapped cluster-based permutation analysis (CPA) for time series data, powered by [`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR).
 
 ![](man/figures/clusterpermute_slice.png)
 
-## Installation
+## Installation and usage
 
 You can install the development version of jlmerclusterperm from [GitHub](https://github.com/yjunechoe/jlmerclusterperm) with:
 
@@ -45,7 +46,7 @@ library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 ```
 
-See the [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles/) page for in-depth tutorials and case study vignettes.
+See the [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles/) page on the [package website](https://github.com/yjunechoe/jlmerclusterperm) for in-depth tutorials and case study vignettes.
 
 ## Quick tour of package functionalities
 
@@ -136,7 +137,7 @@ tidy(empirical_statistics)
 ```
 
 ```{r plot-empirical_statistics}
-matplot(t(empirical_statistics), type = "l", ylab = "t-value")
+matplot(t(empirical_statistics), type = "l", lwd = 3, ylab = "t-value")
 abline(h = 2.5, lty = 3)
 ```
 
@@ -153,6 +154,7 @@ Simulating the null:
 set_rng_state(123L)
 null_statistics <- permute_timewise_statistics(chickweights_spec, nsim = 100)
 null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2.5)
+null_cluster_dists
 ```
 
 Significance testing:
@@ -161,11 +163,11 @@ Significance testing:
 calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1 = TRUE)
 ```
 
-Testing a range of thresholds values:
+Testing a range of threshold values:
 
 ```{r walk_threshold_steps}
 walk_threshold_steps(
-  empirical_statistics,null_statistics,
+  empirical_statistics, null_statistics,
   threshold_steps = c(2, 2.5, 3)
 )
 ```

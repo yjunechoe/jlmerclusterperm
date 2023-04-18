@@ -12,6 +12,12 @@ knitr::opts_chunk$set(
 )
 ```
 
+This vignette showcases ways of interacting with pointers to `{jlmerclusterperm}` Julia objects from R using [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR).
+
+See more tutorials and vignettes on the [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles) page.
+
+### Setup
+
 ```{r setup}
 library(jlmerclusterperm)
 jlmerclusterperm_setup(verbose = FALSE)
@@ -81,7 +87,7 @@ old_progress_opts
 #>
 #> $width
 #> [1] 50
-print( julia_progress() )
+print(julia_progress())
 #> $show
 #> [1] FALSE
 #>

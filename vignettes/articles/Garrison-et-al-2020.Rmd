@@ -11,9 +11,13 @@ knitr::opts_chunk$set(
 )
 ```
 
+This tutorial is a walkthrough of basic package features for conducting CPA and the components of a CPA.
+
+See more tutorials and vignettes on the [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles) page.
+
 ## Background
 
-The data comes from an eye-tracking study by [Garrison et al. (2020)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7456569/) "Familiarity plays a small role in noun comprehension at 12-18 months", by way of the [peekbankr](https://langcog.github.io/peekbank-website/) corpus package.
+The data comes from an eye-tracking study by [Garrison, Baudet, Breitfield, Aberman, & Bergelson (2020)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7456569/) "Familiarity plays a small role in noun comprehension at 12-18 months", by way of the [peekbankr](https://langcog.github.io/peekbank-website/) corpus package.
 
 The original study used a growth curve model to analyze children's looks to an object when it was **familiar** ("own") vs. unfamiliar ("other") at different **ages** (median-split into "younger" and "older" groups). We will not be replicating that specific analysis here.
 
@@ -55,7 +59,7 @@ ts_data <- ts_window |>
 # Data of subject mean proportions
 ts_data_agg <- ts_data |>
   group_by(subject_id, age, time) |>
-  summarize(prop = sum(target)/sum(!missing), .groups = "drop")
+  summarize(prop = sum(target) / sum(!missing), .groups = "drop")
 
 # Trial-level 0-1 data
 ts_data_trials <- ts_data %>%
@@ -70,7 +74,7 @@ The data `ts_data_agg` that I will be using to replicate the tutorial has just 4
 
 - `subject_id`: Unique identifier for subjects
 - `age`: A between-participant factor variable (`"Younger"`, `"Older"`)
-- `time`: A continuous measure of time from 0-3975
+- `time`: A continuous measure of time from 0-3975ms at 25ms intervals
 - `prop`: A by-subject proportion of looks to the target object
 
 ```{r ts_data_agg}
@@ -99,13 +103,13 @@ tutorial_fig
 
 This case study vignette showcases four features of doing a CPA with `jlmerclusterperm`:
 
-1) Prepping data for CPA using `make_jlmer_spec()`
+A) Prepping data for CPA using `make_jlmer_spec()`
 
-2) CPA in one go with `clusterpermute()`
+B) CPA in one go with `clusterpermute()`
 
-3) A modular, step-by-step approach to CPA
+C) A modular, step-by-step approach to CPA
 
-4) Using logistic regression over trial-level data of 1s and 0s
+D) Using logistic regression over trial-level data of 1s and 0s
 
 
 Load the package and start the Julia instance with `jlmerclusterperm_setup()` before proceeding.
@@ -127,7 +131,7 @@ The function `make_jlmer_spec()` returns the specification object of class `<jlm
 
 For example, to model `prop` using `age` as a predictor for the `ts_data_agg` data:
 
-```{r}
+```{r simple_spec}
 simple_spec <- make_jlmer_spec(formula = prop ~ 1 + age, data = ts_data_agg)
 simple_spec
 ```
@@ -202,7 +206,7 @@ The output is explained more in the next section, but for presented purposes sim
 
 ```{r, echo = FALSE}
 cat(
-"## Test Type:    t.test
+  "## Test Type:    t.test
 ## Predictor:    age_binned
 ## Formula:  Prop ~ age_binned
 ## Null Distribution   ======
@@ -374,8 +378,8 @@ The data that we have been using so far is an _aggregated_ data which collapsed 
 
 ```{r agg}
 nrow(ts_data_agg)
-ts_data_agg %>% 
-  distinct(subject_id, time) %>% 
+ts_data_agg %>%
+  distinct(subject_id, time) %>%
   nrow()
 ```
 
@@ -390,8 +394,8 @@ To demonstrate the relationship between the two data sets:
 ```{r}
 identical(
   ts_data_agg,
-  ts_data_trials %>% 
-    group_by(subject_id, age, time) %>% 
+  ts_data_trials %>%
+    group_by(subject_id, age, time) %>%
     summarize(prop = mean(target), .groups = "drop")
 )
 ```
@@ -475,17 +479,19 @@ We diagnose these factors by visualizing the **timewise statistics**. We also pl
 timewise_statistics_fig <- ggplot(mapping = aes(time, statistic)) +
   geom_hline(aes(yintercept = 0)) +
   geom_line(
-    aes(color = "aggregated"), linewidth = 1.5,
+    aes(color = "aggregated"),
+    linewidth = 1.5,
     data = tidy(empirical_statistics)
   ) +
   geom_line(
-    aes(color = "trial-level"), linewidth = 1.5,
+    aes(color = "trial-level"),
+    linewidth = 1.5,
     data = tidy(empirical_statistics_binom)
   )
 timewise_statistics_fig +
   geom_vline(
     aes(xintercept = time),
-    data = tidy(empirical_statistics_binom) %>% 
+    data = tidy(empirical_statistics_binom) %>%
       slice(which.max(abs(statistic)))
   )
 ```
@@ -507,7 +513,7 @@ CPA_trial <- clusterpermute(
   family = "binomial",
   threshold = 2.8,
   nsim = 100,
-  top_n = 1,       # Just test the largest cluster
+  top_n = 1, # Just test the largest cluster
   progress = FALSE # Suppress printing of progress for vignette
 )
 ```
@@ -524,9 +530,10 @@ These appear to converge at a higher `nsim` for this data set. We also time the 
 
 ```{r CPA_agg_1000}
 system.time({
-  reset_rng_state()
+  set_rng_state(123L)
   CPA_agg_1000 <- clusterpermute(
-    ts_data_agg_spec, threshold = 2,
+    ts_data_agg_spec,
+    threshold = 2,
     nsim = 1000, top_n = 1, progress = FALSE
   )
 })
@@ -535,9 +542,10 @@ CPA_agg_1000
 
 ```{r CPA_trial_1000}
 system.time({
-  reset_rng_state()
+  set_rng_state(123L)
   CPA_trial_1000 <- clusterpermute(
-    ts_data_trial_spec, family = "binomial", threshold = 2.8,
+    ts_data_trial_spec,
+    family = "binomial", threshold = 2.8,
     nsim = 1000, top_n = 1, progress = FALSE
   )
 })

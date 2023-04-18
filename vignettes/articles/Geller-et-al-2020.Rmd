@@ -1,0 +1,438 @@
+---
+title: "Geller et al. 2020"
+description: |
+  A walkthrough of t vs. chisq statistic in a (mixed-effects) CPA
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This tutorial is a walk through of the choice of t vs. chisq statistic in a (mixed-effects) CPA.
+
+See more tutorials and vignettes on the [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles) page.
+
+## Background
+
+The data comes from a lexical decision task using pupilometry (specifically, measure of pupil dilation) to study differences in processing difficulty between **print** vs. **cursive** script. The data is available as part of the [gazer](https://github.com/dmirman/gazer) package by [Geller, Winn, Mahr, & Mirman 2020](https://link.springer.com/article/10.3758/s13428-020-01374-8).
+
+We will follow [Jason Geller's tutorial](https://www.drjasongeller.com/blog/2020-gp-pup/) which used the [clusterperm](https://github.com/dalejbarr/clusterperm/) package to conduct a cluster-based permutation analysis (CPA) of differences in pupil size between the print and cursive conditions.
+
+The data from the package (`cursive_agg_data`) looks slightly different from that used in the tutorial, so to ensure full reproducibility we use the [snapshot of the data](https://raw.githubusercontent.com/jgeller112/drjasongeller/main/content/blog/2020-07-10-CBPT/blog_data.csv) that the tutorial used:
+
+```{r data, message = FALSE}
+library(dplyr)
+cursive_agg_data <- as_tibble(read.csv("https://raw.githubusercontent.com/jgeller112/drjasongeller/main/content/blog/2020-07-10-CBPT/blog_data.csv"))
+cursive_agg_data
+```
+
+The data comes prepared for this analysis out of the box. The following columns are relevant for our analysis:
+
+- `subject`: Unique identifier for subjects
+- `script`: A **within-participant** factor variable (`"cursive"`, `"print"`)
+- `time`: A continuous measure of time from 0-2500ms at 100ms intervals
+- `aggbaseline`: The response variable representing normalized ("baseline-corrected") pupil size
+
+As the name of the `cusrive_agg_data` variable suggests, the data has been aggregated within subject, collapsing across trials.
+
+The following reproduces the figure from the tutorial (it looks slightly different because [the data has been updated since](https://github.com/dmirman/gazer/commit/091d38f586640831dbfd87aae29965ecb0d2e253)):
+
+```{r script_fig, message = FALSE}
+library(ggplot2)
+script_fig <- ggplot(cursive_agg_data, aes(timebins, aggbaseline)) +
+  stat_summary(aes(linetype = script), geom = "line", linewidth = 1)
+script_fig
+```
+
+Note that for within-participant predictors like `script`, the permutation algorithm will randomly swap the labels for condition between the trials from each subject. This preserves the temporal structure of the data (no swapping below the trial-level grouping) and subject-level groupings of the data (no swapping of trials across participants).
+
+## Outline
+
+This case study vignette showcases five features of doing a CPA with `jlmerclusterperm`:
+
+A) Prepping data for CPA using `make_jlmer_spec()`
+
+B) `clusterpermute()` with default `statistic = "t"`
+
+C) A comparison between "t" and "chisq"
+
+D) Specifying random effects
+
+E) Contrast coding
+
+Load the package and start the Julia instance with `jlmerclusterperm_setup()` before proceeding.
+
+```{r pkg-setup}
+library(jlmerclusterperm)
+jlmerclusterperm_setup(verbose = FALSE)
+```
+
+
+## A) Prepping a specification object
+
+We start with a simple specification object to model `aggbaseline` using `script` as a predictor for the `script_fig` data:
+
+```{r simple_spec}
+simple_spec <- make_jlmer_spec(
+  formula = aggbaseline ~ 1 + script,
+  data = cursive_agg_data
+)
+simple_spec
+```
+
+For a sanity check, we fit a global model to the data...
+
+```{r jlmer-simple_spec}
+jlmer(simple_spec)
+```
+
+...and check that it's comparable to what we expect from `lm()`:
+
+```{r lm-simple_spec}
+summary(lm(formula = aggbaseline ~ 1 + script, data = cursive_agg_data))$coefficients
+```
+
+The _full_ specification object for a CPA must also declare the **grouping structures** present in the data. The rule of thumb is that **every observation (row) in the data must be uniquely identified by a combination of columns for `subject`, `trial`, and `time`**. Because CPA is over a time series data `time` must always be specified, and `subject` must also always be specified for the permutation algorithm to respect subject-level grouping of the data.
+
+The `cursive_agg_data` data collapses across trials within subject, so there is no column for trial. However, we cannot leave the `trial` argument unspecified because observations are not uniquely identified by `subject` and `time` alone. There are instead 2 rows per subject-time combination, one for each `script` condition:
+
+```{r non-uq}
+cursive_agg_data %>%
+  count(subject, timebins)
+```
+
+Therefore we need a "dummy" column for trial to distinctly mark "cursive" vs. "script" trials. We save this new data as `cursive_agg`:
+
+```{r cursive_agg}
+cursive_agg <- cursive_agg_data %>%
+  mutate(trial_type = paste0(script, "_agg"))
+cursive_agg
+```
+
+This makes all observations uniquely identified by the columns for `subject`, `trial`, and `time`:
+
+```{r all-uq}
+cursive_agg %>%
+  count(subject, timebins, trial_type) %>%
+  distinct(n)
+```
+
+The final specification object looks like the following:
+
+```{r cursive_agg_spec}
+cursive_agg_spec <- make_jlmer_spec(
+  formula = aggbaseline ~ 1 + script,
+  data = cursive_agg,
+  subject = "subject", trial = "trial_type", time = "timebins"
+)
+cursive_agg_spec
+```
+
+
+## B) CPA with default `statistic = "t"`
+
+The CPA output from the original tutorial (using 100 simulations) is copied below for comparison:
+
+```{r tutorial-results, echo=FALSE}
+cat(
+  "#> effect   b0	  b1  sign        cms	        p
+#> script    0	 100     1  10.121215	0.1584158
+#> script  900	1000    -1  8.756152	0.1782178
+#> script 1900	2500     1  82.198279	0.0099010
+"
+)
+```
+
+Using a threshold of 2 with the default `statistic = "t"`, `clusterpermute()` returns the following:
+
+```{r CPA}
+set_rng_state(123L)
+clusterpermute(
+  cursive_agg_spec,
+  statistic = "t", # Default value spelled out
+  threshold = 2,
+  nsim = 100,
+  progress = FALSE
+)
+```
+
+The results look very different from the original. This is due to the following:
+
+1) The cluster-mass statistic (cms) is lower. This is because we ran `clusterpermute()` with the default `statistic = "t"`.
+
+2) Different clusters are identified. This is because our simple model does not account for subject-level variation, whereas the original did this with the error term in the formula `aggbaseline ~ script + Error(subject)`.
+
+3) The sign on the cluster is reversed. This is because the defaults of `aov()` used in the original tutorial are different from the default contrast coding of our regression model.
+
+We now address these issue in turn, building up to a CPA that closely replicate the results of the tutorial.
+
+
+## C) Comparing "t" vs. "chisq"
+
+The original tutorial used `clusterperm::cluster_nhds()` to conduct a CPA, which fits ANOVA models by time. There, the timewise statistic used is **chi-squared** and the threshold is determined from the p-value of the chi-squared statistic.
+
+Using chi-squared statistics with p-value threshold is also supported in `clusterpermute()` using `statistic = "chisq"` (instead of the default `"t"`):
+
+```{r CPA-chisq}
+set_rng_state(123L)
+clusterpermute(
+  cursive_agg_spec,
+  statistic = "chisq",
+  threshold = 0.05, # Threshold is now the p-value of the chi-squared statistic
+  nsim = 100,
+  progress = FALSE
+)
+```
+
+This returns the same cluster but now with a larger cluster-mass statistic, as expected (chi-squared is asymptotic to t^2).
+
+Below, we compare the shape of the timewise statistics between "t" with threshold of 2 and "chisq" with threshold of p=0.05:
+
+```{r timewise-compare}
+timewise_ts <- compute_timewise_statistics(cursive_agg_spec, statistic = "t")
+timewise_chisqs <- compute_timewise_statistics(cursive_agg_spec, statistic = "chisq")
+library(ggplot2)
+timewise_fig <- ggplot(mapping = aes(x = time, y = statistic)) +
+  geom_line(
+    aes(color = "t"),
+    linewidth = 1.5,
+    data = tidy(timewise_ts)
+  ) +
+  geom_line(
+    aes(color = "chisq"),
+    linewidth = 1.5,
+    data = tidy(timewise_chisqs)
+  ) +
+  geom_hline(
+    aes(yintercept = c(-2, 2, qchisq(.95, df = 1), -qchisq(.95, df = 1))),
+    color = rep(c("#00BFC4", "#F8766D"), each = 2), linetype = 2
+  )
+timewise_fig
+```
+
+We find the same clusters identified between 2000ms-2300ms for both "t" and "chisq", with the peaks more pronounced for "chisq". The differences between the two measures are inconsequential for this example, but may produce different results in other cases.
+
+<div class="callout" style="font-size:0.9em">
+The chi-squared statistic (which `jlmerclusterperm` computes via a likelihood ratio test) is often preferred for testing single parameters because it makes less assumptions and tend to be more robust ([glmmFAQ](https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#model-diagnostics)). But because goodness-of-fit tests are at the level of a predictor in a model formula, "chisq" is less interpretatable for multi-level predictors (k-1 > 1). To tease apart the contribution of the individual levels of a predictor, it is recommended to use the `statistic = "t"` instead.
+</div>
+
+## D) Specifying random effects
+
+The biggest missing component at this point is the subject random effects, which the original tutorial's anova model specified via the error term `Error(subject)`. There isn't a strict equivalent to this in linear regression, but specifying random intercepts by subject with `(1 | subject)` gets us very close:
+
+```{r cursive_agg_spec_re}
+cursive_agg_spec_re <- make_jlmer_spec(
+  formula = aggbaseline ~ 1 + script + (1 | subject),
+  data = cursive_agg,
+  subject = "subject", time = "timebins", trial = "trial_type"
+)
+set_rng_state(123L)
+system.time({
+  re_CPA <- clusterpermute(
+    cursive_agg_spec_re,
+    statistic = "chisq",
+    threshold = 0.05,
+    nsim = 100,
+    progress = FALSE
+  )
+})
+re_CPA
+```
+
+We repeat the results from the original tutorial below for comparison:
+
+```{r tutorial-results, echo=FALSE}
+```
+
+We also plot the timewise statistics from the by-subject random intercept model:
+
+```{r timewise_fig-re}
+timewise_chisqs_re <- compute_timewise_statistics(cursive_agg_spec_re, statistic = "chisq")
+timewise_fig_re <- timewise_fig +
+  geom_line(
+    aes(color = "chisq-re-intercept"),
+    linewidth = 1.5,
+    data = tidy(timewise_chisqs_re)
+  )
+timewise_fig_re
+```
+
+At this point we may wonder whether the results change much if we used a maximal model with the random effects structure `(1 + script | subject)`. We first create a specification object with that formula:
+
+```{r cursive_agg_spec_re_max}
+cursive_agg_spec_re_max <- make_jlmer_spec(
+  formula = aggbaseline ~ 1 + script + (1 + script | subject),
+  data = cursive_agg,
+  subject = "subject", time = "timebins", trial = "trial_type"
+)
+```
+
+Then compute the timewise statistics. We find one by-time model with singular fit which isn't too troubling:
+
+```{r timewise_chisqs_re_max}
+timewise_chisqs_re_max <- compute_timewise_statistics(cursive_agg_spec_re_max, statistic = "chisq")
+```
+
+We find that the chisq statistics from the maximal model is virtually identical to that from the more parsimonious, intercept-only model (the two lines overlap):
+
+```{r timewise_fig_re2}
+timewise_fig_re +
+  geom_line(
+    aes(color = "chisq-re-max"),
+    linewidth = 1.5,
+    data = tidy(timewise_chisqs_re_max)
+  )
+```
+
+This becomes clearer when we plot the _difference_ in timewise statistics between the two - they're practically zero:
+
+```{r re-timewise-diff}
+ggplot(tidy(timewise_chisqs_re - timewise_chisqs_re_max)) +
+  geom_path(aes(x = time, y = statistic)) +
+  scale_y_continuous(labels = function(x) sprintf("%f", x))
+```
+
+Parsimony is incredibly important for simulation - while `jlmerclusterperm` is fast, model complexity is still a major bottleneck. When adding the extra random effect terms (random slope and correlation) has negligible effects on the statistic, removing them is likely to be inconsequential for the CPA itself.
+
+We demonstrate this in the following, which uses the maximal model. Notice how the results are identical to `re_CPA` but with a substantial slowdown:
+
+```{r re_max_CPA}
+set_rng_state(123L)
+system.time({
+  re_max_CPA <- clusterpermute(
+    cursive_agg_spec_re_max,
+    statistic = "chisq",
+    threshold = 0.05,
+    nsim = 100,
+    progress = FALSE
+  )
+})
+re_max_CPA
+```
+
+Lastly, back in our figure of the data, we annotate the clusters detected with the threshold of 0.05 (chisq p-value) using the intercept-only model:
+
+```{r cluster-annotate, message = FALSE}
+empirical_clusters_df <- tidy(extract_empirical_clusters(timewise_chisqs_re, threshold = 0.05))
+script_fig +
+  geom_segment(
+    aes(
+      x = start, xend = end, y = -Inf, yend = -Inf,
+      color = factor(sign(sum_statistic))
+    ),
+    linewidth = 10,
+    inherit.aes = FALSE,
+    data = empirical_clusters_df
+  ) +
+  geom_text(
+    aes(
+      y = -Inf, x = start + (end - start) / 2,
+      label = paste("Cluster", id)
+    ),
+    vjust = -2,
+    inherit.aes = FALSE,
+    data = empirical_clusters_df
+  ) +
+  labs(color = "Sign of cluster")
+```
+
+## E) Contrast coding
+
+The last piece of the puzzle is the flipped sign of the effect. Whereas we detect a _negative_ cluster where the line for cursive is over the line for print, original tutorial detects a _positive_ cluster (output repeated below):
+
+```{r tutorial-results, echo=FALSE}
+```
+
+Fixing this is trivial - it just takes a different choice of contrast.
+
+For example, we can flip the levels of the factor to make "print" the reference level:
+
+```{r reverse_contrast_spec}
+rev_contrast_df <- cursive_agg
+rev_contrast_df$script <- factor(rev_contrast_df$script, levels = c("print", "cursive"))
+contrasts(rev_contrast_df$script)
+reverse_contrast_spec <- make_jlmer_spec(
+  formula = aggbaseline ~ 1 + script + (1 | subject),
+  data = rev_contrast_df,
+  subject = "subject", time = "timebins", trial = "trial_type"
+)
+set_rng_state(123L)
+clusterpermute(
+  reverse_contrast_spec,
+  statistic = "chisq",
+  threshold = 0.05,
+  nsim = 100,
+  progress = FALSE
+)
+```
+
+Or we can sum-code and set "print" to -1 and "cursive" to 1:
+
+```{r sum_contrast_spec}
+sum_contrast_df <- cursive_agg
+sum_contrast_df$script <- factor(sum_contrast_df$script)
+contrasts(sum_contrast_df$script) <- contr.sum(2)
+contrasts(sum_contrast_df$script)
+sum_contrast_spec <- make_jlmer_spec(
+  formula = aggbaseline ~ 1 + script + (1 | subject),
+  data = sum_contrast_df,
+  subject = "subject", time = "timebins", trial = "trial_type"
+)
+set_rng_state(123L)
+clusterpermute(
+  sum_contrast_spec,
+  statistic = "chisq",
+  threshold = 0.05,
+  nsim = 100,
+  progress = FALSE
+)
+```
+
+<div class="callout" style="font-size:0.9em">
+Note that because CPA operates over the domain of the timewise statistics and not the effect size (i.e., the coefficient/beta), whether the difference between "print" and "cursive" was in unit of 1 (in treatment coding) or 2 (in contrast coding) has no bearing on the results.
+</div>
+
+To conclude, we re-run and time a 1000-simulation CPA using the intercept-only model with a treatment coding of `script` where  "print" as the reference level.
+
+```{r full-run}
+set_rng_state(123L)
+system.time({
+  final_CPA <- clusterpermute(
+    reverse_contrast_spec,
+    statistic = "chisq",
+    threshold = 0.05,
+    nsim = 1000,
+    progress = FALSE
+  )
+})
+final_CPA
+```
+
+Finally, annotating just the significant cluster on the plot of the data:
+
+```{r final-cluster-vis, message = FALSE}
+signif_clusters_df <- tidy(final_CPA$empirical_clusters) %>%
+  filter(pvalue < 0.05)
+signif_clusters_df
+script_fig +
+  geom_segment(
+    aes(x = start, xend = end, y = -Inf, yend = -Inf),
+    color = "steelblue", linewidth = 10,
+    inherit.aes = FALSE,
+    data = signif_clusters_df
+  ) +
+  geom_text(
+    aes(
+      y = -Inf, x = start + (end - start) / 2,
+      label = paste("p =", signif(pvalue, 3))
+    ),
+    vjust = -2,
+    inherit.aes = FALSE,
+    data = signif_clusters_df
+  )
+```
+
+  
