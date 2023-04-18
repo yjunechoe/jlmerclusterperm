@@ -49,6 +49,7 @@
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
     <a class="dropdown-item" href="../articles/Garrison-et-al-2020.html">Garrison et al. 2020</a>
+    <a class="dropdown-item" href="../articles/Geller-et-al-2020.html">Geller et al. 2020</a>
   </div>
 </li>
 <li class="nav-item">
@@ -87,10 +88,18 @@
 
     
     
+<p>This vignette showcases ways of interacting with pointers to
+<a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">jlmerclusterperm</a> Julia objects from R using <a href="https://github.com/stefan-m-lenz/JuliaConnectoR" class="external-link">JuliaConnectoR</a>.</p>
+<p>See more tutorials and vignettes on the <a href="https://yjunechoe.github.io/jlmerclusterperm/articles">Articles</a>
+page.</p>
+<div class="section level3">
+<h3 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+</h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">jlmerclusterperm</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/julia_progress.html">julia_progress</a></span><span class="op">(</span>show <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+</div>
 <div class="section level2">
 <h2 id="interacting-with-julia-objects">Interacting with Julia objects<a class="anchor" aria-label="anchor" href="#interacting-with-julia-objects"></a>
 </h2>
@@ -159,7 +168,7 @@ printed progress bar.</p>
 <span><span class="co">#&gt;</span></span>
 <span><span class="co">#&gt; $width</span></span>
 <span><span class="co">#&gt; [1] 50</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span> <span class="fu"><a href="../reference/julia_progress.html">julia_progress</a></span><span class="op">(</span><span class="op">)</span> <span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/julia_progress.html">julia_progress</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $show</span></span>
 <span><span class="co">#&gt; [1] FALSE</span></span>
 <span><span class="co">#&gt;</span></span>

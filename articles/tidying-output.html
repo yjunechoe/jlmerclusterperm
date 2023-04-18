@@ -49,6 +49,7 @@
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
     <a class="dropdown-item" href="../articles/Garrison-et-al-2020.html">Garrison et al. 2020</a>
+    <a class="dropdown-item" href="../articles/Geller-et-al-2020.html">Geller et al. 2020</a>
   </div>
 </li>
 <li class="nav-item">
@@ -89,6 +90,8 @@
     
 <p>This vignette showcases <code><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy()</a></code> and other ways of
 collecting <a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">jlmerclusterperm</a> objects as <a href="https://r4ds.had.co.nz/tidy-data.html" class="external-link">tidy data</a>.</p>
+<p>See more tutorials and vignettes on the <a href="https://yjunechoe.github.io/jlmerclusterperm/articles">Articles</a>
+page.</p>
 <div class="section level3">
 <h3 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h3>
@@ -356,7 +359,7 @@ list:</p>
 <span>  <span class="va">full_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clusterpermute.html">clusterpermute</a></span><span class="op">(</span><span class="va">jlmer_spec</span>, threshold <span class="op">=</span> <span class="fl">1</span>, nsim <span class="op">=</span> <span class="fl">1000</span>, progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   0.034   0.002   5.863</span></span>
+<span><span class="co">#&gt;   0.049   0.002   6.998</span></span>
 <span><span class="va">full_test</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (t &gt; <span style="color: #0000BB;">1</span>) ────────────── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
@@ -408,7 +411,7 @@ pointer to the Julia model object:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">jlmer_mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "jlmer_mod"        "JuliaStructProxy" "JuliaProxy"</span></span>
 <span><span class="va">jlmer_mod</span></span>
-<span><span class="co">#&gt; &lt;Julia object of type LinearMixedModel{Float64}&gt;</span></span>
+<span><span class="co">#&gt; &lt;Julia object of type LinearMixedModel&gt;</span></span>
 <span><span class="co">#&gt; Variance components:</span></span>
 <span><span class="co">#&gt;             Column    Variance Std.Dev.</span></span>
 <span><span class="co">#&gt; Chick    (Intercept)   305.1809 17.4694</span></span>

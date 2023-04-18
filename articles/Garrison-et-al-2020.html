@@ -49,6 +49,7 @@
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
     <a class="dropdown-item" href="../articles/Garrison-et-al-2020.html">Garrison et al. 2020</a>
+    <a class="dropdown-item" href="../articles/Geller-et-al-2020.html">Geller et al. 2020</a>
   </div>
 </li>
 <li class="nav-item">
@@ -87,13 +88,18 @@
 
     
     
+<p>This tutorial is a walkthrough of basic package features for
+conducting CPA and the components of a CPA.</p>
+<p>See more tutorials and vignettes on the <a href="https://yjunechoe.github.io/jlmerclusterperm/articles">Articles</a>
+page.</p>
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h2>
-<p>The data comes from an eye-tracking study by <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7456569/" class="external-link">Garrison et
-al. (2020)</a> “Familiarity plays a small role in noun comprehension at
-12-18 months”, by way of the <a href="https://langcog.github.io/peekbank-website/" class="external-link">peekbankr</a> corpus
-package.</p>
+<p>The data comes from an eye-tracking study by <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7456569/" class="external-link">Garrison,
+Baudet, Breitfield, Aberman, &amp; Bergelson (2020)</a> “Familiarity
+plays a small role in noun comprehension at 12-18 months”, by way of the
+<a href="https://langcog.github.io/peekbank-website/" class="external-link">peekbankr</a>
+corpus package.</p>
 <p>The original study used a growth curve model to analyze children’s
 looks to an object when it was <strong>familiar</strong> (“own”)
 vs. unfamiliar (“other”) at different <strong>ages</strong>
@@ -143,7 +149,7 @@ Data preparation code
 <span><span class="co"># Data of subject mean proportions</span></span>
 <span><span class="va">ts_data_agg</span> <span class="op">&lt;-</span> <span class="va">ts_data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">subject_id</span>, <span class="va">age</span>, <span class="va">time</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">target</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">!</span><span class="va">missing</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">target</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">!</span><span class="va">missing</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Trial-level 0-1 data</span></span>
 <span><span class="va">ts_data_trials</span> <span class="op">&lt;-</span> <span class="va">ts_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -160,7 +166,8 @@ cluster-permutation analysis:</p>
 <code>age</code>: A between-participant factor variable
 (<code>"Younger"</code>, <code>"Older"</code>)</li>
 <li>
-<code>time</code>: A continuous measure of time from 0-3975</li>
+<code>time</code>: A continuous measure of time from 0-3975ms at
+25ms intervals</li>
 <li>
 <code>prop</code>: A by-subject proportion of looks to the target
 object</li>
@@ -204,7 +211,7 @@ introduces the cluster-permutation analysis:</p>
 </h2>
 <p>This case study vignette showcases four features of doing a CPA with
 <code>jlmerclusterperm</code>:</p>
-<ol style="list-style-type: decimal">
+<ol style="list-style-type: upper-alpha">
 <li><p>Prepping data for CPA using
 <code><a href="../reference/make_jlmer_spec.html">make_jlmer_spec()</a></code></p></li>
 <li><p>CPA in one go with <code><a href="../reference/clusterpermute.html">clusterpermute()</a></code></p></li>
@@ -650,8 +657,8 @@ target per time point within subject:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">ts_data_agg</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 2560</span></span>
-<span><span class="va">ts_data_agg</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">subject_id</span>, <span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span><span class="va">ts_data_agg</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">subject_id</span>, <span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 2560</span></span></code></pre></div>
 <p>It is possible to also fit a <strong>logistic regression
@@ -678,8 +685,8 @@ the data preparation code at the top of this vignette.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span></span>
 <span>  <span class="va">ts_data_agg</span>,</span>
-<span>  <span class="va">ts_data_trials</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">subject_id</span>, <span class="va">age</span>, <span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="va">ts_data_trials</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">subject_id</span>, <span class="va">age</span>, <span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>prop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">target</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
@@ -819,17 +826,19 @@ aggregated data for comparison:</p>
 <code class="sourceCode R"><span><span class="va">timewise_statistics_fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">time</span>, <span class="va">statistic</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"aggregated"</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"aggregated"</span><span class="op">)</span>,</span>
+<span>    linewidth <span class="op">=</span> <span class="fl">1.5</span>,</span>
 <span>    data <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">empirical_statistics</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"trial-level"</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"trial-level"</span><span class="op">)</span>,</span>
+<span>    linewidth <span class="op">=</span> <span class="fl">1.5</span>,</span>
 <span>    data <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">empirical_statistics_binom</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="va">timewise_statistics_fig</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">time</span><span class="op">)</span>,</span>
-<span>    data <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">empirical_statistics_binom</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>    data <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">empirical_statistics_binom</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">statistic</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="Garrison-et-al-2020_files/figure-html/timewise_statistics_fig-1.png" width="700"></p>
@@ -858,7 +867,7 @@ largest cluster:</p>
 <span>  family <span class="op">=</span> <span class="st">"binomial"</span>,</span>
 <span>  threshold <span class="op">=</span> <span class="fl">2.8</span>,</span>
 <span>  nsim <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  top_n <span class="op">=</span> <span class="fl">1</span>,       <span class="co"># Just test the largest cluster</span></span>
+<span>  top_n <span class="op">=</span> <span class="fl">1</span>, <span class="co"># Just test the largest cluster</span></span>
 <span>  progress <span class="op">=</span> <span class="cn">FALSE</span> <span class="co"># Suppress printing of progress for vignette</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>This gives us a pvalue for the cluster spanning from 850ms to 1525ms
@@ -882,49 +891,51 @@ set. We also time the 1000-simulation runs to showcase the speed of
 <code>jlmerclusterperm</code>.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>  <span class="fu"><a href="../reference/julia_rng.html">reset_rng_state</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/julia_rng.html">set_rng_state</a></span><span class="op">(</span><span class="fl">123L</span><span class="op">)</span></span>
 <span>  <span class="va">CPA_agg_1000</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clusterpermute.html">clusterpermute</a></span><span class="op">(</span></span>
-<span>    <span class="va">ts_data_agg_spec</span>, threshold <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>    <span class="va">ts_data_agg_spec</span>,</span>
+<span>    threshold <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>    nsim <span class="op">=</span> <span class="fl">1000</span>, top_n <span class="op">=</span> <span class="fl">1</span>, progress <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   0.054   0.001  10.101</span></span>
+<span><span class="co">#&gt;   0.073   0.018  11.486</span></span>
 <span><span class="va">CPA_agg_1000</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (t &gt; <span style="color: #0000BB;">2</span>) ────────────── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">ageOlder</span> (n = 1000)</span></span>
-<span><span class="co">#&gt;   Mean (SD): 1.436 (39.39)</span></span>
-<span><span class="co">#&gt;   Coverage intervals: 95% [-68.731, 97.630]</span></span>
+<span><span class="co">#&gt;   Mean (SD): 0.078 (40.29)</span></span>
+<span><span class="co">#&gt;   Coverage intervals: 95% [-76.748, 82.717]</span></span>
 <span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $empirical_clusters</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Empirical clusters</span> (t &gt; <span style="color: #0000BB;">2</span>) ────────────────────────── <span style="color: #0000BB;">&lt;empirical_clusters&gt;</span> ──</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">ageOlder</span></span></span>
-<span><span class="co">#&gt;   [850, 1525]: 74.724 <span style="color: #B2B2B2; font-style: italic;">(p=0.0619)</span></span></span>
+<span><span class="co">#&gt;   [850, 1525]: 74.724 <span style="color: #B2B2B2; font-style: italic;">(p=0.0629)</span></span></span>
 <span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span></code></pre></div>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>  <span class="fu"><a href="../reference/julia_rng.html">reset_rng_state</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/julia_rng.html">set_rng_state</a></span><span class="op">(</span><span class="fl">123L</span><span class="op">)</span></span>
 <span>  <span class="va">CPA_trial_1000</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clusterpermute.html">clusterpermute</a></span><span class="op">(</span></span>
-<span>    <span class="va">ts_data_trial_spec</span>, family <span class="op">=</span> <span class="st">"binomial"</span>, threshold <span class="op">=</span> <span class="fl">2.8</span>,</span>
+<span>    <span class="va">ts_data_trial_spec</span>,</span>
+<span>    family <span class="op">=</span> <span class="st">"binomial"</span>, threshold <span class="op">=</span> <span class="fl">2.8</span>,</span>
 <span>    nsim <span class="op">=</span> <span class="fl">1000</span>, top_n <span class="op">=</span> <span class="fl">1</span>, progress <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   0.110   0.039  29.902</span></span>
+<span><span class="co">#&gt;   0.244   0.078  41.453</span></span>
 <span><span class="va">CPA_trial_1000</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (t &gt; <span style="color: #0000BB;">2.8</span>) ──────────── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">ageOlder</span> (n = 1000)</span></span>
-<span><span class="co">#&gt;   Mean (SD): 1.831 (52.20)</span></span>
-<span><span class="co">#&gt;   Coverage intervals: 95% [-92.696, 133.319]</span></span>
+<span><span class="co">#&gt;   Mean (SD): -0.045 (55.09)</span></span>
+<span><span class="co">#&gt;   Coverage intervals: 95% [-119.239, 125.506]</span></span>
 <span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $empirical_clusters</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Empirical clusters</span> (t &gt; <span style="color: #0000BB;">2.8</span>) ──────────────────────── <span style="color: #0000BB;">&lt;empirical_clusters&gt;</span> ──</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">ageOlder</span></span></span>
-<span><span class="co">#&gt;   [850, 1525]: 102.450 <span style="color: #B2B2B2; font-style: italic;">(p=0.0619)</span></span></span>
+<span><span class="co">#&gt;   [850, 1525]: 102.450 <span style="color: #B2B2B2; font-style: italic;">(p=0.0689)</span></span></span>
 <span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span></code></pre></div>
 <p>Note the use <code><a href="../reference/julia_rng.html">reset_rng_state()</a></code>, which makes the two CPAs
 generate the same permutations of the observed data.</p>
