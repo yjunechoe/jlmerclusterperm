@@ -114,6 +114,7 @@ make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = 
     fe_terms_renamed <- as.character(c(as.integer(has_intercept), fe_terms_renamed))
     fe_fm <- stats::reformulate(fe_terms_renamed, fm_response, env = fm_env)
     r_fm <- jl_fm <- fe_fm
+    re_groups <- NULL
   } else {
     fe <- lme4::nobars(fm)
     fe_expanded <- stats::terms(fe, keep.order = TRUE)
@@ -153,6 +154,7 @@ make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = 
       expanded <- Reduce(function(x, y) call("+", x, y), c(fe_fm, re_str))
       stats::as.formula(call("~", as.symbol(fm_response), expanded), fm_env)
     }
+    re_groups <- names(re_bars)
     r_fm <- combine_fm(re_fm_r)
     jl_fm <- combine_fm(re_fm_jl)
     re_cols <- as.data.frame.list(lapply(df[!na_rows, names(re_bars), drop = FALSE], as.character))
@@ -169,10 +171,10 @@ make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = 
   model_matrix_df <- maybe_as_tibble(model_matrix_df)
 
   out <- list(
-    formula = list(r = r_fm, jl = jl_fm),
+    formula = list(r = r_fm, jl = jl_fm, original = fm),
     data = model_matrix_df,
     meta = list(
-      term_groups = renamed_terms_dict,
+      term_groups = renamed_terms_dict, re_groups = re_groups,
       subject = subject, trial = trial, time = time,
       is_mem = has_re
     )
@@ -220,4 +222,29 @@ format.jlmer_spec <- function(x, ...) {
     },
     theme = .jlmerclusterperm$cli_theme
   )
+}
+
+# update_spec_data <- function(jlmer_spec, data, reform = FALSE) {
+#   .jlmer_spec <- jlmer_spec
+#   if (is.function(data)) {
+#     .data <- data(jlmer_spec$data)
+#   } else {
+#     .data <- data
+#   }
+#   used_cols <- get_spec_used_cols(jlmer_spec)
+#   if (!all(used_cols %in% colnames(.data))) {
+#     missing_cols <- used_cols[!used_cols %in% colnames(.data)]
+#     cli::cli_abort("Necessary column{?s} {.val {missing_cols}} missing from {.arg data}")
+#   }
+#   .jlmer_spec$data <- .data
+#   .jlmer_spec
+# }
+
+get_spec_used_cols <- function(jlmer_spec) {
+  all_cols <- unlist(c(
+    jlmer_spec$meta$term_groups,
+    jlmer_spec$meta$re_groups,
+    jlmer_spec$meta[c("subject", "trial", "time")]
+  ), use.names = FALSE)
+  all_cols[all_cols != "(Intercept)"]
 }
