@@ -21,11 +21,19 @@ make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = 
   check_arg_class(formula, "formula")
   check_arg_class(data, "data.frame", "data")
   special_cols <- c(subject, trial, time)
-  if (!is.null(special_cols) && !all(special_cols %in% colnames(data))) {
-    cli::cli_abort("Column{?s} {.val {special_cols[!special_cols %in% colnames(data)]}} not found in {.arg data}")
+  # Validate grouping structure
+  if (!is.null(special_cols)) {
+    if (!all(special_cols %in% colnames(data))) {
+      cli::cli_abort("Column{?s} {.val {special_cols[!special_cols %in% colnames(data)]}} not found in {.arg data}")
+    }
+    if (nrow(data) != nrow(unique(data[, special_cols, drop = FALSE]))) {
+      cli::cli_alert_warning(c(
+        "Grouping column{?s} {.val {special_cols}} do{?es/} not uniquely identify rows in the data"
+      ))
+    }
   }
   if (!is.null(time)) {
-    time_diffs <- diff(unique(data[[time]]))
+    time_diffs <- diff(sort(unique(data[[time]])))
     if (!all(time_diffs == time_diffs[1])) {
       cli::cli_alert_warning(c(
         "Sampling rate for the {.arg time} column {.val {time}} is not constant - ",
@@ -192,10 +200,13 @@ format.jlmer_spec <- function(x, ...) {
       cli::cli_dl(lapply(terms, paste, collapse = ", "), paste0("{.emph ", names(terms), "}"))
       cli::cli_end()
       # Grouping
-      cli::cli_text("{.el Groupings}:")
-      cli::cli_ul()
-      cli::cli_dl(x$meta[c("subject", "trial", "time")], paste0("{.emph ", c("Subject", "Trial", "Time"), "}"))
-      cli::cli_end()
+      groupings <- x$meta[c("subject", "trial", "time")]
+      if (!is.null(unlist(groupings))) {
+        cli::cli_text("{.el Groupings}:")
+        cli::cli_ul()
+        cli::cli_dl(groupings, paste0("{.emph ", c("Subject", "Trial", "Time"), "}"))
+        cli::cli_end()
+      }
       # Data
       cli::cli_text("{.el Data}:")
       if (inherits(x$data, "tbl_df")) {
