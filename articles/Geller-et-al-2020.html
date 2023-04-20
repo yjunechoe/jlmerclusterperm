@@ -197,10 +197,6 @@ the <code>script_fig</code> data:</p>
 <span><span class="co">#&gt; <span style="color: #00BB00;">Formula</span>: aggbaseline ~ 1 + scriptprint</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">Predictors</span>:</span></span>
 <span><span class="co">#&gt;   <span style="font-style: italic;">script</span>: scriptprint</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">Groupings</span>:</span></span>
-<span><span class="co">#&gt;   <span style="font-style: italic;">Subject</span>:</span></span>
-<span><span class="co">#&gt;   <span style="font-style: italic;">Trial</span>:</span></span>
-<span><span class="co">#&gt;   <span style="font-style: italic;">Time</span>:</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">Data</span>:</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,184 × 2</span></span></span>
 <span><span class="co">#&gt;   aggbaseline scriptprint</span></span>
@@ -396,8 +392,9 @@ in <code><a href="../reference/clusterpermute.html">clusterpermute()</a></code> 
 <span><span class="co">#&gt; <span style="color: #00BB00;">script</span> (<span style="font-style: italic;">df = 1</span>)</span></span>
 <span><span class="co">#&gt;   [2000, 2300]: -19.085 <span style="font-style: italic;">(p=0.0099)</span></span></span>
 <span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span></code></pre></div>
-<p>This returns the same cluster but now with a larger cluster-mass
-statistic, as expected (chi-squared is asymptotic to t^2).</p>
+<p>This returns the same cluster but now with a numerically larger
+cluster-mass statistic, as expected (chi-squared is asymptotic to
+t^2).</p>
 <p>Below, we compare the shape of the timewise statistics between “t”
 with threshold of 2 and “chisq” with threshold of p=0.05:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -423,28 +420,28 @@ with threshold of 2 and “chisq” with threshold of p=0.05:</p>
 <p><img src="Geller-et-al-2020_files/figure-html/timewise-compare-1.png" width="700"></p>
 <p>We find the same clusters identified between 2000ms-2300ms for both
 “t” and “chisq”, with the peaks more pronounced for “chisq”. The
-differences between the two measures are inconsequential for this
-example, but may produce different results in other cases.</p>
+differences between the two are inconsequential for this example, but
+may produce different results in other cases.</p>
 <div class="callout" style="font-size:0.9em">
 <p>The chi-squared statistic (which <code>jlmerclusterperm</code>
 computes via a likelihood ratio test) is often preferred for testing
 single parameters because it makes less assumptions and tend to be more
 robust (<a href="https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#model-diagnostics" class="external-link">glmmFAQ</a>).
 But because goodness-of-fit tests are at the level of a predictor in a
-model formula, “chisq” is less interpretatable for multi-level
-predictors (k-1 &gt; 1). To tease apart the contribution of the
-individual levels of a predictor, it is recommended to use the
-<code>statistic = "t"</code> instead.</p>
+model formula, “chisq” is less interpretable for multi-level predictors
+(k-1 &gt; 1). To tease apart the contribution of the individual levels
+of a multi-level predictor, <code>statistic = "t"</code> may be more
+appropriate.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="d-specifying-random-effects">D) Specifying random effects<a class="anchor" aria-label="anchor" href="#d-specifying-random-effects"></a>
 </h2>
 <p>The biggest missing component at this point is the subject random
-effects, which the original tutorial’s anova model specified via the
-error term <code>Error(subject)</code>. There isn’t a strict equivalent
-to this in linear regression, but specifying random intercepts by
-subject with <code>(1 | subject)</code> gets us very close:</p>
+effects, which the original tutorial captures via the error term
+<code>Error(subject)</code>. There isn’t a strict equivalent to this in
+regression models, but specifying random intercepts by subject with
+<code>(1 | subject)</code> gets us very close:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cursive_agg_spec_re</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_jlmer_spec.html">make_jlmer_spec</a></span><span class="op">(</span></span>
 <span>  formula <span class="op">=</span> <span class="va">aggbaseline</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">script</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">subject</span><span class="op">)</span>,</span>
@@ -462,7 +459,7 @@ subject with <code>(1 | subject)</code> gets us very close:</p>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   0.098   0.034  21.573</span></span>
+<span><span class="co">#&gt;   0.094   0.023  18.560</span></span>
 <span><span class="va">re_CPA</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (chisq p &lt; <span style="color: #0000BB;">0.05</span>) ───── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
@@ -484,8 +481,8 @@ comparison:</p>
 <span><span class="co">#&gt; #&gt; script    0    100     1  10.121215   0.1584158</span></span>
 <span><span class="co">#&gt; #&gt; script  900   1000    -1  8.756152    0.1782178</span></span>
 <span><span class="co">#&gt; #&gt; script 1900   2500     1  82.198279   0.0099010</span></span></code></pre>
-<p>We also plot the timewise statistics from the by-subject random
-intercept model:</p>
+<p>We also plot the timewise statistics from the random intercept
+models:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">timewise_chisqs_re</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compute_timewise_statistics.html">compute_timewise_statistics</a></span><span class="op">(</span><span class="va">cursive_agg_spec_re</span>, statistic <span class="op">=</span> <span class="st">"chisq"</span><span class="op">)</span></span>
 <span><span class="va">timewise_fig_re</span> <span class="op">&lt;-</span> <span class="va">timewise_fig</span> <span class="op">+</span></span>
@@ -498,16 +495,15 @@ intercept model:</p>
 <p><img src="Geller-et-al-2020_files/figure-html/timewise_fig-re-1.png" width="700"></p>
 <p>At this point we may wonder whether the results change much if we
 used a maximal model with the random effects structure
-<code>(1 + script | subject)</code>. We first create a specification
-object with that formula:</p>
+<code>(1 + script | subject)</code>. We first create another
+specification object with a maximal formula:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cursive_agg_spec_re_max</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_jlmer_spec.html">make_jlmer_spec</a></span><span class="op">(</span></span>
 <span>  formula <span class="op">=</span> <span class="va">aggbaseline</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">script</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="va">script</span> <span class="op">|</span> <span class="va">subject</span><span class="op">)</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">cursive_agg</span>,</span>
 <span>  subject <span class="op">=</span> <span class="st">"subject"</span>, time <span class="op">=</span> <span class="st">"timebins"</span>, trial <span class="op">=</span> <span class="st">"trial_type"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Then compute the timewise statistics. We find one by-time model with
-singular fit which isn’t too troubling:</p>
+<p>Then compute the timewise statistics:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">timewise_chisqs_re_max</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compute_timewise_statistics.html">compute_timewise_statistics</a></span><span class="op">(</span><span class="va">cursive_agg_spec_re_max</span>, statistic <span class="op">=</span> <span class="st">"chisq"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> <span style="color: #0000BB;">1</span> singular fit (3.85%).</span></span></code></pre></div>
@@ -523,7 +519,7 @@ two lines overlap):</p>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="Geller-et-al-2020_files/figure-html/timewise_fig_re2-1.png" width="700"></p>
 <p>This becomes clearer when we plot the <em>difference</em> in timewise
-statistics between the two - they’re practically zero:</p>
+statistics between the two - they’re virtually identical:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">timewise_chisqs_re</span> <span class="op">-</span> <span class="va">timewise_chisqs_re_max</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_path</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y <span class="op">=</span> <span class="va">statistic</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -534,9 +530,9 @@ statistics between the two - they’re practically zero:</p>
 bottleneck. When adding the extra random effect terms (random slope and
 correlation) has negligible effects on the statistic, removing them is
 likely to be inconsequential for the CPA itself.</p>
-<p>We demonstrate this in the following, which uses the maximal model.
-Notice how the results are identical to <code>re_CPA</code> but with a
-substantial slowdown:</p>
+<p>We show this in the following CPA run, which uses the maximal model.
+Notice how the results are identical to the intercept-only
+<code>re_CPA</code> but substantially slower:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/julia_rng.html">set_rng_state</a></span><span class="op">(</span><span class="fl">123L</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
@@ -549,7 +545,7 @@ substantial slowdown:</p>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   0.149   0.044  10.725</span></span>
+<span><span class="co">#&gt;   0.142   0.023  10.090</span></span>
 <span><span class="va">re_max_CPA</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (chisq p &lt; <span style="color: #0000BB;">0.05</span>) ───── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
@@ -565,9 +561,15 @@ substantial slowdown:</p>
 <span><span class="co">#&gt;   [900, 1000]: 8.521 <span style="color: #B2B2B2; font-style: italic;">(p=0.2475)</span></span></span>
 <span><span class="co">#&gt;   [1900, 2500]: -73.440 <span style="font-style: italic;">(p=0.0099)</span></span></span>
 <span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span></code></pre></div>
+<div class="callout" style="font-size:0.9em">
+<p>We run the above maximal mixed model CPA purely for demonstration
+purposes. The random effects structure is actually unidentifiable given
+the aggregated data, where at any point in time there are only 2
+observations from each subject (the means at each condition).</p>
+</div>
 <p>Lastly, back in our figure of the data, we annotate the clusters
-detected with the threshold of 0.05 (chisq p-value) using the
-intercept-only model:</p>
+detected with the threshold of 0.05 (chisq p-value) from the random
+intercept CPA:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">empirical_clusters_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="fu"><a href="../reference/extract_empirical_clusters.html">extract_empirical_clusters</a></span><span class="op">(</span><span class="va">timewise_chisqs_re</span>, threshold <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">script_fig</span> <span class="op">+</span></span>
@@ -596,8 +598,8 @@ intercept-only model:</p>
 <h2 id="e-contrast-coding">E) Contrast coding<a class="anchor" aria-label="anchor" href="#e-contrast-coding"></a>
 </h2>
 <p>The last piece of the puzzle is the flipped sign of the effect.
-Whereas we detect a <em>negative</em> cluster where the line for cursive
-is over the line for print, original tutorial detects a
+Whereas we detect a <em>negative</em> cluster when the line for cursive
+is over the line for print, the original tutorial reports a
 <em>positive</em> cluster (output repeated below):</p>
 <pre><code><span><span class="co">#&gt; #&gt; effect   b0     b1  sign        cms           p</span></span>
 <span><span class="co">#&gt; #&gt; script    0    100     1  10.121215   0.1584158</span></span>
@@ -678,15 +680,14 @@ reference level:</p>
 <span><span class="co">#&gt;   [1900, 2500]: 73.440 <span style="font-style: italic;">(p=0.0099)</span></span></span>
 <span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span></code></pre></div>
 <div class="callout" style="font-size:0.9em">
-<p>Note that because CPA operates over the domain of the timewise
-statistics and not the effect size (i.e., the coefficient/beta), whether
-the difference between “print” and “cursive” was in unit of 1 (in
-treatment coding) or 2 (in contrast coding) has no bearing on the
-results.</p>
+<p>Because CPA operates over the domain of the timewise statistics (and
+not the effect size), whether the difference between “print” and
+“cursive” is expressed as a unit of 1 (in treatment coding) or 2 (in
+contrast coding) has no bearing on the calculation of the statistic.</p>
 </div>
 <p>To conclude, we re-run and time a 1000-simulation CPA using the
-intercept-only model with a treatment coding of <code>script</code>
-where “print” as the reference level.</p>
+intercept-only model with the new treatment coding of
+<code>script</code> where “print” is the reference level.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/julia_rng.html">set_rng_state</a></span><span class="op">(</span><span class="fl">123L</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
@@ -699,7 +700,7 @@ where “print” as the reference level.</p>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   0.174   0.077  22.687</span></span>
+<span><span class="co">#&gt;   0.143   0.037  16.599</span></span>
 <span><span class="va">final_CPA</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (chisq p &lt; <span style="color: #0000BB;">0.05</span>) ───── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
@@ -715,8 +716,7 @@ where “print” as the reference level.</p>
 <span><span class="co">#&gt;   [900, 1000]: -8.521 <span style="color: #B2B2B2; font-style: italic;">(p=0.2358)</span></span></span>
 <span><span class="co">#&gt;   [1900, 2500]: 73.440 <span style="font-style: italic;">(p=0.0090)</span></span></span>
 <span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span></code></pre></div>
-<p>Finally, annotating just the significant cluster on the plot of the
-data:</p>
+<p>Finally, annotating just the significant cluster on the figure:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">signif_clusters_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">final_CPA</span><span class="op">$</span><span class="va">empirical_clusters</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">pvalue</span> <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">)</span></span>

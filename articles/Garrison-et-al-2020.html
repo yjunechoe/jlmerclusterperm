@@ -250,10 +250,6 @@ predictor for the <code>ts_data_agg</code> data:</p>
 <span><span class="co">#&gt; <span style="color: #00BB00;">Formula</span>: prop ~ 1 + ageOlder</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">Predictors</span>:</span></span>
 <span><span class="co">#&gt;   <span style="font-style: italic;">age</span>: ageOlder</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">Groupings</span>:</span></span>
-<span><span class="co">#&gt;   <span style="font-style: italic;">Subject</span>:</span></span>
-<span><span class="co">#&gt;   <span style="font-style: italic;">Trial</span>:</span></span>
-<span><span class="co">#&gt;   <span style="font-style: italic;">Time</span>:</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">Data</span>:</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,560 × 2</span></span></span>
 <span><span class="co">#&gt;    prop ageOlder</span></span>
@@ -899,7 +895,7 @@ set. We also time the 1000-simulation runs to showcase the speed of
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   0.073   0.018  11.486</span></span>
+<span><span class="co">#&gt;   0.049   0.013  10.758</span></span>
 <span><span class="va">CPA_agg_1000</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (t &gt; <span style="color: #0000BB;">2</span>) ────────────── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
@@ -923,7 +919,7 @@ set. We also time the 1000-simulation runs to showcase the speed of
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   0.244   0.078  41.453</span></span>
+<span><span class="co">#&gt;   0.110   0.044  30.448</span></span>
 <span><span class="va">CPA_trial_1000</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (t &gt; <span style="color: #0000BB;">2.8</span>) ──────────── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
