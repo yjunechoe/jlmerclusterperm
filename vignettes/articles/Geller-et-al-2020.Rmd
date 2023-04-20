@@ -187,7 +187,7 @@ clusterpermute(
 )
 ```
 
-This returns the same cluster but now with a larger cluster-mass statistic, as expected (chi-squared is asymptotic to t^2).
+This returns the same cluster but now with a numerically larger cluster-mass statistic, as expected (chi-squared is asymptotic to t^2).
 
 Below, we compare the shape of the timewise statistics between "t" with threshold of 2 and "chisq" with threshold of p=0.05:
 
@@ -213,15 +213,15 @@ timewise_fig <- ggplot(mapping = aes(x = time, y = statistic)) +
 timewise_fig
 ```
 
-We find the same clusters identified between 2000ms-2300ms for both "t" and "chisq", with the peaks more pronounced for "chisq". The differences between the two measures are inconsequential for this example, but may produce different results in other cases.
+We find the same clusters identified between 2000ms-2300ms for both "t" and "chisq", with the peaks more pronounced for "chisq". The differences between the two are inconsequential for this example, but may produce different results in other cases.
 
 <div class="callout" style="font-size:0.9em">
-The chi-squared statistic (which `jlmerclusterperm` computes via a likelihood ratio test) is often preferred for testing single parameters because it makes less assumptions and tend to be more robust ([glmmFAQ](https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#model-diagnostics)). But because goodness-of-fit tests are at the level of a predictor in a model formula, "chisq" is less interpretatable for multi-level predictors (k-1 > 1). To tease apart the contribution of the individual levels of a predictor, it is recommended to use the `statistic = "t"` instead.
+The chi-squared statistic (which `jlmerclusterperm` computes via a likelihood ratio test) is often preferred for testing single parameters because it makes less assumptions and tend to be more robust ([glmmFAQ](https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#model-diagnostics)). But because goodness-of-fit tests are at the level of a predictor in a model formula, "chisq" is less interpretable for multi-level predictors (k-1 > 1). To tease apart the contribution of the individual levels of a multi-level predictor, `statistic = "t"` may be more appropriate.
 </div>
 
 ## D) Specifying random effects
 
-The biggest missing component at this point is the subject random effects, which the original tutorial's anova model specified via the error term `Error(subject)`. There isn't a strict equivalent to this in linear regression, but specifying random intercepts by subject with `(1 | subject)` gets us very close:
+The biggest missing component at this point is the subject random effects, which the original tutorial captures via the error term `Error(subject)`. There isn't a strict equivalent to this in regression models, but specifying random intercepts by subject with `(1 | subject)` gets us very close:
 
 ```{r cursive_agg_spec_re}
 cursive_agg_spec_re <- make_jlmer_spec(
@@ -247,7 +247,7 @@ We repeat the results from the original tutorial below for comparison:
 ```{r tutorial-results, echo=FALSE}
 ```
 
-We also plot the timewise statistics from the by-subject random intercept model:
+We also plot the timewise statistics from the random intercept models:
 
 ```{r timewise_fig-re}
 timewise_chisqs_re <- compute_timewise_statistics(cursive_agg_spec_re, statistic = "chisq")
@@ -260,7 +260,7 @@ timewise_fig_re <- timewise_fig +
 timewise_fig_re
 ```
 
-At this point we may wonder whether the results change much if we used a maximal model with the random effects structure `(1 + script | subject)`. We first create a specification object with that formula:
+At this point we may wonder whether the results change much if we used a maximal model with the random effects structure `(1 + script | subject)`. We first create another specification object with a maximal formula:
 
 ```{r cursive_agg_spec_re_max}
 cursive_agg_spec_re_max <- make_jlmer_spec(
@@ -270,7 +270,7 @@ cursive_agg_spec_re_max <- make_jlmer_spec(
 )
 ```
 
-Then compute the timewise statistics. We find one by-time model with singular fit which isn't too troubling:
+Then compute the timewise statistics:
 
 ```{r timewise_chisqs_re_max}
 timewise_chisqs_re_max <- compute_timewise_statistics(cursive_agg_spec_re_max, statistic = "chisq")
@@ -287,7 +287,7 @@ timewise_fig_re +
   )
 ```
 
-This becomes clearer when we plot the _difference_ in timewise statistics between the two - they're practically zero:
+This becomes clearer when we plot the _difference_ in timewise statistics between the two - they're virtually identical:
 
 ```{r re-timewise-diff}
 ggplot(tidy(timewise_chisqs_re - timewise_chisqs_re_max)) +
@@ -297,7 +297,7 @@ ggplot(tidy(timewise_chisqs_re - timewise_chisqs_re_max)) +
 
 Parsimony is incredibly important for simulation - while `jlmerclusterperm` is fast, model complexity is still a major bottleneck. When adding the extra random effect terms (random slope and correlation) has negligible effects on the statistic, removing them is likely to be inconsequential for the CPA itself.
 
-We demonstrate this in the following, which uses the maximal model. Notice how the results are identical to `re_CPA` but with a substantial slowdown:
+We show this in the following CPA run, which uses the maximal model. Notice how the results are identical to the intercept-only `re_CPA` but substantially slower:
 
 ```{r re_max_CPA}
 set_rng_state(123L)
@@ -313,7 +313,11 @@ system.time({
 re_max_CPA
 ```
 
-Lastly, back in our figure of the data, we annotate the clusters detected with the threshold of 0.05 (chisq p-value) using the intercept-only model:
+<div class="callout" style="font-size:0.9em">
+We run the above maximal mixed model CPA purely for demonstration purposes. The random effects structure is actually unidentifiable given the aggregated data, where at any point in time there are only 2 observations from each subject (the means at each condition).
+</div>
+
+Lastly, back in our figure of the data, we annotate the clusters detected with the threshold of 0.05 (chisq p-value) from the random intercept CPA:
 
 ```{r cluster-annotate, message = FALSE}
 empirical_clusters_df <- tidy(extract_empirical_clusters(timewise_chisqs_re, threshold = 0.05))
@@ -341,7 +345,7 @@ script_fig +
 
 ## E) Contrast coding
 
-The last piece of the puzzle is the flipped sign of the effect. Whereas we detect a _negative_ cluster where the line for cursive is over the line for print, original tutorial detects a _positive_ cluster (output repeated below):
+The last piece of the puzzle is the flipped sign of the effect. Whereas we detect a _negative_ cluster when the line for cursive is over the line for print, the original tutorial reports a _positive_ cluster (output repeated below):
 
 ```{r tutorial-results, echo=FALSE}
 ```
@@ -392,10 +396,10 @@ clusterpermute(
 ```
 
 <div class="callout" style="font-size:0.9em">
-Note that because CPA operates over the domain of the timewise statistics and not the effect size (i.e., the coefficient/beta), whether the difference between "print" and "cursive" was in unit of 1 (in treatment coding) or 2 (in contrast coding) has no bearing on the results.
+Because CPA operates over the domain of the timewise statistics (and not the effect size), whether the difference between "print" and "cursive" is expressed as a unit of 1 (in treatment coding) or 2 (in contrast coding) has no bearing on the calculation of the statistic.
 </div>
 
-To conclude, we re-run and time a 1000-simulation CPA using the intercept-only model with a treatment coding of `script` where  "print" as the reference level.
+To conclude, we re-run and time a 1000-simulation CPA using the intercept-only model with the new treatment coding of `script` where "print" is the reference level.
 
 ```{r full-run}
 set_rng_state(123L)
@@ -411,7 +415,7 @@ system.time({
 final_CPA
 ```
 
-Finally, annotating just the significant cluster on the plot of the data:
+Finally, annotating just the significant cluster on the figure:
 
 ```{r final-cluster-vis, message = FALSE}
 signif_clusters_df <- tidy(final_CPA$empirical_clusters) %>%
@@ -434,5 +438,3 @@ script_fig +
     data = signif_clusters_df
   )
 ```
-
-  
