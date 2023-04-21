@@ -38,24 +38,23 @@ required and \>=1.9 is preferred for its substantial compiler/runtime
 improvements.
 
 Before using functions from `jlmerclusterperm`, an initial setup step is
-required via calling `jlmerclusterperm_setup()`. This will launch Julia
-with some number of threads (controlled via
-`options("jlmerclusterperm.nthreads")`) and install necessary package
-dependencies (this only happens once and should take about 15-30
-minutes).
+required via calling `jlmerclusterperm_setup()`. The very first call on
+a system will start Julia and install necessary dependencies (this only
+happens once and takes 15-30 minutes).
 
 Subsequent calls to `jlmerclusterperm_setup()` incur a small overhead of
-around 30 seconds and there will be slight delays for first-time
-function calls due to Julia’s [just-in-time
-compilation](https://docs.julialang.org/en/v1/). Afterwards you can
-enjoy blazingly-fast functions from the package.
+around 30 seconds, plus slight delays for first-time function calls due
+to Julia’s [just-in-time
+compilation](https://docs.julialang.org/en/v1/). You pay up front for
+start-up and warm-up costs and get enjoy blazingly-fast functions from
+the package.
 
 ``` r
 # Both lines must be run
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.00    0.04   27.94
+#>    0.00    0.01   17.90
 ```
 
 See the
@@ -78,7 +77,7 @@ matplot(
 )
 ```
 
-<img src="man/figures/README-chickweight-1.png" width="100%" />
+<img src="man/figures/README-chickweight-1.png" width="75%" />
 
 Preparing a specification object:
 
@@ -117,7 +116,21 @@ clusterpermute(
   threshold = 2.5,
   nsim = 100,
   progress = FALSE
-)$empirical_clusters
+)
+#> $null_cluster_dists
+#> ── Null cluster-mass distribution (t > 2.5) ──────────── <null_cluster_dists> ──
+#> Diet2 (n = 100)
+#>   Mean (SD): -0.039 (1.89)
+#>   Coverage intervals: 95% [-2.862, 0.000]
+#> Diet3 (n = 100)
+#>   Mean (SD): -0.129 (2.02)
+#>   Coverage intervals: 95% [0.000, 0.000]
+#> Diet4 (n = 100)
+#>   Mean (SD): 0.296 (3.21)
+#>   Coverage intervals: 95% [0.000, 5.797]
+#> ────────────────────────────────────────────────────────────────────────────────
+#> 
+#> $empirical_clusters
 #> ── Empirical clusters (t > 2.5) ──────────────────────── <empirical_clusters> ──
 #> Diet2
 #>   [3, 4]: 6.121 (p=0.0495)
@@ -191,9 +204,9 @@ clusterpermute(
 #> ────────────────────────────────────────────────────────────────────────────────
 ```
 
-### Components of a CPA
+### Piecemeal approach to CPA
 
-Time-wise statistics of the data:
+Time-wise statistics of the observed data:
 
 ``` r
 empirical_statistics <- compute_timewise_statistics(chickweights_spec)
@@ -215,13 +228,13 @@ tidy(empirical_statistics)
 ```
 
 ``` r
-matplot(t(empirical_statistics), type = "l", lwd = 3, ylab = "t-value")
+matplot(t(empirical_statistics), type = "b", pch = 1, lwd = 3, ylab = "t-statistic")
 abline(h = 2.5, lty = 3)
 ```
 
-<img src="man/figures/README-plot-empirical_statistics-1.png" width="100%" />
+<img src="man/figures/README-plot-empirical_statistics-1.png" width="75%" />
 
-Empirical clusters:
+Identifying empirical clusters:
 
 ``` r
 empirical_clusters <- extract_empirical_clusters(empirical_statistics, threshold = 2.5)
@@ -236,7 +249,7 @@ empirical_clusters
 #> ────────────────────────────────────────────────────────────────────────────────
 ```
 
-Simulating the null:
+Simulating the null distribution:
 
 ``` r
 set_rng_state(123L)
@@ -256,7 +269,7 @@ null_cluster_dists
 #> ────────────────────────────────────────────────────────────────────────────────
 ```
 
-Significance testing:
+Significance testing the cluster-mass statistic:
 
 ``` r
 calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1 = TRUE)
