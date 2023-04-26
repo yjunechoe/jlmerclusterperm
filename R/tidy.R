@@ -152,7 +152,7 @@ glance.jlmer_mod <- function(x, ...) {
   deviance <- JuliaConnectoR::juliaCall("deviance", x)
   dof <- JuliaConnectoR::juliaCall("dof", x)
   out <- data.frame(
-    nobs = nobs, sigma = sigma,
+    nobs = nobs, df = dof, sigma = sigma,
     logLik = ll$logLik, AIC = ll$AIC, BIC = ll$BIC,
     deviance = deviance, df.residual = nobs - dof
   )
