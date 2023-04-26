@@ -131,9 +131,16 @@ generics::glance
 #' @method glance jlmer_mod
 #' @export
 glance.jlmer_mod <- function(x, ...) {
+  is_mixed <- JuliaConnectoR::juliaLet("x isa MixedModel", x = x)
+  is_REML <- is_mixed && JuliaConnectoR::juliaLet("x.optsum.REML", x = x)
   nobs <- JuliaConnectoR::juliaCall("nobs", x)
-  sigma <- JuliaConnectoR::juliaLet("x.sigma", x = x) %|0|% NA
-  ll <- if (JuliaConnectoR::juliaLet("x isa MixedModel && x.optsum.REML", x = x)) {
+  sigma <- if (is_mixed) {
+    JuliaConnectoR::juliaLet("x.sigma", x = x) %|0|% NA
+  } else {
+    has_dispersion <- JuliaConnectoR::juliaCall("GLM.dispersion_parameter", x)
+    if (has_dispersion) JuliaConnectoR::juliaLet("dispersion(x.model)", x = x) else NA
+  }
+  ll <- if (is_REML) {
     list(logLik = NA, AIC = NA, BIC = NA)
   } else {
     list(
