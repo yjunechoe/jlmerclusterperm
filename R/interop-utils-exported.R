@@ -6,14 +6,20 @@
 #' @return Previous values for `show` and `width`
 #' @export
 julia_progress <- function(show, width) {
+  show_missing <- missing(show)
+  width_missing <- missing(width)
   old_opts <- JuliaConnectoR::juliaGet(JuliaConnectoR::juliaEval("(show = !(pg_io isa Base.DevNull), width = pg_width)"))
-  if (!missing(show)) {
+  if (!show_missing) {
     if (is.list(show) && identical(names(show), c("show", "width"))) {
       width <- show$width
       show <- show$show
     }
     JuliaConnectoR::juliaEval(paste0("pg_io = ", if (show) "stderr" else "devnull"))
   }
-  if (!missing(width)) JuliaConnectoR::juliaEval(paste0("pg_width = ", width))
-  strip_JLTYPE(old_opts)
+  if (!width_missing) JuliaConnectoR::juliaEval(paste0("pg_width = ", width))
+  if (show_missing && width_missing) {
+    strip_JLTYPE(old_opts)
+  } else {
+    invisible(strip_JLTYPE(old_opts))
+  }
 }
