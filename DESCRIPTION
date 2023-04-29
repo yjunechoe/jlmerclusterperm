@@ -32,8 +32,11 @@ Suggests:
     forcats,
     ggplot2,
     knitr,
+    patchwork,
     peekbankr,
+    readr,
     rmarkdown,
+    scales,
     tibble
 VignetteBuilder: 
     knitr

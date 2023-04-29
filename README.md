@@ -46,15 +46,15 @@ Subsequent calls to `jlmerclusterperm_setup()` incur a small overhead of
 around 30 seconds, plus slight delays for first-time function calls due
 to Julia’s [just-in-time
 compilation](https://docs.julialang.org/en/v1/). You pay up front for
-start-up and warm-up costs and get enjoy blazingly-fast functions from
-the package.
+start-up and warm-up costs and get blazingly-fast functions from the
+package.
 
 ``` r
 # Both lines must be run
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.00    0.01   17.90
+#>    0.02    0.00   18.89
 ```
 
 See the
@@ -138,44 +138,6 @@ clusterpermute(
 #>   [3, 12]: 35.769 (p=0.0099)
 #> Diet4
 #>   [2, 8]: 32.442 (p=0.0099)
-#> ────────────────────────────────────────────────────────────────────────────────
-```
-
-Using custom contrast coding:
-
-``` r
-chickweights_helm <- chickweights
-contrasts(chickweights_helm$Diet) <- contr.helmert(4)
-colnames(contrasts(chickweights_helm$Diet)) <- c("1v2", "12v3", "123v4")
-contrasts(chickweights_helm$Diet)
-#>   1v2 12v3 123v4
-#> 1  -1   -1    -1
-#> 2   1   -1    -1
-#> 3   0    2    -1
-#> 4   0    0     3
-```
-
-``` r
-chickweights_helm_spec <- make_jlmer_spec(
-  formula = weight ~ 1 + Diet,
-  data = chickweights_helm,
-  subject = "Chick", time = "Time"
-)
-set_rng_state(123L)
-clusterpermute(
-  chickweights_helm_spec,
-  threshold = 2.5,
-  nsim = 100,
-  progress = FALSE
-)$empirical_clusters
-#> ── Empirical clusters (t > 2.5) ──────────────────────── <empirical_clusters> ──
-#> Diet1v2
-#>   [3, 4]: 6.121 (p=0.0495)
-#> Diet12v3
-#>   [3, 5]: 8.904 (p=0.0297)
-#>   [9, 12]: 12.061 (p=0.0099)
-#> Diet123v4
-#>   [3, 6]: 15.029 (p=0.0495)
 #> ────────────────────────────────────────────────────────────────────────────────
 ```
 

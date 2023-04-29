@@ -38,7 +38,7 @@ Using `jlmerclusterperm` requires a prior installation of Julia, which can be do
 
 Before using functions from `jlmerclusterperm`, an initial setup step is required via calling `jlmerclusterperm_setup()`. The very first call on a system will start Julia and install necessary dependencies (this only happens once and takes 15-30 minutes).
 
-Subsequent calls to `jlmerclusterperm_setup()` incur a small overhead of around 30 seconds, plus slight delays for first-time function calls due to Julia's [just-in-time compilation](https://docs.julialang.org/en/v1/). You pay up front for start-up and warm-up costs and get enjoy blazingly-fast functions from the package.
+Subsequent calls to `jlmerclusterperm_setup()` incur a small overhead of around 30 seconds, plus slight delays for first-time function calls due to Julia's [just-in-time compilation](https://docs.julialang.org/en/v1/). You pay up front for start-up and warm-up costs and get blazingly-fast functions from the package.
 
 ```{r setup}
 # Both lines must be run
@@ -84,30 +84,6 @@ clusterpermute(
   nsim = 100,
   progress = FALSE
 )
-```
-
-Using custom contrast coding:
-
-```{r chickweights_helm}
-chickweights_helm <- chickweights
-contrasts(chickweights_helm$Diet) <- contr.helmert(4)
-colnames(contrasts(chickweights_helm$Diet)) <- c("1v2", "12v3", "123v4")
-contrasts(chickweights_helm$Diet)
-```
-
-```{r chickweights_helm_spec}
-chickweights_helm_spec <- make_jlmer_spec(
-  formula = weight ~ 1 + Diet,
-  data = chickweights_helm,
-  subject = "Chick", time = "Time"
-)
-set_rng_state(123L)
-clusterpermute(
-  chickweights_helm_spec,
-  threshold = 2.5,
-  nsim = 100,
-  progress = FALSE
-)$empirical_clusters
 ```
 
 With random effects:
