@@ -87,7 +87,7 @@ old_progress_opts
 #>
 #> $width
 #> [1] 50
-print(julia_progress())
+julia_progress()
 #> $show
 #> [1] FALSE
 #>

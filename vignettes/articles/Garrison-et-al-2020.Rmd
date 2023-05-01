@@ -462,7 +462,7 @@ tutorial_fig +
 
 </details>
 
-```{r tutorial_fig-eclusters_binom, eval=TRUE, message=FALSE}
+```{r tutorial_fig-eclusters_binom, eval=TRUE, echo=FALSE, message=FALSE}
 ```
 
 The differences we see between the aggregated vs. trial-level data here are completely expected and follow straightforwardly from the following two facts:

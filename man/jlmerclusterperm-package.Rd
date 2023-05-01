@@ -6,7 +6,7 @@
 \alias{jlmerclusterperm-package}
 \title{jlmerclusterperm: Bootstrapped cluster-based permutation analysis for time series data with GLM.jl and MixedModels.jl}
 \description{
-A Julia-based implementation of fast cluster-based permutation tests for time series data using mixed-effects models. Provides a modular interface for the steps of calculating timewise statistics, extracting clusters, and calculating p-values. Calls MixedModels.jl and GLM.jl to fit regression models using JuliaConnectoR (requires Julia installation).
+A Julia-based implementation of fast cluster-based permutation tests for time series data using mixed-effects models. Provides a modular interface for the steps of computing timewise statistics, extracting clusters, and calculating p-values. Calls MixedModels.jl and GLM.jl to fit regression models using JuliaConnectoR (requires Julia installation).
 }
 \seealso{
 Useful links:

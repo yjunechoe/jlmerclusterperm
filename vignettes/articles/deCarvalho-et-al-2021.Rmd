@@ -1,0 +1,542 @@
+---
+title: "de Carvalho et al. 2021"
+resource_files:
+  - articles/paper_files/
+description: |
+  A walkthrough of multi-level contrasts and model complexity in a CPA
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This tutorial is a walkthrough of contrasts for multi-level predictors (vs. multiple t-tests) and model complexity (linear vs. logistic; fixed vs. mixed) as they relate to CPA.
+
+See more tutorials and vignettes on the [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles) page.
+
+## Background
+
+The data comes from an eye-tracking study by [de Carvalho, Dautriche, Fiévet, & Christophe (2021)](https://doi.org/10.1016/j.jecp.2020.105017) "Toddlers exploit referential and syntactic cues to flexibly adapt their interpretation of novel verb meanings."
+
+This article reproduces and expands on their Experiment 2 analysis, which used CPA (with t-tests) to do a three-way pairwise comparison of conditions (relevant figure from paper below).
+
+```{r og-fig7, fig.alt="Figure 7 from de Carvalho et al. 2021", echo = FALSE, message = FALSE}
+knitr::include_graphics("https://raw.githubusercontent.com/yjunechoe/jlmerclusterperm/main/man/figures/deCarvalho_fig7.jpg")
+```
+
+The data comes mostly ready for CPA straight from the study's [OSF repository](https://osf.io/b5yqp/?view_only=2a06746ba360446e9857df73307d21be). The collapsible chunk below contains the code to prepare the data and reproduce the figure.
+
+<details>
+<summary>Code to reproduce data and plot</summary>
+
+Data cleaning
+
+```{r data-cleaning, message = FALSE, warning = FALSE}
+library(dplyr)
+library(forcats)
+filepath <- "https://osf.io/download/var2h/?view_only=2a06746ba360446e9857df73307d21be"
+E2_data_raw <- readr::read_delim(filepath)
+
+E2_data <- E2_data_raw %>%
+  filter(away != 1) %>%
+  mutate(Target = as.integer(bin_2P == 1)) %>%
+  mutate(Condition = fct_recode(
+    factor(Condition, levels = c("intrans", "pros", "trans")),
+    "Intransitive" = "intrans",
+    "RightDislocated" = "pros",
+    "Transitive" = "trans"
+  )) %>%
+  select(Subject, Trial, Condition, Time, Target)
+E2_data_agg <- E2_data %>%
+  group_by(Subject, Condition, Time) %>%
+  summarize(Prop = mean(Target), .groups = "drop")
+
+# Unaggregated trial-level data of 1s and 0s
+E2_data
+
+# Aggregated subject-mean proportions data used in original study
+E2_data_agg
+```
+
+Code for Figure 7 plots
+
+```{r plot-replication}
+library(ggplot2)
+make_fig7_plot <- function(conditions) {
+  E2_data %>%
+    group_by(Condition, Time) %>%
+    summarize(
+      Prop = mean(Target), se = sqrt(var(Target)/n()),
+      lower = Prop - se, upper = Prop + se,
+      .groups = "drop"
+    ) %>%
+    filter(Condition %in% conditions) %>%
+    ggplot(aes(Time, Prop, color = Condition, fill = Condition)) +
+    geom_hline(aes(yintercept = .5)) +
+    geom_ribbon(
+      aes(ymin = lower, ymax = upper),
+      alpha = .2,
+      show.legend = FALSE,
+    ) +
+    geom_line(linewidth = 1) +
+    scale_color_manual(
+      aesthetics = c("color", "fill"),
+      values = setNames(scales::hue_pal()(3)[c(2, 1, 3)], levels(E2_data$Condition))
+    ) +
+    scale_y_continuous(limits = c(.2, .8), oob = scales::oob_keep) +
+    labs(y = NULL, x = NULL) +
+    theme_minimal() +
+    theme(axis.title.y = element_text(angle = 0, vjust = .5, hjust = 0))
+}
+fig7_comparisons <- list(
+  "A" = c("Intransitive", "RightDislocated", "Transitive"),
+  "B" = c("RightDislocated", "Transitive"),
+  "C" = c("Intransitive", "RightDislocated"),
+  "D" = c("Intransitive", "Transitive")
+)
+fig7 <- lapply(fig7_comparisons, make_fig7_plot)
+
+# Figure 7 combined plots
+library(patchwork)
+p_top <- fig7$A +
+  scale_x_continuous(breaks = scales::breaks_width(1000)) +
+  theme(legend.position = "bottom")
+p_bot <- (fig7$B + fig7$C + fig7$D) & guides(color = guide_none())
+fig7_combined <- p_top / guide_area() / p_bot +
+  plot_layout(guides = "collect", heights = c(2, .1, 1)) +
+  plot_annotation(tag_levels = "A")
+```
+
+</details>
+
+Below is the data from the original study (as close as I could reproduce it). The `E2_data_agg` dataframe has the following four columns:
+
+- `Subject`: Unique identifier for subjects
+- `Condition`: A between-participant factor variable (`"Intransitive"`, `"RightDislocated"`, `"Transitive"`)
+- `Time`: A continuous measure of time from 0-8000ms in 50ms intervals
+- `Prop`: Proportion of looks to the target (averaged across trials)
+
+```{r E2_data_agg}
+E2_data_agg
+```
+
+The following is a reproduction of Figure 7 from the original paper:
+
+```{r fig7}
+fig7_combined
+```
+
+The original study used pairwise comparisons to analyze the relationship between the three conditions. The smaller figures (B, C, D) plot the following relationships:
+
+- **(B)** More looks to the target in `"Transitive"` compared to `"RightDislocated"`
+- **(C)** More looks to the target in `"RightDislocated"` compared to `"Intransitive"`
+- **(D)** More looks to the target in `"Transitive"` compared to `"Intransitive"`
+
+The rest of this vignette is organized as follows:
+
+- First, we replicate the individual pairwise CPAs from the original paper.
+
+- Next, we consider a more parsimonious analysis that reformulates the same research hypothesis as a choice of regression contrast.
+
+- Lastly, we build on the model from (2) and consider issues around model diagnostics and complexity (linear vs. logistic; fixed vs. mixed) in the context of CPA
+
+Load the package and start the Julia instance with `jlmerclusterperm_setup()` before proceeding.
+
+```{r pkg-setup}
+library(jlmerclusterperm)
+jlmerclusterperm_setup(verbose = FALSE)
+```
+
+## Replicating the pairwise CPAs
+
+The three conditions in the experiment are levels of the `Condition` factor variable:
+
+```{r condition-levels}
+levels(E2_data_agg$Condition)
+```
+
+We begin with a replication of the `"Transitive"` vs. `"RightDislocated"` comparison shown in Figure 7B and apply the same logic to the other two pairwise comparisons in 7C and 7D.
+
+### Transitive vs. RightDislocated
+
+The reproduced Figure 7B below compares `"Transitive"` and `"RightDislocated"` conditions.
+
+```{r fig7B}
+fig7$B
+```
+
+The paper (in the caption for Figure 7; emphasis mine) reports:
+
+> The **transitive** and **right-dislocated** conditions differed from each other from the second repetition of the novel verbs (**~6400 ms after the onset of the test trials until the end of the trials**).
+
+We now replicate this analysis.
+
+First, we prepare a specification object. Two things to note here:
+
+- We express the original t-test as a regression model with `Condition` as the predictor
+- We drop the third, unused condition from the data _and_ from the factor representation
+
+```{r spec_7B}
+spec_7B <- make_jlmer_spec(
+  formula = Prop ~ Condition,
+  data = E2_data_agg %>%
+    filter(Condition %in% c("Transitive", "RightDislocated")) %>%
+    mutate(Condition = droplevels(Condition)), # or forcats::fct_drop()
+  subject = "Subject", time = "Time"
+)
+spec_7B
+```
+
+Next, we fit a global model to sanity check the structure of the model output. We get one estimate for `ConditionTransitive` which has a positive coefficient, as we'd expect:
+
+```{r 7B-global}
+jlmer(spec_7B)
+```
+
+Finally, we call `clusterpermute()` with `threshold = 1.5` (same as in the original study) and simulate 100 permutations:
+
+```{r 7B-clusterpermute}
+clusterpermute(spec_7B, threshold = 1.5, nsim = 100L, progress = FALSE)
+```
+
+We detect the same largest empirical cluster spanning 6400-8000ms as reported in the original paper. This converges to around p=0.02 in a separate 10,000-simulation run (not shown here).
+
+### RightDislocated vs. Intransitive
+
+The reproduced Figure 7C below compares `"RightDislocated"` and `"Intransitive"` conditions.
+
+```{r fig7C}
+fig7$C
+```
+
+The paper reports:
+
+> The **intransitive** and **right-dislocated** conditions differed from each other from the first repetition of the novel verbs (**from 2100 ms until 3500 ms** after the beginning of the test trials).
+
+We repeat the same CPA procedure for this pairwise comparison:
+
+```{r spec_7C}
+spec_7C <- make_jlmer_spec(
+  formula = Prop ~ Condition,
+  data = E2_data_agg %>%
+    filter(Condition %in% c("RightDislocated", "Intransitive")) %>%
+    mutate(Condition = droplevels(Condition)),
+  subject = "Subject", time = "Time"
+)
+
+clusterpermute(spec_7C, threshold = 1.5, nsim = 100L, progress = FALSE)
+```
+
+The largest empirical cluster we detect spans 2150-3650ms, which is slightly different from the cluster reported in the original paper (2100-3500ms). This is a relatively less "extreme" cluster that converges to around p=0.05 in a 10,000-simulation run.
+
+### Transitive vs. Intransitive
+
+The reproduced Figure 7D below compares `"Transitive"` and `"Intransitive"` conditions.
+
+```{r fig7D}
+fig7$D
+```
+
+The paper reports:
+
+> The **transitive** and **intransitive** conditions differed from each other slightly after the offset of the first sentence in the test trials (**from 4500 ms after the beginning of the test trials until the end of the trials**).
+
+We repeat the same CPA procedure for this pairwise comparison:
+
+```{r spec_7D}
+spec_7D <- make_jlmer_spec(
+  formula = Prop ~ Condition,
+  data = E2_data_agg %>%
+    filter(Condition %in% c("Transitive", "Intransitive")) %>%
+    mutate(Condition = droplevels(Condition)),
+  subject = "Subject", time = "Time"
+)
+
+clusterpermute(spec_7D, threshold = 1.5, nsim = 100L, progress = FALSE)
+```
+
+The largest empirical cluster we detect spans 4600-8000ms, which is again only slightly different from the cluster reported in the original paper (4500-8000ms). This converges to around p=0.001 in a separate 10,000-simulation run.
+
+## Expressed as regression contrasts
+
+We now consider a more parsimonious analysis that translates the research hypothesis into _contrast coding_ to avoid multiple testing. Specifically, we exploit the fact that the original paper only specifies the hypothesis up to `Intransitive < RightDislocated < Transitive`.
+
+### Helmert (deviation) coding
+
+Testing for such an _ordinal_ relationship between levels of a category does not require all possible pairwise comparisons; instead, it can be approximated via [Helmert coding](https://stats.oarc.ucla.edu/spss/faq/coding-systems-for-categorical-variables-in-regression-analysis-2/#HELMERT%20EFFECT%20CODING) (a.k.a. deviance coding) where K levels are expressed K-1 contrasts, with each contrast successively comparing a level vs. the average of previous (typically lower) levels.
+Critically, because Helmert contrasts are _orthogonal_, we can test for them _simultaneously_ in a single model.
+
+For our data, we test the ordinal relationship `Intransitive < RightDislocated < Transitive` via these two contrasts:
+
+1) `"RightDislocated"` vs. `"Intransitive"`
+2) `"Transitive"` vs. the average of `"RightDislocated"` and `"Intransitive"`
+
+The corresponding numerical coding is the following:
+
+```{r helmert-coding}
+condition_helm <- contr.helmert(3)
+colnames(condition_helm) <- c("RvsI", "TvsRI")
+condition_helm
+```
+
+In practice, Helmert contrasts are often standardized such that all deviations are expressed as **a unit of 1**. We also do this here such that the comparison between `"RightDislocated"` vs. `"Intransitive"` is expressed as 1 unit of `RvsI` and the comparison between `"Transitive"` vs. the average of `"RightDislocated"` and `"Intransitive"` is expressed as 1 unit of `TvsRI`:
+
+```{r helmert-coding-standardized}
+condition_helm[, 1] <- condition_helm[, 1] / 2
+condition_helm[, 2] <- condition_helm[, 2] / 3
+condition_helm
+```
+
+Once we have our contrast matrix, we make a new column in our original data called `ConditionHelm` copying the `Condition` column, and apply the contrasts to this new column:
+
+```{r ConditionHelm}
+E2_data_agg$ConditionHelm <- E2_data_agg$Condition
+contrasts(E2_data_agg$ConditionHelm) <- condition_helm
+
+# For pretty-printing as fractions
+MASS::fractions(contrasts(E2_data_agg$ConditionHelm))
+```
+
+Lastly, we build a new specification making use of the _full_ data. Here, we predict `Prop` with `ConditionHelm` which will estimate the effect of both contrasts in a single model.
+
+```{r spec_helm}
+spec_helm <- make_jlmer_spec(
+  formula = Prop ~ ConditionHelm,
+  data = E2_data_agg,
+  subject = "Subject", time = "Time"
+)
+spec_helm
+```
+
+As a sanity check, we fit a global model - we expect an estimate for each contrast and we indeed find both `RvsI` and `TvsRI` in the output with positive coefficients. This suggests that the ordinal relationship between the three conditions hold at least _globally_.
+
+```{r global-spec_helm}
+jlmer(spec_helm) %>%
+  tidy(effects = "fixed")
+```
+
+Note how the coefficient for the `RvsI` contrast is exactly the same as that from the pairwise model using `spec_7C` from earlier, which _also_ compared `"RightDislocated"` to `"Intransitive"`:
+
+```{r global-spec_7C}
+jlmer(spec_7C) %>%
+  tidy(effects = "fixed")
+```
+
+In `spec_helm` the two conditions in `RvsI` were coded as -0.5 and 0.5, and in `spec_7C`'s treatment coding they were coded as 0 and 1. Since both express the difference from `"Intransitive"` to `"RightDislocated"` as a unit of +1, the two coefficients are equal in magnitude and sign.
+
+### Interpreting CPA results
+
+We proceed as normal and `clusterpermute()` using the new `spec_helm`:
+
+```{r helm-clusterpermute}
+reset_rng_state()
+CPA_helm <- clusterpermute(spec_helm, threshold = 1.5, nsim = 100L, progress = FALSE)
+CPA_helm
+```
+
+Here's a summary of what we find from `CPA_helm`:
+
+- The **`RvsI` clusters** are similar to what we detected from our previous "partial" CPA with `spec_7C`. The slight differences in the cluster-mass are due in part due to the Helmert-coded model simultaneously estimating the `TvsRI` contrast. But importantly, `CPA_helm` detects the same _largest_ cluster between `"RightDislocated"` and `"Intransitive"` (2150-3650ms). This again converges to around p=0.05 in a 10,000-simulation run.
+
+- The **`TvsRI` clusters** are new, and the largest cluster for this predictor spans 5800ms-8000ms. This converges to around p=0.01 in a separate 10,000-simulation run. This cluster effectively captures the region where the relationship `Transitive > (RightDislocated & Intransitive)` emerges as robust. Essentially, `TvsRI` is a comparison between the line for `"Transitive"` and an _invisible_ line that runs in between the lines for `"Intransitive"` and `"RightDislocated"`.
+
+We conclude by visualizing the clusters for the two Helmert-coded terms, annotated below the empirical data. The "invisible" line for `RI` from Helmert coding is drawn as a dashed line.
+
+```{r helm-annotated-plot, echo = FALSE}
+fig7A_v2 <- fig7$A +
+  geom_line(
+    aes(Time, Prop, linetype = "RI"),
+    inherit.aes = FALSE,
+    data = . %>%
+      filter(Condition %in% c("RightDislocated", "Intransitive")) %>%
+      group_by(Time) %>%
+      summarize(Prop = mean(Prop)),
+  ) +
+  scale_linetype_manual(values = "41", guide = guide_legend("ConditionHelm")) +
+  guides(x = guide_none(""))
+
+clusters_annotation <- tidy(CPA_helm$empirical_clusters) %>%
+  mutate(contrast = gsub(".*([TR])vs([RI]+)", "\\1 vs. \\2", predictor)) %>%
+  ggplot(aes(y = fct_rev(contrast))) +
+  geom_segment(
+    aes(
+      x = start, xend = end, yend = contrast,
+      color = pvalue < 0.05
+    ),
+    linewidth = 8
+  ) +
+  scale_color_manual(values = c("grey70", "steelblue")) +
+  scale_y_discrete() +
+  scale_x_continuous(n.breaks = 9, limits = range(E2_data_agg$Time)) +
+  theme_minimal() +
+  theme(
+    axis.title = element_blank(),
+    axis.text.y = element_text(face = "bold"),
+    panel.border = element_rect(fill = NA),
+    panel.grid.major.y = element_blank()
+  )
+
+fig7A_v2 / clusters_annotation &
+  plot_layout(heights = c(4, 1))
+```
+
+<details>
+<summary>Plotting code</summary>
+
+```{r helm-annotated-plot, eval = FALSE}
+```
+
+</details>
+
+## Model complexity
+
+We wrap up this case study by considering a more complex CPA which uses **logistic mixed effects models** over trial-level data of fixations to the target (1s and 0s).
+
+### Logistic mixed model
+
+The un-aggregated trial-level data that we will use in this section is `E2_data`, which comes from the initial data preparation code chunk:
+
+```{r E2_data}
+E2_data
+```
+
+We again apply the same Helmert/deviation-coded contrast matrix:
+
+```{r condition-helm-unagg}
+E2_data$ConditionHelm <- E2_data$Condition
+contrasts(E2_data$ConditionHelm) <- condition_helm
+MASS::fractions(contrasts(E2_data$ConditionHelm))
+```
+
+In our specification object for `E2_data`, we add `trial = "Trial"` and predict `Target` instead of `Prop`. We also add a by-subject random intercept to the formula:
+
+```{r spec_helm_complex}
+spec_helm_complex <- make_jlmer_spec(
+  formula = Target ~ ConditionHelm + (1 | Subject),
+  data = E2_data,
+  subject = "Subject", trial = "Trial", time = "Time"
+)
+spec_helm_complex
+```
+
+Then, we CPA with `family = "binomial"`:
+
+```{r CPA_helm_complex}
+reset_rng_state()
+CPA_helm_complex <- clusterpermute(
+  spec_helm_complex,
+  family = "binomial",
+  threshold = 1.5, nsim = 100,
+  progress = FALSE
+)
+CPA_helm_complex
+```
+
+We now visualize the results of `CPA_helm_complex` and `CPA_helm` side by side:
+
+```{r clusters_annotation-both, echo = FALSE}
+clusters_annotation2 <- tidy(CPA_helm_complex$empirical_clusters) %>%
+  mutate(contrast = gsub(".*([TR])vs([RI]+)", "\\1 vs. \\2", predictor)) %>%
+  ggplot(aes(y = fct_rev(contrast))) +
+  geom_segment(
+    aes(
+      x = start, xend = end, yend = contrast,
+      color = pvalue < 0.05
+    ),
+    linewidth = 8
+  ) +
+  scale_color_manual(values = c("grey70", "steelblue")) +
+  scale_y_discrete() +
+  scale_x_continuous(n.breaks = 9, limits = range(E2_data$Time)) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    axis.title = element_blank(),
+    axis.text.y = element_text(face = "bold"),
+    panel.border = element_rect(fill = NA),
+    panel.grid.major.y = element_blank()
+  )
+
+clusters_annotation / clusters_annotation2 &
+  guides(color = guide_none()) &
+  plot_annotation(tag_levels = list(c("Simple", "Complex")))
+```
+
+<details>
+<summary>Plotting code</summary>
+
+```{r clusters_annotation-both, eval = FALSE}
+```
+
+</details>
+
+The results are largely the same, except that the largest, significant cluster identified for `TvsRI` extends much further in the complex CPA than the simple CPA. We will examine this difference next.
+
+### Comparison of CPAs
+
+Looking at the timewise statistics computed from the simple vs. complex CPA tells us why. The figure below plots this information from calls to `compute_timewise_statistics()`:
+
+```{r empirical_statistics_fig, echo = FALSE, message = FALSE, warning = FALSE}
+# Compute the timewise statistics from the CPA specifications
+empirical_statistics <- bind_rows(
+  tidy(compute_timewise_statistics(spec_helm)),
+  tidy(compute_timewise_statistics(spec_helm_complex, family = "binomial")),
+  .id = "spec"
+) %>%
+  mutate(
+    CPA = c("Simple", "Complex")[as.integer(spec)],
+    Contrast = gsub(".*([TR])vs([RI]+)", "\\1 vs. \\2", predictor)
+  )
+
+# Time series plot of the statistics, with a line for each Helmert contrasts
+empirical_statistics_fig <- ggplot(empirical_statistics, aes(time, statistic)) +
+  geom_line(aes(color = Contrast, linetype = CPA), linewidth = 1, alpha = .7) +
+  geom_hline(yintercept = c(-1.5, 1.5), linetype = 2) +
+  theme_classic()
+
+empirical_statistics_fig
+```
+
+<details>
+<summary>Plotting code</summary>
+
+```{r empirical_statistics_fig, eval = FALSE, message = FALSE, warning = FALSE}
+```
+
+</details>
+
+Whereas the largest cluster starts to emerge at 5800ms for `CPA_helm`, it emerges much earlier at 4650ms for `CPA_helm_complex`. When we zoom into the region around 5800ms, we see that timewise statistics for `T vs. RI` in `CPA_helm` suddenly dip below the 1.5 threshold at 5750ms:
+
+```{r interest_range_fig}
+empirical_statistics_fig +
+  geom_vline(xintercept = 5750) +
+  coord_cartesian(xlim = 5750 + c(-500, 500), ylim = c(1, 2.5))
+```
+
+So which CPA is better? The existence of dips and spikes does not itself indicate a problem, but it's consistent with the expectation that the simple CPA would be less robust to variance.
+
+We can inspect the time-point model at 5750ms from the two CPAs by fitting it ourselves:
+
+```{r model-comparison}
+jlmer_simple_5750 <- to_jlmer(
+  formula = Prop ~ ConditionHelm,
+  data = E2_data_agg %>% filter(Time == 5750)
+)
+jlmer_complex_5750 <- to_jlmer(
+  formula = Target ~ ConditionHelm + (1 | Subject),
+  family = "binomial",
+  data = E2_data %>% filter(Time == 5750)
+)
+```
+
+There's no _correct_ way of comparing goodness of fit between a linear fixed-effects model and a logistic mixed-effects model fitted to different data (as far as I know), but the complex model outperforms the simple model on all the classic metrics when we inspect them with `glance()`. This doesn't come as a surprise, as the differences are largely driven by the number of observations (`nobs`).
+
+```{r model-metrics}
+glance(jlmer_simple_5750)
+glance(jlmer_complex_5750)
+```
+
+Determining the appropriate degree of model complexity in a CPA is beyond the scope of this vignette, so we will not pursue this discussion further. Instead, we conclude with an old wisdom: a chain is only as strong as its weakest link.

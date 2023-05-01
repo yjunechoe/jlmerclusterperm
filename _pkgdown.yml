@@ -69,11 +69,13 @@ articles:
   contents:
   - articles/Garrison-et-al-2020
   - articles/Geller-et-al-2020
+  - articles/deCarvalho-et-al-2021
 
 figures:
   dev: ragg::agg_png
   dpi: 96
   dev.args: []
+  out.width: "100%"
   fig.ext: png
   fig.height: ~
   fig.retina: 2

@@ -1,0 +1,14 @@
+pandoc: 2.19.2
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  deCarvalho-et-al-2021: deCarvalho-et-al-2021.html
+  Garrison-et-al-2020: Garrison-et-al-2020.html
+  Geller-et-al-2020: Geller-et-al-2020.html
+  julia-interface: julia-interface.html
+  tidying-output: tidying-output.html
+last_built: 2023-05-01T15:22Z
+urls:
+  reference: https://yjunechoe.github.io/jlmerclusterperm/reference
+  article: https://yjunechoe.github.io/jlmerclusterperm/articles
+

@@ -7,7 +7,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-0701-921X"))
 Description: A Julia-based implementation of fast cluster-based
     permutation tests for time series data using mixed-effects models.
-    Provides a modular interface for the steps of calculating timewise
+    Provides a modular interface for the steps of computing timewise
     statistics, extracting clusters, and calculating p-values.  Calls
     MixedModels.jl and GLM.jl to fit regression models using
     JuliaConnectoR (requires Julia installation).
@@ -32,6 +32,7 @@ Suggests:
     forcats,
     ggplot2,
     knitr,
+    MASS,
     patchwork,
     peekbankr,
     readr,
