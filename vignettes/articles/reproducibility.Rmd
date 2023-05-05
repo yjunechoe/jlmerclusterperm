@@ -1,0 +1,178 @@
+---
+title: "Reproducibility"
+description: |
+  Using RNG seed and counter state to guarantee reproducibility of results
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette showcases using RNG seed and counter state to guarantee the reproducibility of results from `{jlmerclusterperm}`.
+
+See more tutorials and vignettes on the [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles) page.
+
+### Setup
+
+```{r setup}
+library(jlmerclusterperm)
+jlmerclusterperm_setup(verbose = FALSE)
+julia_progress(show = FALSE)
+```
+
+Minimal example data:
+
+```{r MWE-setup, message = FALSE, warning = FALSE}
+library(dplyr, warn.conflicts = FALSE)
+library(ggplot2)
+chickweights <- as_tibble(ChickWeight) %>%
+  mutate(diet = forcats::fct_collapse(Diet, A = c(1, 3), B = c(2, 4))) %>%
+  filter(Time %in% 0:20)
+ggplot(chickweights, aes(Time, weight, color = diet)) +
+  stat_summary(fun.args = list(mult = 1.96)) +
+  stat_summary(geom = "line") +
+  theme_minimal(base_size = 18)
+```
+
+The jlmer specification object used for this showcase:
+
+```{r spec}
+jlmer_spec <- make_jlmer_spec(
+  formula = weight ~ diet + (1 | Chick), data = chickweights,
+  subject = "Chick", time = "Time"
+)
+jlmer_spec
+```
+
+## RNG seed vs. counter
+
+Because CPA is powered by bootstrapping, it is inherently a stochastic procedure. Reproducibility is guaranteed for `clusterpermute()` calls ran with the same **seed** and **counter** values. These are both properties of the Julia random number generator used by `{jlmerclusterperm}` and refer to two slightly different concepts:
+
+1) The **seed** is conceptually equivalent to the same "seed" as talked about in R, as in `set.seed()`. The seed is used in the RNG's initialization, locking it into a specific state that persists for the session. In `{jlmerclusterperm}`, the default seed is `1` and is controlled via `options("jlmerclusterperm.seed")` (this must be set _before_ starting Julia with `jlmerclusterperm_setup()`)
+
+2) The **counter** initializes to `0` and increments by some value every time the RNG is consumed to produce a random number. There is no equivalent concept in base R, though it's a more handy and intuitive way of interfacing with the RNG's state in an interactive session. The counter can be manipulated via the functions `reset_rng_state()`, `set_rng_state()`, and `get_rng_state()`.
+
+The rest of this vignette will showcase interacting with the **counter** state, as it is more useful in practice.
+
+## Behavior of RNG counter
+
+At the start of a fresh session, the counter has been initialized to zero:
+
+```{r get_rng_state-1}
+get_rng_state()
+```
+
+We start with a simple `clusterpermute()` with 100 simulations. The reproducibility profile of this run has a seed of `1` and a counter of `0`:
+
+```{r CPA_1_0}
+CPA_1_0 <- clusterpermute(jlmer_spec, threshold = 1, nsim = 100, progress = FALSE)
+CPA_1_0
+```
+
+After this run, the counter is now incremented to 3712:
+
+```{r get_rng_state-2}
+get_rng_state()
+```
+
+The same call to `clusterpermute()` now runs with this new counter value, and it produces a different result. Again, this is expected given the stochastic nature of CPA (and thus the need to run very many simulations when reporting results):
+
+```{r CPA_1_3712}
+CPA_1_3712 <- clusterpermute(jlmer_spec, threshold = 1, nsim = 100, progress = FALSE)
+CPA_1_3712
+```
+
+This second run also increments the counter state, though not by exactly the same amount (this is not possible to predict):
+
+```{r get_rng_state-3}
+get_rng_state()
+```
+
+Note that the difference between these two runs is specifically in the **null distribution** of the cluster-mass statistics. Both 100-simulation samples are drawn share the same underlying distribution (i.e., the null hypothesis), but the samples themselves are rarely identical to one another
+
+```{r null_dist_plot}
+ggplot(mapping = aes(sum_statistic)) +
+  geom_density(
+    aes(fill = "1"),
+    alpha = .5,
+    data = tidy(CPA_1_0$null_cluster_dists)
+  ) +
+  geom_density(
+    aes(fill = "3712"),
+    alpha = .5,
+    data = tidy(CPA_1_3712$null_cluster_dists)
+  ) +
+  guides(fill = guide_legend("Counter")) +
+  theme_classic()
+```
+
+## Manipulating RNG counter
+
+Using `set_rng_counter()`, it is possible to reproduce a prior run. For example, to reproduce the second `clusterpermute()` call, we set the counter back to 3712 with `set_rng_state()`:
+
+```{r set_rng_state-3712}
+set_rng_state(3712)
+get_rng_state()
+```
+
+The results of the subsequent run from this counter state is identical to the previous run:
+
+```{r identical-at-3712-counter}
+identical(
+  CPA_1_3712,
+  clusterpermute(jlmer_spec, threshold = 1, nsim = 100, progress = FALSE)
+)
+```
+
+To reproduce the first CPA ran with counter at `0`, we can again use `set_rng_state()` or simply use `reset_rng_state()` which is an alias for `set_rng_state(0)`:
+
+```{r identical-at-0-counter}
+reset_rng_state()
+get_rng_state()
+identical(
+  CPA_1_0,
+  clusterpermute(jlmer_spec, threshold = 1, nsim = 100, progress = FALSE)
+)
+```
+
+This behavior can be observed at the specific step of simulating the null distribution as well. The function corresponding to this step is `permute_timewise_statistics()` and we run 100 simulations for this step with counter at zero:
+
+```{r null_statistics-0}
+reset_rng_state()
+null_statistics <- permute_timewise_statistics(jlmer_spec, nsim = 100)
+get_rng_state()
+```
+
+Running the cluster detection algorithm over the result using `extract_null_cluster_dists()` returns a null cluster-mass distribution which is identical to that from `CPA_1_0`:
+
+```{r null_cluster_dists-0}
+null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 1)
+null_cluster_dists
+identical(null_cluster_dists, CPA_1_0$null_cluster_dists)
+```
+
+## Technical details and notes
+
+`{jlmerclusterperm}` uses a thread-safe, counter-based RNG called [Threefry](https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/#threefry) (specifically, `Random123.Threefry2x`) which comes from the [Random123.jl](https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/) Julia library as an adaptation of the original algorithm developed by [Salmon, Moraes, Dror, and Shaw (2011)](http://dx.doi.org/10.1145/2063384.2063405). Threefry is used for its speed and stability across Julia versions.
+
+Also, as noted earlier, the RNG initializes with an explicit seed of `1`. This behavior is different than in the case of R, where a random seed is chosen for the user at every new session. The consequence is that in the absence of explicit seeding via `options("jlmerclusterperm.seed")`, the first run of every new session (i.e., runs with counter value of zero) will be identical.
+
+```{r restart-run}
+# Stop Julia and restart
+JuliaConnectoR::stopJulia()
+jlmerclusterperm_setup(verbose = FALSE)
+
+# Results of the first CPA of the session (with counter = 0) is the same
+get_rng_state()
+identical(
+  CPA_1_0,
+  clusterpermute(jlmer_spec, threshold = 1, nsim = 100, progress = FALSE)
+)
+```
+
+Given the interface to the RNG counter, there are not many unique advantages to using a different seed over manipulating the RNG counter.
+
+Lastly, please be aware that changing the seed for the _R session_ (e.g., via `set.seed()`) has no effect on `{jlmerclusterperm}` functions powered by the _Julia_ back-end.

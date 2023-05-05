@@ -6,8 +6,9 @@ articles:
   Garrison-et-al-2020: Garrison-et-al-2020.html
   Geller-et-al-2020: Geller-et-al-2020.html
   julia-interface: julia-interface.html
+  reproducibility: reproducibility.html
   tidying-output: tidying-output.html
-last_built: 2023-05-01T15:22Z
+last_built: 2023-05-05T18:45Z
 urls:
   reference: https://yjunechoe.github.io/jlmerclusterperm/reference
   article: https://yjunechoe.github.io/jlmerclusterperm/articles
