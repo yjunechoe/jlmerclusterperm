@@ -5,23 +5,18 @@
 \alias{set_rng_state}
 \alias{reset_rng_state}
 \alias{get_rng_state}
-\alias{set_rng_seed}
-\title{RNG seed and counter for the permutation algorithm}
+\title{Interface to the RNG counter}
 \usage{
 set_rng_state(i)
 
 reset_rng_state()
 
 get_rng_state()
-
-set_rng_seed(seed)
 }
 \arguments{
 \item{i}{Counter number}
-
-\item{seed}{Seed}
 }
 \description{
-Experimental.
+Interface to the RNG counter
 }
 \keyword{internal}

@@ -1,6 +1,4 @@
-#' RNG seed and counter for the permutation algorithm
-#'
-#' Experimental.
+#' Interface to the RNG counter
 #'
 #' @name julia_rng
 #' @keywords internal
@@ -27,14 +25,4 @@ reset_rng_state <- function() {
 #' @export
 get_rng_state <- function() {
   JuliaConnectoR::juliaEval("Int(rng.ctr1)")
-}
-
-#' @param seed Seed
-#'
-#' @rdname julia_rng
-#' @export
-set_rng_seed <- function(seed) {
-  seedL <- as.integer(seed)
-  JuliaConnectoR::juliaEval(paste0("Random123.seed!(rng, (", seedL, ", 20))"))
-  invisible(seedL)
 }

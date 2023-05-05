@@ -56,6 +56,7 @@ reference:
 
 - title: Interop utilities
   contents:
+  - julia_rng
   - julia_progress
 
 articles:
