@@ -49,7 +49,7 @@ package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.03    0.05   26.26
+#>    0.00    0.03   29.21
 ```
 
 See the
@@ -260,3 +260,21 @@ walk_threshold_steps(
 #> 8       3   Diet3     2         9    12      4         14.0  0.00990
 #> 9       3   Diet4     1         2     7      6         29.7  0.00990
 ```
+
+## Acknowledgements
+
+- The paper [Maris & Oostenveld
+  (2007)](https://doi.org/10.1016/j.jneumeth.2007.03.024) which
+  originally proposed the cluster-based permutation analysis.
+
+- The [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR)
+  package for providing an R interface to Julia.
+
+- The Julia packages [GLM.jl](https://github.com/JuliaStats/GLM.jl) and
+  [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) for
+  fast implementations (mixed effects) regression models.
+
+- Existing implementations of CPA in R
+  ([permuco](https://jaromilfrossard.github.io/permuco/),
+  [permutes](https://github.com/cvoeten/permutes), etc.) whose designs
+  inspired the CPA interface in jlmerclusterperm.

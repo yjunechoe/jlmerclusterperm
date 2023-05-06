@@ -145,3 +145,13 @@ walk_threshold_steps(
   threshold_steps = c(2, 2.5, 3)
 )
 ```
+
+## Acknowledgements
+
+- The paper [Maris & Oostenveld (2007)](https://doi.org/10.1016/j.jneumeth.2007.03.024) which originally proposed the cluster-based permutation analysis.
+
+- The [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR) package for providing an R interface to Julia.
+
+- The Julia packages [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) for fast implementations (mixed effects) regression models.
+
+- Existing implementations of CPA in R ([permuco](https://jaromilfrossard.github.io/permuco/), [permutes](https://github.com/cvoeten/permutes), etc.) whose designs inspired the CPA interface in jlmerclusterperm.
