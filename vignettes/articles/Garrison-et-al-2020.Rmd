@@ -353,7 +353,7 @@ empirical_clusters_tested
 ```
 
 <div class="callout" style="font-size:0.9em">
-Again, the p-values are slightly different because the test is stochastic. A separate vignette covers issues of replicability, seed, and rng.
+Again, the p-values are slightly different because the test is stochastic. A [separate vignette](https://yjunechoe.github.io/jlmerclusterperm/articles/reproducibility.html) covers issues of replicability, seed, and rng.
 </div>
 
 When collected with `tidy()`, the p-values are added as a column:
@@ -496,7 +496,7 @@ timewise_statistics_fig +
   )
 ```
 
-We see that the trial-level binomial model has overall inflated t-values, as well as more pronounced "peaks" (specifically the maximum at 1300ms). A separate vignette covers a middle-ground, *partial pooling* approaching using mixed-effects models, and its consequences for CPA.
+We see that the trial-level binomial model has overall inflated t-values, as well as more pronounced "peaks" (specifically the maximum at 1300ms). A middle-ground, *partial pooling* approaching using mixed-effects models for CPA is showcased in other case study vignettes.
 
 For present purposes, we raise the threshold to a value (of `2.8`) which gets us close to detecting at least the same _largest_ cluster from `empirical_statistics`, spanning 850ms-1525ms:
 

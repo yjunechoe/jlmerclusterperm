@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">jlmerclusterperm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,6 +46,7 @@
     <h6 class="dropdown-header" data-toc-skip>Topics</h6>
     <a class="dropdown-item" href="../articles/tidying-output.html">Tidying output</a>
     <a class="dropdown-item" href="../articles/julia-interface.html">Julia interface</a>
+    <a class="dropdown-item" href="../articles/reproducibility.html">Reproducibility</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
     <a class="dropdown-item" href="../articles/Garrison-et-al-2020.html">Garrison et al. 2020</a>
@@ -365,7 +366,7 @@ replicate the results of the tutorial.</p>
 <div class="section level2">
 <h2 id="c-comparing-t-vs--chisq">C) Comparing “t” vs. “chisq”<a class="anchor" aria-label="anchor" href="#c-comparing-t-vs--chisq"></a>
 </h2>
-<p>The original tutorial used <code>clusterperm::cluster_nhds()</code>
+<p>The original tutorial used <code><a href="https://rdrr.io/pkg/clusterperm/man/cluster_nhds.html" class="external-link">clusterperm::cluster_nhds()</a></code>
 to conduct a CPA, which fits ANOVA models by time. There, the timewise
 statistic used is <strong>chi-squared</strong> and the threshold is
 determined from the p-value of the chi-squared statistic.</p>
@@ -460,7 +461,7 @@ regression models, but specifying random intercepts by subject with
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.00    0.04   21.50</span></span>
+<span><span class="co">#&gt;    0.08    0.15   21.65</span></span>
 <span><span class="va">re_CPA</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (chisq p &lt; <span style="color: #0000BB;">0.05</span>) ───── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
@@ -546,7 +547,7 @@ Notice how the results are identical to the intercept-only
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.08    0.10   35.22</span></span>
+<span><span class="co">#&gt;    0.06    0.16   33.39</span></span>
 <span><span class="va">re_max_CPA</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (chisq p &lt; <span style="color: #0000BB;">0.05</span>) ───── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
@@ -701,7 +702,7 @@ intercept-only model with the new treatment coding of
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.17    0.25   14.96</span></span>
+<span><span class="co">#&gt;    0.14    0.25   14.14</span></span>
 <span><span class="va">final_CPA</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (chisq p &lt; <span style="color: #0000BB;">0.05</span>) ───── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>

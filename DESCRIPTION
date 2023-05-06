@@ -1,7 +1,7 @@
 Package: jlmerclusterperm
 Title: Bootstrapped cluster-based permutation analysis for time series
     data with GLM.jl and MixedModels.jl
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person("June", "Choe", , "jchoe001@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0701-921X"))

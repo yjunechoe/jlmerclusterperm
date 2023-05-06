@@ -5,10 +5,6 @@
 
 <!-- badges: start -->
 
-[![Development
-Version](https://img.shields.io/badge/devel%20version-0.1.0-blue.svg)](https://github.com/yjunechoe/jlmerclusterperm)
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
@@ -16,7 +12,7 @@ Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and
 [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl)
 implementation of bootstrapped cluster-based permutation analysis (CPA)
 for time series data, powered by
-[`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR).
+[JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR).
 
 ![](man/figures/clusterpermute_slice.png)
 
@@ -34,8 +30,7 @@ Using `jlmerclusterperm` requires a prior installation of Julia, which
 can be downloaded from either the [official
 website](https://julialang.org/) or using the command line utility
 [juliaup](https://github.com/JuliaLang/juliaup). Julia version \>=1.8 is
-required and \>=1.9 is preferred for its substantial compiler/runtime
-improvements.
+required and 1.9 is preferred for its substantial speed improvements.
 
 Before using functions from `jlmerclusterperm`, an initial setup step is
 required via calling `jlmerclusterperm_setup()`. The very first call on
@@ -54,7 +49,7 @@ package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.02    0.00   18.89
+#>    0.03    0.05   26.26
 ```
 
 See the
@@ -168,7 +163,7 @@ clusterpermute(
 
 ### Piecemeal approach to CPA
 
-Time-wise statistics of the observed data:
+Computing time-wise statistics of the observed data:
 
 ``` r
 empirical_statistics <- compute_timewise_statistics(chickweights_spec)
@@ -245,7 +240,7 @@ calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1 = TRUE)
 #> ────────────────────────────────────────────────────────────────────────────────
 ```
 
-Testing a range of threshold values:
+Iterating over a range of threshold values:
 
 ``` r
 walk_threshold_steps(

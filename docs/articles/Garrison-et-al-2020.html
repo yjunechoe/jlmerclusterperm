@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">jlmerclusterperm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,6 +46,7 @@
     <h6 class="dropdown-header" data-toc-skip>Topics</h6>
     <a class="dropdown-item" href="../articles/tidying-output.html">Tidying output</a>
     <a class="dropdown-item" href="../articles/julia-interface.html">Julia interface</a>
+    <a class="dropdown-item" href="../articles/reproducibility.html">Reproducibility</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
     <a class="dropdown-item" href="../articles/Garrison-et-al-2020.html">Garrison et al. 2020</a>
@@ -608,8 +609,8 @@ p-value for each empirical cluster and returns an augmented
 <span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span></code></pre></div>
 <div class="callout" style="font-size:0.9em">
 <p>Again, the p-values are slightly different because the test is
-stochastic. A separate vignette covers issues of replicability, seed,
-and rng.</p>
+stochastic. A <a href="https://yjunechoe.github.io/jlmerclusterperm/articles/reproducibility.html">separate
+vignette</a> covers issues of replicability, seed, and rng.</p>
 </div>
 <p>When collected with <code><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy()</a></code>, the p-values are added as a
 column:</p>
@@ -823,9 +824,9 @@ aggregated data for comparison:</p>
 <p><img src="Garrison-et-al-2020_files/figure-html/timewise_statistics_fig-1.png" width="100%"></p>
 <p>We see that the trial-level binomial model has overall inflated
 t-values, as well as more pronounced “peaks” (specifically the maximum
-at 1300ms). A separate vignette covers a middle-ground, <em>partial
-pooling</em> approaching using mixed-effects models, and its
-consequences for CPA.</p>
+at 1300ms). A middle-ground, <em>partial pooling</em> approaching using
+mixed-effects models for CPA is showcased in other case study
+vignettes.</p>
 <p>For present purposes, we raise the threshold to a value (of
 <code>2.8</code>) which gets us close to detecting at least the same
 <em>largest</em> cluster from <code>empirical_statistics</code>,
@@ -878,7 +879,7 @@ set. We also time the 1000-simulation runs to showcase the speed of
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.23    0.39   13.64</span></span>
+<span><span class="co">#&gt;    0.10    0.17   13.55</span></span>
 <span><span class="va">CPA_agg_1000</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (t &gt; <span style="color: #0000BB;">2</span>) ────────────── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
@@ -902,7 +903,7 @@ set. We also time the 1000-simulation runs to showcase the speed of
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.16    0.33   29.50</span></span>
+<span><span class="co">#&gt;    0.04    0.09   31.20</span></span>
 <span><span class="va">CPA_trial_1000</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (t &gt; <span style="color: #0000BB;">2.8</span>) ──────────── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>

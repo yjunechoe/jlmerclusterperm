@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="index.html">jlmerclusterperm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +81,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>Julia <a href="https://github.com/JuliaStats/GLM.jl" class="external-link">GLM.jl</a> and <a href="https://github.com/JuliaStats/MixedModels.jl" class="external-link">MixedModels.jl</a> implementation of bootstrapped cluster-based permutation analysis (CPA) for time series data, powered by <a href="https://github.com/stefan-m-lenz/JuliaConnectoR" class="external-link"><code>JuliaConnectoR</code></a>.</p>
+<p>Julia <a href="https://github.com/JuliaStats/GLM.jl" class="external-link">GLM.jl</a> and <a href="https://github.com/JuliaStats/MixedModels.jl" class="external-link">MixedModels.jl</a> implementation of bootstrapped cluster-based permutation analysis (CPA) for time series data, powered by <a href="https://github.com/stefan-m-lenz/JuliaConnectoR" class="external-link">JuliaConnectoR</a>.</p>
 <p><img src="reference/figures/clusterpermute_slice.png"></p>
 <div class="section level2">
 <h2 id="installation-and-usage">Installation and usage<a class="anchor" aria-label="anchor" href="#installation-and-usage"></a>
@@ -90,7 +90,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"yjunechoe/jlmerclusterperm"</span><span class="op">)</span></span></code></pre></div>
-<p>Using <code>jlmerclusterperm</code> requires a prior installation of Julia, which can be downloaded from either the <a href="https://julialang.org/" class="external-link">official website</a> or using the command line utility <a href="https://github.com/JuliaLang/juliaup" class="external-link">juliaup</a>. Julia version &gt;=1.8 is required and &gt;=1.9 is preferred for its substantial compiler/runtime improvements.</p>
+<p>Using <code>jlmerclusterperm</code> requires a prior installation of Julia, which can be downloaded from either the <a href="https://julialang.org/" class="external-link">official website</a> or using the command line utility <a href="https://github.com/JuliaLang/juliaup" class="external-link">juliaup</a>. Julia version &gt;=1.8 is required and 1.9 is preferred for its substantial speed improvements.</p>
 <p>Before using functions from <code>jlmerclusterperm</code>, an initial setup step is required via calling <code><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup()</a></code>. The very first call on a system will start Julia and install necessary dependencies (this only happens once and takes 15-30 minutes).</p>
 <p>Subsequent calls to <code><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup()</a></code> incur a small overhead of around 30 seconds, plus slight delays for first-time function calls due to Julia’s <a href="https://docs.julialang.org/en/v1/" class="external-link">just-in-time compilation</a>. You pay up front for start-up and warm-up costs and get blazingly-fast functions from the package.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -98,7 +98,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">jlmerclusterperm</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu"><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.02    0.00   18.89</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.03    0.05   26.26</span></span></code></pre></div>
 <p>See the <a href="https://yjunechoe.github.io/jlmerclusterperm/articles/">Articles</a> page on the <a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">package website</a> for in-depth tutorials and case study vignettes.</p>
 </div>
 <div class="section level2">
@@ -199,7 +199,7 @@
 <div class="section level3">
 <h3 id="piecemeal-approach-to-cpa">Piecemeal approach to CPA<a class="anchor" aria-label="anchor" href="#piecemeal-approach-to-cpa"></a>
 </h3>
-<p>Time-wise statistics of the observed data:</p>
+<p>Computing time-wise statistics of the observed data:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">empirical_statistics</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/compute_timewise_statistics.html">compute_timewise_statistics</a></span><span class="op">(</span><span class="va">chickweights_spec</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">empirical_statistics</span><span class="op">)</span></span>
@@ -261,7 +261,7 @@
 <span><span class="co">#&gt; Diet4</span></span>
 <span><span class="co">#&gt;   [2, 8]: 32.442 (p=0.0099)</span></span>
 <span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span></code></pre></div>
-<p>Testing a range of threshold values:</p>
+<p>Iterating over a range of threshold values:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/walk_threshold_steps.html">walk_threshold_steps</a></span><span class="op">(</span></span>
 <span>  <span class="va">empirical_statistics</span>, <span class="va">null_statistics</span>,</span>
@@ -317,8 +317,6 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link"><img src="https://img.shields.io/badge/devel%20version-0.1.0-blue.svg" alt="Development Version"></a></li>
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 <li><a href="https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
