@@ -69,7 +69,7 @@ make_fig7_plot <- function(conditions) {
   E2_data %>%
     group_by(Condition, Time) %>%
     summarize(
-      Prop = mean(Target), se = sqrt(var(Target)/n()),
+      Prop = mean(Target), se = sqrt(var(Target) / n()),
       lower = Prop - se, upper = Prop + se,
       .groups = "drop"
     ) %>%

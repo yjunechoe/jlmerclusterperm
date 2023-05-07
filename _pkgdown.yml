@@ -66,6 +66,7 @@ articles:
   - articles/tidying-output
   - articles/julia-interface
   - articles/reproducibility
+  - articles/asynchronous-cpa
 - title: Case Studies
   navbar: Case Studies
   contents:

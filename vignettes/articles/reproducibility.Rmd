@@ -20,7 +20,6 @@ See more tutorials and vignettes on the [Articles](https://yjunechoe.github.io/j
 ```{r setup}
 library(jlmerclusterperm)
 jlmerclusterperm_setup(verbose = FALSE)
-julia_progress(show = FALSE)
 ```
 
 Minimal example data:
@@ -59,10 +58,11 @@ The rest of this vignette will showcase interacting with the **counter** state, 
 
 ## Behavior of RNG counter
 
-At the start of a fresh session, the counter has been initialized to zero:
+At the start of a fresh session, the counter is initialized at zero. And because we did not specify the seed, it's at one:
 
 ```{r get_rng_state-1}
 get_rng_state()
+get_rng_seed()
 ```
 
 We start with a simple `clusterpermute()` with 100 simulations. The reproducibility profile of this run has a seed of `1` and a counter of `0`:
@@ -78,20 +78,20 @@ After this run, the counter is now incremented to 3712:
 get_rng_state()
 ```
 
-The same call to `clusterpermute()` now runs with this new counter value, and it produces a different result. Again, this is expected given the stochastic nature of CPA (and thus the need to run very many simulations when reporting results):
+The same call to `clusterpermute()` now runs with this new counter value, and it produces a different result. Again, this is expected given the stochastic nature of the CPA (and thus the need to run tens of thousands of simulations when reporting results):
 
 ```{r CPA_1_3712}
 CPA_1_3712 <- clusterpermute(jlmer_spec, threshold = 1, nsim = 100, progress = FALSE)
 CPA_1_3712
 ```
 
-This second run also increments the counter state, though not by exactly the same amount (this is not possible to predict):
+This second run also increments the counter state, but note how it's _not exactly_ by the same amount (this is not possible to predict):
 
 ```{r get_rng_state-3}
 get_rng_state()
 ```
 
-Note that the difference between these two runs is specifically in the **null distribution** of the cluster-mass statistics. Both 100-simulation samples are drawn share the same underlying distribution (i.e., the null hypothesis), but the samples themselves are rarely identical to one another
+The difference between these two runs is specifically in the **null distribution** of the cluster-mass statistics. Both 100-simulation samples are drawn share the same underlying (null) distribution, but the samples themselves are not identical to one another (they rarely are).
 
 ```{r null_dist_plot}
 ggplot(mapping = aes(sum_statistic)) +
@@ -142,6 +142,7 @@ This behavior can be observed at the specific step of simulating the null distri
 
 ```{r null_statistics-0}
 reset_rng_state()
+get_rng_state()
 null_statistics <- permute_timewise_statistics(jlmer_spec, nsim = 100)
 get_rng_state()
 ```
@@ -156,16 +157,16 @@ identical(null_cluster_dists, CPA_1_0$null_cluster_dists)
 
 ## Technical details and notes
 
-`{jlmerclusterperm}` uses a thread-safe, counter-based RNG called [Threefry](https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/#threefry) (specifically, `Random123.Threefry2x`) which comes from the [Random123.jl](https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/) Julia library as an adaptation of the original algorithm developed by [Salmon, Moraes, Dror, and Shaw (2011)](http://dx.doi.org/10.1145/2063384.2063405). The RNG is initialized with Rounds = 20, which is the default value. Threefry is used for its speed and stability across Julia versions.
+`{jlmerclusterperm}` uses a thread-safe, counter-based RNG called [Threefry](https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/#threefry) (specifically, `Random123.Threefry2x`) which comes from the [Random123.jl](https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/) Julia library as an adaptation of the original algorithm developed by [Salmon, Moraes, Dror, and Shaw (2011)](http://dx.doi.org/10.1145/2063384.2063405). The RNG is initialized with a "rounds" value of 20, which is also the default Threefry is used for its speed and stability across Julia versions.
 
-Also, as noted earlier, the RNG initializes with an explicit seed of `1`. This behavior is different than in the case of R, where a random seed is chosen for the user for every new session. The consequence is that in the absence of explicit seeding via `options("jlmerclusterperm.seed")`, the first run of every new session (i.e., runs with counter value of zero) will be identical.
+Additionally, as noted earlier, the RNG initializes with an explicit seed of `1`. This behavior is different than in the case of R, where a random seed is chosen for the user for every new session. The consequence is that in the absence of explicit seeding via `options("jlmerclusterperm.seed")`, the first run of every new session (i.e., runs with counter value of zero) will be identical.
 
 ```{r restart-run}
 # Stop Julia and restart
 JuliaConnectoR::stopJulia()
 jlmerclusterperm_setup(verbose = FALSE)
 
-# RNG seed is 1
+# RNG seed is again 1
 get_rng_seed()
 
 # So results of the first CPA of the session (with counter = 0) is the same
@@ -176,6 +177,37 @@ identical(
 )
 ```
 
+<div class="callout" style="font-size:0.9em">
 Given the interface to the RNG counter, there are not many unique advantages to using a different seed over manipulating the RNG counter. But an interface to RNG seed is also provided via `set_rng_seed()` and `get_rng_seed()`.
+</div>
 
 Lastly, please be aware that changing the seed for the _R session_ (e.g., via `set.seed()`) has no effect on `{jlmerclusterperm}` functions powered by the _Julia_ back-end.
+
+## Miscellaneous
+
+You may be wondering whether two CPAs that overlap in the range of counter values also share overlapping samples from the null. This is actually not the case in practice because of how shuffling for the CPA is implemented:
+
+```{r similar-counter}
+# 100 simulations of timewise statistics
+## First CPA using counter at 1
+set_rng_state(123)
+x <- permute_timewise_statistics(jlmer_spec, nsim = 100)
+## Second CPA using counter at 2
+set_rng_state(124)
+y <- permute_timewise_statistics(jlmer_spec, nsim = 100)
+
+# The null cluster-mass statistics
+x_null <- extract_null_cluster_dists(x, threshold = 1)
+x_null_stats <- tidy(x_null)$sum_statistic
+y_null <- extract_null_cluster_dists(y, threshold = 1)
+y_null_stats <- tidy(y_null)$sum_statistic
+
+# Relationship between two CPAs with similar initial counters
+matplot(cbind(x_null_stats, y_null_stats), type = "b", pch = 1)
+```
+
+<div class="callout" style="font-size:0.9em">
+The two colored lines represent two 100-simulation bootstrap permutations that differ in the initial RNG counter by a value of 1. The point is that the shape of the two lines look very different, which is unexpected under the assumption that having a similar counter value also means having many overlapping samples (i.e., permutations of the data) from the null.
+</div>
+
+For more formal investigations (e.g., when simulating power for CPA), it's of course best practice to generate random _seeds_. The _counter_ is more of a convenience that balances interactivity with reproducibility.

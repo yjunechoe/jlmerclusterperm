@@ -47,6 +47,7 @@
     <a class="dropdown-item" href="../articles/tidying-output.html">Tidying output</a>
     <a class="dropdown-item" href="../articles/julia-interface.html">Julia interface</a>
     <a class="dropdown-item" href="../articles/reproducibility.html">Reproducibility</a>
+    <a class="dropdown-item" href="../articles/asynchronous-cpa.html">Asynchronous CPA</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
     <a class="dropdown-item" href="../articles/Garrison-et-al-2020.html">Garrison et al. 2020</a>
@@ -461,7 +462,7 @@ regression models, but specifying random intercepts by subject with
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.08    0.15   21.65</span></span>
+<span><span class="co">#&gt;    0.02    0.08   31.17</span></span>
 <span><span class="va">re_CPA</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (chisq p &lt; <span style="color: #0000BB;">0.05</span>) ───── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
@@ -547,7 +548,7 @@ Notice how the results are identical to the intercept-only
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.06    0.16   33.39</span></span>
+<span><span class="co">#&gt;    0.11    0.14   35.11</span></span>
 <span><span class="va">re_max_CPA</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (chisq p &lt; <span style="color: #0000BB;">0.05</span>) ───── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
@@ -702,7 +703,7 @@ intercept-only model with the new treatment coding of
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.14    0.25   14.14</span></span>
+<span><span class="co">#&gt;    0.04    0.11   18.28</span></span>
 <span><span class="va">final_CPA</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (chisq p &lt; <span style="color: #0000BB;">0.05</span>) ───── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
