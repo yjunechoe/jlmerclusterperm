@@ -8,8 +8,7 @@ NULL
 #' @rdname julia_rng
 #' @export
 set_rng_state <- function(i) {
-  counterL <- as.integer(i)
-  JuliaConnectoR::juliaLet("set_counter!(rng, i)", i = counterL)
+  JuliaConnectoR::juliaLet("set_counter!(rng, i)", i = i)
   invisible(counterL)
 }
 
@@ -17,32 +16,30 @@ set_rng_state <- function(i) {
 #' @export
 reset_rng_state <- function() {
   JuliaConnectoR::juliaEval("set_counter!(rng, 0)")
-  invisible(0L)
+  invisible(0)
 }
 
 #' @rdname julia_rng
 #' @export
 get_rng_state <- function() {
-  JuliaConnectoR::juliaEval("Int(rng.ctr1)")
+  as.double(JuliaConnectoR::juliaEval("rng.ctr1"))
 }
 
 #' @rdname julia_rng
 #' @param seed Seed
 #' @export
 set_rng_seed <- function(seed) {
-  seed_supplied <- !missing(seed)
-  if (seed_supplied) {
-    seedL <- as.integer(seed)
-  } else {
-    seedL <- as.integer(JuliaConnectoR::juliaEval("Int(Random123.gen_seed(UInt32, 1)[1])"))
+  seed_missing <- missing(seed)
+  if (seed_missing) {
+    seed <- as.double(JuliaConnectoR::juliaEval("Int(Random123.gen_seed(UInt32, 1)[1])"))
   }
-  JuliaConnectoR::juliaEval(paste0("Random123.seed!(rng, (", seedL, ", 20))"))
-  .jlmerclusterperm$opts$seed <- seedL
-  if (seed_supplied) {
-    invisible(seedL)
-  } else {
+  JuliaConnectoR::juliaEval(paste0("Random123.seed!(rng, (", seed, ", 20))"))
+  .jlmerclusterperm$opts$seed <- seed
+  if (seed_missing) {
     cli::cli_alert_info("Using randomly generated seed")
-    seedL
+    seed
+  } else {
+    invisible(seed)
   }
 }
 
