@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![Development
+Version](https://img.shields.io/badge/devel%20version-0.2.0-check.svg)](https://github.com/yjunechoe/jlmerclusterperm)
 [![R-CMD-check](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
@@ -49,7 +51,7 @@ package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.00    0.03   29.21
+#>    0.00    0.04   22.72
 ```
 
 See the

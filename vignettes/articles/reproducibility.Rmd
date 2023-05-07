@@ -156,16 +156,19 @@ identical(null_cluster_dists, CPA_1_0$null_cluster_dists)
 
 ## Technical details and notes
 
-`{jlmerclusterperm}` uses a thread-safe, counter-based RNG called [Threefry](https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/#threefry) (specifically, `Random123.Threefry2x`) which comes from the [Random123.jl](https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/) Julia library as an adaptation of the original algorithm developed by [Salmon, Moraes, Dror, and Shaw (2011)](http://dx.doi.org/10.1145/2063384.2063405). Threefry is used for its speed and stability across Julia versions.
+`{jlmerclusterperm}` uses a thread-safe, counter-based RNG called [Threefry](https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/#threefry) (specifically, `Random123.Threefry2x`) which comes from the [Random123.jl](https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/) Julia library as an adaptation of the original algorithm developed by [Salmon, Moraes, Dror, and Shaw (2011)](http://dx.doi.org/10.1145/2063384.2063405). The RNG is initialized with Rounds = 20, which is the default value. Threefry is used for its speed and stability across Julia versions.
 
-Also, as noted earlier, the RNG initializes with an explicit seed of `1`. This behavior is different than in the case of R, where a random seed is chosen for the user at every new session. The consequence is that in the absence of explicit seeding via `options("jlmerclusterperm.seed")`, the first run of every new session (i.e., runs with counter value of zero) will be identical.
+Also, as noted earlier, the RNG initializes with an explicit seed of `1`. This behavior is different than in the case of R, where a random seed is chosen for the user for every new session. The consequence is that in the absence of explicit seeding via `options("jlmerclusterperm.seed")`, the first run of every new session (i.e., runs with counter value of zero) will be identical.
 
 ```{r restart-run}
 # Stop Julia and restart
 JuliaConnectoR::stopJulia()
 jlmerclusterperm_setup(verbose = FALSE)
 
-# Results of the first CPA of the session (with counter = 0) is the same
+# RNG seed is 1
+get_rng_seed()
+
+# So results of the first CPA of the session (with counter = 0) is the same
 get_rng_state()
 identical(
   CPA_1_0,
@@ -173,6 +176,6 @@ identical(
 )
 ```
 
-Given the interface to the RNG counter, there are not many unique advantages to using a different seed over manipulating the RNG counter.
+Given the interface to the RNG counter, there are not many unique advantages to using a different seed over manipulating the RNG counter. But an interface to RNG seed is also provided via `set_rng_seed()` and `get_rng_seed()`.
 
 Lastly, please be aware that changing the seed for the _R session_ (e.g., via `set.seed()`) has no effect on `{jlmerclusterperm}` functions powered by the _Julia_ back-end.
