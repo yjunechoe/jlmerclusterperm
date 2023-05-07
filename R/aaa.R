@@ -49,15 +49,17 @@ start_with_threads <- function(..., max_threads = 7, verbose = TRUE) {
 set_projenv <- function(..., verbose = TRUE) {
   if (verbose) cli::cli_progress_step("Activating package environment")
   pkgdir <- system.file("julia/", package = "jlmerclusterperm")
+  seed <- as.integer(getOption("jlmerclusterperm.seed", 1L))
   JuliaConnectoR::juliaCall("cd", pkgdir)
   JuliaConnectoR::juliaEval("using Pkg")
   JuliaConnectoR::juliaEval('Pkg.activate(".", io = devnull)')
   JuliaConnectoR::juliaEval("Pkg.instantiate()") # io = devnull
   JuliaConnectoR::juliaEval("Pkg.resolve(io = devnull)")
   JuliaConnectoR::juliaCall("cd", getwd())
-  JuliaConnectoR::juliaEval(paste0("using Random123; const rng = Threefry2x((", getOption("jlmerclusterperm.seed", 1L), ", 20))"))
-  JuliaConnectoR::juliaEval(paste0("pg_width = ", cli::console_width() - 50))
+  JuliaConnectoR::juliaEval(paste0("pg_width = ", cli::console_width() - 50L))
   JuliaConnectoR::juliaEval("pg_io = stderr")
+  JuliaConnectoR::juliaEval(paste0("using Random123; const rng = Threefry2x((", seed, ", 20))"))
+  .jlmerclusterperm$opts$seed <- seed
   .jlmerclusterperm$opts$pkgdir <- pkgdir
 }
 

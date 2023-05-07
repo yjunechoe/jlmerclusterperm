@@ -5,18 +5,25 @@
 \alias{set_rng_state}
 \alias{reset_rng_state}
 \alias{get_rng_state}
-\title{Interface to the RNG counter}
+\alias{set_rng_seed}
+\alias{get_rng_seed}
+\title{Interface to the Julia RNG}
 \usage{
 set_rng_state(i)
 
 reset_rng_state()
 
 get_rng_state()
+
+set_rng_seed(seed)
+
+get_rng_seed()
 }
 \arguments{
 \item{i}{Counter number}
+
+\item{seed}{Seed}
 }
 \description{
-Interface to the RNG counter
+Interface to the Julia RNG
 }
-\keyword{internal}
