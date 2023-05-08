@@ -1,6 +1,6 @@
 Package: jlmerclusterperm
 Title: Bootstrapped cluster-based permutation analysis for time series
-    data with GLM.jl and MixedModels.jl
+    data using GLM and MixedModels in Julia
 Version: 0.2.0
 Authors@R: 
     person("June", "Choe", , "jchoe001@gmail.com", role = c("aut", "cre"),
@@ -8,7 +8,7 @@ Authors@R:
 Description: A Julia-based implementation of fast cluster-based
     permutation tests for time series data using mixed-effects models.
     Provides a modular interface for the steps of computing timewise
-    statistics, extracting clusters, and calculating p-values.  Calls
+    statistics, extracting clusters, and calculating p-values. Calls
     MixedModels.jl and GLM.jl to fit regression models using
     JuliaConnectoR (requires Julia installation).
 License: MIT + file LICENSE
@@ -30,6 +30,7 @@ Suggests:
     broom.mixed,
     dplyr,
     forcats,
+    future,
     ggplot2,
     knitr,
     MASS,
