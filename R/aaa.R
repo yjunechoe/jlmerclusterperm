@@ -84,15 +84,15 @@ source_jl <- function(..., verbose = TRUE) {
     "guess_shuffle_as", "permute_by_predictor"
   )
   for (jl_fn in exported_fns) {
-    .jlmerclusterperm[[jl_fn]] <- wrap_jl_fn(jl_fn)
+    .jlmerclusterperm[[jl_fn]] <- JuliaConnectoR::juliaFun(jl_fn)
   }
   .jlmerclusterperm$exported_fns <- exported_fns
 }
 
-wrap_jl_fn <- function(jl_fn) {
-  force(jl_fn)
-  function(...) JuliaConnectoR::juliaCall(jl_fn, ...)
-}
+# wrap_jl_fn <- function(jl_fn) {
+#   force(jl_fn)
+#   function(...) JuliaConnectoR::juliaCall(jl_fn, ...)
+# }
 
 #' @keywords internal
 dev_source <- function() {
