@@ -82,7 +82,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>Julia <a href="https://github.com/JuliaStats/GLM.jl" class="external-link">GLM.jl</a> and <a href="https://github.com/JuliaStats/MixedModels.jl" class="external-link">MixedModels.jl</a> implementation of bootstrapped cluster-based permutation analysis (CPA) for time series data, powered by <a href="https://github.com/stefan-m-lenz/JuliaConnectoR" class="external-link">JuliaConnectoR</a>.</p>
+<p>Julia <a href="https://github.com/JuliaStats/GLM.jl" class="external-link">GLM.jl</a> and <a href="https://github.com/JuliaStats/MixedModels.jl" class="external-link">MixedModels.jl</a> based implementation of bootstrapped cluster-based permutation analysis (CPA) for time series data, powered by <a href="https://github.com/stefan-m-lenz/JuliaConnectoR" class="external-link">JuliaConnectoR</a>.</p>
 <p><img src="reference/figures/clusterpermute_slice.png"></p>
 <div class="section level2">
 <h2 id="installation-and-usage">Installation and usage<a class="anchor" aria-label="anchor" href="#installation-and-usage"></a>
@@ -91,15 +91,15 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"yjunechoe/jlmerclusterperm"</span><span class="op">)</span></span></code></pre></div>
-<p>Using <code>jlmerclusterperm</code> requires a prior installation of Julia, which can be downloaded from either the <a href="https://julialang.org/" class="external-link">official website</a> or using the command line utility <a href="https://github.com/JuliaLang/juliaup" class="external-link">juliaup</a>. Julia version &gt;=1.8 is required and 1.9 is preferred for its substantial speed improvements.</p>
-<p>Before using functions from <code>jlmerclusterperm</code>, an initial setup step is required via calling <code><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup()</a></code>. The very first call on a system will start Julia and install necessary dependencies (this only happens once and takes 15-30 minutes).</p>
-<p>Subsequent calls to <code><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup()</a></code> incur a small overhead of around 30 seconds, plus slight delays for first-time function calls due to Julia’s <a href="https://docs.julialang.org/en/v1/" class="external-link">just-in-time compilation</a>. You pay up front for start-up and warm-up costs and get blazingly-fast functions from the package.</p>
+<p>Using <code>jlmerclusterperm</code> requires a prior installation of Julia, which can be downloaded from either the <a href="https://julialang.org/" class="external-link">official website</a> or using the command line utility <a href="https://github.com/JuliaLang/juliaup" class="external-link">juliaup</a>. Julia version &gt;=1.8 is required and <a href="https://julialang.org/blog/2023/04/julia-1.9-highlights/#caching_of_native_code" class="external-link">1.9</a> is preferred for its substantial speed improvements.</p>
+<p>Before using functions from <code>jlmerclusterperm</code>, an initial setup step is required via calling <code><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup()</a></code>. The very first call on a system will install necessary dependencies (this only happens once and takes around 10-15 minutes).</p>
+<p>Subsequent calls to <code><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup()</a></code> incur a small overhead of around 30 seconds, plus slight delays for first-time function calls. You pay up front for start-up and warm-up costs and get blazingly-fast functions from the package.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Both lines must be run</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">jlmerclusterperm</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu"><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.00    0.04   22.72</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.00    0.02   25.25</span></span></code></pre></div>
 <p>See the <a href="https://yjunechoe.github.io/jlmerclusterperm/articles/">Articles</a> page on the <a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">package website</a> for in-depth tutorials and case study vignettes.</p>
 </div>
 <div class="section level2">
@@ -287,7 +287,7 @@
 </h2>
 <ul>
 <li><p>The paper <a href="https://doi.org/10.1016/j.jneumeth.2007.03.024" class="external-link">Maris &amp; Oostenveld (2007)</a> which originally proposed the cluster-based permutation analysis.</p></li>
-<li><p>The <a href="https://github.com/stefan-m-lenz/JuliaConnectoR" class="external-link">JuliaConnectoR</a> package for providing an R interface to Julia.</p></li>
+<li><p>The <a href="https://github.com/stefan-m-lenz/JuliaConnectoR" class="external-link">JuliaConnectoR</a> package for powering the R interface to Julia.</p></li>
 <li><p>The Julia packages <a href="https://github.com/JuliaStats/GLM.jl" class="external-link">GLM.jl</a> and <a href="https://github.com/JuliaStats/MixedModels.jl" class="external-link">MixedModels.jl</a> for fast implementations (mixed effects) regression models.</p></li>
 <li><p>Existing implementations of CPA in R (<a href="https://jaromilfrossard.github.io/permuco/" class="external-link">permuco</a>, <a href="https://github.com/cvoeten/permutes" class="external-link">permutes</a>, etc.) whose designs inspired the CPA interface in jlmerclusterperm.</p></li>
 </ul>

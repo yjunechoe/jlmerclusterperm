@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) implementation of bootstrapped cluster-based permutation analysis (CPA) for time series data, powered by [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR).
+Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) based implementation of bootstrapped cluster-based permutation analysis (CPA) for time series data, powered by [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR).
 
 ![](man/figures/clusterpermute_slice.png)
 
@@ -33,11 +33,11 @@ You can install the development version of jlmerclusterperm from [GitHub](https:
 remotes::install_github("yjunechoe/jlmerclusterperm")
 ```
 
-Using `jlmerclusterperm` requires a prior installation of Julia, which can be downloaded from either the [official website](https://julialang.org/) or using the command line utility [juliaup](https://github.com/JuliaLang/juliaup). Julia version >=1.8 is required and 1.9 is preferred for its substantial speed improvements.
+Using `jlmerclusterperm` requires a prior installation of Julia, which can be downloaded from either the [official website](https://julialang.org/) or using the command line utility [juliaup](https://github.com/JuliaLang/juliaup). Julia version >=1.8 is required and [1.9](https://julialang.org/blog/2023/04/julia-1.9-highlights/#caching_of_native_code) is preferred for its substantial speed improvements.
 
-Before using functions from `jlmerclusterperm`, an initial setup step is required via calling `jlmerclusterperm_setup()`. The very first call on a system will start Julia and install necessary dependencies (this only happens once and takes 15-30 minutes).
+Before using functions from `jlmerclusterperm`, an initial setup step is required via calling `jlmerclusterperm_setup()`. The very first call on a system will install necessary dependencies (this only happens once and takes around 10-15 minutes).
 
-Subsequent calls to `jlmerclusterperm_setup()` incur a small overhead of around 30 seconds, plus slight delays for first-time function calls due to Julia's [just-in-time compilation](https://docs.julialang.org/en/v1/). You pay up front for start-up and warm-up costs and get blazingly-fast functions from the package.
+Subsequent calls to `jlmerclusterperm_setup()` incur a small overhead of around 30 seconds, plus slight delays for first-time function calls. You pay up front for start-up and warm-up costs and get blazingly-fast functions from the package.
 
 ```{r setup}
 # Both lines must be run
@@ -151,7 +151,7 @@ walk_threshold_steps(
 
 - The paper [Maris & Oostenveld (2007)](https://doi.org/10.1016/j.jneumeth.2007.03.024) which originally proposed the cluster-based permutation analysis.
 
-- The [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR) package for providing an R interface to Julia.
+- The [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR) package for powering the R interface to Julia.
 
 - The Julia packages [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) for fast implementations (mixed effects) regression models.
 

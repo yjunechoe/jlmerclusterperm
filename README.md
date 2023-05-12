@@ -11,7 +11,7 @@ Version](https://img.shields.io/badge/devel%20version-0.2.0-check.svg)](https://
 <!-- badges: end -->
 
 Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and
-[MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl)
+[MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) based
 implementation of bootstrapped cluster-based permutation analysis (CPA)
 for time series data, powered by
 [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR).
@@ -32,26 +32,26 @@ Using `jlmerclusterperm` requires a prior installation of Julia, which
 can be downloaded from either the [official
 website](https://julialang.org/) or using the command line utility
 [juliaup](https://github.com/JuliaLang/juliaup). Julia version \>=1.8 is
-required and 1.9 is preferred for its substantial speed improvements.
+required and
+[1.9](https://julialang.org/blog/2023/04/julia-1.9-highlights/#caching_of_native_code)
+is preferred for its substantial speed improvements.
 
 Before using functions from `jlmerclusterperm`, an initial setup step is
 required via calling `jlmerclusterperm_setup()`. The very first call on
-a system will start Julia and install necessary dependencies (this only
-happens once and takes 15-30 minutes).
+a system will install necessary dependencies (this only happens once and
+takes around 10-15 minutes).
 
 Subsequent calls to `jlmerclusterperm_setup()` incur a small overhead of
-around 30 seconds, plus slight delays for first-time function calls due
-to Julia’s [just-in-time
-compilation](https://docs.julialang.org/en/v1/). You pay up front for
-start-up and warm-up costs and get blazingly-fast functions from the
-package.
+around 30 seconds, plus slight delays for first-time function calls. You
+pay up front for start-up and warm-up costs and get blazingly-fast
+functions from the package.
 
 ``` r
 # Both lines must be run
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.00    0.04   22.72
+#>    0.00    0.02   25.25
 ```
 
 See the
@@ -270,7 +270,7 @@ walk_threshold_steps(
   originally proposed the cluster-based permutation analysis.
 
 - The [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR)
-  package for providing an R interface to Julia.
+  package for powering the R interface to Julia.
 
 - The Julia packages [GLM.jl](https://github.com/JuliaStats/GLM.jl) and
   [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) for
