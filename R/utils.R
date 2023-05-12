@@ -5,11 +5,11 @@ near_zero <- function(x) {
 }
 
 maybe_as_tibble <- function(x) {
-  if ("tibble" %in% rownames(utils::installed.packages())) {
-    asNamespace("tibble")$as_tibble(x)
-  } else {
-    x
+  if ("tibble" %in% loadedNamespaces()) {
+    rownames(x) <- NULL
+    class(x) <- c("tbl_df", "tbl", class(x))
   }
+  x
 }
 
 backtrans_interaction <- function(x) {
