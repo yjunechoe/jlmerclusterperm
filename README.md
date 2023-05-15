@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# jlmerclusterperm <a href="https://yjunechoe.github.io/jlmerclusterperm/"><img src="man/figures/logo.png" align="right" height="139" /></a>
+# jlmerclusterperm <a href="https://yjunechoe.github.io/jlmerclusterperm/"><img src="man/figures/logo.png" align="right" height="200" /></a>
 
 <!-- badges: start -->
 
@@ -17,6 +17,39 @@ for time series data, powered by
 [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR).
 
 ![](man/figures/clusterpermute_slice.png)
+
+## Overview of CPA
+
+**Cluster-based permutation analysis (CPA)** is a simulation-based,
+non-parametric statistical test of difference between groups in a time
+series. It is suitable for analyzing **densely-sampled time data**
+(e.g., eye gaze, EEG) when the research hypothesis is often specified up
+to the existence of an effect (as predicted by higher-order cognitive
+mechanisms) but agnostic to the structural details of the temporal event
+(such as the price moment of an effect’s emergence).
+
+CPA formalizes two intuitions about what it means for there to be a
+difference between groups:
+
+1)  The countable unit of difference (i.e., a **cluster**) is a
+    contiguous, uninterrupted span of *sufficiently large* (determined
+    via a pre-determined threshold) differences at each time point.
+
+2)  The degree of extremity of a cluster (i.e., the **cluster-mass
+    statistic**) is a measure that is sensitive to the magnitude of the
+    difference, its variability, and the sample size (e.g., the
+    t-statistic).
+
+In short, the CPA procedure identifies empirical clusters in a time
+series and tests the significance of the cluster-mass statistics against
+bootstrapped permutations of the data which simulates sampling from the
+null.
+
+`jlmerclusterperm` is an interface to CPA which supports both wholesale
+and piecemeal approaches to conducting a CPA. See the
+[Articles](https://yjunechoe.github.io/jlmerclusterperm/articles/) page
+on the [package website](https://github.com/yjunechoe/jlmerclusterperm)
+for in-depth tutorials and case study vignettes.
 
 ## Installation and usage
 
@@ -51,17 +84,12 @@ functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.00    0.03   25.50
+#>    0.02    0.01   30.24
 ```
-
-See the
-[Articles](https://yjunechoe.github.io/jlmerclusterperm/articles/) page
-on the [package website](https://github.com/yjunechoe/jlmerclusterperm)
-for in-depth tutorials and case study vignettes.
 
 ## Quick tour of package functionalities
 
-### Complete CPA with `clusterpermute()`
+### Wholesale CPA with `clusterpermute()`
 
 A time series data:
 
