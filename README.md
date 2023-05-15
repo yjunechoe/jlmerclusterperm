@@ -12,8 +12,8 @@ Version](https://img.shields.io/badge/devel%20version-0.2.0-check.svg)](https://
 
 Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and
 [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) based
-implementation of bootstrapped cluster-based permutation analysis (CPA)
-for time series data, powered by
+implementation of cluster-based permutation analysis for time series
+data, powered by
 [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR).
 
 ![](man/figures/clusterpermute_slice.png)
@@ -24,32 +24,32 @@ for time series data, powered by
 non-parametric statistical test of difference between groups in a time
 series. It is suitable for analyzing **densely-sampled time data**
 (e.g., eye gaze, EEG) when the research hypothesis is often specified up
-to the existence of an effect (as predicted by higher-order cognitive
-mechanisms) but agnostic to the structural details of the temporal event
-(such as the price moment of an effect’s emergence).
+to the existence of an effect (e.g., as predicted by higher-order
+cognitive mechanisms) but agnostic to the structural details of the
+temporal event (e.g., the precise moment of an effect’s emergence).
 
 CPA formalizes two intuitions about what it means for there to be a
 difference between groups:
 
 1)  The countable unit of difference (i.e., a **cluster**) is a
-    contiguous, uninterrupted span of *sufficiently large* (determined
-    via a pre-determined threshold) differences at each time point.
+    contiguous, uninterrupted span of *sufficiently large* differences
+    at each time point (determined via a pre-determined threshold).
 
 2)  The degree of extremity of a cluster (i.e., the **cluster-mass
     statistic**) is a measure that is sensitive to the magnitude of the
     difference, its variability, and the sample size (e.g., the
-    t-statistic).
+    t-statistic from a regression).
 
 In short, the CPA procedure identifies empirical clusters in a time
 series and tests the significance of the cluster-mass statistics against
-bootstrapped permutations of the data which simulates sampling from the
-null.
+bootstrapped permutations of the data simulating the null.
 
-`jlmerclusterperm` is an interface to CPA which supports both wholesale
-and piecemeal approaches to conducting a CPA. See the
+`jlmerclusterperm` is an interface to a regression-based CPA which
+supports both wholesale and piecemeal approaches to conducting a CPA.
+See the
 [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles/) page
 on the [package website](https://github.com/yjunechoe/jlmerclusterperm)
-for in-depth tutorials and case study vignettes.
+for tutorials and case studies.
 
 ## Installation and usage
 
@@ -69,7 +69,7 @@ required and
 [1.9](https://julialang.org/blog/2023/04/julia-1.9-highlights/#caching_of_native_code)
 is preferred for its substantial speed improvements.
 
-Before using functions from `jlmerclusterperm`, an initial setup step is
+Before using functions from `jlmerclusterperm`, an initial setup is
 required via calling `jlmerclusterperm_setup()`. The very first call on
 a system will install necessary dependencies (this only happens once and
 takes around 10-15 minutes).
@@ -80,11 +80,11 @@ pay up front for start-up and warm-up costs and get blazingly-fast
 functions from the package.
 
 ``` r
-# Both lines must be run
+# Both lines must be run at the start of each new session
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.02    0.01   30.24
+#>    0.04    0.04   23.35
 ```
 
 ## Quick tour of package functionalities

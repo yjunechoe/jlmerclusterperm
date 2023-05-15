@@ -92,19 +92,19 @@
 </div>
 <!-- badges: start -->
 
-<p>Julia <a href="https://github.com/JuliaStats/GLM.jl" class="external-link">GLM.jl</a> and <a href="https://github.com/JuliaStats/MixedModels.jl" class="external-link">MixedModels.jl</a> based implementation of bootstrapped cluster-based permutation analysis (CPA) for time series data, powered by <a href="https://github.com/stefan-m-lenz/JuliaConnectoR" class="external-link">JuliaConnectoR</a>.</p>
+<p>Julia <a href="https://github.com/JuliaStats/GLM.jl" class="external-link">GLM.jl</a> and <a href="https://github.com/JuliaStats/MixedModels.jl" class="external-link">MixedModels.jl</a> based implementation of cluster-based permutation analysis for time series data, powered by <a href="https://github.com/stefan-m-lenz/JuliaConnectoR" class="external-link">JuliaConnectoR</a>.</p>
 <p><img src="reference/figures/clusterpermute_slice.png"></p>
 <div class="section level2">
 <h2 id="overview-of-cpa">Overview of CPA<a class="anchor" aria-label="anchor" href="#overview-of-cpa"></a>
 </h2>
-<p><strong>Cluster-based permutation analysis (CPA)</strong> is a simulation-based, non-parametric statistical test of difference between groups in a time series. It is suitable for analyzing <strong>densely-sampled time data</strong> (e.g., eye gaze, EEG) when the research hypothesis is often specified up to the existence of an effect (as predicted by higher-order cognitive mechanisms) but agnostic to the structural details of the temporal event (such as the price moment of an effect’s emergence).</p>
+<p><strong>Cluster-based permutation analysis (CPA)</strong> is a simulation-based, non-parametric statistical test of difference between groups in a time series. It is suitable for analyzing <strong>densely-sampled time data</strong> (e.g., eye gaze, EEG) when the research hypothesis is often specified up to the existence of an effect (e.g., as predicted by higher-order cognitive mechanisms) but agnostic to the structural details of the temporal event (e.g., the precise moment of an effect’s emergence).</p>
 <p>CPA formalizes two intuitions about what it means for there to be a difference between groups:</p>
 <ol style="list-style-type: decimal">
-<li><p>The countable unit of difference (i.e., a <strong>cluster</strong>) is a contiguous, uninterrupted span of <em>sufficiently large</em> (determined via a pre-determined threshold) differences at each time point.</p></li>
-<li><p>The degree of extremity of a cluster (i.e., the <strong>cluster-mass statistic</strong>) is a measure that is sensitive to the magnitude of the difference, its variability, and the sample size (e.g., the t-statistic).</p></li>
+<li><p>The countable unit of difference (i.e., a <strong>cluster</strong>) is a contiguous, uninterrupted span of <em>sufficiently large</em> differences at each time point (determined via a pre-determined threshold).</p></li>
+<li><p>The degree of extremity of a cluster (i.e., the <strong>cluster-mass statistic</strong>) is a measure that is sensitive to the magnitude of the difference, its variability, and the sample size (e.g., the t-statistic from a regression).</p></li>
 </ol>
-<p>In short, the CPA procedure identifies empirical clusters in a time series and tests the significance of the cluster-mass statistics against bootstrapped permutations of the data which simulates sampling from the null.</p>
-<p><code>jlmerclusterperm</code> is an interface to CPA which supports both wholesale and piecemeal approaches to conducting a CPA. See the <a href="https://yjunechoe.github.io/jlmerclusterperm/articles/">Articles</a> page on the <a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">package website</a> for in-depth tutorials and case study vignettes.</p>
+<p>In short, the CPA procedure identifies empirical clusters in a time series and tests the significance of the cluster-mass statistics against bootstrapped permutations of the data simulating the null.</p>
+<p><code>jlmerclusterperm</code> is an interface to a regression-based CPA which supports both wholesale and piecemeal approaches to conducting a CPA. See the <a href="https://yjunechoe.github.io/jlmerclusterperm/articles/">Articles</a> page on the <a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">package website</a> for tutorials and case studies.</p>
 </div>
 <div class="section level2">
 <h2 id="installation-and-usage">Installation and usage<a class="anchor" aria-label="anchor" href="#installation-and-usage"></a>
@@ -114,14 +114,14 @@
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"yjunechoe/jlmerclusterperm"</span><span class="op">)</span></span></code></pre></div>
 <p>Using <code>jlmerclusterperm</code> requires a prior installation of Julia, which can be downloaded from either the <a href="https://julialang.org/" class="external-link">official website</a> or using the command line utility <a href="https://github.com/JuliaLang/juliaup" class="external-link">juliaup</a>. Julia version &gt;=1.8 is required and <a href="https://julialang.org/blog/2023/04/julia-1.9-highlights/#caching_of_native_code" class="external-link">1.9</a> is preferred for its substantial speed improvements.</p>
-<p>Before using functions from <code>jlmerclusterperm</code>, an initial setup step is required via calling <code><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup()</a></code>. The very first call on a system will install necessary dependencies (this only happens once and takes around 10-15 minutes).</p>
+<p>Before using functions from <code>jlmerclusterperm</code>, an initial setup is required via calling <code><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup()</a></code>. The very first call on a system will install necessary dependencies (this only happens once and takes around 10-15 minutes).</p>
 <p>Subsequent calls to <code><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup()</a></code> incur a small overhead of around 30 seconds, plus slight delays for first-time function calls. You pay up front for start-up and warm-up costs and get blazingly-fast functions from the package.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Both lines must be run</span></span>
+<code class="sourceCode R"><span><span class="co"># Both lines must be run at the start of each new session</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">jlmerclusterperm</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu"><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.02    0.01   30.24</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.04    0.04   23.35</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-tour-of-package-functionalities">Quick tour of package functionalities<a class="anchor" aria-label="anchor" href="#quick-tour-of-package-functionalities"></a>
