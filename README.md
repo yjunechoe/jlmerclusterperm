@@ -18,7 +18,7 @@ data, powered by
 
 ![](man/figures/clusterpermute_slice.png)
 
-## Overview of CPA
+## Overview
 
 **Cluster-based permutation analysis (CPA)** is a simulation-based,
 non-parametric statistical test of difference between groups in a time
@@ -84,7 +84,7 @@ functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.04    0.04   23.35
+#>    0.02    0.00   22.25
 ```
 
 ## Quick tour of package functionalities
@@ -195,52 +195,11 @@ Computing time-wise statistics of the observed data:
 
 ``` r
 empirical_statistics <- compute_timewise_statistics(chickweights_spec)
-tidy(empirical_statistics)
-#>    predictor time statistic
-#> 1      Diet2    1 -1.602704
-#> 2      Diet3    1 -1.373747
-#> 3      Diet4    1 -0.915831
-#> 4      Diet2    2  1.670228
-#> 5      Diet3    2  2.447078
-#> 6      Diet4    2  3.534669
-#> 7      Diet2    3  2.600323
-#> 8      Diet3    3  4.476505
-#> 9      Diet4    3  6.274514
-#> 10     Diet2    4  3.520818
-#> 11     Diet3    4  4.543060
-#> 12     Diet4    4  6.996441
-#> 13     Diet2    5  2.375235
-#> 14     Diet3    5  3.699665
-#> 15     Diet4    5  5.122934
-#> 16     Diet2    6  1.909022
-#> 17     Diet3    6  2.971831
-#> 18     Diet4    6  4.071714
-#> 19     Diet2    7  1.943661
-#> 20     Diet3    7  3.061704
-#> 21     Diet4    7  3.659132
-#> 22     Diet2    8  1.341161
-#> 23     Diet3    8  2.978569
-#> 24     Diet4    8  2.782950
-#> 25     Diet2    9  1.157799
-#> 26     Diet3    9  3.045802
-#> 27     Diet4    9  2.156651
-#> 28     Diet2   10  1.396368
-#> 29     Diet3   10  3.600737
-#> 30     Diet4   10  2.134394
-#> 31     Diet2   11  1.512195
-#> 32     Diet3   11  3.802734
-#> 33     Diet4   11  2.637206
-#> 34     Diet2   12  1.432626
-#> 35     Diet3   12  3.588349
-#> 36     Diet4   12  2.280864
-```
-
-``` r
 matplot(t(empirical_statistics), type = "b", pch = 1, lwd = 3, ylab = "t-statistic")
 abline(h = 2.5, lty = 3)
 ```
 
-<img src="man/figures/README-plot-empirical_statistics-1.png" width="75%" />
+<img src="man/figures/README-empirical_statistics-1.png" width="75%" />
 
 Identifying empirical clusters:
 

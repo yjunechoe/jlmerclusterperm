@@ -24,7 +24,7 @@ Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https:
 
 ![](man/figures/clusterpermute_slice.png)
 
-## Overview of CPA
+## Overview
 
 **Cluster-based permutation analysis (CPA)** is a simulation-based, non-parametric statistical test of difference between groups in a time series. It is suitable for analyzing **densely-sampled time data** (e.g., eye gaze, EEG) when the research hypothesis is often specified up to the existence of an effect (e.g., as predicted by higher-order cognitive mechanisms) but agnostic to the structural details of the temporal event (e.g., the precise moment of an effect's emergence).
 
@@ -121,10 +121,6 @@ Computing time-wise statistics of the observed data:
 
 ```{r empirical_statistics}
 empirical_statistics <- compute_timewise_statistics(chickweights_spec)
-tidy(empirical_statistics)
-```
-
-```{r plot-empirical_statistics}
 matplot(t(empirical_statistics), type = "b", pch = 1, lwd = 3, ylab = "t-statistic")
 abline(h = 2.5, lty = 3)
 ```
