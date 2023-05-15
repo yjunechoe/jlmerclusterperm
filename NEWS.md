@@ -1,6 +1,6 @@
 # jlmerclusterperm (development version)
 
-- Exported `get_rng_seed()` and `set_rng_seed()`
+- New functions to interface with Julia RNG seed: `get_rng_seed()` and `set_rng_seed()`
 
 - New article: [asynchronous CPA](https://yjunechoe.github.io/jlmerclusterperm/articles/asynchronous-cpa.html)
 

@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# jlmerclusterperm
+# jlmerclusterperm <a href="https://yjunechoe.github.io/jlmerclusterperm/"><img src="man/figures/logo.png" align="right" height="139" /></a>
 
 <!-- badges: start -->
 
@@ -51,7 +51,7 @@ functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.00    0.02   25.25
+#>    0.00    0.03   25.50
 ```
 
 See the
@@ -94,13 +94,11 @@ chickweights_spec
 #>   Trial:
 #>   Time: Time
 #> Data:
-#> # A tibble: 578 × 6
-#>   weight Diet2 Diet3 Diet4 Chick  Time
-#>    <dbl> <dbl> <dbl> <dbl> <ord> <int>
-#> 1     42     0     0     0 1         1
-#> 2     51     0     0     0 1         2
-#> 3     59     0     0     0 1         3
-#> # ℹ 575 more rows
+#>   weight Diet2 Diet3 Diet4 Chick Time
+#> 1     42     0     0     0     1    1
+#> 2     51     0     0     0     1    2
+#> 3     59     0     0     0     1    3
+#>  [ reached 'max' / getOption("max.print") -- omitted 575 rows ]
 #> ────────────────────────────────────────────────────────────────────────────────
 ```
 
@@ -170,20 +168,43 @@ Computing time-wise statistics of the observed data:
 ``` r
 empirical_statistics <- compute_timewise_statistics(chickweights_spec)
 tidy(empirical_statistics)
-#> # A tibble: 36 × 3
-#>    predictor  time statistic
-#>    <chr>     <dbl>     <dbl>
-#>  1 Diet2         1    -1.60 
-#>  2 Diet3         1    -1.37 
-#>  3 Diet4         1    -0.916
-#>  4 Diet2         2     1.67 
-#>  5 Diet3         2     2.45 
-#>  6 Diet4         2     3.53 
-#>  7 Diet2         3     2.60 
-#>  8 Diet3         3     4.48 
-#>  9 Diet4         3     6.27 
-#> 10 Diet2         4     3.52 
-#> # ℹ 26 more rows
+#>    predictor time statistic
+#> 1      Diet2    1 -1.602704
+#> 2      Diet3    1 -1.373747
+#> 3      Diet4    1 -0.915831
+#> 4      Diet2    2  1.670228
+#> 5      Diet3    2  2.447078
+#> 6      Diet4    2  3.534669
+#> 7      Diet2    3  2.600323
+#> 8      Diet3    3  4.476505
+#> 9      Diet4    3  6.274514
+#> 10     Diet2    4  3.520818
+#> 11     Diet3    4  4.543060
+#> 12     Diet4    4  6.996441
+#> 13     Diet2    5  2.375235
+#> 14     Diet3    5  3.699665
+#> 15     Diet4    5  5.122934
+#> 16     Diet2    6  1.909022
+#> 17     Diet3    6  2.971831
+#> 18     Diet4    6  4.071714
+#> 19     Diet2    7  1.943661
+#> 20     Diet3    7  3.061704
+#> 21     Diet4    7  3.659132
+#> 22     Diet2    8  1.341161
+#> 23     Diet3    8  2.978569
+#> 24     Diet4    8  2.782950
+#> 25     Diet2    9  1.157799
+#> 26     Diet3    9  3.045802
+#> 27     Diet4    9  2.156651
+#> 28     Diet2   10  1.396368
+#> 29     Diet3   10  3.600737
+#> 30     Diet4   10  2.134394
+#> 31     Diet2   11  1.512195
+#> 32     Diet3   11  3.802734
+#> 33     Diet4   11  2.637206
+#> 34     Diet2   12  1.432626
+#> 35     Diet3   12  3.588349
+#> 36     Diet4   12  2.280864
 ```
 
 ``` r
@@ -249,18 +270,16 @@ walk_threshold_steps(
   empirical_statistics, null_statistics,
   threshold_steps = c(2, 2.5, 3)
 )
-#> # A tibble: 9 × 8
-#>   threshold predictor id    start   end length sum_statistic  pvalue
-#>       <dbl> <chr>     <fct> <dbl> <dbl>  <dbl>         <dbl>   <dbl>
-#> 1       2   Diet2     1         3     5      3          8.50 0.0792 
-#> 2       2   Diet3     1         2    12     11         38.2  0.00990
-#> 3       2   Diet4     1         2    12     11         41.7  0.00990
-#> 4       2.5 Diet2     1         3     4      2          6.12 0.0495 
-#> 5       2.5 Diet3     1         3    12     10         35.8  0.00990
-#> 6       2.5 Diet4     1         2     8      7         32.4  0.00990
-#> 7       3   Diet3     1         3     5      3         12.7  0.00990
-#> 8       3   Diet3     2         9    12      4         14.0  0.00990
-#> 9       3   Diet4     1         2     7      6         29.7  0.00990
+#>    threshold predictor id start end length sum_statistic     pvalue
+#> 1        2.0     Diet2  1     3   5      3      8.496376 0.07920792
+#> 2        2.0     Diet3  1     2  12     11     38.216035 0.00990099
+#> 3        2.0     Diet4  1     2  12     11     41.651468 0.00990099
+#> 4        2.5     Diet2  1     3   4      2      6.121141 0.04950495
+#> 5        2.5     Diet3  1     3  12     10     35.768957 0.00990099
+#> 6        2.5     Diet4  1     2   8      7     32.442352 0.00990099
+#> 31       3.0     Diet3  1     3   5      3     12.719231 0.00990099
+#> 21       3.0     Diet3  2     9  12      4     14.037622 0.00990099
+#> 41       3.0     Diet4  1     2   7      6     29.659402 0.00990099
 ```
 
 ## Acknowledgements
