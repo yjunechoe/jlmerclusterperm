@@ -3,6 +3,19 @@
 #' @param show Whether to show the progress bar. You may also pass in a list of `"show"` and `"width"`.
 #' @param width Width of the progress bar.
 #'
+#' @examples
+#' \dontrun{
+#' jlmerclusterperm_setup()
+#'
+#' # Set Julia progress options and save old state
+#' old_progress_opts <- julia_progress(show = FALSE, width = 30)
+#' old_progress_opts
+#'
+#' # Restored old state
+#' julia_progress(old_progress_opts)
+#' identical(old_progress_opts, julia_progress())
+#' }
+#'
 #' @return Previous values for `show` and `width`
 #' @export
 julia_progress <- function(show, width) {

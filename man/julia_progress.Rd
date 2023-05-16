@@ -17,3 +17,17 @@ Previous values for \code{show} and \code{width}
 \description{
 Set/get options for Julia progress bar
 }
+\examples{
+\dontrun{
+jlmerclusterperm_setup()
+
+# Set Julia progress options and save old state
+old_progress_opts <- julia_progress(show = FALSE, width = 30)
+old_progress_opts
+
+# Restored old state
+julia_progress(old_progress_opts)
+identical(old_progress_opts, julia_progress())
+}
+
+}

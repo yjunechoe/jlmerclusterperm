@@ -26,3 +26,48 @@ A long dataframe of permuted re-samples with \code{.id} column representing repl
 \description{
 Permute data while respecting grouping structure(s) of observations
 }
+\examples{
+\dontrun{
+jlmerclusterperm_setup()
+
+# Example data setup
+chickweights_df <- ChickWeight
+chickweights_df <- chickweights_df[chickweights_df$Time <= 20,]
+chickweights_df$DietInt <- as.integer(chickweights_df$Diet)
+head(chickweights_df)
+
+# Example 1: Spec object using the continuous `DietInt` predictor
+chickweights_spec1 <- make_jlmer_spec(
+ formula = weight ~ 1 + DietInt,
+ data = chickweights_df,
+ subject = "Chick", time = "Time"
+)
+chickweights_spec1
+
+# Shuffling `DietInt` values guesses `predictor_type = "between_participant"`
+reset_rng_state()
+spec1_perm1 <- permute_by_predictor(chickweights_spec1, predictors = "DietInt")
+# This uses the same Julia-based shuffling algorithm for CPA, so it increments the counter
+get_rng_state()
+
+# Shuffling under shared RNG state reproduces the same permutation of the data
+reset_rng_state()
+spec1_perm2 <- spec1_perm2 <- permute_by_predictor(chickweights_spec1, predictors = "DietInt", predictor_type = "between_participant")
+identical(spec1_perm1, spec1_perm2)
+
+# Example 2: Spec object using the multilevel `Diet` predictor
+chickweights_spec2 <- make_jlmer_spec(
+ formula = weight ~ 1 + Diet,
+ data = chickweights_df,
+ subject = "Chick", time = "Time"
+)
+chickweights_spec2
+
+# Levels of a category are automatically shuffled together
+reset_rng_state()
+spec2_perm1 <- permute_by_predictor(chickweights_spec2, predictors = "Diet2")
+reset_rng_state()
+spec2_perm2 <- permute_by_predictor(chickweights_spec2, predictors = c("Diet2", "Diet3", "Diet4"))
+identical(spec2_perm1, spec2_perm2)
+}
+}
