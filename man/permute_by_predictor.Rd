@@ -28,7 +28,7 @@ Permute data while respecting grouping structure(s) of observations
 }
 \examples{
 \dontrun{
-jlmerclusterperm_setup()
+jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 # Example data setup
 chickweights_df <- ChickWeight

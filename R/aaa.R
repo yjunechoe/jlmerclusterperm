@@ -7,21 +7,30 @@
   span.fm = list()
 )
 
+is_setup <- function() isTRUE(.jlmerclusterperm$is_setup)
+
 #' Initial setup for the jlmerclusterperm package
 #'
 #' @param ... Ignored.
+#' @param restart Whether to set up a fresh Julia session, given that one is already running.
+#'   If `FALSE` and `jlmerclusterperm_setup()` has already been ran, nothing happens.
 #' @param verbose Print progress and messages from Julia in the console
 #'
 #' @examples
 #' \dontrun{
-#' jlmerclusterperm_setup()
+#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #' }
 #'
 #' @export
-jlmerclusterperm_setup <- function(..., verbose = TRUE) {
+jlmerclusterperm_setup <- function(..., restart = TRUE, verbose = TRUE) {
   if (!JuliaConnectoR::juliaSetupOk()) cli::cli_abort("Cannot set up Julia for {.pkg jlmerclusterperm}.")
-  JuliaConnectoR::stopJulia()
-  setup_with_progress(verbose = verbose)
+  if (restart || !is_setup()) {
+    JuliaConnectoR::stopJulia()
+    setup_with_progress(verbose = verbose)
+    .jlmerclusterperm$is_setup <- TRUE
+  } else {
+    if (verbose) cli::cli_inform("Julia instance already running - skipping setup.")
+  }
   invisible(TRUE)
 }
 

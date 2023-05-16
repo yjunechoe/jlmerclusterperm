@@ -7,7 +7,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' jlmerclusterperm_setup()
+#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
 #' # Example data setup
 #' chickweights_df <- ChickWeight

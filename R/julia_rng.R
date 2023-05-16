@@ -3,7 +3,7 @@
 #' @name julia_rng
 #' @examples
 #' \dontrun{
-#' jlmerclusterperm_setup()
+#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
 #' # RNG initializes to seed=1 counter=0
 #' get_rng_seed()  # 1

@@ -4,10 +4,13 @@
 \alias{jlmerclusterperm_setup}
 \title{Initial setup for the jlmerclusterperm package}
 \usage{
-jlmerclusterperm_setup(..., verbose = TRUE)
+jlmerclusterperm_setup(..., restart = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{...}{Ignored.}
+
+\item{restart}{Whether to set up a fresh Julia session, given that one is already running.
+If \code{FALSE} and \code{jlmerclusterperm_setup()} has already been ran, nothing happens.}
 
 \item{verbose}{Print progress and messages from Julia in the console}
 }
@@ -16,7 +19,7 @@ Initial setup for the jlmerclusterperm package
 }
 \examples{
 \dontrun{
-jlmerclusterperm_setup()
+jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 }
 
 }

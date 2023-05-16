@@ -19,7 +19,7 @@ Set/get options for Julia progress bar
 }
 \examples{
 \dontrun{
-jlmerclusterperm_setup()
+jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 # Set Julia progress options and save old state
 old_progress_opts <- julia_progress(show = FALSE, width = 30)
