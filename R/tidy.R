@@ -28,6 +28,7 @@ generics::tidy
 #' }
 #'
 #' @name julia_model_tidiers
+#' @return A data frame
 NULL
 
 #' @rdname julia_model_tidiers
@@ -120,6 +121,7 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
 #' @rdname cluster_permutation_tidiers
 #' @method tidy timewise_statistics
 #' @export
+#' @return A data frame
 tidy.timewise_statistics <- function(x, ...) {
   stacked <- as.data.frame.table(x, responseName = "statistic")
   colnames(stacked) <- tolower(colnames(stacked))

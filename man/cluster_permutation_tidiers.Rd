@@ -18,6 +18,9 @@
 
 \item{...}{Unused}
 }
+\value{
+A data frame
+}
 \description{
 Tidiers for cluster permutation test objects
 }

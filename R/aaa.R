@@ -22,6 +22,7 @@ is_setup <- function() isTRUE(.jlmerclusterperm$is_setup)
 #' }
 #'
 #' @export
+#' @return TRUE
 jlmerclusterperm_setup <- function(..., restart = TRUE, verbose = TRUE) {
   if (!JuliaConnectoR::juliaSetupOk()) cli::cli_abort("Cannot set up Julia for {.pkg jlmerclusterperm}.")
   if (restart || !is_setup()) {

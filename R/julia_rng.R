@@ -21,6 +21,7 @@
 #' set_rng_seed(1)
 #' set_rng_state(0)
 #' }
+#' @return The current seed or counter
 NULL
 
 #' @param i Counter number

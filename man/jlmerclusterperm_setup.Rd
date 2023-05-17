@@ -14,6 +14,9 @@ If \code{FALSE} and \code{jlmerclusterperm_setup()} has already been called, not
 
 \item{verbose}{Print progress and messages from Julia in the console}
 }
+\value{
+TRUE
+}
 \description{
 Initial setup for the jlmerclusterperm package
 }

@@ -17,6 +17,9 @@
 
 \item{...}{Unused}
 }
+\value{
+A data frame
+}
 \description{
 Tidier methods for Julia regression models
 }

@@ -24,6 +24,9 @@ get_rng_seed()
 
 \item{seed}{Seed}
 }
+\value{
+The current seed or counter
+}
 \description{
 Interface to the Julia RNG
 }
