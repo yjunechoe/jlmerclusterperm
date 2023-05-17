@@ -11,6 +11,8 @@ Version](https://img.shields.io/badge/devel%20version-0.2.0-check.svg)](https://
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![Codecov test
+coverage](https://codecov.io/gh/yjunechoe/jlmerclusterperm/branch/main/graph/badge.svg)](https://app.codecov.io/gh/yjunechoe/jlmerclusterperm?branch=main)
 <!-- badges: end -->
 
 Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and
@@ -87,7 +89,7 @@ functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.02    0.00   24.66
+#>    0.02    0.00   33.31
 ```
 
 ## Quick tour of package functionalities

@@ -28,6 +28,7 @@ Imports:
 Suggests:
     broom,
     broom.mixed,
+    covr,
     dplyr,
     forcats,
     future,

@@ -8,3 +8,4 @@
 ^\.github$
 ^vignettes/articles$
 ^inst/WORDLIST
+^codecov\.yml$
