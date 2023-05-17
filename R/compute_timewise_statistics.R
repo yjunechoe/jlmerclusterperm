@@ -23,7 +23,7 @@
 #'
 #' # Predictor x Time matrix of t-statistics from regression output
 #' empirical_statistics <- compute_timewise_statistics(spec)
-#' round(timewise_stats, 2)
+#' round(empirical_statistics, 2)
 #'
 #' # Collect as dataframe with `tidy()`
 #' empirical_statistics_df <- tidy(empirical_statistics)
