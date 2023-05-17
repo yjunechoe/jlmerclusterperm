@@ -1,8 +1,14 @@
 # jlmerclusterperm (development version)
 
+### Breaking changes
+
+- The `threshold_steps` argument of `walk_threshold_steps()` is renamed to `steps`.
+
+### New features
+
 - New functions to interface with Julia RNG seed: `get_rng_seed()` and `set_rng_seed()`
 
-- New article: [asynchronous CPA](https://yjunechoe.github.io/jlmerclusterperm/articles/asynchronous-cpa.html)
+### Other improvements
 
 - `jlmerclusterperm_setup()` now echos `Pkg.instantiate()` to print precompilation information upon the first setup call
 

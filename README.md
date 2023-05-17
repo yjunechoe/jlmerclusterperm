@@ -84,7 +84,7 @@ functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.02    0.00   22.25
+#>    0.03    0.02   23.32
 ```
 
 ## Quick tour of package functionalities
@@ -253,10 +253,7 @@ calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1 = TRUE)
 Iterating over a range of threshold values:
 
 ``` r
-walk_threshold_steps(
-  empirical_statistics, null_statistics,
-  threshold_steps = c(2, 2.5, 3)
-)
+walk_threshold_steps(empirical_statistics, null_statistics, steps = c(2, 2.5, 3))
 #>    threshold predictor id start end length sum_statistic     pvalue
 #> 1        2.0     Diet2  1     3   5      3      8.496376 0.07920792
 #> 2        2.0     Diet3  1     2  12     11     38.216035 0.00990099

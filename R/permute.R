@@ -49,6 +49,7 @@
 #' spec2_perm2 <- permute_by_predictor(chickweights_spec2, predictors = c("Diet2", "Diet3", "Diet4"))
 #' identical(spec2_perm1, spec2_perm2)
 #' }
+#'
 #' @return A long dataframe of permuted re-samples with `.id` column representing replication IDs.
 #' @export
 permute_by_predictor <- function(jlmer_spec, predictors, predictor_type = c("guess", "between_participant", "within_participant"), n = 1L) {

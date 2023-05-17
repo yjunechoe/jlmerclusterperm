@@ -9,6 +9,35 @@
 #'
 #' @seealso [jlmer()], [make_jlmer_spec()]
 #'
+#' @examples
+#' \dontrun{
+#' library(dplyr, warn.conflicts = FALSE)
+#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+#'
+#' # Specification object
+#' spec <- make_jlmer_spec(
+#'   weight ~ 1 + Diet, filter(ChickWeight, Time <= 20),
+#'   subject = "Chick", time = "Time"
+#' )
+#' spec
+#'
+#' # Predictor x Time matrix of t-statistics from regression output
+#' empirical_statistics <- compute_timewise_statistics(spec)
+#' round(timewise_stats, 2)
+#'
+#' # Collect as dataframe with `tidy()`
+#' empirical_statistics_df <- tidy(empirical_statistics)
+#' empirical_statistics_df
+#'
+#' # Timewise statistics are from regression models fitted to each time point
+#' # - Note the identical statistics at `Time == 0`
+#' empirical_statistics_df %>%
+#'   filter(time == 0)
+#' to_jlmer(weight ~ 1 + Diet, filter(ChickWeight, Time == 0)) %>%
+#'   tidy() %>%
+#'   select(term, statistic)
+#' }
+#'
 #' @return A predictor-by-time matrix of cluster statistics, of class `timewise_statistics`.
 #' @export
 compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "binomial"), statistic = c("t", "chisq"), ...) {

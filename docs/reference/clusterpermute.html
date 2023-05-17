@@ -150,6 +150,94 @@ Defaults to <code>fast = TRUE</code> (when <code>family = "binomial"</code>) and
 <code><a href="calculate_clusters_pvalues.html">calculate_clusters_pvalues()</a></code></p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>restart <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Specification object</span></span></span>
+<span class="r-in"><span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu"><a href="make_jlmer_spec.html">make_jlmer_spec</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">weight</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">Diet</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ChickWeight</span>, <span class="va">Time</span> <span class="op">&lt;=</span> <span class="fl">20</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  subject <span class="op">=</span> <span class="st">"Chick"</span>, time <span class="op">=</span> <span class="st">"Time"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">spec</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">jlmer specification</span> ───────────────────────────────────────── <span style="color: #0000BB;">&lt;jlmer_spec&gt;</span> ──</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Formula</span>: weight ~ 1 + Diet2 + Diet3 + Diet4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Predictors</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Diet</span>: Diet2, Diet3, Diet4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Groupings</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Subject</span>: Chick</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Trial</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Time</span>: Time</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Data</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 533 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   weight Diet2 Diet3 Diet4 Chick  Time</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     42     0     0     0 1         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     51     0     0     0 1         2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     59     0     0     0 1         4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 530 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Should minimally provide `threshold` and `nsim`, in addition to the spec object</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="julia_rng.html">reset_rng_state</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">CPA</span> <span class="op">&lt;-</span> <span class="fu">clusterpermute</span><span class="op">(</span><span class="va">spec</span>, threshold <span class="op">=</span> <span class="fl">2</span>, nsim <span class="op">=</span> <span class="fl">100</span>, progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">CPA</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $null_cluster_dists</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (t &gt; <span style="color: #0000BB;">2</span>) ────────────── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet2</span> (n = 100)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean (SD): 0.266 (2.13)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Coverage intervals: 95% [0.000, 6.579]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet3</span> (n = 100)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean (SD): -0.124 (2.75)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Coverage intervals: 95% [-4.777, 5.707]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet4</span> (n = 100)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean (SD): 0.007 (2.50)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Coverage intervals: 95% [0.000, 0.000]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $empirical_clusters</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Empirical clusters</span> (t &gt; <span style="color: #0000BB;">2</span>) ────────────────────────── <span style="color: #0000BB;">&lt;empirical_clusters&gt;</span> ──</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [4, 8]: 8.496 <span style="font-style: italic;">(p=0.0297)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [2, 20]: 34.628 <span style="font-style: italic;">(p=0.0099)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [2, 20]: 39.371 <span style="font-style: italic;">(p=0.0099)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># CPA is a list of `&lt;null_cluster_dists&gt;` and `&lt;empirical_clusters&gt;` objects</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">CPA</span>, <span class="va">class</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   null_cluster_dists   empirical_clusters </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> "null_cluster_dists" "empirical_clusters" </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># You can extract the individual components for further inspection</span></span></span>
+<span class="r-in"><span><span class="va">CPA</span><span class="op">$</span><span class="va">null_cluster_dists</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (t &gt; <span style="color: #0000BB;">2</span>) ────────────── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet2</span> (n = 100)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean (SD): 0.266 (2.13)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Coverage intervals: 95% [0.000, 6.579]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet3</span> (n = 100)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean (SD): -0.124 (2.75)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Coverage intervals: 95% [-4.777, 5.707]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet4</span> (n = 100)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean (SD): 0.007 (2.50)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Coverage intervals: 95% [0.000, 0.000]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-in"><span><span class="va">CPA</span><span class="op">$</span><span class="va">empirical_clusters</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Empirical clusters</span> (t &gt; <span style="color: #0000BB;">2</span>) ────────────────────────── <span style="color: #0000BB;">&lt;empirical_clusters&gt;</span> ──</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [4, 8]: 8.496 <span style="font-style: italic;">(p=0.0297)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [2, 20]: 34.628 <span style="font-style: italic;">(p=0.0099)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [2, 20]: 39.371 <span style="font-style: italic;">(p=0.0099)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

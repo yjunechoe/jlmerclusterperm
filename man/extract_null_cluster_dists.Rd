@@ -25,6 +25,36 @@ A \code{null_cluster_dists} object.
 \description{
 Construct a null distribution of cluster-mass statistics
 }
+\examples{
+\dontrun{
+library(dplyr, warn.conflicts = FALSE)
+jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+
+# Specification object
+spec <- make_jlmer_spec(
+  weight ~ 1 + Diet, filter(ChickWeight, Time <= 20),
+  subject = "Chick", time = "Time"
+)
+spec
+
+# Null cluster-mass distributions are derived from the permuted timewise statistics
+reset_rng_state()
+null_statistics <- permute_timewise_statistics(spec, nsim = 100)
+null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2)
+null_cluster_dists
+
+# Collect as dataframe with `tidy()`
+# - Each simulation contributes one (largest) cluster-mass statistic to the null
+# - When no clusters are found, the `sum_statistic` value is zero
+null_cluster_dists_df <- tidy(null_cluster_dists)
+null_cluster_dists_df
+
+# Changing the `threshold` value changes the shape of the null
+extract_null_cluster_dists(null_statistics, threshold = 1)
+extract_null_cluster_dists(null_statistics, threshold = 3)
+}
+
+}
 \seealso{
 \code{\link[=permute_timewise_statistics]{permute_timewise_statistics()}}
 }

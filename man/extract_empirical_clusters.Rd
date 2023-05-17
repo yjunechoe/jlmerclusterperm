@@ -33,6 +33,35 @@ An \code{empirical_clusters} object.
 \description{
 Detect largest clusters from a time sequence of predictor statistics
 }
+\examples{
+\dontrun{
+library(dplyr, warn.conflicts = FALSE)
+jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+
+# Specification object
+spec <- make_jlmer_spec(
+  weight ~ 1 + Diet, filter(ChickWeight, Time <= 20),
+  subject = "Chick", time = "Time"
+)
+spec
+
+# Empirical clusters are derived from the timewise statistics
+empirical_statistics <- compute_timewise_statistics(spec)
+empirical_clusters <- extract_empirical_clusters(empirical_statistics, threshold = 2)
+empirical_clusters
+
+# Collect as dataframe with `tidy()`
+empirical_clusters_df <- tidy(empirical_clusters)
+empirical_clusters_df
+
+# Changing the `threshold` value identifies different clusters
+extract_empirical_clusters(empirical_statistics, threshold = 1)
+
+# A predictor can have zero or multiple clusters associated with it
+extract_empirical_clusters(empirical_statistics, threshold = 3)
+}
+
+}
 \seealso{
 \code{\link[=compute_timewise_statistics]{compute_timewise_statistics()}}
 }

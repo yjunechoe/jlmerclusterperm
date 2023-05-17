@@ -6,6 +6,37 @@
 #'
 #' @seealso [make_jlmer_spec()]
 #'
+#' @examples
+#' \dontrun{
+#' library(dplyr, warn.conflicts = FALSE)
+#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+#'
+#' # Specification object
+#' spec <- make_jlmer_spec(
+#'   weight ~ 1 + Diet, filter(ChickWeight, Time <= 20),
+#'   subject = "Chick", time = "Time"
+#' )
+#' spec
+#'
+#' # Simulation x Time x Predictor array of t-statistics from regression output
+#' reset_rng_state()
+#' null_statistics <- permute_timewise_statistics(spec, nsim = 3)
+#' round(null_statistics, 2)
+#'
+#' # Collect as dataframe with `tidy()`
+#' permuted_timewise_stats_df <- tidy(null_statistics)
+#' permuted_timewise_stats_df
+#'
+#' # Permutations ran under the same RNG state are identical
+#' reset_rng_state()
+#' null_statistics2 <- permute_timewise_statistics(spec, nsim = 3)
+#' identical(null_statistics, null_statistics2)
+#'
+#' get_rng_state()
+#' null_statistics3 <- permute_timewise_statistics(spec, nsim = 3)
+#' identical(null_statistics, null_statistics3)
+#' }
+#'
 #' @return A simulation-by-time-by-predictor 3D array of cluster statistics, of class `timewise_statistics`.
 #' @export
 permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "binomial"),

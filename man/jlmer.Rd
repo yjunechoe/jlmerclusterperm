@@ -21,6 +21,19 @@ A \code{jlmer_mod} object.
 \description{
 Fit a Julia regression model using jlmer specifications
 }
+\examples{
+\dontrun{
+jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+
+# Fitting a regression model with a specification object
+spec <- make_jlmer_spec(weight ~ 1 + Diet, ChickWeight)
+jlmer(spec)
+
+# `lm()` equivalent
+summary(lm(weight ~ 1 + Diet, ChickWeight))$coef
+}
+
+}
 \seealso{
 \code{\link[=make_jlmer_spec]{make_jlmer_spec()}}
 }

@@ -28,6 +28,47 @@ An \code{empirical_clusters} object augmented with p-values.
 \description{
 Calculate bootstrapped p-values of cluster-mass statistics
 }
+\examples{
+\dontrun{
+library(dplyr, warn.conflicts = FALSE)
+jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+
+# Specification object
+spec <- make_jlmer_spec(
+  weight ~ 1 + Diet, filter(ChickWeight, Time <= 20),
+  subject = "Chick", time = "Time"
+)
+spec
+
+# Make empirical clusters
+empirical_statistics <- compute_timewise_statistics(spec)
+empirical_clusters <- extract_empirical_clusters(empirical_statistics, threshold = 2)
+empirical_clusters
+
+# Make null cluster-mass distribution
+reset_rng_state()
+null_statistics <- permute_timewise_statistics(spec, nsim = 100)
+null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2)
+
+# Significance test the empirical cluster(s) from each predictor against the simulated null
+calculate_clusters_pvalues(empirical_clusters, null_cluster_dists)
+
+# Set `add1 = TRUE` to normalize by adding 1 to numerator and denominator
+calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1 = TRUE)
+
+# This sequence of procedures is equivalent to `clusterpermute()`
+reset_rng_state()
+clusterpermute(spec, threshold = 2, nsim = 100, progress = FALSE)
+
+# The empirical clusters and the null cluster-mass distribution must be comparable
+empirical_clusters2 <- extract_empirical_clusters(empirical_statistics, threshold = 3)
+calculate_clusters_pvalues(empirical_clusters2, null_cluster_dists)
+
+# Check for compatibility with `clusters_are_comparable()`
+clusters_are_comparable(empirical_clusters, null_cluster_dists)
+}
+
+}
 \seealso{
 \code{\link[=extract_empirical_clusters]{extract_empirical_clusters()}}, \code{\link[=extract_null_cluster_dists]{extract_null_cluster_dists()}}
 }

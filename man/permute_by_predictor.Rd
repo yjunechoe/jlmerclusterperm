@@ -70,4 +70,5 @@ reset_rng_state()
 spec2_perm2 <- permute_by_predictor(chickweights_spec2, predictors = c("Diet2", "Diet3", "Diet4"))
 identical(spec2_perm1, spec2_perm2)
 }
+
 }

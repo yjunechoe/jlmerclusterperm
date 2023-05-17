@@ -14,10 +14,44 @@
 \method{tidy}{null_cluster_dists}(x, ...)
 }
 \arguments{
-\item{x}{A \code{timewise_statistics}, \code{empirical_clusters}, or \code{null_clusters} object}
+\item{x}{An object of class \verb{<timewise_statistics>}, \verb{<empirical_clusters>}, or \verb{<null_cluster_dists>}}
 
 \item{...}{Unused}
 }
 \description{
 Tidiers for cluster permutation test objects
+}
+\examples{
+\dontrun{
+library(dplyr, warn.conflicts = FALSE)
+jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+
+# Specification object
+spec <- make_jlmer_spec(
+  weight ~ 1 + Diet, filter(ChickWeight, Time <= 20),
+  subject = "Chick", time = "Time"
+)
+spec
+
+# Method for `<timewise_statistics>`
+empirical_statistics <- compute_timewise_statistics(spec)
+class(empirical_statistics)
+tidy(empirical_statistics)
+
+reset_rng_state()
+null_statistics <- permute_timewise_statistics(spec, nsim = 100)
+class(null_statistics)
+tidy(null_statistics)
+
+# Method for `<empirical_clusters>`
+empirical_clusters <- extract_empirical_clusters(empirical_statistics, threshold = 2)
+class(empirical_clusters)
+tidy(empirical_clusters)
+
+# Method for `<null_cluster_dists>`
+null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2)
+class(null_cluster_dists)
+tidy(null_cluster_dists)
+}
+
 }

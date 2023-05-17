@@ -9,8 +9,30 @@
 #' @param drop_terms (Optional) any terms to drop from the reconstructed model formula
 #' @param ... Unused, for extensibility.
 #'
-#' @return An object of class `jlmer_spec`.
+#' @examples
+#' \dontrun{
+#' # Bare specification object (minimal spec for fitting a global model)
+#' spec <- make_jlmer_spec(weight ~ 1 + Diet, ChickWeight)
+#' spec
 #'
+#' # Constraints on specification for CPA:
+#' # 1) The combination of `subject`, `trial`, and `time` must uniquely identify rows in the data
+#' # 2) `time` must have constant sampling rate (i.e., evenly spaced values)
+#' spec_wrong <- make_jlmer_spec(
+#'   weight ~ 1 + Diet, ChickWeight,
+#'   time = "Time"
+#' )
+#' unique(ChickWeight$Time)
+#'
+#' # Corrected specification for the above
+#' spec_correct <- make_jlmer_spec(
+#'   weight ~ 1 + Diet, subset(ChickWeight, Time <= 20),
+#'   subject = "Chick", time = "Time"
+#' )
+#' spec_correct
+#' }
+#'
+#' @return An object of class `jlmer_spec`.
 #' @export
 make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = NULL, drop_terms = NULL, ...) {
   # Old names

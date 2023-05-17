@@ -7,7 +7,7 @@
 walk_threshold_steps(
   empirical_statistics,
   null_statistics,
-  threshold_steps,
+  steps,
   top_n = Inf,
   binned = FALSE,
   add1 = TRUE,
@@ -19,7 +19,7 @@ walk_threshold_steps(
 
 \item{null_statistics}{A simulation-by-time-by-predictor 3D array of null (permuted) timewise statistics.}
 
-\item{threshold_steps}{A vector of threshold values to test}
+\item{steps}{A vector of threshold values to test}
 
 \item{top_n}{How many clusters to return, in the order of the size of the cluster-mass statistic.
 Defaults to \code{Inf} which return all detected clusters.}
@@ -38,4 +38,26 @@ A data frame of predictor clusters-mass statistics by threshold.
 }
 \description{
 Test the probability of cluster-mass statistics over a range of threshold values
+}
+\examples{
+\dontrun{
+library(dplyr, warn.conflicts = FALSE)
+jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+
+# Specification object
+spec <- make_jlmer_spec(
+  weight ~ 1 + Diet, filter(ChickWeight, Time <= 20),
+  subject = "Chick", time = "Time"
+)
+spec
+
+# Compute timewise statistics for the observed and permuted data
+empirical_statistics <- compute_timewise_statistics(spec)
+reset_rng_state()
+null_statistics <- permute_timewise_statistics(spec, nsim = 100)
+
+# Test cluster mass/probability under different threshold values
+walk_threshold_steps(empirical_statistics, null_statistics, steps = 1:3)
+}
+
 }

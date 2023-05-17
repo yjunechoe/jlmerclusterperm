@@ -32,6 +32,24 @@ A \code{jlmer_mod} object.
 \description{
 Fit a Julia regression model using lme4 syntax
 }
+\examples{
+\dontrun{
+jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+
+# Fitting a regression model with R formula syntax
+to_jlmer(weight ~ 1 + Diet, ChickWeight)
+
+# `lm()` equivalent
+summary(lm(weight ~ 1 + Diet, ChickWeight))$coef
+
+# Fitting a mixed model with {lme4} syntax
+to_jlmer(weight ~ 1 + Diet + (1 | Chick), ChickWeight)
+
+# Passing MixedModels.jl fit options to the `...`
+to_jlmer(weight ~ 1 + Diet + (1 | Chick), ChickWeight, REML = TRUE)
+}
+
+}
 \seealso{
 \code{\link[=jlmer]{jlmer()}}, \code{\link[=make_jlmer_spec]{make_jlmer_spec()}}
 }

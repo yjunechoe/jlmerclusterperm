@@ -20,3 +20,23 @@
 \description{
 Tidier methods for Julia regression models
 }
+\examples{
+\dontrun{
+jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+
+# Fixed-effects only model
+mod1 <- to_jlmer(weight ~ 1 + Diet, ChickWeight)
+tidy(mod1)
+glance(mod1)
+
+# Mixed model
+mod2 <- to_jlmer(weight ~ 1 + Diet + (1 | Chick), ChickWeight)
+tidy(mod2)
+glance(mod2)
+
+# Select which of fixed/random effects to return
+tidy(mod2, effects = "fixed")
+tidy(mod2, effects = "ran_pars")
+}
+
+}

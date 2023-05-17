@@ -98,6 +98,102 @@ which requires a cluster to span at least two time points. If <code>TRUE</code>,
     <div class="dont-index"><p><code><a href="permute_timewise_statistics.html">permute_timewise_statistics()</a></code></p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>restart <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Specification object</span></span></span>
+<span class="r-in"><span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu"><a href="make_jlmer_spec.html">make_jlmer_spec</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">weight</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">Diet</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ChickWeight</span>, <span class="va">Time</span> <span class="op">&lt;=</span> <span class="fl">20</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  subject <span class="op">=</span> <span class="st">"Chick"</span>, time <span class="op">=</span> <span class="st">"Time"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">spec</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">jlmer specification</span> ───────────────────────────────────────── <span style="color: #0000BB;">&lt;jlmer_spec&gt;</span> ──</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Formula</span>: weight ~ 1 + Diet2 + Diet3 + Diet4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Predictors</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Diet</span>: Diet2, Diet3, Diet4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Groupings</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Subject</span>: Chick</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Trial</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Time</span>: Time</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Data</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 533 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   weight Diet2 Diet3 Diet4 Chick  Time</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     42     0     0     0 1         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     51     0     0     0 1         2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     59     0     0     0 1         4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 530 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Null cluster-mass distributions are derived from the permuted timewise statistics</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="julia_rng.html">reset_rng_state</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">null_statistics</span> <span class="op">&lt;-</span> <span class="fu"><a href="permute_timewise_statistics.html">permute_timewise_statistics</a></span><span class="op">(</span><span class="va">spec</span>, nsim <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">null_cluster_dists</span> <span class="op">&lt;-</span> <span class="fu">extract_null_cluster_dists</span><span class="op">(</span><span class="va">null_statistics</span>, threshold <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">null_cluster_dists</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (t &gt; <span style="color: #0000BB;">2</span>) ────────────── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet2</span> (n = 100)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean (SD): 0.266 (2.13)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Coverage intervals: 95% [0.000, 6.579]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet3</span> (n = 100)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean (SD): -0.124 (2.75)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Coverage intervals: 95% [-4.777, 5.707]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet4</span> (n = 100)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean (SD): 0.007 (2.50)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Coverage intervals: 95% [0.000, 0.000]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Collect as dataframe with `tidy()`</span></span></span>
+<span class="r-in"><span><span class="co"># - Each simulation contributes one (largest) cluster-mass statistic to the null</span></span></span>
+<span class="r-in"><span><span class="co"># - When no clusters are found, the `sum_statistic` value is zero</span></span></span>
+<span class="r-in"><span><span class="va">null_cluster_dists_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">null_cluster_dists</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">null_cluster_dists_df</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 300 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    predictor start   end length sum_statistic sim  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Diet2        10    20      6          14.8 001  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Diet2        <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>           0   002  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Diet2        <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>           0   003  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Diet2        <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>           0   004  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Diet2        <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>           0   005  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Diet2        <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>           0   006  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Diet2        <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>           0   007  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Diet2        <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>           0   008  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Diet2        <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>           0   009  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Diet2        <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>           0   010  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 290 more rows</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Changing the `threshold` value changes the shape of the null</span></span></span>
+<span class="r-in"><span><span class="fu">extract_null_cluster_dists</span><span class="op">(</span><span class="va">null_statistics</span>, threshold <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (t &gt; <span style="color: #0000BB;">1</span>) ────────────── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet2</span> (n = 100)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean (SD): 0.565 (5.52)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Coverage intervals: 95% [-9.681, 12.061]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet3</span> (n = 100)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean (SD): 0.089 (6.27)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Coverage intervals: 95% [-15.847, 12.185]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet4</span> (n = 100)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean (SD): 0.715 (5.23)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Coverage intervals: 95% [-7.843, 11.728]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-in"><span><span class="fu">extract_null_cluster_dists</span><span class="op">(</span><span class="va">null_statistics</span>, threshold <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (t &gt; <span style="color: #0000BB;">3</span>) ────────────── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet2</span> (n = 100)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean (SD): 0.000 (0.00)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Coverage intervals: 95% [0.000, 0.000]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet3</span> (n = 100)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean (SD): 0.000 (0.00)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Coverage intervals: 95% [0.000, 0.000]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet4</span> (n = 100)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Mean (SD): 0.000 (0.00)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Coverage intervals: 95% [0.000, 0.000]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

@@ -6,6 +6,23 @@
 #'
 #' @seealso [jlmer()], [make_jlmer_spec()]
 #'
+#' @examples
+#' \dontrun{
+#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+#'
+#' # Fitting a regression model with R formula syntax
+#' to_jlmer(weight ~ 1 + Diet, ChickWeight)
+#'
+#' # `lm()` equivalent
+#' summary(lm(weight ~ 1 + Diet, ChickWeight))$coef
+#'
+#' # Fitting a mixed model with {lme4} syntax
+#' to_jlmer(weight ~ 1 + Diet + (1 | Chick), ChickWeight)
+#'
+#' # Passing MixedModels.jl fit options to the `...`
+#' to_jlmer(weight ~ 1 + Diet + (1 | Chick), ChickWeight, REML = TRUE)
+#' }
+#'
 #' @return A `jlmer_mod` object.
 #' @export
 to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_spec_opts = list(), ..., progress = FALSE) {
@@ -21,6 +38,18 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_sp
 #' @param progress If `TRUE`, prints the timing of iterations.
 #'
 #' @seealso [make_jlmer_spec()]
+#'
+#' @examples
+#' \dontrun{
+#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+#'
+#' # Fitting a regression model with a specification object
+#' spec <- make_jlmer_spec(weight ~ 1 + Diet, ChickWeight)
+#' jlmer(spec)
+#'
+#' # `lm()` equivalent
+#' summary(lm(weight ~ 1 + Diet, ChickWeight))$coef
+#' }
 #'
 #' @return A `jlmer_mod` object.
 #' @export

@@ -8,6 +8,25 @@ generics::tidy
 #' @param effects One of "var_model", "ran_pars", or "fixed"
 #' @param ... Unused
 #'
+#' @examples
+#' \dontrun{
+#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+#'
+#' # Fixed-effects only model
+#' mod1 <- to_jlmer(weight ~ 1 + Diet, ChickWeight)
+#' tidy(mod1)
+#' glance(mod1)
+#'
+#' # Mixed model
+#' mod2 <- to_jlmer(weight ~ 1 + Diet + (1 | Chick), ChickWeight)
+#' tidy(mod2)
+#' glance(mod2)
+#'
+#' # Select which of fixed/random effects to return
+#' tidy(mod2, effects = "fixed")
+#' tidy(mod2, effects = "ran_pars")
+#' }
+#'
 #' @name julia_model_tidiers
 NULL
 
@@ -60,8 +79,41 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
 
 #' Tidiers for cluster permutation test objects
 #'
-#' @param x A `timewise_statistics`, `empirical_clusters`, or `null_clusters` object
+#' @param x An object of class `<timewise_statistics>`, `<empirical_clusters>`, or `<null_cluster_dists>`
 #' @param ... Unused
+#'
+#' @examples
+#' \dontrun{
+#' library(dplyr, warn.conflicts = FALSE)
+#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+#'
+#' # Specification object
+#' spec <- make_jlmer_spec(
+#'   weight ~ 1 + Diet, filter(ChickWeight, Time <= 20),
+#'   subject = "Chick", time = "Time"
+#' )
+#' spec
+#'
+#' # Method for `<timewise_statistics>`
+#' empirical_statistics <- compute_timewise_statistics(spec)
+#' class(empirical_statistics)
+#' tidy(empirical_statistics)
+#'
+#' reset_rng_state()
+#' null_statistics <- permute_timewise_statistics(spec, nsim = 100)
+#' class(null_statistics)
+#' tidy(null_statistics)
+#'
+#' # Method for `<empirical_clusters>`
+#' empirical_clusters <- extract_empirical_clusters(empirical_statistics, threshold = 2)
+#' class(empirical_clusters)
+#' tidy(empirical_clusters)
+#'
+#' # Method for `<null_cluster_dists>`
+#' null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2)
+#' class(null_cluster_dists)
+#' tidy(null_cluster_dists)
+#' }
 #'
 #' @name cluster_permutation_tidiers
 

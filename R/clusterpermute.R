@@ -9,6 +9,31 @@
 #'  [extract_empirical_clusters()], [extract_null_cluster_dists()],
 #'  [calculate_clusters_pvalues()]
 #'
+#' @examples
+#' \dontrun{
+#' library(dplyr, warn.conflicts = FALSE)
+#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+#'
+#' # Specification object
+#' spec <- make_jlmer_spec(
+#'   weight ~ 1 + Diet, filter(ChickWeight, Time <= 20),
+#'   subject = "Chick", time = "Time"
+#' )
+#' spec
+#'
+#' # Should minimally provide `threshold` and `nsim`, in addition to the spec object
+#' reset_rng_state()
+#' CPA <- clusterpermute(spec, threshold = 2, nsim = 100, progress = FALSE)
+#' CPA
+#'
+#' # CPA is a list of `<null_cluster_dists>` and `<empirical_clusters>` objects
+#' sapply(CPA, class)
+#'
+#' # You can extract the individual components for further inspection
+#' CPA$null_cluster_dists
+#' CPA$empirical_clusters
+#' }
+#'
 #' @export
 #' @return A list of `null_cluster_dists` and `empirical_clusters` with p-values
 clusterpermute <- function(jlmer_spec,

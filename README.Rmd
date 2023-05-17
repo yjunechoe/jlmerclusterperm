@@ -150,10 +150,7 @@ calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1 = TRUE)
 Iterating over a range of threshold values:
 
 ```{r walk_threshold_steps}
-walk_threshold_steps(
-  empirical_statistics, null_statistics,
-  threshold_steps = c(2, 2.5, 3)
-)
+walk_threshold_steps(empirical_statistics, null_statistics, steps = c(2, 2.5, 3))
 ```
 
 ## Acknowledgements
