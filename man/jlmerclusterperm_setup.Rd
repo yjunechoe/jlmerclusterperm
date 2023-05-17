@@ -10,7 +10,7 @@ jlmerclusterperm_setup(..., restart = TRUE, verbose = TRUE)
 \item{...}{Ignored.}
 
 \item{restart}{Whether to set up a fresh Julia session, given that one is already running.
-If \code{FALSE} and \code{jlmerclusterperm_setup()} has already been ran, nothing happens.}
+If \code{FALSE} and \code{jlmerclusterperm_setup()} has already been called, nothing happens.}
 
 \item{verbose}{Print progress and messages from Julia in the console}
 }

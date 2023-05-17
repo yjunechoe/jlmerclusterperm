@@ -6,16 +6,20 @@
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
 #' # RNG initializes to seed=1 counter=0
-#' get_rng_seed()  # 1
-#' get_rng_state() # 0
+#' get_rng_seed()
+#' get_rng_state()
 #'
 #' # setter/getter for RNG counter
 #' set_rng_state(123)
-#' get_rng_state() # 123
+#' get_rng_state()
 #'
 #' # setter/getter for RNG seed
 #' set_rng_seed(2)
-#' get_rng_seed()  # 2
+#' get_rng_seed()
+#'
+#' # restore to initial setting (seed=1, counter=0)
+#' set_rng_seed(1)
+#' set_rng_state(0)
 #' }
 NULL
 

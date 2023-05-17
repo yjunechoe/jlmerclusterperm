@@ -1,38 +1,49 @@
 #' Set/get options for Julia progress bar
 #'
 #' @param show Whether to show the progress bar. You may also pass in a list of `"show"` and `"width"`.
-#' @param width Width of the progress bar.
+#' @param width Width of the progress bar. If `"auto"`, adjusts the progress bar width to fit the console.
 #'
 #' @examples
 #' \dontrun{
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
-#' # Set Julia progress options and save old state
-#' old_progress_opts <- julia_progress(show = FALSE, width = 30)
-#' old_progress_opts
+#' # Show current progress options
+#' julia_progress()
 #'
-#' # Restored old state
+#' # Set options and save previous options
+#' old_progress_opts <- julia_progress(show = FALSE, width = 100)
+#' julia_progress()
+#'
+#' # Restoring progress settings by passing a list of old options
+#' old_progress_opts
 #' julia_progress(old_progress_opts)
-#' identical(old_progress_opts, julia_progress())
+#' identical(julia_progress(), old_progress_opts)
 #' }
 #'
 #' @return Previous values for `show` and `width`
 #' @export
 julia_progress <- function(show, width) {
   show_missing <- missing(show)
-  width_missing <- missing(width)
+  both_missing <- show_missing && missing(width)
+  opts_is_list <- !show_missing && is.list(show) && identical(names(show), c("show", "width"))
   old_opts <- JuliaConnectoR::juliaGet(JuliaConnectoR::juliaEval("(show = !(pg_io isa Base.DevNull), width = pg_width)"))
   if (!show_missing) {
-    if (is.list(show) && identical(names(show), c("show", "width"))) {
+    if (opts_is_list) {
       width <- show$width
       show <- show$show
     }
     JuliaConnectoR::juliaEval(paste0("pg_io = ", if (show) "stderr" else "devnull"))
   }
-  if (!width_missing) JuliaConnectoR::juliaEval(paste0("pg_width = ", width))
-  if (show_missing && width_missing) {
-    strip_JLTYPE(old_opts)
+  if (!missing(width)) {
+    if (width == "auto") {
+      width <- cli::console_width() - 44L
+    }
+    JuliaConnectoR::juliaEval(paste0("pg_width = ", width))
+  }
+  out <- strip_JLTYPE(old_opts)
+  if (both_missing) {
+    out
   } else {
-    invisible(strip_JLTYPE(old_opts))
+    invisible(out)
   }
 }

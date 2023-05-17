@@ -9,7 +9,7 @@ julia_progress(show, width)
 \arguments{
 \item{show}{Whether to show the progress bar. You may also pass in a list of \code{"show"} and \code{"width"}.}
 
-\item{width}{Width of the progress bar.}
+\item{width}{Width of the progress bar. If \code{"auto"}, adjusts the progress bar width to fit the console.}
 }
 \value{
 Previous values for \code{show} and \code{width}
@@ -21,13 +21,17 @@ Set/get options for Julia progress bar
 \dontrun{
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
-# Set Julia progress options and save old state
-old_progress_opts <- julia_progress(show = FALSE, width = 30)
-old_progress_opts
+# Show current progress options
+julia_progress()
 
-# Restored old state
+# Set options and save previous options
+old_progress_opts <- julia_progress(show = FALSE, width = 100)
+julia_progress()
+
+# Restoring progress settings by passing a list of old options
+old_progress_opts
 julia_progress(old_progress_opts)
-identical(old_progress_opts, julia_progress())
+identical(julia_progress(), old_progress_opts)
 }
 
 }

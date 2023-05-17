@@ -101,14 +101,22 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>restart <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Example data setup</span></span></span>
 <span class="r-in"><span><span class="va">chickweights_df</span> <span class="op">&lt;-</span> <span class="va">ChickWeight</span></span></span>
 <span class="r-in"><span><span class="va">chickweights_df</span> <span class="op">&lt;-</span> <span class="va">chickweights_df</span><span class="op">[</span><span class="va">chickweights_df</span><span class="op">$</span><span class="va">Time</span> <span class="op">&lt;=</span> <span class="fl">20</span>,<span class="op">]</span></span></span>
 <span class="r-in"><span><span class="va">chickweights_df</span><span class="op">$</span><span class="va">DietInt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">chickweights_df</span><span class="op">$</span><span class="va">Diet</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">chickweights_df</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Grouped Data: weight ~ Time | Chick</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   weight Time Chick Diet DietInt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     42    0     1    1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     51    2     1    1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     59    4     1    1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     64    6     1    1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     76    8     1    1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     93   10     1    1       1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Example 1: Spec object using the continuous `DietInt` predictor</span></span></span>
 <span class="r-in"><span><span class="va">chickweights_spec1</span> <span class="op">&lt;-</span> <span class="fu"><a href="make_jlmer_spec.html">make_jlmer_spec</a></span><span class="op">(</span></span></span>
@@ -117,17 +125,38 @@
 <span class="r-in"><span> subject <span class="op">=</span> <span class="st">"Chick"</span>, time <span class="op">=</span> <span class="st">"Time"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">chickweights_spec1</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">jlmer specification</span> ───────────────────────────────────────── <span style="color: #0000BB;">&lt;jlmer_spec&gt;</span> ──</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Formula</span>: weight ~ 1 + DietInt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Predictors</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">DietInt</span>: DietInt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Groupings</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Subject</span>: Chick</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Trial</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Time</span>: Time</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Data</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 533 × 4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   weight DietInt Chick  Time</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     42       1 1         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     51       1 1         2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     59       1 1         4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 530 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Shuffling `DietInt` values guesses `predictor_type = "between_participant"`</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="julia_rng.html">reset_rng_state</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">spec1_perm1</span> <span class="op">&lt;-</span> <span class="fu">permute_by_predictor</span><span class="op">(</span><span class="va">chickweights_spec1</span>, predictors <span class="op">=</span> <span class="st">"DietInt"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># This uses the same Julia-based shuffling algorithm for CPA, so it increments the counter</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Guessed `predictor_type` to be <span style="color: #0000BB;">"between_participant"</span></span>
+<span class="r-in"><span><span class="co"># This calls the same shuffling algorithm for CPA in Julia, so counter is incremented</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="julia_rng.html">get_rng_state</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 38</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Shuffling under shared RNG state reproduces the same permutation of the data</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="julia_rng.html">reset_rng_state</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">spec1_perm2</span> <span class="op">&lt;-</span> <span class="va">spec1_perm2</span> <span class="op">&lt;-</span> <span class="fu">permute_by_predictor</span><span class="op">(</span><span class="va">chickweights_spec1</span>, predictors <span class="op">=</span> <span class="st">"DietInt"</span>, predictor_type <span class="op">=</span> <span class="st">"between_participant"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">spec1_perm2</span> <span class="op">&lt;-</span> <span class="fu">permute_by_predictor</span><span class="op">(</span><span class="va">chickweights_spec1</span>, predictors <span class="op">=</span> <span class="st">"DietInt"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Guessed `predictor_type` to be <span style="color: #0000BB;">"between_participant"</span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">spec1_perm1</span>, <span class="va">spec1_perm2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Example 2: Spec object using the multilevel `Diet` predictor</span></span></span>
 <span class="r-in"><span><span class="va">chickweights_spec2</span> <span class="op">&lt;-</span> <span class="fu"><a href="make_jlmer_spec.html">make_jlmer_spec</a></span><span class="op">(</span></span></span>
@@ -136,14 +165,35 @@
 <span class="r-in"><span> subject <span class="op">=</span> <span class="st">"Chick"</span>, time <span class="op">=</span> <span class="st">"Time"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">chickweights_spec2</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">jlmer specification</span> ───────────────────────────────────────── <span style="color: #0000BB;">&lt;jlmer_spec&gt;</span> ──</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Formula</span>: weight ~ 1 + Diet2 + Diet3 + Diet4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Predictors</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Diet</span>: Diet2, Diet3, Diet4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Groupings</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Subject</span>: Chick</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Trial</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Time</span>: Time</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Data</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 533 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   weight Diet2 Diet3 Diet4 Chick  Time</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     42     0     0     0 1         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     51     0     0     0 1         2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     59     0     0     0 1         4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 530 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Levels of a category are automatically shuffled together</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="julia_rng.html">reset_rng_state</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">spec2_perm1</span> <span class="op">&lt;-</span> <span class="fu">permute_by_predictor</span><span class="op">(</span><span class="va">chickweights_spec2</span>, predictors <span class="op">=</span> <span class="st">"Diet2"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Guessed `predictor_type` to be <span style="color: #0000BB;">"between_participant"</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Shuffling all levels of the factor together (<span style="color: #0000BB;">"Diet2"</span>, <span style="color: #0000BB;">"Diet3"</span>, and <span style="color: #0000BB;">"Diet4"</span>)</span>
 <span class="r-in"><span><span class="fu"><a href="julia_rng.html">reset_rng_state</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">spec2_perm2</span> <span class="op">&lt;-</span> <span class="fu">permute_by_predictor</span><span class="op">(</span><span class="va">chickweights_spec2</span>, predictors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Diet2"</span>, <span class="st">"Diet3"</span>, <span class="st">"Diet4"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Guessed `predictor_type` to be <span style="color: #0000BB;">"between_participant"</span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">spec2_perm1</span>, <span class="va">spec2_perm2</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

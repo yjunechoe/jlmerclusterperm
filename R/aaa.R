@@ -13,7 +13,7 @@ is_setup <- function() isTRUE(.jlmerclusterperm$is_setup)
 #'
 #' @param ... Ignored.
 #' @param restart Whether to set up a fresh Julia session, given that one is already running.
-#'   If `FALSE` and `jlmerclusterperm_setup()` has already been ran, nothing happens.
+#'   If `FALSE` and `jlmerclusterperm_setup()` has already been called, nothing happens.
 #' @param verbose Print progress and messages from Julia in the console
 #'
 #' @examples
@@ -65,7 +65,7 @@ set_projenv <- function(..., verbose = TRUE) {
   JuliaConnectoR::juliaEval("Pkg.instantiate()") # io = devnull
   JuliaConnectoR::juliaEval("Pkg.resolve(io = devnull)")
   JuliaConnectoR::juliaCall("cd", getwd())
-  JuliaConnectoR::juliaEval(paste0("pg_width = ", cli::console_width() - 50L))
+  JuliaConnectoR::juliaEval(paste0("pg_width = ", cli::console_width() - 44L))
   JuliaConnectoR::juliaEval("pg_io = stderr")
   JuliaConnectoR::juliaEval(paste0("using Random123; const rng = Threefry2x((", seed, ", 20))"))
   .jlmerclusterperm$opts$seed <- seed

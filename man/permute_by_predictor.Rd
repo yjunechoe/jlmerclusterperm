@@ -47,12 +47,12 @@ chickweights_spec1
 # Shuffling `DietInt` values guesses `predictor_type = "between_participant"`
 reset_rng_state()
 spec1_perm1 <- permute_by_predictor(chickweights_spec1, predictors = "DietInt")
-# This uses the same Julia-based shuffling algorithm for CPA, so it increments the counter
+# This calls the same shuffling algorithm for CPA in Julia, so counter is incremented
 get_rng_state()
 
 # Shuffling under shared RNG state reproduces the same permutation of the data
 reset_rng_state()
-spec1_perm2 <- spec1_perm2 <- permute_by_predictor(chickweights_spec1, predictors = "DietInt", predictor_type = "between_participant")
+spec1_perm2 <- permute_by_predictor(chickweights_spec1, predictors = "DietInt")
 identical(spec1_perm1, spec1_perm2)
 
 # Example 2: Spec object using the multilevel `Diet` predictor
