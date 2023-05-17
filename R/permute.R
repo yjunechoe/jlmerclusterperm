@@ -11,15 +11,15 @@
 #'
 #' # Example data setup
 #' chickweights_df <- ChickWeight
-#' chickweights_df <- chickweights_df[chickweights_df$Time <= 20,]
+#' chickweights_df <- chickweights_df[chickweights_df$Time <= 20, ]
 #' chickweights_df$DietInt <- as.integer(chickweights_df$Diet)
 #' head(chickweights_df)
 #'
 #' # Example 1: Spec object using the continuous `DietInt` predictor
 #' chickweights_spec1 <- make_jlmer_spec(
-#'  formula = weight ~ 1 + DietInt,
-#'  data = chickweights_df,
-#'  subject = "Chick", time = "Time"
+#'   formula = weight ~ 1 + DietInt,
+#'   data = chickweights_df,
+#'   subject = "Chick", time = "Time"
 #' )
 #' chickweights_spec1
 #'
@@ -36,9 +36,9 @@
 #'
 #' # Example 2: Spec object using the multilevel `Diet` predictor
 #' chickweights_spec2 <- make_jlmer_spec(
-#'  formula = weight ~ 1 + Diet,
-#'  data = chickweights_df,
-#'  subject = "Chick", time = "Time"
+#'   formula = weight ~ 1 + Diet,
+#'   data = chickweights_df,
+#'   subject = "Chick", time = "Time"
 #' )
 #' chickweights_spec2
 #'
