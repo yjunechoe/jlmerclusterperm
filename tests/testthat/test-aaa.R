@@ -16,3 +16,8 @@ test_that("Starts with default seed of N-1", {
 test_that("Don't restart if FALSE", {
   expect_message(jlmerclusterperm_setup(restart = FALSE))
 })
+
+test_that("RNG initializes to seed=1 counter=0", {
+  expect_equal(get_rng_seed(), 1)
+  expect_equal(get_rng_state(), 0)
+})

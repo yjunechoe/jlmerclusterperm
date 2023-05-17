@@ -1,0 +1,27 @@
+spec <- make_jlmer_spec(
+  weight ~ 1 + Diet, subset(ChickWeight, Time <= 20),
+  subject = "Chick", time = "Time"
+)
+
+test_that("CPAs under the same RNG state are identical", {
+  reset_rng_state()
+  a <- clusterpermute(spec, threshold = 2, progress = FALSE)
+  reset_rng_state()
+  b <- clusterpermute(spec, threshold = 2, progress = FALSE)
+  expect_equal(a, b)
+})
+
+test_that("Piecemeal and wholesale CPAs are identical", {
+  reset_rng_state()
+  wholesale <- clusterpermute(spec, threshold = 2, progress = FALSE)
+  reset_rng_state()
+  empirical_statistics <- compute_timewise_statistics(spec)
+  empirical_clusters <- extract_empirical_clusters(empirical_statistics, threshold = 2)
+  null_statistics <- permute_timewise_statistics(spec)
+  null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2)
+  empirical_clusters_tested <- calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1 = TRUE)
+  expect_equal(wholesale$null_cluster_dists, null_cluster_dists)
+  expect_equal(wholesale$empirical_clusters, empirical_clusters_tested)
+})
+
+reset_rng_state()
