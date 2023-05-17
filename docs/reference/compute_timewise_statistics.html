@@ -138,8 +138,12 @@ Defaults to <code>fast = TRUE</code> (when <code>family = "binomial"</code>) and
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Predictor x Time matrix of t-statistics from regression output</span></span></span>
 <span class="r-in"><span><span class="va">empirical_statistics</span> <span class="op">&lt;-</span> <span class="fu">compute_timewise_statistics</span><span class="op">(</span><span class="va">spec</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">timewise_stats</span>, <span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'timewise_stats' not found</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">empirical_statistics</span>, <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          Time</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Predictor     0    2    4    6    8   10   12   14   16   18   20</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Diet2 -1.60 1.67 2.60 3.52 2.38 1.91 1.94 1.34 1.16 1.40 1.51</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Diet3 -1.37 2.45 4.48 4.54 3.70 2.97 3.06 2.98 3.05 3.60 3.80</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Diet4 -0.92 3.53 6.27 7.00 5.12 4.07 3.66 2.78 2.16 2.13 2.64</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Collect as dataframe with `tidy()`</span></span></span>
 <span class="r-in"><span><span class="va">empirical_statistics_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">empirical_statistics</span><span class="op">)</span></span></span>
