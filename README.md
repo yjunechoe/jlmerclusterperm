@@ -89,7 +89,7 @@ functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.02    0.00   33.31
+#>    0.01    0.03   23.35
 ```
 
 ## Quick tour of package functionalities
