@@ -1,14 +1,35 @@
 #' Test the probability of cluster-mass statistics over a range of threshold values
 #'
-#' @param threshold_steps A vector of threshold values to test
+#' @param steps A vector of threshold values to test
 #' @inheritParams extract_empirical_clusters
 #' @inheritParams extract_null_cluster_dists
 #' @inheritParams calculate_clusters_pvalues
 #' @param progress Whether to display a progress bar
 #'
+#' @examples
+#' \dontrun{
+#' library(dplyr, warn.conflicts = FALSE)
+#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+#'
+#' # Specification object
+#' spec <- make_jlmer_spec(
+#'   weight ~ 1 + Diet, filter(ChickWeight, Time <= 20),
+#'   subject = "Chick", time = "Time"
+#' )
+#' spec
+#'
+#' # Compute timewise statistics for the observed and permuted data
+#' empirical_statistics <- compute_timewise_statistics(spec)
+#' reset_rng_state()
+#' null_statistics <- permute_timewise_statistics(spec, nsim = 100)
+#'
+#' # Test cluster mass/probability under different threshold values
+#' walk_threshold_steps(empirical_statistics, null_statistics, steps = 1:3)
+#' }
+#'
 #' @return A data frame of predictor clusters-mass statistics by threshold.
 #' @export
-walk_threshold_steps <- function(empirical_statistics, null_statistics, threshold_steps,
+walk_threshold_steps <- function(empirical_statistics, null_statistics, steps,
                                  top_n = Inf, binned = FALSE, add1 = TRUE, progress = TRUE) {
   test_threshold <- function(threshold) {
     empirical <- extract_empirical_clusters(empirical_statistics, threshold = threshold, binned = binned, top_n = top_n)
@@ -20,13 +41,13 @@ walk_threshold_steps <- function(empirical_statistics, null_statistics, threshol
     out[!is.na(out$pvalue), ]
   }
   if (progress) {
-    i_vec <- cli::cli_progress_along(threshold_steps)
+    i_vec <- cli::cli_progress_along(steps)
   } else {
-    i_vec <- seq_along(threshold_steps)
+    i_vec <- seq_along(steps)
   }
   res <- lapply(i_vec, function(i) {
-    out <- test_threshold(threshold_steps[i])
-    if (!is.null(out)) out$threshold <- threshold_steps[i]
+    out <- test_threshold(steps[i])
+    if (!is.null(out)) out$threshold <- steps[i]
     out
   })
 
