@@ -8,6 +8,9 @@
 [![Development
 Version](https://img.shields.io/badge/devel%20version-0.2.0-check.svg)](https://github.com/yjunechoe/jlmerclusterperm)
 [![R-CMD-check](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml)
+[![Project Status: Active – The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 <!-- badges: end -->
 
 Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and
@@ -84,7 +87,7 @@ functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.03    0.02   23.32
+#>    0.02    0.00   24.66
 ```
 
 ## Quick tour of package functionalities
