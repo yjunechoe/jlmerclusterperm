@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-A Julia-based implementation of fast cluster-based permutation tests for time series data using mixed-effects models. Provides a modular interface for the steps of computing timewise statistics, extracting clusters, and calculating p-values. Calls MixedModels.jl and GLM.jl to fit regression models using JuliaConnectoR (requires Julia installation).
+A Julia implementation of fast cluster-based permutation analysis (CPA) for densely-sampled time data developed in Maris & Oostenveld, 2007 \doi{10.1016/j.jneumeth.2007.03.024}. Uses (generalized, mixed-effects) regression models for the calculation of timewise statistics. Provides both a wholesale and a piecemeal interface to the CPA procedure with an emphasis on interpretability and diagnostics. Integrates Julia libraries MixedModels and GLM for performance improvements. Provides additional functionalities for R-Julia interface, powered by the JuliaConnectoR package (requires Julia installation).
 }
 \seealso{
 Useful links:
