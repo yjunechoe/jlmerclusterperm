@@ -9,6 +9,20 @@
 #' @param drop_terms (Optional) any terms to drop from the reconstructed model formula
 #' @param ... Unused, for extensibility.
 #'
+#' @srrstats {G2.5} Inputs are never strictly expected as factor, but users are expected to be aware of the concept of contrast coding,
+#'  such that they can further control the numerical coding of their categorical variables with `contrasts()`.
+#' @srrstats {G2.7} Package accepts any tabular structure that is `model.matrix()`-able.
+#' @srrstats {G2.8} Package applies a strict gateway via `make_jlmer_spec()` where all CPA-related functions require a pre-processed `<jlmer_spec>` object.
+#' @srrstats {G2.9} Messages dropped rows and invalid names on `model.matrix()` conversion.
+#' @srrstats {G2.10} Handled via `model.matrix()`
+#' @srrstats {G2.11} Handled via `model.matrix()`
+#' @srrstats {G2.12} Handled via `model.matrix()`
+#' @srrstats {G2.13} Handled via `model.matrix()` and informs on dropping NA rows.
+#' @srrstats {G2.14} `make_jlmer_spec()` informs about NA rows. Imputation not implemented as it does not make sense for this package.
+#' @srrstats {G5.8} Edge conditions on data are caught firstly by `model.matrix()` (inside `make_jlmer_spec()`) and also in Julia when handing the data off to GLM/MixedModels
+#' @srrstats {RE1.1} Handled standardly via `model.matrix()`
+#' @srrstats {RE1.3} Handled standardly via `model.matrix()`. Users can see the model matrix with contrasts spelled-out upon printing a `<jlmer_spec>` object
+#'
 #' @examples
 #' \dontrun{
 #' # Bare specification object (minimal spec for fitting a global model)

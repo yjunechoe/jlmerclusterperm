@@ -1,5 +1,6 @@
 `%|0|%` <- function(lhs, rhs) if (is.null(lhs) || identical(lhs, "") || length(lhs) == 0 || is.na(lhs)) rhs else lhs
 
+#' @srrstats {G3.0} Equality comparison between floats use tolerance (e.g., the internal function `near_zero()`)
 near_zero <- function(x) {
   abs(x) < .Machine$double.eps^0.5
 }

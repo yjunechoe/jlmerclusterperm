@@ -6,6 +6,10 @@
 #'
 #' @seealso [jlmer()], [make_jlmer_spec()]
 #'
+#' @srrstats {G2.16} Undefined values are caught during model fitting in Julia.
+#' @srrstats {RE1.0} Uses R formula interface
+#' @srrstats {RE4.0} `jlmer()` and `to_jlmer()` return pointers to Julia model objects.
+#'
 #' @examples
 #' \dontrun{
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
@@ -39,6 +43,8 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_sp
 #'
 #' @seealso [make_jlmer_spec()]
 #'
+#' @srrstats {RE3.3} Convergence thresholds can be explicitly set by passing the appropriate argument to the `...` of functions that call GLM/MixedModels
+#'
 #' @examples
 #' \dontrun{
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
@@ -62,6 +68,12 @@ jlmer <- function(jlmer_spec, family = c("gaussian", "binomial"), ..., progress 
   structure(mod, class = c("jlmer_mod", class(mod)))
 }
 
+#' @srrstats {RE4.3} Confidence intervals printed in `print.jlmer_mod()` for LMs, not implemented for LMEMs.
+#' @srrstats {RE4.4} Formula printed via `print.jlmer_mod()` or evaluating Julia code on model object via JuliaConnectoR
+#' @srrstats {RE4.6} The variance-covariance matrix of the model parameters via `print.jlmer_mod()` or evaluating Julia code on model object via JuliaConnectoR
+#' @srrstats {RE4.8} Response variable and metadata printed via `print.jlmer_mod()` or evaluating Julia code on model object via JuliaConnectoR
+#' @srrstats {RE4.13} Predictor variables and metadata printed via `print.jlmer_mod()` or evaluating Julia code on model object via JuliaConnectoR
+#' @srrstats {RE4.17} Print method defined for all custom S3 objects.
 #' @export
 print.jlmer_mod <- function(x, ...) {
   cat(format(x, ...))

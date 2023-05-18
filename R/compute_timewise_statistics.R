@@ -9,6 +9,10 @@
 #'
 #' @seealso [jlmer()], [make_jlmer_spec()]
 #'
+#' @srrstats {RE3.0} Issues singularity messages and excludes runs with convergence failures in permutation testing (and informs of this)
+#' @srrstats {RE3.1} Convergence failures can be retrieved from function outputs, but users are encouraged to watch out for warnings and messages.
+#'  These can be suppressed via the `suppress*()` functions.
+#'
 #' @examples
 #' \dontrun{
 #' library(dplyr, warn.conflicts = FALSE)

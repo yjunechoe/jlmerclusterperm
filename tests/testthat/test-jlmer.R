@@ -1,9 +1,13 @@
+#' @srrstats {G5.3} Tests for correctness but no explicit test for NA
+#' @srrstats {G5.4} Tests compare to R `lm()` output.
+
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 spec_lm <- make_jlmer_spec(weight ~ 1 + Diet, ChickWeight)
 jlm1 <- to_jlmer(weight ~ 1 + Diet, ChickWeight)
 jlm2 <- jlmer(spec_lm)
 
+#' @srrstats {RE7.3} Tests for `print()`, `tidy()`, and `glance()`
 test_that("direct and indirect fits identical", {
   expect_equal(tidy(jlm1), tidy(jlm2))
   expect_equal(glance(jlm1), glance(jlm2))

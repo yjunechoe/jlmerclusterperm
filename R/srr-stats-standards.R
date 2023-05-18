@@ -9,13 +9,6 @@
 #'
 #' @srrstatsVerbose TRUE
 #'
-#' @srrstats {G1.0} References Maris & Oostenveld (2007) which originally proposed the cluster-based permutation analysis.
-#' @srrstats {G1.1} Package is an improvement over existing implementations in R (mainly in speed and interpretability).
-#'  This is explained in the readme and the case study vignettes.
-#' @srrstats {G1.2} Lifecycle is active and stable.
-#' @srrstats {G1.3} The many moving parts are explained across the readme, the function documentation, and the topics/case study vignettes.
-#'  Users are assumed to already have familiarity with (genearlized, mixed-effects) regression to use this package.
-#' @srrstats {G1.4} `roxygen2` is used throughout the package.
 #' @srrstats {G1.4a}
 #' @srrstats {G1.6} Some performance comparisons are available in the case study vignettes upon following the links to original tutorials they replicate.
 #' @srrstats {G2.0} Function arguments passed to Julia are appropriately handled in Julia. Outputs from Julia to R are checked on type and length.
@@ -32,65 +25,27 @@
 #' @srrstats {G2.4c}
 #' @srrstats {G2.4d}
 #' @srrstats {G2.4e}
-#' @srrstats {G2.5} Inputs are never strictly expected as factor, but users are expected to be aware of the concept of contrast coding,
-#'  such that they can further control the numerical coding of their categorical variables with `contrasts()`.
 #' @srrstats {G2.6} Values are appropriately pre-processed regardless of class structures where appropriate
-#' @srrstats {G2.7} Package accepts any tabular structure that is `model.matrix()`-able.
-#' @srrstats {G2.8} Package applies a strict gateway via `make_jlmer_spec()` where all CPA-related functions require a pre-processed `<jlmer_spec>` object.
-#' @srrstats {G2.9} Messages dropped rows and invalid names on `model.matrix()` conversion.
-#' @srrstats {G2.10} Handled via `model.matrix()`
-#' @srrstats {G2.11} Handled via `model.matrix()`
-#' @srrstats {G2.12} Handled via `model.matrix()`
-#' @srrstats {G2.13} Handled via `model.matrix()` and informs on dropping NA rows.
-#' @srrstats {G2.14} `make_jlmer_spec()` informs about NA rows. Imputation not implemented as it does not make sense for this package.
 #' @srrstats {G2.14a}
 #' @srrstats {G2.14b}
 #' @srrstats {G2.14c}
 #' @srrstats {G2.15} Functions check for missinginess in output where appropriate.
-#' @srrstats {G2.16} Undefined values are caught during model fitting in Julia.
-#' @srrstats {G3.0} Equality comparison between floats use tolerance (e.g., the internal function `near_zero()`)
-#' @srrstats {G5.0} Uses the built-in `ChickWeight` dataset for tests
-#' @srrstats {G5.2} Appropriate message/warning/error tests are in `/tests/testthat`
 #' @srrstats {G5.2a}
 #' @srrstats {G5.2b}
-#' @srrstats {G5.3} Tests for correctness but no explicit test for NA
-#' @srrstats {G5.4} Tests compare to R `lm()` output.
 #' @srrstats {G5.4a}
 #' @srrstats {G5.4b}
 #' @srrstats {G5.4c}
-#' @srrstats {G5.5} Uses shared Julia RNG state to test correctness
-#' @srrstats {G5.8} Edge conditions on data are caught firstly by `model.matrix()` (inside `make_jlmer_spec()`) and also in Julia when handing the data off to GLM/MixedModels
 #' @srrstats {G5.8a}
 #' @srrstats {G5.8b}
 #' @srrstats {G5.8c}
 #' @srrstats {G5.8d}
-#' @srrstats {G5.9} Tests for stochastic nature of the CPA under different RNG states
 #' @srrstats {G5.9a}
 #' @srrstats {G5.9b}
 #' @srrstats {G5.10} Tests ran on codecov.
-#' @srrstats {RE1.0} Uses R formula interface
-#' @srrstats {RE1.1} Handled standardly via `model.matrix()`
 #' @srrstats {RE1.2} See G2.5
-#' @srrstats {RE1.3} Handled standardly via `model.matrix()`. Users can see the model matrix with contrasts spelled-out upon printing a `<jlmer_spec>` object
 #' @srrstats {RE1.3a}
 #' @srrstats {RE2.1} See G2.14
-#' @srrstats {RE3.0} Issues singularity messages and excludes runs with convergence failures in permutation testing (and informs of this)
-#' @srrstats {RE3.1} Convergence failures can be retrieved from function outputs, but users are encouraged to watch out for warnings and messages.
-#'  These can be suppressed via the `suppress*()` functions.
-#' @srrstats {RE3.3} Convergence thresholds can be explicitly set by passing the appropriate argument to the `...` of functions that call GLM/MixedModels
-#' @srrstats {RE4.0} `jlmer()` and `to_jlmer()` return pointers to Julia model objects.
-#' @srrstats {RE4.2} Model coefficients via `tidy()`
-#' @srrstats {RE4.3} Confidence intervals printed in `print.jlmer_mod()` for LMs, not implemented for LMEMs.
-#' @srrstats {RE4.4} Formula printed via `print.jlmer_mod()` or evaluating Julia code on model object via JuliaConnectoR
-#' @srrstats {RE4.5} Numbers of observations via `glance()`
-#' @srrstats {RE4.6} The variance-covariance matrix of the model parameters via `print.jlmer_mod()` or evaluating Julia code on model object via JuliaConnectoR
 #' @srrstats {RE4.7} Convergence statistics can be retrieved from evaluating Julia code on model object via JuliaConnectoR
-#' @srrstats {RE4.8} Response variable and metadata printed via `print.jlmer_mod()` or evaluating Julia code on model object via JuliaConnectoR
-#' @srrstats {RE4.10} Model Residuals via `glance()`. Users are assumed to be familiar.
-#' @srrstats {RE4.11} Goodness-of-fit and other statistics via `glance()`
-#' @srrstats {RE4.13} Predictor variables and metadata printed via `print.jlmer_mod()` or evaluating Julia code on model object via JuliaConnectoR
-#' @srrstats {RE4.17} Print method defined for all custom S3 objects.
-#' @srrstats {RE7.3} Tests for `print()`, `tidy()`, and `glance()`
 #' @noRd
 NULL
 

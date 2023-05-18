@@ -28,18 +28,18 @@ data, powered by
 
 **Cluster-based permutation analysis (CPA)** is a simulation-based,
 non-parametric statistical test of difference between groups in a time
-series. It is suitable for analyzing **densely-sampled time data**
-(e.g., eye gaze, EEG) when the research hypothesis is often specified up
-to the existence of an effect (e.g., as predicted by higher-order
-cognitive mechanisms) but agnostic to the structural details of the
-temporal event (e.g., the precise moment of an effect’s emergence).
+series. It is suitable for analyzing **densely-sampled time data** (such
+as in EEG and eye-tracking research) where the research hypothesis is
+often specified up to the existence of an effect (e.g., as predicted by
+higher-order cognitive mechanisms) but agnostic to the temporal details
+of the effect (such as the precise moment of its emergence).
 
 CPA formalizes two intuitions about what it means for there to be a
 difference between groups:
 
 1)  The countable unit of difference (i.e., a **cluster**) is a
     contiguous, uninterrupted span of *sufficiently large* differences
-    at each time point (determined via a pre-determined threshold).
+    at each time point (determined via a *threshold*).
 
 2)  The degree of extremity of a cluster (i.e., the **cluster-mass
     statistic**) is a measure that is sensitive to the magnitude of the
@@ -47,11 +47,14 @@ difference between groups:
     t-statistic from a regression).
 
 In short, the CPA procedure identifies empirical clusters in a time
-series and tests the significance of the cluster-mass statistics against
-bootstrapped permutations of the data simulating the null.
+series and tests the significance of the observed cluster-mass
+statistics against **bootstrapped permutations** of the data. The
+bootstrapping procedure simulates the null hypothesis and yield a
+distribution of cluster-mass statistics emerging from *chance* (i.e.,
+random shuffling of condition labels).
 
-`jlmerclusterperm` is an interface to a regression-based CPA which
-supports both wholesale and piecemeal approaches to conducting a CPA.
+`jlmerclusterperm` is an interface to regression-based CPAs which
+supports both wholesale and piecemeal approaches to conducting the test.
 See the
 [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles/) page
 on the [package website](https://github.com/yjunechoe/jlmerclusterperm)
@@ -90,7 +93,7 @@ functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.00    0.02   22.49
+#>    0.00    0.05   24.19
 ```
 
 ## Quick tour of package functionalities

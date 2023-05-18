@@ -29,17 +29,17 @@ Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https:
 
 ## Overview
 
-**Cluster-based permutation analysis (CPA)** is a simulation-based, non-parametric statistical test of difference between groups in a time series. It is suitable for analyzing **densely-sampled time data** (e.g., eye gaze, EEG) when the research hypothesis is often specified up to the existence of an effect (e.g., as predicted by higher-order cognitive mechanisms) but agnostic to the structural details of the temporal event (e.g., the precise moment of an effect's emergence).
+**Cluster-based permutation analysis (CPA)** is a simulation-based, non-parametric statistical test of difference between groups in a time series. It is suitable for analyzing **densely-sampled time data** (such as in EEG and eye-tracking research) where the research hypothesis is often specified up to the existence of an effect (e.g., as predicted by higher-order cognitive mechanisms) but agnostic to the temporal details of the effect (such as the precise moment of its emergence).
 
 CPA formalizes two intuitions about what it means for there to be a difference between groups:
 
-1) The countable unit of difference (i.e., a **cluster**) is a contiguous, uninterrupted span of _sufficiently large_ differences at each time point (determined via a pre-determined threshold).
+1) The countable unit of difference (i.e., a **cluster**) is a contiguous, uninterrupted span of _sufficiently large_ differences at each time point (determined via a _threshold_).
 
 2) The degree of extremity of a cluster (i.e., the **cluster-mass statistic**) is a measure that is sensitive to the magnitude of the difference, its variability, and the sample size (e.g., the t-statistic from a regression).
 
-In short, the CPA procedure identifies empirical clusters in a time series and tests the significance of the cluster-mass statistics against bootstrapped permutations of the data simulating the null.
+In short, the CPA procedure identifies empirical clusters in a time series and tests the significance of the observed cluster-mass statistics against **bootstrapped permutations** of the data. The bootstrapping procedure simulates the null hypothesis and yield a distribution of cluster-mass statistics emerging from _chance_ (i.e., random shuffling of condition labels).
 
-`jlmerclusterperm` is an interface to a regression-based CPA which supports both wholesale and piecemeal approaches to conducting a CPA. See the [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles/) page on the [package website](https://github.com/yjunechoe/jlmerclusterperm) for tutorials and case studies.
+`jlmerclusterperm` is an interface to regression-based CPAs which supports both wholesale and piecemeal approaches to conducting the test. See the [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles/) page on the [package website](https://github.com/yjunechoe/jlmerclusterperm) for tutorials and case studies.
 
 
 ## Installation and usage
@@ -165,3 +165,14 @@ walk_threshold_steps(empirical_statistics, null_statistics, steps = c(2, 2.5, 3)
 - The Julia packages [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) for fast implementations (mixed effects) regression models.
 
 - Existing implementations of CPA in R ([permuco](https://jaromilfrossard.github.io/permuco/), [permutes](https://github.com/cvoeten/permutes), etc.) whose designs inspired the CPA interface in jlmerclusterperm.
+
+```{r srr, include = FALSE}
+#' @srrstats {G1.0} References Maris & Oostenveld (2007) which originally proposed the cluster-based permutation analysis.
+#' @srrstats {G1.1} Package is an improvement over existing implementations in R (mainly in speed and interpretability).
+#'  This is explained in the readme and the case study vignettes.
+#' @srrstats {G1.2} Lifecycle is active and stable.
+#' @srrstats {G1.3} The many moving parts are explained across the readme, the function documentation, and the topics/case study vignettes.
+#'  Users are assumed to already have familiarity with (genearlized, mixed-effects) regression to use this package.
+#' @srrstats {G1.4} `roxygen2` is used throughout the package.
+```
+

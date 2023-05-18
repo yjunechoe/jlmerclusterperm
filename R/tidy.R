@@ -8,6 +8,8 @@ generics::tidy
 #' @param effects One of "var_model", "ran_pars", or "fixed"
 #' @param ... Unused
 #'
+#' @srrstats {RE4.2} Model coefficients via `tidy()`
+#'
 #' @examples
 #' \dontrun{
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
@@ -182,6 +184,11 @@ tidy.null_cluster_dists <- function(x, ...) {
 generics::glance
 
 #' @rdname julia_model_tidiers
+#'
+#' @srrstats {RE4.5} Numbers of observations via `glance()`
+#' @srrstats {RE4.10} Model Residuals via `glance()`. Users are assumed to be familiar.
+#' @srrstats {RE4.11} Goodness-of-fit and other statistics via `glance()`
+#'
 #' @method glance jlmer_mod
 #' @export
 glance.jlmer_mod <- function(x, ...) {

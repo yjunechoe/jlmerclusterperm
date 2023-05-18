@@ -97,14 +97,14 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p><strong>Cluster-based permutation analysis (CPA)</strong> is a simulation-based, non-parametric statistical test of difference between groups in a time series. It is suitable for analyzing <strong>densely-sampled time data</strong> (e.g., eye gaze, EEG) when the research hypothesis is often specified up to the existence of an effect (e.g., as predicted by higher-order cognitive mechanisms) but agnostic to the structural details of the temporal event (e.g., the precise moment of an effect’s emergence).</p>
+<p><strong>Cluster-based permutation analysis (CPA)</strong> is a simulation-based, non-parametric statistical test of difference between groups in a time series. It is suitable for analyzing <strong>densely-sampled time data</strong> (such as in EEG and eye-tracking research) where the research hypothesis is often specified up to the existence of an effect (e.g., as predicted by higher-order cognitive mechanisms) but agnostic to the temporal details of the effect (such as the precise moment of its emergence).</p>
 <p>CPA formalizes two intuitions about what it means for there to be a difference between groups:</p>
 <ol style="list-style-type: decimal">
-<li><p>The countable unit of difference (i.e., a <strong>cluster</strong>) is a contiguous, uninterrupted span of <em>sufficiently large</em> differences at each time point (determined via a pre-determined threshold).</p></li>
+<li><p>The countable unit of difference (i.e., a <strong>cluster</strong>) is a contiguous, uninterrupted span of <em>sufficiently large</em> differences at each time point (determined via a <em>threshold</em>).</p></li>
 <li><p>The degree of extremity of a cluster (i.e., the <strong>cluster-mass statistic</strong>) is a measure that is sensitive to the magnitude of the difference, its variability, and the sample size (e.g., the t-statistic from a regression).</p></li>
 </ol>
-<p>In short, the CPA procedure identifies empirical clusters in a time series and tests the significance of the cluster-mass statistics against bootstrapped permutations of the data simulating the null.</p>
-<p><code>jlmerclusterperm</code> is an interface to a regression-based CPA which supports both wholesale and piecemeal approaches to conducting a CPA. See the <a href="https://yjunechoe.github.io/jlmerclusterperm/articles/">Articles</a> page on the <a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">package website</a> for tutorials and case studies.</p>
+<p>In short, the CPA procedure identifies empirical clusters in a time series and tests the significance of the observed cluster-mass statistics against <strong>bootstrapped permutations</strong> of the data. The bootstrapping procedure simulates the null hypothesis and yield a distribution of cluster-mass statistics emerging from <em>chance</em> (i.e., random shuffling of condition labels).</p>
+<p><code>jlmerclusterperm</code> is an interface to regression-based CPAs which supports both wholesale and piecemeal approaches to conducting the test. See the <a href="https://yjunechoe.github.io/jlmerclusterperm/articles/">Articles</a> page on the <a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">package website</a> for tutorials and case studies.</p>
 </div>
 <div class="section level2">
 <h2 id="installation-and-usage">Installation and usage<a class="anchor" aria-label="anchor" href="#installation-and-usage"></a>
@@ -121,7 +121,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">jlmerclusterperm</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu"><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.00    0.02   22.49</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.00    0.05   24.19</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-tour-of-package-functionalities">Quick tour of package functionalities<a class="anchor" aria-label="anchor" href="#quick-tour-of-package-functionalities"></a>

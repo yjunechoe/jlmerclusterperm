@@ -1,10 +1,13 @@
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
+#' @srrstats {G5.0} Uses the built-in `ChickWeight` dataset for tests
 spec <- make_jlmer_spec(
   weight ~ 1 + Diet, subset(ChickWeight, Time <= 20),
   subject = "Chick", time = "Time"
 )
 
+#' @srrstats {G5.5} Uses shared Julia RNG state to test correctness
+#' @srrstats {G5.9} Tests for stochastic nature of the CPA under different RNG states
 test_that("CPAs under the same RNG state are identical", {
   reset_rng_state()
   a <- clusterpermute(spec, threshold = 2, progress = FALSE)

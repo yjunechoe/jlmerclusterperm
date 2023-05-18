@@ -1,3 +1,5 @@
+#' @srrstats {G5.2} Appropriate message/warning/error tests are in `/tests/testthat`
+
 test_that("Setup works", {
   expect_true(jlmerclusterperm_setup(verbose = FALSE))
 })
