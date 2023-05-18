@@ -36,7 +36,7 @@ julia_progress <- function(show, width) {
   }
   if (!missing(width)) {
     if (width == "auto") {
-      width <- cli::console_width() - 44L
+      width <- max(1L, cli::console_width() - 44L)
     }
     JuliaConnectoR::juliaEval(paste0("pg_width = ", width))
   }

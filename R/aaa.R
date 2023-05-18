@@ -66,7 +66,7 @@ set_projenv <- function(..., verbose = TRUE) {
   JuliaConnectoR::juliaEval("Pkg.instantiate()") # io = devnull
   JuliaConnectoR::juliaEval("Pkg.resolve(io = devnull)")
   JuliaConnectoR::juliaCall("cd", getwd())
-  JuliaConnectoR::juliaEval(paste0("pg_width = ", cli::console_width() - 44L))
+  JuliaConnectoR::juliaEval(paste0("pg_width = ", max(1L, cli::console_width() - 44L)))
   JuliaConnectoR::juliaEval("pg_io = stderr")
   JuliaConnectoR::juliaEval(paste0("using Random123; const rng = Threefry2x((", seed, ", 20))"))
   .jlmerclusterperm$opts$seed <- seed
