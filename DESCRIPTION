@@ -52,7 +52,7 @@ Remotes:
     langcog/peekbankr
 Config/testthat/edition: 3
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
+Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
 RoxygenNote: 7.2.3
 Collate:
     'jlmerclusterperm-package.R'
@@ -73,3 +73,4 @@ Collate:
     'threshold_search.R'
     'tidy.R'
     'zzz.R'
+    'srr-stats-standards.R'
