@@ -7,6 +7,8 @@
 ^pkgdown$
 ^\.github$
 ^vignettes/articles$
-^inst/WORDLIST
+^inst/WORDLIST$
+^inst/scripts$
 ^codecov\.yml$
 ^CITATION\.cff$
+^codemeta\.json$
