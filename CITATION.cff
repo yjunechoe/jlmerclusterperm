@@ -1,0 +1,419 @@
+# -----------------------------------------------------------
+# CITATION file created with {cffr} R package, v0.5.0
+# See also: https://docs.ropensci.org/cffr/
+# -----------------------------------------------------------
+ 
+cff-version: 1.2.0
+message: 'To cite package "jlmerclusterperm" in publications use:'
+type: software
+license: MIT
+title: 'jlmerclusterperm: Bootstrapped cluster-based permutation analysis for time
+  series data using GLM and MixedModels in Julia'
+version: 0.2.0
+abstract: A Julia implementation of fast cluster-based permutation analysis (CPA)
+  for densely-sampled time data developed in Maris & Oostenveld, 2007 <doi:10.1016/j.jneumeth.2007.03.024>.
+  Uses (generalized, mixed-effects) regression models for the calculation of timewise
+  statistics. Provides both a wholesale and a piecemeal interface to the CPA procedure
+  with an emphasis on interpretability and diagnostics. Integrates Julia libraries
+  MixedModels and GLM for performance improvements. Provides additional functionalities
+  for R-Julia interface, powered by the JuliaConnectoR package (requires Julia installation).
+authors:
+- family-names: Choe
+  given-names: June
+  email: jchoe001@gmail.com
+  orcid: https://orcid.org/0000-0002-0701-921X
+repository-code: https://github.com/yjunechoe/jlmerclusterperm
+url: https://yjunechoe.github.io/jlmerclusterperm/
+contact:
+- family-names: Choe
+  given-names: June
+  email: jchoe001@gmail.com
+  orcid: https://orcid.org/0000-0002-0701-921X
+references:
+- type: software
+  title: 'R: A Language and Environment for Statistical Computing'
+  notes: Depends
+  url: https://www.R-project.org/
+  authors:
+  - name: R Core Team
+  location:
+    name: Vienna, Austria
+  year: '2023'
+  institution:
+    name: R Foundation for Statistical Computing
+  version: '>= 3.5'
+- type: software
+  title: cli
+  abstract: 'cli: Helpers for Developing Command Line Interfaces'
+  notes: Imports
+  url: https://cli.r-lib.org
+  repository: https://CRAN.R-project.org/package=cli
+  authors:
+  - family-names: Csárdi
+    given-names: Gábor
+    email: csardi.gabor@gmail.com
+  year: '2023'
+- type: software
+  title: generics
+  abstract: 'generics: Common S3 Generics not Provided by Base R Methods Related to
+    Model Fitting'
+  notes: Imports
+  url: https://generics.r-lib.org
+  repository: https://CRAN.R-project.org/package=generics
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  - family-names: Kuhn
+    given-names: Max
+    email: max@rstudio.com
+  - family-names: Vaughan
+    given-names: Davis
+    email: davis@rstudio.com
+  year: '2023'
+- type: software
+  title: JuliaConnectoR
+  abstract: 'JuliaConnectoR: A Functionally Oriented Interface for Integrating ''Julia''
+    with R'
+  notes: Imports
+  repository: https://CRAN.R-project.org/package=JuliaConnectoR
+  authors:
+  - family-names: Lenz
+    given-names: Stefan
+    email: stefan-m-lenz@web.de
+    orcid: https://orcid.org/0000-0001-9135-1743
+  - family-names: Binder
+    given-names: Harald
+    orcid: https://orcid.org/0000-0002-5666-8662
+  year: '2023'
+- type: software
+  title: lme4
+  abstract: 'lme4: Linear Mixed-Effects Models using ''Eigen'' and S4'
+  notes: Imports
+  url: https://github.com/lme4/lme4/
+  repository: https://CRAN.R-project.org/package=lme4
+  authors:
+  - family-names: Bates
+    given-names: Douglas
+    orcid: https://orcid.org/0000-0001-8316-9503
+  - family-names: Maechler
+    given-names: Martin
+    orcid: https://orcid.org/0000-0002-8685-9910
+  - family-names: Bolker
+    given-names: Ben
+    email: bbolker+lme4@gmail.com
+    orcid: https://orcid.org/0000-0002-2127-0443
+  - family-names: Walker
+    given-names: Steven
+    orcid: https://orcid.org/0000-0002-4394-9078
+  year: '2023'
+- type: software
+  title: parallel
+  abstract: 'R: A Language and Environment for Statistical Computing'
+  notes: Imports
+  authors:
+  - name: R Core Team
+  location:
+    name: Vienna, Austria
+  year: '2023'
+  institution:
+    name: R Foundation for Statistical Computing
+- type: software
+  title: stats
+  abstract: 'R: A Language and Environment for Statistical Computing'
+  notes: Imports
+  authors:
+  - name: R Core Team
+  location:
+    name: Vienna, Austria
+  year: '2023'
+  institution:
+    name: R Foundation for Statistical Computing
+- type: software
+  title: utils
+  abstract: 'R: A Language and Environment for Statistical Computing'
+  notes: Imports
+  authors:
+  - name: R Core Team
+  location:
+    name: Vienna, Austria
+  year: '2023'
+  institution:
+    name: R Foundation for Statistical Computing
+- type: software
+  title: broom
+  abstract: 'broom: Convert Statistical Objects into Tidy Tibbles'
+  notes: Suggests
+  url: https://broom.tidymodels.org/
+  repository: https://CRAN.R-project.org/package=broom
+  authors:
+  - family-names: Robinson
+    given-names: David
+    email: admiral.david@gmail.com
+  - family-names: Hayes
+    given-names: Alex
+    email: alexpghayes@gmail.com
+    orcid: https://orcid.org/0000-0002-4985-5160
+  - family-names: Couch
+    given-names: Simon
+    email: simon.couch@posit.co
+    orcid: https://orcid.org/0000-0001-5676-5107
+  year: '2023'
+- type: software
+  title: broom.mixed
+  abstract: 'broom.mixed: Tidying Methods for Mixed Models'
+  notes: Suggests
+  url: https://github.com/bbolker/broom.mixed
+  repository: https://CRAN.R-project.org/package=broom.mixed
+  authors:
+  - family-names: Bolker
+    given-names: Ben
+    email: bolker@mcmaster.ca
+    orcid: https://orcid.org/0000-0002-2127-0443
+  - family-names: Robinson
+    given-names: David
+    email: admiral.david@gmail.com
+  year: '2023'
+- type: software
+  title: covr
+  abstract: 'covr: Test Coverage for Packages'
+  notes: Suggests
+  url: https://covr.r-lib.org
+  repository: https://CRAN.R-project.org/package=covr
+  authors:
+  - family-names: Hester
+    given-names: Jim
+    email: james.f.hester@gmail.com
+  year: '2023'
+- type: software
+  title: dplyr
+  abstract: 'dplyr: A Grammar of Data Manipulation'
+  notes: Suggests
+  url: https://dplyr.tidyverse.org
+  repository: https://CRAN.R-project.org/package=dplyr
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+    orcid: https://orcid.org/0000-0003-4757-117X
+  - family-names: François
+    given-names: Romain
+    orcid: https://orcid.org/0000-0002-2444-4226
+  - family-names: Henry
+    given-names: Lionel
+  - family-names: Müller
+    given-names: Kirill
+    orcid: https://orcid.org/0000-0002-1416-3412
+  - family-names: Vaughan
+    given-names: Davis
+    email: davis@posit.co
+    orcid: https://orcid.org/0000-0003-4777-038X
+  year: '2023'
+- type: software
+  title: forcats
+  abstract: 'forcats: Tools for Working with Categorical Variables (Factors)'
+  notes: Suggests
+  url: https://forcats.tidyverse.org/
+  repository: https://CRAN.R-project.org/package=forcats
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  year: '2023'
+- type: software
+  title: future
+  abstract: 'future: Unified Parallel and Distributed Processing in R for Everyone'
+  notes: Suggests
+  url: https://future.futureverse.org
+  repository: https://CRAN.R-project.org/package=future
+  authors:
+  - family-names: Bengtsson
+    given-names: Henrik
+    email: henrikb@braju.com
+  year: '2023'
+- type: software
+  title: ggplot2
+  abstract: 'ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics'
+  notes: Suggests
+  url: https://ggplot2.tidyverse.org
+  repository: https://CRAN.R-project.org/package=ggplot2
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+    orcid: https://orcid.org/0000-0003-4757-117X
+  - family-names: Chang
+    given-names: Winston
+    orcid: https://orcid.org/0000-0002-1576-2126
+  - family-names: Henry
+    given-names: Lionel
+  - family-names: Pedersen
+    given-names: Thomas Lin
+    email: thomas.pedersen@posit.co
+    orcid: https://orcid.org/0000-0002-5147-4711
+  - family-names: Takahashi
+    given-names: Kohske
+  - family-names: Wilke
+    given-names: Claus
+    orcid: https://orcid.org/0000-0002-7470-9261
+  - family-names: Woo
+    given-names: Kara
+    orcid: https://orcid.org/0000-0002-5125-4188
+  - family-names: Yutani
+    given-names: Hiroaki
+    orcid: https://orcid.org/0000-0002-3385-7233
+  - family-names: Dunnington
+    given-names: Dewey
+    orcid: https://orcid.org/0000-0002-9415-4582
+  year: '2023'
+- type: software
+  title: knitr
+  abstract: 'knitr: A General-Purpose Package for Dynamic Report Generation in R'
+  notes: Suggests
+  url: https://yihui.org/knitr/
+  repository: https://CRAN.R-project.org/package=knitr
+  authors:
+  - family-names: Xie
+    given-names: Yihui
+    email: xie@yihui.name
+    orcid: https://orcid.org/0000-0003-0645-5666
+  year: '2023'
+- type: software
+  title: MASS
+  abstract: 'MASS: Support Functions and Datasets for Venables and Ripley''s MASS'
+  notes: Suggests
+  url: http://www.stats.ox.ac.uk/pub/MASS4/
+  repository: https://CRAN.R-project.org/package=MASS
+  authors:
+  - family-names: Ripley
+    given-names: Brian
+    email: ripley@stats.ox.ac.uk
+  year: '2023'
+- type: software
+  title: patchwork
+  abstract: 'patchwork: The Composer of Plots'
+  notes: Suggests
+  url: https://patchwork.data-imaginist.com
+  repository: https://CRAN.R-project.org/package=patchwork
+  authors:
+  - family-names: Pedersen
+    given-names: Thomas Lin
+    email: thomasp85@gmail.com
+    orcid: https://orcid.org/0000-0002-5147-4711
+  year: '2023'
+- type: software
+  title: peekbankr
+  abstract: 'peekbankr: Accessing the Peekbank Database'
+  notes: Suggests
+  url: http://github.com/langcog/peekbankr
+  authors:
+  - family-names: Braginsky
+    given-names: Mika
+    email: mika.br@gmail.com
+  - family-names: MacDonald
+    given-names: Kyle
+    email: kylem412@gmail.com
+  - family-names: Frank
+    given-names: Michael
+    email: mcfrank@stanford.edu
+  year: '2023'
+- type: software
+  title: readr
+  abstract: 'readr: Read Rectangular Text Data'
+  notes: Suggests
+  url: https://readr.tidyverse.org
+  repository: https://CRAN.R-project.org/package=readr
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  - family-names: Hester
+    given-names: Jim
+  - family-names: Bryan
+    given-names: Jennifer
+    email: jenny@posit.co
+    orcid: https://orcid.org/0000-0002-6983-2759
+  year: '2023'
+- type: software
+  title: rmarkdown
+  abstract: 'rmarkdown: Dynamic Documents for R'
+  notes: Suggests
+  url: https://pkgs.rstudio.com/rmarkdown/
+  repository: https://CRAN.R-project.org/package=rmarkdown
+  authors:
+  - family-names: Allaire
+    given-names: JJ
+    email: jj@posit.co
+  - family-names: Xie
+    given-names: Yihui
+    email: xie@yihui.name
+    orcid: https://orcid.org/0000-0003-0645-5666
+  - family-names: Dervieux
+    given-names: Christophe
+    email: cderv@posit.co
+    orcid: https://orcid.org/0000-0003-4474-2498
+  - family-names: McPherson
+    given-names: Jonathan
+    email: jonathan@posit.co
+  - family-names: Luraschi
+    given-names: Javier
+  - family-names: Ushey
+    given-names: Kevin
+    email: kevin@posit.co
+  - family-names: Atkins
+    given-names: Aron
+    email: aron@posit.co
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  - family-names: Cheng
+    given-names: Joe
+    email: joe@posit.co
+  - family-names: Chang
+    given-names: Winston
+    email: winston@posit.co
+  - family-names: Iannone
+    given-names: Richard
+    email: rich@posit.co
+    orcid: https://orcid.org/0000-0003-3925-190X
+  year: '2023'
+- type: software
+  title: scales
+  abstract: 'scales: Scale Functions for Visualization'
+  notes: Suggests
+  url: https://scales.r-lib.org
+  repository: https://CRAN.R-project.org/package=scales
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  - family-names: Seidel
+    given-names: Dana
+  year: '2023'
+- type: software
+  title: testthat
+  abstract: 'testthat: Unit Testing for R'
+  notes: Suggests
+  url: https://testthat.r-lib.org
+  repository: https://CRAN.R-project.org/package=testthat
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  year: '2023'
+  version: '>= 3.0.0'
+- type: software
+  title: tibble
+  abstract: 'tibble: Simple Data Frames'
+  notes: Suggests
+  url: https://tibble.tidyverse.org/
+  repository: https://CRAN.R-project.org/package=tibble
+  authors:
+  - family-names: Müller
+    given-names: Kirill
+    email: kirill@cynkra.com
+    orcid: https://orcid.org/0000-0002-1416-3412
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  year: '2023'

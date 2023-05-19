@@ -2,7 +2,7 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "jlmerclusterperm",
-  "description": "A Julia-based implementation of fast cluster-based permutation tests for time series data using mixed-effects models. Provides a modular interface for the steps of computing timewise statistics, extracting clusters, and calculating p-values. Calls MixedModels.jl and GLM.jl to fit regression models using JuliaConnectoR (requires Julia installation).",
+  "description": "A Julia implementation of fast cluster-based permutation analysis (CPA) for densely-sampled time data developed in Maris & Oostenveld, 2007 <doi:10.1016/j.jneumeth.2007.03.024>. Uses (generalized, mixed-effects) regression models for the calculation of timewise statistics. Provides both a wholesale and a piecemeal interface to the CPA procedure with an emphasis on interpretability and diagnostics. Integrates Julia libraries MixedModels and GLM for performance improvements. Provides additional functionalities for R-Julia interface, powered by the JuliaConnectoR package (requires Julia installation).",
   "name": "jlmerclusterperm: Bootstrapped cluster-based permutation analysis for time series\n    data using GLM and MixedModels in Julia",
   "relatedLink": "https://yjunechoe.github.io/jlmerclusterperm/",
   "codeRepository": "https://github.com/yjunechoe/jlmerclusterperm",
@@ -57,6 +57,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=broom.mixed"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "covr",
+      "name": "covr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=covr"
     },
     {
       "@type": "SoftwareApplication",
@@ -186,6 +198,19 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "testthat",
+      "name": "testthat",
+      "version": ">= 3.0.0",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=testthat"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "tibble",
       "name": "tibble",
       "provider": {
@@ -269,8 +294,9 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "1848.351KB",
+  "fileSize": "1868.124KB",
   "releaseNotes": "https://github.com/yjunechoe/jlmerclusterperm/blob/master/NEWS.md",
   "readme": "https://github.com/yjunechoe/jlmerclusterperm/blob/main/README.md",
-  "contIntegration": "https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml"
+  "contIntegration": ["https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml", "https://github.com/yjunechoe/jlmerclusterperm/actions?query=workflow%3Apkgcheck", "https://app.codecov.io/gh/yjunechoe/jlmerclusterperm?branch=main"],
+  "developmentStatus": "https://www.repostatus.org/#active"
 }

@@ -9,3 +9,4 @@
 ^vignettes/articles$
 ^inst/WORDLIST
 ^codecov\.yml$
+^CITATION\.cff$
