@@ -12,3 +12,4 @@
 ^codecov\.yml$
 ^CITATION\.cff$
 ^codemeta\.json$
+^cran-comments\.md$
