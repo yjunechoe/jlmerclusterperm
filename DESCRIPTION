@@ -2,7 +2,7 @@ Package: jlmerclusterperm
 Title: Cluster-based Permutation Analysis for Densely Sampled Time Data
 Version: 0.2.0
 Authors@R: 
-    person("June", "Choe", , "jchoe001@gmail.com", role = c("aut", "cre"),
+    person("June", "Choe", , "jchoe001@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-0701-921X"))
 Description: An implementation of fast cluster-based permutation analysis
     (CPA) for densely-sampled time data developed in Maris & Oostenveld,

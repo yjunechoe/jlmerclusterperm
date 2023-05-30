@@ -20,7 +20,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: June Choe \email{jchoe001@gmail.com} (\href{https://orcid.org/0000-0002-0701-921X}{ORCID})
+\strong{Maintainer}: June Choe \email{jchoe001@gmail.com} (\href{https://orcid.org/0000-0002-0701-921X}{ORCID}) [copyright holder]
 
 }
 \keyword{internal}
