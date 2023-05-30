@@ -6,6 +6,7 @@
 #' @param n Number of permuted samples of the data to generate. Defaults to `1L`.
 #'
 #' @examples
+#' \dontrun{
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
 #' # Example data setup
@@ -47,6 +48,7 @@
 #' reset_rng_state()
 #' spec2_perm2 <- permute_by_predictor(chickweights_spec2, predictors = c("Diet2", "Diet3", "Diet4"))
 #' identical(spec2_perm1, spec2_perm2)
+#' }
 #'
 #' @return A long dataframe of permuted re-samples with `.id` column representing replication IDs.
 #' @export

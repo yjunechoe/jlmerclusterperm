@@ -31,6 +31,7 @@ An \code{empirical_clusters} object augmented with p-values.
 Calculate bootstrapped p-values of cluster-mass statistics
 }
 \examples{
+\dontrun{
 library(dplyr, warn.conflicts = FALSE)
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
@@ -69,6 +70,7 @@ empirical_clusters2 <- extract_empirical_clusters(empirical_statistics, threshol
 # Check for compatibility with `clusters_are_comparable()`
 clusters_are_comparable(empirical_clusters, null_cluster_dists)
 clusters_are_comparable(empirical_clusters2, null_cluster_dists)
+}
 
 }
 \seealso{

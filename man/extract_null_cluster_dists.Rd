@@ -26,6 +26,7 @@ A \code{null_cluster_dists} object.
 Construct a null distribution of cluster-mass statistics
 }
 \examples{
+\dontrun{
 library(dplyr, warn.conflicts = FALSE)
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
@@ -51,6 +52,7 @@ null_cluster_dists_df
 # Changing the `threshold` value changes the shape of the null
 extract_null_cluster_dists(null_statistics, threshold = 1)
 extract_null_cluster_dists(null_statistics, threshold = 3)
+}
 
 }
 \seealso{

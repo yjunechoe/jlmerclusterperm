@@ -25,6 +25,7 @@ A data frame
 Tidiers for cluster permutation test objects
 }
 \examples{
+\dontrun{
 library(dplyr, warn.conflicts = FALSE)
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
@@ -54,5 +55,6 @@ tidy(empirical_clusters)
 null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2)
 class(null_cluster_dists)
 tidy(null_cluster_dists)
+}
 
 }

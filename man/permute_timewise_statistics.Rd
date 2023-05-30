@@ -36,6 +36,7 @@ A simulation-by-time-by-predictor 3D array of cluster statistics, of class \code
 Simulate cluster-mass statistics via bootstrapped permutations
 }
 \examples{
+\dontrun{
 library(dplyr, warn.conflicts = FALSE)
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
@@ -63,6 +64,7 @@ identical(null_statistics, null_statistics2)
 get_rng_state()
 null_statistics3 <- permute_timewise_statistics(spec, nsim = 3)
 identical(null_statistics, null_statistics3)
+}
 
 }
 \seealso{

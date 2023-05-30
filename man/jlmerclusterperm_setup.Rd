@@ -21,6 +21,8 @@ TRUE
 Initial setup for the jlmerclusterperm package
 }
 \examples{
+\dontrun{
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+}
 
 }

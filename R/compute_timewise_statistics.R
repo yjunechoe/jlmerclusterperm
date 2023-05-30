@@ -14,6 +14,7 @@
 #'  These can be suppressed via the `suppress*()` functions.
 #'
 #' @examples
+#' \dontrun{
 #' library(dplyr, warn.conflicts = FALSE)
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
@@ -39,6 +40,7 @@
 #' to_jlmer(weight ~ 1 + Diet, filter(ChickWeight, Time == 0)) %>%
 #'   tidy() %>%
 #'   select(term, statistic)
+#' }
 #'
 #' @return A predictor-by-time matrix of cluster statistics, of class `timewise_statistics`.
 #' @export

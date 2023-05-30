@@ -34,6 +34,7 @@ An \code{empirical_clusters} object.
 Detect largest clusters from a time sequence of predictor statistics
 }
 \examples{
+\dontrun{
 library(dplyr, warn.conflicts = FALSE)
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
@@ -58,6 +59,7 @@ extract_empirical_clusters(empirical_statistics, threshold = 1)
 
 # A predictor can have zero or multiple clusters associated with it
 extract_empirical_clusters(empirical_statistics, threshold = 3)
+}
 
 }
 \seealso{

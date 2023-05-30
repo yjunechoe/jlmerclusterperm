@@ -11,6 +11,7 @@
 #' @srrstats {RE4.0} `jlmer()` and `to_jlmer()` return pointers to Julia model objects.
 #'
 #' @examples
+#' \dontrun{
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
 #' # Fitting a regression model with R formula syntax
@@ -24,6 +25,7 @@
 #'
 #' # Passing MixedModels.jl fit options to the `...`
 #' to_jlmer(weight ~ 1 + Diet + (1 | Chick), ChickWeight, REML = TRUE)
+#' }
 #'
 #' @return A `jlmer_mod` object.
 #' @export
@@ -44,6 +46,7 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_sp
 #' @srrstats {RE3.3} Convergence thresholds can be explicitly set by passing the appropriate argument to the `...` of functions that call GLM/MixedModels
 #'
 #' @examples
+#' \dontrun{
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
 #' # Fitting a regression model with a specification object
@@ -52,6 +55,7 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_sp
 #'
 #' # `lm()` equivalent
 #' summary(lm(weight ~ 1 + Diet, ChickWeight))$coef
+#' }
 #'
 #' @return A `jlmer_mod` object.
 #' @export

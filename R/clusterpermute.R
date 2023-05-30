@@ -32,6 +32,8 @@
 #' CPA$null_cluster_dists
 #' CPA$empirical_clusters
 #'
+#' JuliaConnectoR::stopJulia()
+#'
 #' @export
 #' @return A list of `null_cluster_dists` and `empirical_clusters` with p-values
 clusterpermute <- function(jlmer_spec,

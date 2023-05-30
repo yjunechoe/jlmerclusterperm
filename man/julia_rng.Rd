@@ -31,6 +31,7 @@ The current seed or counter
 Interface to the Julia RNG
 }
 \examples{
+\dontrun{
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 # RNG initializes to seed=1 counter=0
@@ -48,5 +49,6 @@ get_rng_seed()
 # restore to initial setting (seed=1, counter=0)
 set_rng_seed(1)
 set_rng_state(0)
+}
 
 }

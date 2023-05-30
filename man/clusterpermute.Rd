@@ -82,6 +82,8 @@ sapply(CPA, class)
 CPA$null_cluster_dists
 CPA$empirical_clusters
 
+JuliaConnectoR::stopJulia()
+
 }
 \seealso{
 \code{\link[=compute_timewise_statistics]{compute_timewise_statistics()}}, \code{\link[=permute_timewise_statistics]{permute_timewise_statistics()}},

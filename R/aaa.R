@@ -21,7 +21,9 @@ is_setup <- function() isTRUE(.jlmerclusterperm$is_setup)
 #' @param verbose Print progress and messages from Julia in the console
 #'
 #' @examples
+#' \dontrun{
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+#' }
 #'
 #' @export
 #' @return TRUE
