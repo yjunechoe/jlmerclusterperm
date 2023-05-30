@@ -54,9 +54,9 @@ The details of the actual CPA is skipped because that's not the focus of this vi
 
 The basic idea behind this asynchronous CPA strategy is to start a background R process whose sole job is to send the instructions for CPA over to Julia. It's **asynchronous** because running the CPA this way **will not block your interactive R session**. Since most of the work is being done in Julia anyways, this parallelization has virtually no impact on the performance of evaluating R code.
 
-The `{future}` package allows such asynchronous evaluation of R code. It's a big package implementing a complex topic and you can read more about the project on the [futureverse](https://www.futureverse.org/); we just show the bare minimum here.
+The `{future}` package allows such asynchronous evaluation of R code. It's a big package implementing a complex topic. You can read more about the project on the [futureverse](https://www.futureverse.org/) but we just show the bare minimum here.
 
-For more advanced users, note that we're use parallelization _only_ for its asynchronous properties (non-blocking evaluation of R code in a background process). It is not recommended to start _multiple R processes_ with each running a CPA because the Julia session is already multithreaded (if you can spare more, set that in `options("jlmerclusterperm.nthreads")` before initializing).
+For more advanced users, note that we're use parallelization _only_ for its asynchronous properties (non-blocking evaluation of R code in a background process). It is not recommended to start _multiple R processes_ with each running a CPA because the Julia session is shared abd already multithreaded (if you can spare more cores, set that in `options("jlmerclusterperm.nthreads")` before calling `jlmerclusterperm_setup()`).
 
 Later updates to `jlmerclusterperm` may wrap this workflow in a more principled way, but for now this vignette serves as a minimally working example for asynchronously running a CPA.
 
@@ -68,15 +68,18 @@ Three things are in order for this workflow:
 
 1. Load the `{future}` package
 2. Initialize the `multisession` future
-3. Grab the `jlmerclusterperm` package environment to pass to the future
+3. Grab options from the `jlmerclusterperm` package environment
 
 ```{r future-setup}
 library(future)
 plan(multisession)
-pkgenv <- jlmerclusterperm:::.jlmerclusterperm
+pkgopts <- as.list(jlmerclusterperm:::.jlmerclusterperm)
 ```
 
-The third step creates a variable called `pkgenv` that points to the internal package environment. Please treat this as a read-only object - it's unexported and not meant to be manipulated.
+<div class="callout" style="font-size:0.9em">
+Please treat the `.jlmerclusterperm` internal variable as a read-only object - it's unexported and not meant to be manipulated.
+</div>
+
 
 ### Creating the future object
 
@@ -88,10 +91,10 @@ The template is as follows. First, you make the `pkgenv` variable (defined above
 # Not run
 f <- future(
   {
-    list2env(as.list(pkgenv), jlmerclusterperm:::.jlmerclusterperm)
-    ## < Your CPA Code Here > ##
+    list2env(pkgopts, jlmerclusterperm:::.jlmerclusterperm)
+    ## Your CPA code below ##
   },
-  globals = structure(TRUE, add = "pkgenv")
+  globals = structure(TRUE, add = "pkgopts")
 )
 ```
 
@@ -101,7 +104,7 @@ A future object replicating the 1000-simulation CPA from above will look like th
 f <- future(
   {
     list2env(as.list(pkgenv), jlmerclusterperm:::.jlmerclusterperm)
-    ## CPA code below ##
+    ## Your CPA code below ##
     set_rng_state(123L)
     clusterpermute(
       chickweights_spec,
@@ -113,7 +116,7 @@ f <- future(
 )
 ```
 
-Once the future is created, it **immediately** starts evaluating the code in a background process. It is important that you **do not evaluate the future object directly**. Instead, you should query it with `future::resolved()` - it simply tells you whether the background evaluation has completed:
+Once the future is created, it **immediately** starts executing the code in a background process. It is important that you **do not evaluate the future object (`f`) directly**. Instead, you should query it with `future::resolved()` - this simply tells you whether the background evaluation has completed or not:
 
 ```{r resolved}
 resolved(f)
@@ -135,8 +138,9 @@ We reach the end of the while loop at `r i/2` seconds, which is approximately ho
 ```{r resolved}
 ```
 
-Lastly, although the R code here was just a crude progress alert using `Sys.sleep()`, you can freely evaluate _any_ R code **except other `jlmerclusterperm` functions that call Julia**. You can make plots, clean data, write up analyses, etc., but just don't run another CPA while a CPA is already running (because the Julia process is shared).
-
+<div class="callout" style="font-size:0.9em">
+Although the R code here was just a crude progress alert using `Sys.sleep()`, you can freely evaluate _any_ R code **except other functions that call Julia**. You can make plots, clean data, write up analyses, etc., but just don't run another CPA while one is already running because the Julia process is shared.
+</div>
 
 ### Collecting the results
 
@@ -145,15 +149,15 @@ We can collect the output of the background process with `future::value()`. But 
 ```{r resolved}
 ```
 
-Once that's confirmed, we can use `value()` to collect the results from the future and assign it to a variable:
+Once that's confirmed, we can use `value()` to collect the results from the future and assign it to a variable for further inspection:
 
 ```{r CPA_async}
 CPA_async <- value(f)
 ```
 
-Calling `value()` also prints the messages encountered while evaluating the CPA code. We see this because we did not specify `progress = FALSE` in the `clusterpermute()` code passed to the future object. Critically, adding up the times from the message is similar to what we saw from the while loop (`r i/2` seconds).
+Note how `value()` also prints the messages encountered while executing the CPA code. We see this because we did not specify `progress = FALSE` in the `clusterpermute()` call passed to the future. For our purposes, just note that adding up the times from the messages is similar to what we saw from the while loop (`r i/2` seconds).
 
-The output of the asynchronous CPA (`CPA_async`) is identical to the initial CPA ran in the interactive sessionat the start (`CPA`) because both were ran with the RNG counter value of `123L`:
+The output of the asynchronous CPA (`CPA_async`) is identical to the initial CPA that we ran at the beginning (`CPA`) because both were ran with the default seed of 1 and the RNG counter value of `123L`:
 
 ```{r CPAs-identical}
 identical(CPA_async, CPA)

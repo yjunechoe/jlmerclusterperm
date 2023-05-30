@@ -50,7 +50,7 @@ jlmer_spec
 
 Because CPA is powered by bootstrapping, it is inherently a stochastic procedure. Reproducibility is guaranteed for `clusterpermute()` calls ran with the same **seed** and **counter** values. These are both properties of the Julia random number generator used by `{jlmerclusterperm}` and refer to two slightly different concepts:
 
-1) The **seed** is conceptually equivalent to the same "seed" as talked about in R, as in `set.seed()`. The seed is used in the RNG's initialization, locking it into a specific state that persists for the session. In `{jlmerclusterperm}`, the default seed is `1` and is controlled via `options("jlmerclusterperm.seed")` (this must be set _before_ starting Julia with `jlmerclusterperm_setup()`)
+1) The **seed** is conceptually equivalent to the same "seed" as talked about in R, as in `set.seed()`. The seed is used in the RNG's initialization, locking it into a specific state that persists for the session. In `{jlmerclusterperm}`, the default seed is `1` and is primarily controlled via `options("jlmerclusterperm.seed")` which must be set _before_ calling `jlmerclusterperm_setup()`.
 
 2) The **counter** initializes to `0` and increments by some value every time the RNG is consumed to produce a random number. There is no equivalent concept in base R, though it's a more handy and intuitive way of interfacing with the RNG's state in an interactive session. The counter can be manipulated via the functions `reset_rng_state()`, `set_rng_state()`, and `get_rng_state()`.
 
@@ -91,7 +91,7 @@ This second run also increments the counter state, but note how it's _not exactl
 get_rng_state()
 ```
 
-The difference between these two runs is specifically in the **null distribution** of the cluster-mass statistics. Both 100-simulation samples are drawn share the same underlying (null) distribution, but the samples themselves are not identical to one another (they rarely are).
+The difference between these two runs is specifically in the **null distribution** of the cluster-mass statistics. Both 100-simulation samples are drawn share the same underlying (null) distribution, though they are not identical to one another (they rarely are).
 
 ```{r null_dist_plot}
 ggplot(mapping = aes(sum_statistic)) +
@@ -157,14 +157,13 @@ identical(null_cluster_dists, CPA_1_0$null_cluster_dists)
 
 ## Technical details and notes
 
-`{jlmerclusterperm}` uses a thread-safe, counter-based RNG called [Threefry](https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/#threefry) (specifically, `Random123.Threefry2x`) which comes from the [Random123.jl](https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/) Julia library as an adaptation of the original algorithm developed by [Salmon, Moraes, Dror, and Shaw (2011)](http://dx.doi.org/10.1145/2063384.2063405). The RNG is initialized with a "rounds" value of 20, which is also the default Threefry is used for its speed and stability across Julia versions.
+The Julia back-end uses a thread-safe, counter-based RNG called [Threefry](https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/#threefry) (specifically, `Random123.Threefry2x`) which comes from the [Random123.jl](https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/) Julia library as an adaptation of the original algorithm developed by [Salmon, Moraes, Dror, and Shaw (2011)](http://dx.doi.org/10.1145/2063384.2063405). The RNG is initialized with a "rounds" value of 20, which is also the default. Threefry is used for its speed and stability across Julia versions.
 
 Additionally, as noted earlier, the RNG initializes with an explicit seed of `1`. This behavior is different than in the case of R, where a random seed is chosen for the user for every new session. The consequence is that in the absence of explicit seeding via `options("jlmerclusterperm.seed")`, the first run of every new session (i.e., runs with counter value of zero) will be identical.
 
 ```{r restart-run}
-# Stop Julia and restart
-JuliaConnectoR::stopJulia()
-jlmerclusterperm_setup(verbose = FALSE)
+# Restart Julia session
+jlmerclusterperm_setup(restart = TRUE, verbose = FALSE)
 
 # RNG seed is again 1
 get_rng_seed()
@@ -190,10 +189,10 @@ You may be wondering whether two CPAs that overlap in the range of counter value
 ```{r similar-counter}
 # 100 simulations of timewise statistics
 ## First CPA using counter at 1
-set_rng_state(123)
+set_rng_state(1)
 x <- permute_timewise_statistics(jlmer_spec, nsim = 100)
 ## Second CPA using counter at 2
-set_rng_state(124)
+set_rng_state(2)
 y <- permute_timewise_statistics(jlmer_spec, nsim = 100)
 
 # The null cluster-mass statistics
@@ -207,7 +206,7 @@ matplot(cbind(x_null_stats, y_null_stats), type = "b", pch = 1)
 ```
 
 <div class="callout" style="font-size:0.9em">
-The two colored lines represent two 100-simulation bootstrap permutations that differ in the initial RNG counter by a value of 1. The point is that the shape of the two lines look very different, which is unexpected under the assumption that having a similar counter value also means having many overlapping samples (i.e., permutations of the data) from the null.
+The two colored lines represent two 100-simulation bootstrap permutations that differ in the initial RNG counter by a value of 1. The point is that the shape of the two lines look very different - one is not just the shifted form of another.
 </div>
 
 For more formal investigations (e.g., when simulating power for CPA), it's of course best practice to generate random _seeds_. The _counter_ is more of a convenience that balances interactivity with reproducibility.

@@ -98,6 +98,10 @@ julia_progress()
 julia_progress(old_progress_opts)
 identical(old_progress_opts, julia_progress())
 #> [1] TRUE
+
+# The syntax to reset progress options
+julia_progress(show = TRUE, width = "auto")
+julia_progress()
 ```
 
 ## The Julia environment
@@ -108,4 +112,4 @@ The following packages are loaded into the Julia environment via `jlmerclusterpe
 cat(readLines(system.file("julia/Project.toml", package = "jlmerclusterperm")), sep = "\n")
 ```
 
-If you wish to use other Julia packages not listed here like Effects.jl, it is recommend to install them in the global library in a fresh Julia session as opposed to `Pkg.add()`-ing using the [`JuliaConnectoR`](https://github.com/stefan-m-lenz/JuliaConnectoR) interface, as that may pollute the `jlmerclusterperm` project environment (if this happens, just re-install the package).
+If you wish to use other Julia packages not listed here like [Effects.jl](https://github.com/beacon-biosignals/Effects.jl), it is recommend to install them in the global library in a fresh Julia session as opposed to `Pkg.add()`-ing using the [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR) interface, as that may pollute the `jlmerclusterperm` project environment (if you suspect that this has happened, just re-install the package).

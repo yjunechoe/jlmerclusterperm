@@ -21,9 +21,9 @@ See more tutorials and vignettes on the [Articles](https://yjunechoe.github.io/j
 
 The data comes from an eye-tracking study by [de Carvalho, Dautriche, Fiévet, & Christophe (2021)](https://doi.org/10.1016/j.jecp.2020.105017) "Toddlers exploit referential and syntactic cues to flexibly adapt their interpretation of novel verb meanings."
 
-This article reproduces and expands on their Experiment 2 analysis, which used CPA (with t-tests) to do a three-way pairwise comparison of conditions (relevant figure from paper below).
+This article reproduces and expands on their Experiment 2 analysis, which used CPA (with t-tests) to conduct a pairwise comparison of the three conditions (relevant Figure 7 from the paper below).
 
-```{r og-fig7, fig.alt="Figure 7 from de Carvalho et al. 2021", echo = FALSE, message = FALSE}
+```{r og-fig7, fig.alt="Figure 7 from de Carvalho et al. (2021)", echo = FALSE, message = FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/yjunechoe/jlmerclusterperm/main/man/figures/deCarvalho_fig7.jpg")
 ```
 
@@ -115,9 +115,9 @@ fig7_combined <- p_top / guide_area() / p_bot +
 Below is the data from the original study (as close as I could reproduce it). The `E2_data_agg` dataframe has the following four columns:
 
 - `Subject`: Unique identifier for subjects
-- `Condition`: A between-participant factor variable (`"Intransitive"`, `"RightDislocated"`, `"Transitive"`)
+- `Condition`: A between-participant factor variable with three levels (`"Intransitive"`, `"RightDislocated"`, `"Transitive"`)
 - `Time`: A continuous measure of time from 0-8000ms in 50ms intervals
-- `Prop`: Proportion of looks to the target (averaged across trials)
+- `Prop`: Proportion of looks to the target (averaged across trials within each condition, by subject)
 
 ```{r E2_data_agg}
 E2_data_agg
@@ -473,11 +473,11 @@ clusters_annotation / clusters_annotation2 &
 
 </details>
 
-The results are largely the same, except that the largest, significant cluster identified for `TvsRI` extends much further in the complex CPA than the simple CPA. We will examine this difference next.
+The results are largely the same, except that the largest, significant cluster identified for `TvsRI` extends much further in the complex CPA than the simple CPA. We examine this difference next.
 
 ### Comparison of CPAs
 
-Looking at the timewise statistics computed from the simple vs. complex CPA tells us why. The figure below plots this information from calls to `compute_timewise_statistics()`:
+Looking at the timewise statistics computed in the simple vs. complex CPA tells us why. The figure below plots this information from calls to `compute_timewise_statistics()`:
 
 ```{r empirical_statistics_fig, echo = FALSE, message = FALSE, warning = FALSE}
 # Compute the timewise statistics from the CPA specifications
@@ -532,7 +532,7 @@ jlmer_complex_5750 <- to_jlmer(
 )
 ```
 
-There's no _correct_ way of comparing goodness of fit between a linear fixed-effects model and a logistic mixed-effects model fitted to different data (as far as I know), but the complex model outperforms the simple model on all the classic metrics when we inspect them with `glance()`. This doesn't come as a surprise, as the differences are largely driven by the number of observations (`nobs`).
+There's no standard way of comparing goodness of fit between a linear fixed-effects model and a logistic mixed-effects model fitted to different data. But the complex model outperforms the simple model on all the classic metrics when we inspect with `glance()`. This doesn't come as a surprise, as the differences are largely driven by the number of observations (`nobs`).
 
 ```{r model-metrics}
 glance(jlmer_simple_5750)

@@ -21,7 +21,7 @@ The data comes from a lexical decision task using pupilometry (specifically, mea
 
 We will follow [Jason Geller's tutorial](https://www.drjasongeller.com/blog/2020-gp-pup/) which used the [clusterperm](https://github.com/dalejbarr/clusterperm/) package to conduct a cluster-based permutation analysis (CPA) of differences in pupil size between the print and cursive conditions.
 
-The data from the package (`cursive_agg_data`) looks slightly different from that used in the tutorial, so to ensure full reproducibility we use the [snapshot of the data](https://raw.githubusercontent.com/jgeller112/drjasongeller/main/content/blog/2020-07-10-CBPT/blog_data.csv) that the tutorial used:
+The data from the package (`cursive_agg_data`) looks slightly different from that used in the tutorial, so to ensure full reproducibility we use the [exact data](https://raw.githubusercontent.com/jgeller112/drjasongeller/main/content/blog/2020-07-10-CBPT/blog_data.csv) that the tutorial used:
 
 ```{r data, message = FALSE}
 library(dplyr)
@@ -38,7 +38,7 @@ The data comes prepared for this analysis out of the box. The following columns 
 
 As the name of the `cusrive_agg_data` variable suggests, the data has been aggregated within subject, collapsing across trials.
 
-The following reproduces the figure from the tutorial (it looks slightly different because [the data has been updated since](https://github.com/dmirman/gazer/commit/091d38f586640831dbfd87aae29965ecb0d2e253)):
+The following reproduces the figure from the tutorial:
 
 ```{r script_fig, message = FALSE}
 library(ggplot2)
@@ -47,7 +47,10 @@ script_fig <- ggplot(cursive_agg_data, aes(timebins, aggbaseline)) +
 script_fig
 ```
 
-Note that for within-participant predictors like `script`, the permutation algorithm will randomly swap the labels for condition between the trials from each subject. This preserves the temporal structure of the data (no swapping below the trial-level grouping) and subject-level groupings of the data (no swapping of trials across participants).
+<div class="callout" style="font-size:0.9em">
+For within-participant predictors like `script`, the permutation algorithm will randomly swap the labels for condition _between_ the trials _within_ each subject. This preserves the temporal structure of the trial-level data (no swapping below the trial-level grouping) as well as the subject-level grouping structure (no swapping of trials across participants).
+</div>
+
 
 ## Outline
 
@@ -216,12 +219,12 @@ timewise_fig
 We find the same clusters identified between 2000ms-2300ms for both "t" and "chisq", with the peaks more pronounced for "chisq". The differences between the two are inconsequential for this example, but may produce different results in other cases.
 
 <div class="callout" style="font-size:0.9em">
-The chi-squared statistic (which `jlmerclusterperm` computes via a likelihood ratio test) is often preferred for testing single parameters because it makes less assumptions and tend to be more robust ([glmmFAQ](https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#model-diagnostics)). But because goodness-of-fit tests are at the level of a predictor in a model formula, "chisq" is less interpretable for multi-level predictors (k-1 > 1). To tease apart the contribution of the individual levels of a multi-level predictor, `statistic = "t"` may be more appropriate.
+The chi-squared statistic (which `jlmerclusterperm` computes via a likelihood ratio test) is often preferred for testing single parameters because it makes less assumptions and tend to be more robust ([glmmFAQ](https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#model-diagnostics)). But because goodness-of-fit tests are at the level of a predictor in a model formula, "chisq" is less interpretable for multi-level predictors (k-1 > 1). For teasing apart the contribution of the individual levels of a multi-level predictor, using `statistic = "t"` is more appropriate.
 </div>
 
 ## D) Specifying random effects
 
-The biggest missing component at this point is the subject random effects, which the original tutorial captures via the error term `Error(subject)`. There isn't a strict equivalent to this in regression models, but specifying random intercepts by subject with `(1 | subject)` gets us very close:
+The biggest missing component at this point is the subject random effects, which the original tutorial captures via the error term `Error(subject)`. There isn't a strict equivalent to this in regression, but specifying random intercepts by subject with `(1 | subject)` gets us very close:
 
 ```{r cursive_agg_spec_re}
 cursive_agg_spec_re <- make_jlmer_spec(
@@ -247,13 +250,13 @@ We repeat the results from the original tutorial below for comparison:
 ```{r tutorial-results, echo=FALSE}
 ```
 
-We also plot the timewise statistics from the random intercept models:
+We now plot the timewise statistics from the random intercept models:
 
 ```{r timewise_fig-re}
 timewise_chisqs_re <- compute_timewise_statistics(cursive_agg_spec_re, statistic = "chisq")
 timewise_fig_re <- timewise_fig +
   geom_line(
-    aes(color = "chisq-re-intercept"),
+    aes(color = "re-intercept-chisq"),
     linewidth = 1.5,
     data = tidy(timewise_chisqs_re)
   )
@@ -281,18 +284,10 @@ We find that the chisq statistics from the maximal model is virtually identical 
 ```{r timewise_fig_re2}
 timewise_fig_re +
   geom_line(
-    aes(color = "chisq-re-max"),
+    aes(color = "re-max-chisq"),
     linewidth = 1.5,
     data = tidy(timewise_chisqs_re_max)
   )
-```
-
-This becomes clearer when we plot the _difference_ in timewise statistics between the two - they're virtually identical:
-
-```{r re-timewise-diff}
-ggplot(tidy(timewise_chisqs_re - timewise_chisqs_re_max)) +
-  geom_path(aes(x = time, y = statistic)) +
-  scale_y_continuous(labels = function(x) sprintf("%f", x))
 ```
 
 Parsimony is incredibly important for simulation - while `jlmerclusterperm` is fast, model complexity is still a major bottleneck. When adding the extra random effect terms (random slope and correlation) has negligible effects on the statistic, removing them is likely to be inconsequential for the CPA itself.
@@ -314,10 +309,10 @@ re_max_CPA
 ```
 
 <div class="callout" style="font-size:0.9em">
-We run the above maximal mixed model CPA purely for demonstration purposes. The random effects structure is actually unidentifiable given the aggregated data, where at any point in time there are only 2 observations from each subject (the means at each condition).
+We run the above maximal mixed model CPA purely for demonstration purposes. The random effects structure is actually unidentifiable given the aggregated data, where at any point in time there are only 2 observations from each subject (the mean of each condition).
 </div>
 
-Lastly, back in our figure of the data, we annotate the clusters detected with the threshold of 0.05 (chisq p-value) from the random intercept CPA:
+Lastly, back in our figure of the data, we annotate the clusters detected with the chisq p-value threshold of 0.05 from the random intercept CPA:
 
 ```{r cluster-annotate, message = FALSE}
 empirical_clusters_df <- tidy(extract_empirical_clusters(timewise_chisqs_re, threshold = 0.05))
@@ -373,7 +368,7 @@ clusterpermute(
 )
 ```
 
-Or we can sum-code and set "print" to -1 and "cursive" to 1:
+Or we could also sum-code and set "print" to -1 and "cursive" to 1:
 
 ```{r sum_contrast_spec}
 sum_contrast_df <- cursive_agg
@@ -396,7 +391,7 @@ clusterpermute(
 ```
 
 <div class="callout" style="font-size:0.9em">
-Because CPA operates over the domain of the timewise statistics (and not the effect size), whether the difference between "print" and "cursive" is expressed as a unit of 1 (in treatment coding) or 2 (in contrast coding) has no bearing on the calculation of the statistic.
+Because CPA operates over the domain of the timewise statistics (and not the effect size), whether the difference between "print" and "cursive" is expressed as a unit of 1 (in treatment coding) or 2 (in contrast coding) has no bearing on the CPA.
 </div>
 
 To conclude, we re-run and time a 1000-simulation CPA using the intercept-only model with the new treatment coding of `script` where "print" is the reference level.
