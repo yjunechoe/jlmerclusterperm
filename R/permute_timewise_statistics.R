@@ -90,7 +90,7 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
 
   if (is.null(dimnames(out$z_array)$Predictor)) {
     cli::cli_abort(c(
-      "No permutations were run.",
+      "No predictors to permute.",
       i = if (!is.null(predictors)) "{.val {predictors}} {?is/are} not among model terms."
     ))
   }
