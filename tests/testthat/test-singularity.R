@@ -7,5 +7,6 @@ singularity_spec <- make_jlmer_spec(
 test_that("Informs on singularity", {
   expect_message(expect_message(expect_message(
     compute_timewise_statistics(singularity_spec),
-    "singular fits"), "number of components"), "Chick")
+    "singular fits"
+  ), "number of components"), "Chick")
 })

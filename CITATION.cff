@@ -14,9 +14,9 @@ abstract: An implementation of fast cluster-based permutation analysis (CPA) for
   time data developed in Maris & Oostenveld, 2007 <doi:10.1016/j.jneumeth.2007.03.024>.
   Supports (generalized, mixed-effects) regression models for the calculation of timewise
   statistics. Provides both a wholesale and a piecemeal interface to the CPA procedure
-  with an emphasis on interpretability and diagnostics. Integrates Julia libraries
-  'MixedModels' and 'GLM' for performance improvements, with additional functionalities
-  for R-Julia interface powered by the 'JuliaConnectoR' package (requires Julia installation).
+  with an emphasis on interpretability and diagnostics. Integrates 'Julia' libraries
+  'MixedModels.JL' and 'GLM.JL' for performance improvements, with additional functionalities
+  for interfacing with 'Julia' from R powered by the 'JuliaConnectoR' package.
 authors:
 - family-names: Choe
   given-names: June
@@ -208,6 +208,23 @@ references:
     given-names: Davis
     email: davis@posit.co
     orcid: https://orcid.org/0000-0003-4777-038X
+  year: '2023'
+- type: software
+  title: eyetrackingR
+  abstract: 'eyetrackingR: Eye-Tracking Data Analysis'
+  notes: Suggests
+  url: http://www.eyetracking-r.com/
+  repository: https://CRAN.R-project.org/package=eyetrackingR
+  authors:
+  - family-names: Forbes
+    given-names: Samuel
+    email: samuel.h.forbes@gmail.com
+  - family-names: Dink
+    given-names: Jacob
+    email: jacobwdink@gmail.com
+  - family-names: Ferguson
+    given-names: Brock
+    email: brock.ferguson@gmail.com
   year: '2023'
 - type: software
   title: forcats

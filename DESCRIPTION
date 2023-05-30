@@ -4,16 +4,16 @@ Version: 0.2.0
 Authors@R: 
     person("June", "Choe", , "jchoe001@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0701-921X"))
-Description: An implementation of fast cluster-based permutation
-    analysis (CPA) for densely-sampled time data developed in Maris &
-    Oostenveld, 2007 <doi:10.1016/j.jneumeth.2007.03.024>. Supports
-    (generalized, mixed-effects) regression models for the calculation of
-    timewise statistics. Provides both a wholesale and a piecemeal
-    interface to the CPA procedure with an emphasis on interpretability
-    and diagnostics. Integrates Julia libraries 'MixedModels' and 'GLM' for
+Description: An implementation of fast cluster-based permutation analysis
+    (CPA) for densely-sampled time data developed in Maris & Oostenveld,
+    2007 <doi:10.1016/j.jneumeth.2007.03.024>. Supports (generalized,
+    mixed-effects) regression models for the calculation of timewise
+    statistics. Provides both a wholesale and a piecemeal interface to the
+    CPA procedure with an emphasis on interpretability and diagnostics.
+    Integrates 'Julia' libraries 'MixedModels.JL' and 'GLM.JL' for
     performance improvements, with additional functionalities for
-    R-Julia interface powered by the 'JuliaConnectoR' package (requires
-    Julia installation).
+    interfacing with 'Julia' from R powered by the 'JuliaConnectoR'
+    package.
 License: MIT + file LICENSE
 URL: https://github.com/yjunechoe/jlmerclusterperm,
     https://yjunechoe.github.io/jlmerclusterperm/
@@ -33,6 +33,7 @@ Suggests:
     broom.mixed,
     covr,
     dplyr,
+    eyetrackingR,
     forcats,
     future,
     ggplot2,
@@ -51,7 +52,8 @@ Remotes:
     langcog/peekbankr
 Config/testthat/edition: 3
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
+Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd",
+    "srr::srr_stats_roclet"))
 RoxygenNote: 7.2.3
 Collate:
     'jlmerclusterperm-package.R'
