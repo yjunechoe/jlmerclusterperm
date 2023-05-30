@@ -27,7 +27,6 @@ A long dataframe of permuted re-samples with \code{.id} column representing repl
 Permute data while respecting grouping structure(s) of observations
 }
 \examples{
-\dontrun{
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 # Example data setup
@@ -69,6 +68,5 @@ spec2_perm1 <- permute_by_predictor(chickweights_spec2, predictors = "Diet2")
 reset_rng_state()
 spec2_perm2 <- permute_by_predictor(chickweights_spec2, predictors = c("Diet2", "Diet3", "Diet4"))
 identical(spec2_perm1, spec2_perm2)
-}
 
 }

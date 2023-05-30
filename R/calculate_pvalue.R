@@ -41,15 +41,17 @@
 #'
 #' # The empirical clusters and the null cluster-mass distribution must be comparable
 #' empirical_clusters2 <- extract_empirical_clusters(empirical_statistics, threshold = 3)
-#' calculate_clusters_pvalues(empirical_clusters2, null_cluster_dists)
+#' # Below code (not run) errors because thresholds are different (2 vs. 3)
+#' # calculate_clusters_pvalues(empirical_clusters2, null_cluster_dists)
 #'
 #' # Check for compatibility with `clusters_are_comparable()`
 #' clusters_are_comparable(empirical_clusters, null_cluster_dists)
+#' clusters_are_comparable(empirical_clusters2, null_cluster_dists)
 #'
 #' @export
 #' @return An `empirical_clusters` object augmented with p-values.
 calculate_clusters_pvalues <- function(empirical_clusters, null_cluster_dists, add1 = FALSE) {
-  clusters_are_comparable(empirical_clusters, null_cluster_dists)
+  clusters_are_comparable(empirical_clusters, null_cluster_dists, error = TRUE)
   empirical <- lapply(empirical_clusters, `[[`, "statistic")
   empirical <- Filter(function(x) !near_zero(x[1]), empirical)
   null <- lapply(null_cluster_dists, `[[`, "statistic")
@@ -64,9 +66,10 @@ calculate_clusters_pvalues <- function(empirical_clusters, null_cluster_dists, a
   augmented
 }
 
+#' @param error Whether to throw an error if incompatible
 #' @rdname calculate_clusters_pvalues
 #' @export
-clusters_are_comparable <- function(empirical_clusters, null_cluster_dists) {
+clusters_are_comparable <- function(empirical_clusters, null_cluster_dists, error = FALSE) {
   if (!inherits(empirical_clusters, "empirical_clusters") || !inherits(null_cluster_dists, "null_cluster_dists")) {
     cli::cli_abort("Can only compare object of class {.cls empirical_clusters} against object of class {.cls null_cluster_dists}")
   }
@@ -83,12 +86,15 @@ clusters_are_comparable <- function(empirical_clusters, null_cluster_dists) {
     })
     mismatch_info <- Filter(Negate(is.null), mismatch_info)
     mismatch_info <- setNames(paste0("{.strong ", names(mismatch_info), "}: ", mismatch_info), rep("x", length(mismatch_info)))
-    cli::cli_abort(c(
-      "Cluster-mass statistics between empirical and null are not comparable.",
-      "i" = "{.arg empirical_clusters} and {.arg null_cluster_dists} must share the same {.code statistic} and {.code threshold}.",
-      mismatch_info
-    ))
+    if (error) {
+      cli::cli_abort(c(
+        "Cluster-mass statistics between empirical and null are not comparable.",
+        "i" = "{.arg empirical_clusters} and {.arg null_cluster_dists} must share the same {.code statistic} and {.code threshold}.",
+        mismatch_info
+      ))
+    }
+    return(FALSE)
   } else {
-    TRUE
+    return(TRUE)
   }
 }

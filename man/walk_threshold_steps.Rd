@@ -40,7 +40,6 @@ A data frame of predictor clusters-mass statistics by threshold.
 Test the probability of cluster-mass statistics over a range of threshold values
 }
 \examples{
-\dontrun{
 library(dplyr, warn.conflicts = FALSE)
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
@@ -58,6 +57,5 @@ null_statistics <- permute_timewise_statistics(spec, nsim = 100)
 
 # Test cluster mass/probability under different threshold values
 walk_threshold_steps(empirical_statistics, null_statistics, steps = 1:3)
-}
 
 }

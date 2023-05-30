@@ -22,7 +22,6 @@ A \code{jlmer_mod} object.
 Fit a Julia regression model using jlmer specifications
 }
 \examples{
-\dontrun{
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 # Fitting a regression model with a specification object
@@ -31,7 +30,6 @@ jlmer(spec)
 
 # `lm()` equivalent
 summary(lm(weight ~ 1 + Diet, ChickWeight))$coef
-}
 
 }
 \seealso{

@@ -11,7 +11,7 @@ calculate_clusters_pvalues(
   add1 = FALSE
 )
 
-clusters_are_comparable(empirical_clusters, null_cluster_dists)
+clusters_are_comparable(empirical_clusters, null_cluster_dists, error = FALSE)
 }
 \arguments{
 \item{empirical_clusters}{A \code{empirical_clusters} object}
@@ -21,6 +21,8 @@ clusters_are_comparable(empirical_clusters, null_cluster_dists)
 \item{add1}{Whether to add 1 to the numerator and denominator when calculating the p-value.
 Use \code{TRUE} to effectively count the observed statistic as part of the permuted
 null distribution (recommended with larger \code{nsim} prior to publishing results).}
+
+\item{error}{Whether to throw an error if incompatible}
 }
 \value{
 An \code{empirical_clusters} object augmented with p-values.
@@ -29,7 +31,6 @@ An \code{empirical_clusters} object augmented with p-values.
 Calculate bootstrapped p-values of cluster-mass statistics
 }
 \examples{
-\dontrun{
 library(dplyr, warn.conflicts = FALSE)
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
@@ -62,11 +63,12 @@ clusterpermute(spec, threshold = 2, nsim = 100, progress = FALSE)
 
 # The empirical clusters and the null cluster-mass distribution must be comparable
 empirical_clusters2 <- extract_empirical_clusters(empirical_statistics, threshold = 3)
-calculate_clusters_pvalues(empirical_clusters2, null_cluster_dists)
+# Below code (not run) errors because thresholds are different (2 vs. 3)
+# calculate_clusters_pvalues(empirical_clusters2, null_cluster_dists)
 
 # Check for compatibility with `clusters_are_comparable()`
 clusters_are_comparable(empirical_clusters, null_cluster_dists)
-}
+clusters_are_comparable(empirical_clusters2, null_cluster_dists)
 
 }
 \seealso{

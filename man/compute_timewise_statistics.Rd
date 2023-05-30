@@ -30,7 +30,6 @@ A predictor-by-time matrix of cluster statistics, of class \code{timewise_statis
 Fit Julia regression models to each time point of a time series data
 }
 \examples{
-\dontrun{
 library(dplyr, warn.conflicts = FALSE)
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
@@ -56,7 +55,6 @@ empirical_statistics_df \%>\%
 to_jlmer(weight ~ 1 + Diet, filter(ChickWeight, Time == 0)) \%>\%
   tidy() \%>\%
   select(term, statistic)
-}
 
 }
 \seealso{

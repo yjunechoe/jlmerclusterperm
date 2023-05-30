@@ -18,7 +18,6 @@ Previous values for \code{show} and \code{width}
 Set/get options for Julia progress bar
 }
 \examples{
-\dontrun{
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 # Show current progress options
@@ -32,6 +31,5 @@ julia_progress()
 old_progress_opts
 julia_progress(old_progress_opts)
 identical(julia_progress(), old_progress_opts)
-}
 
 }

@@ -37,7 +37,6 @@ An object of class \code{jlmer_spec}.
 Create a specifications object for fitting regression models in Julia
 }
 \examples{
-\dontrun{
 # Bare specification object (minimal spec for fitting a global model)
 spec <- make_jlmer_spec(weight ~ 1 + Diet, ChickWeight)
 spec
@@ -57,6 +56,5 @@ spec_correct <- make_jlmer_spec(
   subject = "Chick", time = "Time"
 )
 spec_correct
-}
 
 }

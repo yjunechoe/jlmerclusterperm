@@ -24,7 +24,6 @@ A data frame
 Tidier methods for Julia regression models
 }
 \examples{
-\dontrun{
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 # Fixed-effects only model
@@ -40,6 +39,5 @@ glance(mod2)
 # Select which of fixed/random effects to return
 tidy(mod2, effects = "fixed")
 tidy(mod2, effects = "ran_pars")
-}
 
 }
