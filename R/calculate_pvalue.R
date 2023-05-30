@@ -9,7 +9,6 @@
 #' @seealso [extract_empirical_clusters()], [extract_null_cluster_dists()]
 #'
 #' @examples
-#' \dontrun{
 #' library(dplyr, warn.conflicts = FALSE)
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
@@ -46,7 +45,6 @@
 #'
 #' # Check for compatibility with `clusters_are_comparable()`
 #' clusters_are_comparable(empirical_clusters, null_cluster_dists)
-#' }
 #'
 #' @export
 #' @return An `empirical_clusters` object augmented with p-values.

@@ -13,7 +13,6 @@
 #' @seealso [compute_timewise_statistics()]
 #'
 #' @examples
-#' \dontrun{
 #' library(dplyr, warn.conflicts = FALSE)
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
@@ -38,7 +37,6 @@
 #'
 #' # A predictor can have zero or multiple clusters associated with it
 #' extract_empirical_clusters(empirical_statistics, threshold = 3)
-#' }
 #'
 #' @return An `empirical_clusters` object.
 #' @export
@@ -71,7 +69,6 @@ extract_empirical_clusters <- function(empirical_statistics, threshold, binned =
 #' @seealso [permute_timewise_statistics()]
 #'
 #' @examples
-#' \dontrun{
 #' library(dplyr, warn.conflicts = FALSE)
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
@@ -97,7 +94,6 @@ extract_empirical_clusters <- function(empirical_statistics, threshold, binned =
 #' # Changing the `threshold` value changes the shape of the null
 #' extract_null_cluster_dists(null_statistics, threshold = 1)
 #' extract_null_cluster_dists(null_statistics, threshold = 3)
-#' }
 #'
 #' @return A `null_cluster_dists` object.
 #' @export

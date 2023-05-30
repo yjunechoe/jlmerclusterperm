@@ -4,7 +4,6 @@
 #' @param width Width of the progress bar. If `"auto"`, adjusts the progress bar width to fit the console.
 #'
 #' @examples
-#' \dontrun{
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
 #' # Show current progress options
@@ -18,7 +17,6 @@
 #' old_progress_opts
 #' julia_progress(old_progress_opts)
 #' identical(julia_progress(), old_progress_opts)
-#' }
 #'
 #' @return Previous values for `show` and `width`
 #' @export

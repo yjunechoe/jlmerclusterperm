@@ -7,7 +7,6 @@
 #' @param progress Whether to display a progress bar
 #'
 #' @examples
-#' \dontrun{
 #' library(dplyr, warn.conflicts = FALSE)
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
@@ -25,7 +24,6 @@
 #'
 #' # Test cluster mass/probability under different threshold values
 #' walk_threshold_steps(empirical_statistics, null_statistics, steps = 1:3)
-#' }
 #'
 #' @return A data frame of predictor clusters-mass statistics by threshold.
 #' @export

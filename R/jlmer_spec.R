@@ -24,7 +24,6 @@
 #' @srrstats {RE1.3} Handled standardly via `model.matrix()`. Users can see the model matrix with contrasts spelled-out upon printing a `<jlmer_spec>` object
 #'
 #' @examples
-#' \dontrun{
 #' # Bare specification object (minimal spec for fitting a global model)
 #' spec <- make_jlmer_spec(weight ~ 1 + Diet, ChickWeight)
 #' spec
@@ -44,7 +43,6 @@
 #'   subject = "Chick", time = "Time"
 #' )
 #' spec_correct
-#' }
 #'
 #' @return An object of class `jlmer_spec`.
 #' @export

@@ -7,7 +7,6 @@
 #' @seealso [make_jlmer_spec()]
 #'
 #' @examples
-#' \dontrun{
 #' library(dplyr, warn.conflicts = FALSE)
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
@@ -35,7 +34,6 @@
 #' get_rng_state()
 #' null_statistics3 <- permute_timewise_statistics(spec, nsim = 3)
 #' identical(null_statistics, null_statistics3)
-#' }
 #'
 #' @return A simulation-by-time-by-predictor 3D array of cluster statistics, of class `timewise_statistics`.
 #' @export

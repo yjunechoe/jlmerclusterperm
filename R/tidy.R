@@ -11,7 +11,6 @@ generics::tidy
 #' @srrstats {RE4.2} Model coefficients via `tidy()`
 #'
 #' @examples
-#' \dontrun{
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
 #' # Fixed-effects only model
@@ -27,7 +26,6 @@ generics::tidy
 #' # Select which of fixed/random effects to return
 #' tidy(mod2, effects = "fixed")
 #' tidy(mod2, effects = "ran_pars")
-#' }
 #'
 #' @name julia_model_tidiers
 #' @return A data frame
@@ -88,7 +86,6 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
 #' @param ... Unused
 #'
 #' @examples
-#' \dontrun{
 #' library(dplyr, warn.conflicts = FALSE)
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
@@ -118,7 +115,6 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
 #' null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2)
 #' class(null_cluster_dists)
 #' tidy(null_cluster_dists)
-#' }
 #'
 #' @name cluster_permutation_tidiers
 

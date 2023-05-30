@@ -10,7 +10,6 @@
 #'  [calculate_clusters_pvalues()]
 #'
 #' @examples
-#' \dontrun{
 #' library(dplyr, warn.conflicts = FALSE)
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
@@ -32,7 +31,6 @@
 #' # You can extract the individual components for further inspection
 #' CPA$null_cluster_dists
 #' CPA$empirical_clusters
-#' }
 #'
 #' @export
 #' @return A list of `null_cluster_dists` and `empirical_clusters` with p-values

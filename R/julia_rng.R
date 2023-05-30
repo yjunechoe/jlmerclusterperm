@@ -2,7 +2,6 @@
 #'
 #' @name julia_rng
 #' @examples
-#' \dontrun{
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
 #' # RNG initializes to seed=1 counter=0
@@ -20,7 +19,7 @@
 #' # restore to initial setting (seed=1, counter=0)
 #' set_rng_seed(1)
 #' set_rng_state(0)
-#' }
+#'
 #' @return The current seed or counter
 NULL
 
