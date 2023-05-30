@@ -42,5 +42,5 @@ test_that("Errors on incompatible clusters", {
 
 # Coverage
 lapply(list(empirical_statistics, empirical_clusters, null_statistics, null_cluster_dists, empirical_clusters_tested), tidy)
-lapply(list(empirical_statistics, empirical_clusters, null_statistics, null_cluster_dists, empirical_clusters_tested), print)
+lapply(list(spec, empirical_statistics, empirical_clusters, null_statistics, null_cluster_dists, empirical_clusters_tested), print)
 print(wholesale)

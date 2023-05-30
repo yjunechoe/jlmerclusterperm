@@ -3,21 +3,6 @@ strip_JLTYPE <- function(x) {
   x
 }
 
-df_to_NT <- function(df) {
-  JuliaConnectoR::juliaLet("NamedTuple{Tuple(Symbol.(x))}(y)", x = colnames(df), y = unname(as.list(df)))
-}
-
-rbind_DFs <- function(DFs) {
-  col_names <- as.character(DFs[[1]]$colindex$names)
-  dfs_list <- lapply(seq_along(DFs), function(i) {
-    df <- as.data.frame.list(DFs[[i]]$columns, col.names = col_names)
-    df$.id <- i
-    df
-  })
-  df_long <- do.call(rbind, dfs_list)
-  df_long[, c(".id", col_names)]
-}
-
 df_from_DF <- function(DF) {
   df_str <- JuliaConnectoR::juliaGet(DF)
   as.data.frame(df_str$columns, col.names = unlist(df_str$colindex$names, use.names = FALSE))
