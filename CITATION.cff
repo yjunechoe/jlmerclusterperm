@@ -7,7 +7,7 @@ cff-version: 1.2.0
 message: 'To cite package "jlmerclusterperm" in publications use:'
 type: software
 license: MIT
-title: 'jlmerclusterperm: Cluster-based Permutation Analysis for Densely Sampled Time
+title: 'jlmerclusterperm: Cluster-Based Permutation Analysis for Densely Sampled Time
   Data'
 version: 0.2.0
 abstract: An implementation of fast cluster-based permutation analysis (CPA) for densely-sampled
@@ -16,7 +16,7 @@ abstract: An implementation of fast cluster-based permutation analysis (CPA) for
   statistics. Provides both a wholesale and a piecemeal interface to the CPA procedure
   with an emphasis on interpretability and diagnostics. Integrates 'Julia' libraries
   'MixedModels.JL' and 'GLM.JL' for performance improvements, with additional functionalities
-  for interfacing with 'Julia' from R powered by the 'JuliaConnectoR' package.
+  for interfacing with 'Julia' from 'R' powered by the 'JuliaConnectoR' package.
 authors:
 - family-names: Choe
   given-names: June

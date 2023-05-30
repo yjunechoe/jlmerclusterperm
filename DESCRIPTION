@@ -1,5 +1,5 @@
 Package: jlmerclusterperm
-Title: Cluster-based Permutation Analysis for Densely Sampled Time Data
+Title: Cluster-Based Permutation Analysis for Densely Sampled Time Data
 Version: 0.2.0
 Authors@R: 
     person("June", "Choe", , "jchoe001@gmail.com", role = c("aut", "cre", "cph"),
@@ -12,7 +12,7 @@ Description: An implementation of fast cluster-based permutation analysis
     CPA procedure with an emphasis on interpretability and diagnostics.
     Integrates 'Julia' libraries 'MixedModels.JL' and 'GLM.JL' for
     performance improvements, with additional functionalities for
-    interfacing with 'Julia' from R powered by the 'JuliaConnectoR'
+    interfacing with 'Julia' from 'R' powered by the 'JuliaConnectoR'
     package.
 License: MIT + file LICENSE
 URL: https://github.com/yjunechoe/jlmerclusterperm,
@@ -52,8 +52,7 @@ Remotes:
     langcog/peekbankr
 Config/testthat/edition: 3
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd",
-    "srr::srr_stats_roclet"))
+Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
 RoxygenNote: 7.2.3
 Collate:
     'jlmerclusterperm-package.R'
