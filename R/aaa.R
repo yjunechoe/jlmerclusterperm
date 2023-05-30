@@ -104,7 +104,7 @@ source_jl <- function(..., verbose = TRUE) {
 }
 
 #' @keywords internal
-dev_source <- function() {
+dev_source <- function() { # nocov start
   .jlmerclusterperm$opts$pkgdir <- system.file("julia/", package = "jlmerclusterperm")
   source_jl()
-}
+} # nocov end
