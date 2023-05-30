@@ -40,6 +40,15 @@ test_that("Errors on incompatible clusters", {
   expect_error(calculate_clusters_pvalues(empirical_clusters, extract_null_cluster_dists(null_statistics, threshold = 3)))
 })
 
+test_that("Errors on no predictors", {
+  spec_intercept <- make_jlmer_spec(
+    weight ~ 1, subset(ChickWeight, Time <= 20),
+    subject = "Chick", time = "Time"
+  )
+  expect_error(clusterpermute(spec_intercept, threshold = 1.5, nsim = 1), "No predictors to permute")
+  expect_error(permute_timewise_statistics(spec_intercept, threshold = 1.5, nsim = 1), "No predictors to permute")
+})
+
 # Coverage
 lapply(list(empirical_statistics, empirical_clusters, null_statistics, null_cluster_dists, empirical_clusters_tested), tidy)
 lapply(list(spec, empirical_statistics, empirical_clusters, null_statistics, null_cluster_dists, empirical_clusters_tested), print)
