@@ -9,7 +9,7 @@
 #'  [extract_empirical_clusters()], [extract_null_cluster_dists()],
 #'  [calculate_clusters_pvalues()]
 #'
-#' @examples
+#' @examplesIf JuliaConnectoR::juliaSetupOk()
 #' library(dplyr, warn.conflicts = FALSE)
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
@@ -32,7 +32,9 @@
 #' CPA$null_cluster_dists
 #' CPA$empirical_clusters
 #'
+#' \dontshow{
 #' JuliaConnectoR::stopJulia()
+#' }
 #'
 #' @export
 #' @return A list of `null_cluster_dists` and `empirical_clusters` with p-values
