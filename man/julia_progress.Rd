@@ -32,6 +32,10 @@ julia_progress()
 old_progress_opts
 julia_progress(old_progress_opts)
 identical(julia_progress(), old_progress_opts)
+
+# Alternatively, reset to default settings using this syntax:
+julia_progress(show = TRUE, width = "auto")
+
 }
 
 }
