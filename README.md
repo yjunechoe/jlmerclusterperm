@@ -9,7 +9,7 @@
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Development
-Version](https://img.shields.io/badge/devel%20version-0.2.0-check.svg)](https://github.com/yjunechoe/jlmerclusterperm)
+Version](https://img.shields.io/badge/devel%20version-1.0.0-check.svg)](https://github.com/yjunechoe/jlmerclusterperm)
 [![R-CMD-check](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml)
 [![pkgcheck](https://github.com/yjunechoe/jlmerclusterperm/workflows/pkgcheck/badge.svg)](https://github.com/yjunechoe/jlmerclusterperm/actions?query=workflow%3Apkgcheck)
 [![Codecov test
@@ -93,7 +93,7 @@ functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.03    0.02   15.24
+#>    0.05    0.01   32.91
 ```
 
 ## Quick tour of package functionalities
