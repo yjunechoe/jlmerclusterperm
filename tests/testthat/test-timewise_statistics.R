@@ -1,3 +1,5 @@
+skip_conditionally()
+
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 spec <- make_jlmer_spec(

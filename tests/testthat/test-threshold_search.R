@@ -1,3 +1,5 @@
+skip_conditionally()
+
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 reset_rng_state()
 

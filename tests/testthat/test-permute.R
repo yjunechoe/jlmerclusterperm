@@ -1,3 +1,5 @@
+skip_conditionally()
+
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 # Example 1

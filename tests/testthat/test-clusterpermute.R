@@ -1,3 +1,5 @@
+skip_conditionally()
+
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 #' @srrstats {G5.0} Uses the built-in `ChickWeight` dataset for tests

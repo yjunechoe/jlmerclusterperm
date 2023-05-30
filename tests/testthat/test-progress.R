@@ -1,3 +1,5 @@
+skip_conditionally()
+
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 test_that("No side effects when called empty", {

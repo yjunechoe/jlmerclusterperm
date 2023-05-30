@@ -1,3 +1,5 @@
+skip_conditionally()
+
 #' @srrstats {G5.2} Appropriate message/warning/error tests are in `/tests/testthat`
 
 test_that("Setup works", {
