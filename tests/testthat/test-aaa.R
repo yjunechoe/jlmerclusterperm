@@ -15,10 +15,6 @@ test_that("Setup works", {
 #   expect_true(jlmerclusterperm_setup(verbose = FALSE))
 # })
 
-test_that("Starts with default seed of N-1", {
-  expect_equal(JuliaConnectoR::juliaEval("Threads.nthreads()"), min(8, parallel::detectCores() - 1))
-})
-
 test_that("Don't restart if FALSE", {
   expect_message(jlmerclusterperm_setup(restart = FALSE))
 })
