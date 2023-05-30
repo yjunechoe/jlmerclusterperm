@@ -166,6 +166,10 @@ walk_threshold_steps(empirical_statistics, null_statistics, steps = c(2, 2.5, 3)
 
 - Existing implementations of CPA in R ([permuco](https://jaromilfrossard.github.io/permuco/), [permutes](https://github.com/cvoeten/permutes), etc.) whose designs inspired the CPA interface in jlmerclusterperm.
 
+```{r close, include = FALSE}
+JuliaConnectoR::stopJulia()
+```
+
 ```{r srr, include = FALSE}
 #' @srrstats {G1.0} References Maris & Oostenveld (2007) which originally proposed the cluster-based permutation analysis.
 #' @srrstats {G1.1} Package is an improvement over existing implementations in R (mainly in speed and interpretability).
@@ -175,4 +179,3 @@ walk_threshold_steps(empirical_statistics, null_statistics, steps = c(2, 2.5, 3)
 #'  Users are assumed to already have familiarity with (genearlized, mixed-effects) regression to use this package.
 #' @srrstats {G1.4} `roxygen2` is used throughout the package.
 ```
-
