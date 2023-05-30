@@ -54,7 +54,7 @@ extract_empirical_clusters <- function(empirical_statistics, threshold, binned =
   empirical_clusters <- lapply(empirical_clusters, function(cluster_df) {
     cluster_df[order(cluster_df$cluster_id), ]
   })
-  missing_clusters <- sapply(empirical_clusters, function(x) all(near_zero(x$statistic)))
+  missing_clusters <- vapply(empirical_clusters, function(x) all(near_zero(x$statistic)), logical(1))
   structure(empirical_clusters,
     class = "empirical_clusters",
     missing_clusters = missing_clusters, statistic = statistic, threshold = threshold,

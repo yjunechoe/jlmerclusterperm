@@ -167,8 +167,9 @@ make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = 
       if (!is.null(drop_terms)) renamed <- renamed[!renamed %in% drop_terms]
       unique(c(attr(terms, "intercept"), renamed))
     })
-    re_terms_regrouped <- lapply(split(re_terms_renamed, sapply(re, function(x) deparse(x[[3]]))), unlist, use.names = FALSE)
-    re_bars <- ifelse(table(sapply(re, function(x) deparse1(x[[3]]))) > 1, "||", "|")
+    re_rhs_deparsed <- vapply(re, function(x) deparse1(x[[3]]), character(1))
+    re_terms_regrouped <- lapply(split(re_terms_renamed, re_rhs_deparsed), unlist, use.names = FALSE)
+    re_bars <- ifelse(table(re_rhs_deparsed) > 1, "||", "|")
     re_groups <- lapply(names(re_terms_regrouped), function(x) {
       bar <- re_bars[[x]]
       lhs <- re_terms_regrouped[[x]]

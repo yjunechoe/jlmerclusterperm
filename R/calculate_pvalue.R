@@ -57,9 +57,9 @@ calculate_clusters_pvalues <- function(empirical_clusters, null_cluster_dists, a
   null <- lapply(null_cluster_dists, `[[`, "statistic")
   predictors_to_test <- setNames(nm = names(empirical)[names(empirical) %in% names(null)])
   pvalues <- lapply(predictors_to_test, function(x) {
-    sapply(empirical[[x]], function(cluster_statistic) {
+    vapply(empirical[[x]], function(cluster_statistic) {
       mean(c(abs(null[[x]]) >= abs(cluster_statistic), if (add1) TRUE))
-    })
+    }, numeric(1))
   })
   augmented <- empirical_clusters
   attr(augmented, "pvalues") <- pvalues

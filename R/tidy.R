@@ -51,7 +51,9 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
     re_cor <- lapply(re_flatten, function(g) {
       re_terms <- backtrans_interaction(names(g[[1]]))
       re_term_matrix <- outer(re_terms, re_terms, function(i, j) {
-        sapply(seq_along(i), function(ind) paste0(sort(c(i[ind], j[ind]))[1], ".", sort(c(i[ind], j[ind]))[2]))
+        vapply(seq_along(i), function(ind) {
+          paste0(sort(c(i[ind], j[ind]))[1], ".", sort(c(i[ind], j[ind]))[2])
+        }, character(1))
       })
       re_cor_terms <- re_term_matrix[lower.tri(re_term_matrix)]
       if (!is.null(g[[2]])) {

@@ -85,12 +85,12 @@ format.null_cluster_dists <- function(x, levels = 0.95, ...) {
 extract_null_cluster_stats <- function(x, levels) {
   statistics <- x$statistic
   mean_se <- do.call(sprintf, c("%0.3f (%0.2f)", lapply(list(mean, stats::sd), function(f) f(statistics))))
-  cis <- paste(sapply(levels, function(prob) {
+  cis <- paste(vapply(levels, function(prob) {
     percent <- paste0(prob * 100, "%")
     bounds <- ((1 - prob) / 2) + c(0, prob)
     interval <- stats::quantile(statistics, bounds)
     paste(percent, sprintf("[%0.3f, %0.3f]", interval[1], interval[2]))
-  }), collapse = ", ")
+  }, character(1)), collapse = ", ")
   list("Mean (SD)" = mean_se, "Coverage intervals" = cis, n = nrow(x))
 }
 

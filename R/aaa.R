@@ -1,7 +1,11 @@
 #' @keywords internal
 .jlmerclusterperm <- new.env(parent = emptyenv())
 .jlmerclusterperm$cli_theme <- list(
-  h1 = list(`font-weight` = "regular", `margin-top` = 0, fmt = function(x) cli::rule(x, line_col = "white")),
+  h1 = list(
+    `font-weight` = "regular",
+    `margin-top` = 0,
+    fmt = function(x) cli::rule(x, line_col = "white")
+  ),
   span.lemph = list(color = "grey", `font-style` = "italic"),
   span.el = list(color = "green"),
   span.fm = list()
@@ -98,11 +102,6 @@ source_jl <- function(..., verbose = TRUE) {
   }
   .jlmerclusterperm$exported_fns <- exported_fns
 }
-
-# wrap_jl_fn <- function(jl_fn) {
-#   force(jl_fn)
-#   function(...) JuliaConnectoR::juliaCall(jl_fn, ...)
-# }
 
 #' @keywords internal
 dev_source <- function() {
