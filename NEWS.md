@@ -1,4 +1,4 @@
-# jlmerclusterperm (development version)
+# jlmerclusterperm 1.0.0
 
 ### Breaking changes
 
