@@ -3,7 +3,7 @@ skip_conditionally()
 #' @srrstats {G5.2} Appropriate message/warning/error tests are in `/tests/testthat`
 
 test_that("Setup works", {
-  expect_true(jlmerclusterperm_setup(verbose = FALSE))
+  expect_true(jlmerclusterperm_setup())
 })
 
 # test_that("Setup with seed works", {
@@ -18,7 +18,7 @@ test_that("Setup works", {
 # })
 
 test_that("Don't restart if FALSE", {
-  expect_message(jlmerclusterperm_setup(restart = FALSE))
+  expect_message(jlmerclusterperm_setup(restart = FALSE), "already running")
 })
 
 test_that("RNG initializes to seed=1 counter=0", {

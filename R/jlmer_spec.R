@@ -274,12 +274,12 @@ format.jlmer_spec <- function(x, ...) {
 #   .jlmer_spec$data <- .data
 #   .jlmer_spec
 # }
-
-get_spec_used_cols <- function(jlmer_spec) {
-  all_cols <- unlist(c(
-    jlmer_spec$meta$term_groups,
-    jlmer_spec$meta$re_groups,
-    jlmer_spec$meta[c("subject", "trial", "time")]
-  ), use.names = FALSE)
-  all_cols[all_cols != "(Intercept)"]
-}
+#
+# get_spec_used_cols <- function(jlmer_spec) {
+#   all_cols <- unlist(c(
+#     jlmer_spec$meta$term_groups,
+#     jlmer_spec$meta$re_groups,
+#     jlmer_spec$meta[c("subject", "trial", "time")]
+#   ), use.names = FALSE)
+#   all_cols[all_cols != "(Intercept)"]
+# }

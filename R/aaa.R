@@ -50,11 +50,11 @@ start_with_threads <- function(..., max_threads = 7, verbose = TRUE) {
   nthreads <- getOption("jlmerclusterperm.nthreads", JULIA_NUM_THREADS) %|0|%
     (min(max_threads, parallel::detectCores() - 1))
   if (verbose) cli::cli_progress_step("Starting Julia with {nthreads} thread{?s}")
-  if (nthreads > 1) {
+  if (nthreads > 1) { # nocov start
     Sys.setenv("JULIA_NUM_THREADS" = nthreads)
     suppressMessages(JuliaConnectoR::startJuliaServer())
     Sys.setenv("JULIA_NUM_THREADS" = JULIA_NUM_THREADS)
-  } else {
+  } else { # nocov end
     suppressMessages(JuliaConnectoR::startJuliaServer())
   }
   .jlmerclusterperm$opts$nthreads <- nthreads
