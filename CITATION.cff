@@ -9,7 +9,7 @@ type: software
 license: MIT
 title: 'jlmerclusterperm: Cluster-Based Permutation Analysis for Densely Sampled Time
   Data'
-version: 0.2.0
+version: 1.0.0
 abstract: An implementation of fast cluster-based permutation analysis (CPA) for densely-sampled
   time data developed in Maris & Oostenveld, 2007 <doi:10.1016/j.jneumeth.2007.03.024>.
   Supports (generalized, mixed-effects) regression models for the calculation of timewise
@@ -317,22 +317,6 @@ references:
     given-names: Thomas Lin
     email: thomasp85@gmail.com
     orcid: https://orcid.org/0000-0002-5147-4711
-  year: '2023'
-- type: software
-  title: peekbankr
-  abstract: 'peekbankr: Accessing the Peekbank Database'
-  notes: Suggests
-  url: http://github.com/langcog/peekbankr
-  authors:
-  - family-names: Braginsky
-    given-names: Mika
-    email: mika.br@gmail.com
-  - family-names: MacDonald
-    given-names: Kyle
-    email: kylem412@gmail.com
-  - family-names: Frank
-    given-names: Michael
-    email: mcfrank@stanford.edu
   year: '2023'
 - type: software
   title: readr

@@ -5,3 +5,6 @@
 .DS_Store
 inst/julia/Manifest.toml
 ^CRAN-SUBMISSION$
+inst/doc
+/doc/
+/Meta/

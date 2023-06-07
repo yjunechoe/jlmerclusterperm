@@ -9,7 +9,8 @@
 #'  [extract_empirical_clusters()], [extract_null_cluster_dists()],
 #'  [calculate_clusters_pvalues()]
 #'
-#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' @examples
+#' \dontrun{
 #' library(dplyr, warn.conflicts = FALSE)
 #' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
@@ -31,9 +32,6 @@
 #' # You can extract the individual components for further inspection
 #' CPA$null_cluster_dists
 #' CPA$empirical_clusters
-#'
-#' \dontshow{
-#' JuliaConnectoR::stopJulia()
 #' }
 #'
 #' @export

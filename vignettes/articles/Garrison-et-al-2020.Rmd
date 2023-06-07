@@ -30,7 +30,8 @@ The following set-up code reads in the data and prepares it for analysis:
 
 ```{r data-prep, message=FALSE, warning=FALSE}
 library(dplyr)
-library(peekbankr) # remotes::install_github("langcog/peekbankr")
+remotes::install_github("langcog/peekbankr", quiet = TRUE)
+library(peekbankr)
 
 # Load data
 aoi_timepoints <- get_aoi_timepoints(dataset_name = "garrison_bergelson_2020")
