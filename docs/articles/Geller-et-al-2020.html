@@ -7,6 +7,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="A walkthrough of t vs. chisq statistic in a (mixed-effects) CPA">
 <title>Geller et al. 2020 • jlmerclusterperm</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Atkinson_Hyperlegible-0.4.5/font.css" rel="stylesheet">
@@ -15,6 +21,7 @@
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Geller et al. 2020">
 <meta property="og:description" content="A walkthrough of t vs. chisq statistic in a (mixed-effects) CPA">
+<meta property="og:image" content="https://yjunechoe.github.io/jlmerclusterperm/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -28,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">jlmerclusterperm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +44,9 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="nav-link" href="../articles/jlmerclusterperm.html">Get started</a>
+</li>
 <li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
@@ -82,7 +92,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>Geller et al. 2020</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Geller et al. 2020</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/yjunechoe/jlmerclusterperm/blob/HEAD/vignettes/articles/Geller-et-al-2020.Rmd" class="external-link"><code>vignettes/articles/Geller-et-al-2020.Rmd</code></a></small>
@@ -110,8 +120,8 @@ to conduct a cluster-based permutation analysis (CPA) of differences in
 pupil size between the print and cursive conditions.</p>
 <p>The data from the package (<code>cursive_agg_data</code>) looks
 slightly different from that used in the tutorial, so to ensure full
-reproducibility we use the <a href="https://raw.githubusercontent.com/jgeller112/drjasongeller/main/content/blog/2020-07-10-CBPT/blog_data.csv" class="external-link">snapshot
-of the data</a> that the tutorial used:</p>
+reproducibility we use the <a href="https://raw.githubusercontent.com/jgeller112/drjasongeller/main/content/blog/2020-07-10-CBPT/blog_data.csv" class="external-link">exact
+data</a> that the tutorial used:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="va">cursive_agg_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"https://raw.githubusercontent.com/jgeller112/drjasongeller/main/content/blog/2020-07-10-CBPT/blog_data.csv"</span><span class="op">)</span><span class="op">)</span></span>
@@ -148,21 +158,21 @@ normalized (“baseline-corrected”) pupil size</li>
 <p>As the name of the <code>cusrive_agg_data</code> variable suggests,
 the data has been aggregated within subject, collapsing across
 trials.</p>
-<p>The following reproduces the figure from the tutorial (it looks
-slightly different because <a href="https://github.com/dmirman/gazer/commit/091d38f586640831dbfd87aae29965ecb0d2e253" class="external-link">the
-data has been updated since</a>):</p>
+<p>The following reproduces the figure from the tutorial:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="va">script_fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">cursive_agg_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">timebins</span>, <span class="va">aggbaseline</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_summary.html" class="external-link">stat_summary</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="va">script</span><span class="op">)</span>, geom <span class="op">=</span> <span class="st">"line"</span>, linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">script_fig</span></span></code></pre></div>
 <p><img src="Geller-et-al-2020_files/figure-html/script_fig-1.png" width="100%"></p>
-<p>Note that for within-participant predictors like <code>script</code>,
-the permutation algorithm will randomly swap the labels for condition
-between the trials from each subject. This preserves the temporal
-structure of the data (no swapping below the trial-level grouping) and
-subject-level groupings of the data (no swapping of trials across
-participants).</p>
+<div class="callout" style="font-size:0.9em">
+<p>For within-participant predictors like <code>script</code>, the
+permutation algorithm will randomly swap the labels for condition
+<em>between</em> the trials <em>within</em> each subject. This preserves
+the temporal structure of the trial-level data (no swapping below the
+trial-level grouping) as well as the subject-level grouping structure
+(no swapping of trials across participants).</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="outline">Outline<a class="anchor" aria-label="anchor" href="#outline"></a>
@@ -432,9 +442,9 @@ single parameters because it makes less assumptions and tend to be more
 robust (<a href="https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html#model-diagnostics" class="external-link">glmmFAQ</a>).
 But because goodness-of-fit tests are at the level of a predictor in a
 model formula, “chisq” is less interpretable for multi-level predictors
-(k-1 &gt; 1). To tease apart the contribution of the individual levels
-of a multi-level predictor, <code>statistic = "t"</code> may be more
-appropriate.</p>
+(k-1 &gt; 1). For teasing apart the contribution of the individual
+levels of a multi-level predictor, using <code>statistic = "t"</code> is
+more appropriate.</p>
 </div>
 </div>
 <div class="section level2">
@@ -443,7 +453,7 @@ appropriate.</p>
 <p>The biggest missing component at this point is the subject random
 effects, which the original tutorial captures via the error term
 <code>Error(subject)</code>. There isn’t a strict equivalent to this in
-regression models, but specifying random intercepts by subject with
+regression, but specifying random intercepts by subject with
 <code>(1 | subject)</code> gets us very close:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cursive_agg_spec_re</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_jlmer_spec.html">make_jlmer_spec</a></span><span class="op">(</span></span>
@@ -462,7 +472,7 @@ regression models, but specifying random intercepts by subject with
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.02    0.08   31.17</span></span>
+<span><span class="co">#&gt;    0.03    0.08   13.14</span></span>
 <span><span class="va">re_CPA</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (chisq p &lt; <span style="color: #0000BB;">0.05</span>) ───── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
@@ -484,13 +494,13 @@ comparison:</p>
 <span><span class="co">#&gt; #&gt; script    0    100     1  10.121215   0.1584158</span></span>
 <span><span class="co">#&gt; #&gt; script  900   1000    -1  8.756152    0.1782178</span></span>
 <span><span class="co">#&gt; #&gt; script 1900   2500     1  82.198279   0.0099010</span></span></code></pre>
-<p>We also plot the timewise statistics from the random intercept
+<p>We now plot the timewise statistics from the random intercept
 models:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">timewise_chisqs_re</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compute_timewise_statistics.html">compute_timewise_statistics</a></span><span class="op">(</span><span class="va">cursive_agg_spec_re</span>, statistic <span class="op">=</span> <span class="st">"chisq"</span><span class="op">)</span></span>
 <span><span class="va">timewise_fig_re</span> <span class="op">&lt;-</span> <span class="va">timewise_fig</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"chisq-re-intercept"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"re-intercept-chisq"</span><span class="op">)</span>,</span>
 <span>    linewidth <span class="op">=</span> <span class="fl">1.5</span>,</span>
 <span>    data <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">timewise_chisqs_re</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
@@ -516,18 +526,11 @@ two lines overlap):</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">timewise_fig_re</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"chisq-re-max"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"re-max-chisq"</span><span class="op">)</span>,</span>
 <span>    linewidth <span class="op">=</span> <span class="fl">1.5</span>,</span>
 <span>    data <span class="op">=</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">timewise_chisqs_re_max</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p><img src="Geller-et-al-2020_files/figure-html/timewise_fig_re2-1.png" width="100%"></p>
-<p>This becomes clearer when we plot the <em>difference</em> in timewise
-statistics between the two - they’re virtually identical:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">timewise_chisqs_re</span> <span class="op">-</span> <span class="va">timewise_chisqs_re_max</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_path</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y <span class="op">=</span> <span class="va">statistic</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%f"</span>, <span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Geller-et-al-2020_files/figure-html/re-timewise-diff-1.png" width="100%"></p>
 <p>Parsimony is incredibly important for simulation - while
 <code>jlmerclusterperm</code> is fast, model complexity is still a major
 bottleneck. When adding the extra random effect terms (random slope and
@@ -536,7 +539,7 @@ likely to be inconsequential for the CPA itself.</p>
 <p>We show this in the following CPA run, which uses the maximal model.
 Notice how the results are identical to the intercept-only
 <code>re_CPA</code> but substantially slower:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/julia_rng.html">set_rng_state</a></span><span class="op">(</span><span class="fl">123L</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>  <span class="va">re_max_CPA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clusterpermute.html">clusterpermute</a></span><span class="op">(</span></span>
@@ -548,7 +551,7 @@ Notice how the results are identical to the intercept-only
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.11    0.14   35.11</span></span>
+<span><span class="co">#&gt;    0.00    0.06   15.10</span></span>
 <span><span class="va">re_max_CPA</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (chisq p &lt; <span style="color: #0000BB;">0.05</span>) ───── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
@@ -568,12 +571,12 @@ Notice how the results are identical to the intercept-only
 <p>We run the above maximal mixed model CPA purely for demonstration
 purposes. The random effects structure is actually unidentifiable given
 the aggregated data, where at any point in time there are only 2
-observations from each subject (the means at each condition).</p>
+observations from each subject (the mean of each condition).</p>
 </div>
 <p>Lastly, back in our figure of the data, we annotate the clusters
-detected with the threshold of 0.05 (chisq p-value) from the random
+detected with the chisq p-value threshold of 0.05 from the random
 intercept CPA:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">empirical_clusters_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="fu"><a href="../reference/extract_empirical_clusters.html">extract_empirical_clusters</a></span><span class="op">(</span><span class="va">timewise_chisqs_re</span>, threshold <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">script_fig</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a></span><span class="op">(</span></span>
@@ -612,7 +615,7 @@ is over the line for print, the original tutorial reports a
 contrast.</p>
 <p>For example, we can flip the levels of the factor to make “print” the
 reference level:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rev_contrast_df</span> <span class="op">&lt;-</span> <span class="va">cursive_agg</span></span>
 <span><span class="va">rev_contrast_df</span><span class="op">$</span><span class="va">script</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">rev_contrast_df</span><span class="op">$</span><span class="va">script</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"print"</span>, <span class="st">"cursive"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/contrasts.html" class="external-link">contrasts</a></span><span class="op">(</span><span class="va">rev_contrast_df</span><span class="op">$</span><span class="va">script</span><span class="op">)</span></span>
@@ -646,8 +649,9 @@ reference level:</p>
 <span><span class="co">#&gt;   [900, 1000]: -8.521 <span style="color: #B2B2B2; font-style: italic;">(p=0.2475)</span></span></span>
 <span><span class="co">#&gt;   [1900, 2500]: 73.440 <span style="font-style: italic;">(p=0.0099)</span></span></span>
 <span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span></code></pre></div>
-<p>Or we can sum-code and set “print” to -1 and “cursive” to 1:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<p>Or we could also sum-code and set “print” to -1 and “cursive” to
+1:</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sum_contrast_df</span> <span class="op">&lt;-</span> <span class="va">cursive_agg</span></span>
 <span><span class="va">sum_contrast_df</span><span class="op">$</span><span class="va">script</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">sum_contrast_df</span><span class="op">$</span><span class="va">script</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/contrasts.html" class="external-link">contrasts</a></span><span class="op">(</span><span class="va">sum_contrast_df</span><span class="op">$</span><span class="va">script</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/contrast.html" class="external-link">contr.sum</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
@@ -686,12 +690,12 @@ reference level:</p>
 <p>Because CPA operates over the domain of the timewise statistics (and
 not the effect size), whether the difference between “print” and
 “cursive” is expressed as a unit of 1 (in treatment coding) or 2 (in
-contrast coding) has no bearing on the calculation of the statistic.</p>
+contrast coding) has no bearing on the CPA.</p>
 </div>
 <p>To conclude, we re-run and time a 1000-simulation CPA using the
 intercept-only model with the new treatment coding of
 <code>script</code> where “print” is the reference level.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/julia_rng.html">set_rng_state</a></span><span class="op">(</span><span class="fl">123L</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>  <span class="va">final_CPA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clusterpermute.html">clusterpermute</a></span><span class="op">(</span></span>
@@ -703,7 +707,7 @@ intercept-only model with the new treatment coding of
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.04    0.11   18.28</span></span>
+<span><span class="co">#&gt;    0.07    0.09    8.20</span></span>
 <span><span class="va">final_CPA</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (chisq p &lt; <span style="color: #0000BB;">0.05</span>) ───── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
@@ -720,7 +724,7 @@ intercept-only model with the new treatment coding of
 <span><span class="co">#&gt;   [1900, 2500]: 73.440 <span style="font-style: italic;">(p=0.0090)</span></span></span>
 <span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span></code></pre></div>
 <p>Finally, annotating just the significant cluster on the figure:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">signif_clusters_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">final_CPA</span><span class="op">$</span><span class="va">empirical_clusters</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">pvalue</span> <span class="op">&lt;</span> <span class="fl">0.05</span><span class="op">)</span></span>
 <span><span class="va">signif_clusters_df</span></span>

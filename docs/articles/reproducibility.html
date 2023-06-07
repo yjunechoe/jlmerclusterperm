@@ -7,6 +7,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="Using RNG seed and counter state to guarantee reproducibility of results">
 <title>Reproducibility • jlmerclusterperm</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="../deps/Atkinson_Hyperlegible-0.4.5/font.css" rel="stylesheet">
@@ -15,6 +21,7 @@
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Reproducibility">
 <meta property="og:description" content="Using RNG seed and counter state to guarantee reproducibility of results">
+<meta property="og:image" content="https://yjunechoe.github.io/jlmerclusterperm/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -28,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">jlmerclusterperm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +44,9 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="nav-link" href="../articles/jlmerclusterperm.html">Get started</a>
+</li>
 <li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
@@ -82,7 +92,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>Reproducibility</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Reproducibility</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/yjunechoe/jlmerclusterperm/blob/HEAD/vignettes/articles/reproducibility.Rmd" class="external-link"><code>vignettes/articles/reproducibility.Rmd</code></a></small>
@@ -153,10 +163,9 @@ concepts:</p>
 “seed” as talked about in R, as in <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code>. The seed is
 used in the RNG’s initialization, locking it into a specific state that
 persists for the session. In <a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">jlmerclusterperm</a>, the
-default seed is <code>1</code> and is controlled via
-<code>options("jlmerclusterperm.seed")</code> (this must be set
-<em>before</em> starting Julia with
-<code><a href="../reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup()</a></code>)</p></li>
+default seed is <code>1</code> and is primarily controlled via
+<code>options("jlmerclusterperm.seed")</code> which must be set
+<em>before</em> calling <code><a href="../reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup()</a></code>.</p></li>
 <li><p>The <strong>counter</strong> initializes to <code>0</code> and
 increments by some value every time the RNG is consumed to produce a
 random number. There is no equivalent concept in base R, though it’s a
@@ -228,8 +237,8 @@ predict):</p>
 <p>The difference between these two runs is specifically in the
 <strong>null distribution</strong> of the cluster-mass statistics. Both
 100-simulation samples are drawn share the same underlying (null)
-distribution, but the samples themselves are not identical to one
-another (they rarely are).</p>
+distribution, though they are not identical to one another (they rarely
+are).</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">sum_statistic</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span></span>
@@ -306,13 +315,12 @@ distribution which is identical to that from <code>CPA_1_0</code>:</p>
 <div class="section level2">
 <h2 id="technical-details-and-notes">Technical details and notes<a class="anchor" aria-label="anchor" href="#technical-details-and-notes"></a>
 </h2>
-<p><a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">jlmerclusterperm</a> uses a thread-safe, counter-based RNG
-called <a href="https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/#threefry" class="external-link">Threefry</a>
+<p>The Julia back-end uses a thread-safe, counter-based RNG called <a href="https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/#threefry" class="external-link">Threefry</a>
 (specifically, <code>Random123.Threefry2x</code>) which comes from the
 <a href="https://juliarandom.github.io/RandomNumbers.jl/stable/man/random123/" class="external-link">Random123.jl</a>
 Julia library as an adaptation of the original algorithm developed by <a href="http://dx.doi.org/10.1145/2063384.2063405" class="external-link">Salmon, Moraes, Dror,
 and Shaw (2011)</a>. The RNG is initialized with a “rounds” value of 20,
-which is also the default Threefry is used for its speed and stability
+which is also the default. Threefry is used for its speed and stability
 across Julia versions.</p>
 <p>Additionally, as noted earlier, the RNG initializes with an explicit
 seed of <code>1</code>. This behavior is different than in the case of
@@ -322,9 +330,8 @@ consequence is that in the absence of explicit seeding via
 new session (i.e., runs with counter value of zero) will be
 identical.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Stop Julia and restart</span></span>
-<span><span class="fu">JuliaConnectoR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/JuliaConnectoR/man/stopJulia.html" class="external-link">stopJulia</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Restart Julia session</span></span>
+<span><span class="fu"><a href="../reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>restart <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># RNG seed is again 1</span></span>
 <span><span class="fu"><a href="../reference/julia_rng.html">get_rng_seed</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -359,10 +366,10 @@ is implemented:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 100 simulations of timewise statistics</span></span>
 <span><span class="co">## First CPA using counter at 1</span></span>
-<span><span class="fu"><a href="../reference/julia_rng.html">set_rng_state</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/julia_rng.html">set_rng_state</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/permute_timewise_statistics.html">permute_timewise_statistics</a></span><span class="op">(</span><span class="va">jlmer_spec</span>, nsim <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="co">## Second CPA using counter at 2</span></span>
-<span><span class="fu"><a href="../reference/julia_rng.html">set_rng_state</a></span><span class="op">(</span><span class="fl">124</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/julia_rng.html">set_rng_state</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/permute_timewise_statistics.html">permute_timewise_statistics</a></span><span class="op">(</span><span class="va">jlmer_spec</span>, nsim <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># The null cluster-mass statistics</span></span>
@@ -377,10 +384,8 @@ is implemented:</p>
 <div class="callout" style="font-size:0.9em">
 <p>The two colored lines represent two 100-simulation bootstrap
 permutations that differ in the initial RNG counter by a value of 1. The
-point is that the shape of the two lines look very different, which is
-unexpected under the assumption that having a similar counter value also
-means having many overlapping samples (i.e., permutations of the data)
-from the null.</p>
+point is that the shape of the two lines look very different - one is
+not just the shifted form of another.</p>
 </div>
 <p>For more formal investigations (e.g., when simulating power for CPA),
 it’s of course best practice to generate random <em>seeds</em>. The

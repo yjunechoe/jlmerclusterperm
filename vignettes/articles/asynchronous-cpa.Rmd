@@ -85,11 +85,11 @@ Please treat the `.jlmerclusterperm` internal variable as a read-only object - i
 
 We start by creating a special object of class `<Future>` using `future::future()`. We can simply pass the `clusterpermute()` code to the first argument of `future()`, but with a slight modification to ensure that the background process connects to the same Julia session.
 
-The template is as follows. First, you make the `pkgenv` variable (defined above) available for the future (via the `globals` argument). Then, inside the future expression ensure that the background process shares the same Julia session (via `list2env(...)`).
+The template is as follows. First, you make the `pkgopts` object (defined above) available for the future (via the `globals` argument). Then, inside the future expression ensure that the background process shares the same Julia session (via `list2env(...)`).
 
 ```{r eval = FALSE}
 # Not run
-f <- future(
+future(
   {
     list2env(pkgopts, jlmerclusterperm:::.jlmerclusterperm)
     ## Your CPA code below ##
@@ -103,7 +103,7 @@ A future object replicating the 1000-simulation CPA from above will look like th
 ```{r future-cpa}
 f <- future(
   {
-    list2env(as.list(pkgenv), jlmerclusterperm:::.jlmerclusterperm)
+    list2env(as.list(pkgopts), jlmerclusterperm:::.jlmerclusterperm)
     ## Your CPA code below ##
     set_rng_state(123L)
     clusterpermute(
@@ -112,7 +112,7 @@ f <- future(
       nsim = 1000
     )
   },
-  globals = structure(TRUE, add = "pkgenv")
+  globals = structure(TRUE, add = "pkgopts")
 )
 ```
 

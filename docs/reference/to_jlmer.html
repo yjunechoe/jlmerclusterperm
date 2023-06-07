@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">jlmerclusterperm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,7 +18,10 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="nav-item">
+  <a class="nav-link" href="../articles/jlmerclusterperm.html">Get started</a>
+</li>
+<li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
@@ -115,61 +118,21 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \dontrun{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>restart <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Fitting a regression model with R formula syntax</span></span></span>
 <span class="r-in"><span><span class="fu">to_jlmer</span><span class="op">(</span><span class="va">weight</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">Diet</span>, <span class="va">ChickWeight</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;Julia object of type StatsModels.TableRegressionModel&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 Coef.  Std. Error      z  Pr(&gt;|z|)  Lower 95%  Upper 95%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)  102.645      4.67395  21.96    &lt;1e-99   93.4847    111.806</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Diet2         19.9712     7.86744   2.54    0.0111    4.55132    35.3911</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Diet3         40.3045     7.86744   5.12    &lt;1e-06   24.8847     55.7244</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Diet4         32.6173     7.91046   4.12    &lt;1e-04   17.113      48.1215</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># `lm()` equivalent</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">weight</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">Diet</span>, <span class="va">ChickWeight</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">coef</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              Estimate Std. Error   t value     Pr(&gt;|t|)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept) 102.64545   4.673954 21.961161 4.712762e-78</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Diet2        19.97121   7.867437  2.538465 1.139708e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Diet3        40.30455   7.867437  5.122958 4.113938e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Diet4        32.61726   7.910461  4.123307 4.286352e-05</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Fitting a mixed model with {lme4} syntax</span></span></span>
 <span class="r-in"><span><span class="fu">to_jlmer</span><span class="op">(</span><span class="va">weight</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">Diet</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">Chick</span><span class="op">)</span>, <span class="va">ChickWeight</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;Julia object of type LinearMixedModel&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Variance components:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             Column    Variance Std.Dev.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chick    (Intercept)   247.2559 15.7244</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual              4527.9661 67.2902</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ──────────────────────────────────────────────────</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 Coef.  Std. Error      z  Pr(&gt;|z|)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ──────────────────────────────────────────────────</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)  101.781      5.78499  17.59    &lt;1e-68</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Diet2         20.8353     9.79412   2.13    0.0334</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Diet3         41.1687     9.79412   4.20    &lt;1e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Diet4         33.284      9.82881   3.39    0.0007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ──────────────────────────────────────────────────</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Passing MixedModels.jl fit options to the `...`</span></span></span>
 <span class="r-in"><span><span class="fu">to_jlmer</span><span class="op">(</span><span class="va">weight</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">Diet</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">Chick</span><span class="op">)</span>, <span class="va">ChickWeight</span>, REML <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;Julia object of type LinearMixedModel&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Variance components:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             Column    Variance Std.Dev.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chick    (Intercept)   305.7755 17.4864</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual              4526.5647 67.2797</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ──────────────────────────────────────────────────</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 Coef.  Std. Error      z  Pr(&gt;|z|)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ──────────────────────────────────────────────────</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)  101.634      6.04044  16.83    &lt;1e-62</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Diet2         20.9832    10.2365    2.05    0.0404</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Diet3         41.3165    10.2365    4.04    &lt;1e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Diet4         33.4041    10.27      3.25    0.0011</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ──────────────────────────────────────────────────</span>
-<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
