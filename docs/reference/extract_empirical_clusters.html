@@ -113,7 +113,7 @@ Defaults to <code>Inf</code> which return all detected clusters.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>restart <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -123,22 +123,69 @@ Defaults to <code>Inf</code> which return all detected clusters.</p></dd>
 <span class="r-in"><span>  subject <span class="op">=</span> <span class="st">"Chick"</span>, time <span class="op">=</span> <span class="st">"Time"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">spec</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">jlmer specification</span> ───────────────────────────────────────── <span style="color: #0000BB;">&lt;jlmer_spec&gt;</span> ──</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Formula</span>: weight ~ 1 + Diet2 + Diet3 + Diet4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Predictors</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Diet</span>: Diet2, Diet3, Diet4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Groupings</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Subject</span>: Chick</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Trial</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="font-style: italic;">Time</span>: Time</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Data</span>:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 533 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   weight Diet2 Diet3 Diet4 Chick  Time</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     42     0     0     0 1         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     51     0     0     0 1         2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     59     0     0     0 1         4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 530 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Empirical clusters are derived from the timewise statistics</span></span></span>
 <span class="r-in"><span><span class="va">empirical_statistics</span> <span class="op">&lt;-</span> <span class="fu"><a href="compute_timewise_statistics.html">compute_timewise_statistics</a></span><span class="op">(</span><span class="va">spec</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">empirical_clusters</span> <span class="op">&lt;-</span> <span class="fu">extract_empirical_clusters</span><span class="op">(</span><span class="va">empirical_statistics</span>, threshold <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">empirical_clusters</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Empirical clusters</span> (t &gt; <span style="color: #0000BB;">2</span>) ────────────────────────── <span style="color: #0000BB;">&lt;empirical_clusters&gt;</span> ──</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [4, 8]: 8.496</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [2, 20]: 34.628</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [2, 20]: 39.371</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Collect as dataframe with `tidy()`</span></span></span>
 <span class="r-in"><span><span class="va">empirical_clusters_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">empirical_clusters</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">empirical_clusters_df</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   predictor id    start   end length sum_statistic</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Diet2     1         4     8      3          8.50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Diet3     1         2    20     10         34.6 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> Diet4     1         2    20     10         39.4 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Changing the `threshold` value identifies different clusters</span></span></span>
 <span class="r-in"><span><span class="fu">extract_empirical_clusters</span><span class="op">(</span><span class="va">empirical_statistics</span>, threshold <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Empirical clusters</span> (t &gt; <span style="color: #0000BB;">1</span>) ────────────────────────── <span style="color: #0000BB;">&lt;empirical_clusters&gt;</span> ──</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [2, 20]: 19.427</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [2, 20]: 34.628</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [2, 20]: 39.371</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># A predictor can have zero or multiple clusters associated with it</span></span></span>
 <span class="r-in"><span><span class="fu">extract_empirical_clusters</span><span class="op">(</span><span class="va">empirical_statistics</span>, threshold <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Empirical clusters</span> (t &gt; <span style="color: #0000BB;">3</span>) ────────────────────────── <span style="color: #0000BB;">&lt;empirical_clusters&gt;</span> ──</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [4, 8]: 12.719</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [16, 20]: 10.449</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">Diet4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [2, 12]: 29.659</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────────────</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> No clusters found for <span style="color: #00BB00;">Diet2</span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

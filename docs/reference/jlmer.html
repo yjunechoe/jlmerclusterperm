@@ -103,16 +103,30 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>restart <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Fitting a regression model with a specification object</span></span></span>
 <span class="r-in"><span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu"><a href="make_jlmer_spec.html">make_jlmer_spec</a></span><span class="op">(</span><span class="va">weight</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">Diet</span>, <span class="va">ChickWeight</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">jlmer</span><span class="op">(</span><span class="va">spec</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;Julia object of type StatsModels.TableRegressionModel&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 Coef.  Std. Error      z  Pr(&gt;|z|)  Lower 95%  Upper 95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)  102.645      4.67395  21.96    &lt;1e-99   93.4847    111.806</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Diet2         19.9712     7.86744   2.54    0.0111    4.55132    35.3911</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Diet3         40.3045     7.86744   5.12    &lt;1e-06   24.8847     55.7244</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Diet4         32.6173     7.91046   4.12    &lt;1e-04   17.113      48.1215</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ────────────────────────────────────────────────────────────────────────</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># `lm()` equivalent</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">weight</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">Diet</span>, <span class="va">ChickWeight</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">coef</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              Estimate Std. Error   t value     Pr(&gt;|t|)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept) 102.64545   4.673954 21.961161 4.712762e-78</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Diet2        19.97121   7.867437  2.538465 1.139708e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Diet3        40.30455   7.867437  5.122958 4.113938e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Diet4        32.61726   7.910461  4.123307 4.286352e-05</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

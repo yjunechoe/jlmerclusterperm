@@ -57,13 +57,14 @@ functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.02    0.00   13.67
+#>    0.00    0.01   21.60
 ```
 
-See the
-[Articles](https://yjunechoe.github.io/jlmerclusterperm/articles/) page
-on the [package website](https://yjunechoe.github.io/jlmerclusterperm/)
-for tutorials and case studies.
+See the [Get
+Started](https://yjunechoe.github.io/jlmerclusterperm/articles/jlmerclusterperm.html)
+page on the [package
+website](https://yjunechoe.github.io/jlmerclusterperm/) for background
+and tutorials.
 
 ## Quick tour of package functionalities
 

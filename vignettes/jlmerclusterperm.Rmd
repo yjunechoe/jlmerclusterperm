@@ -14,7 +14,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Overview
+`jlmerclusterperm` is an interface to regression-based CPAs which supports both wholesale and piecemeal approaches to conducting the test.
+
+## Overview of CPA
 
 **Cluster-based permutation analysis (CPA)** is a simulation-based, non-parametric statistical test of difference between groups in a time series. It is suitable for analyzing **densely-sampled time data** (such as in EEG and eye-tracking research) where the research hypothesis is often specified up to the existence of an effect (e.g., as predicted by higher-order cognitive mechanisms) but agnostic to the temporal details of the effect (such as the precise moment of its emergence).
 
@@ -24,6 +26,52 @@ CPA formalizes two intuitions about what it means for there to be a difference b
 
 2) The degree of extremity of a cluster (i.e., the **cluster-mass statistic**) is a measure that is sensitive to the magnitude of the difference, its variability, and the sample size (e.g., the t-statistic from a regression).
 
-In short, the CPA procedure identifies empirical clusters in a time series and tests the significance of the observed cluster-mass statistics against **bootstrapped permutations** of the data. The bootstrapping procedure simulates the null hypothesis and yield a distribution of cluster-mass statistics emerging from _chance_ (i.e., random shuffling of condition labels).
+The CPA procedure identifies empirical clusters in a time series data and tests the significance of the observed cluster-mass statistics against **bootstrapped permutations** of the data. The bootstrapping procedure samples from the null, yielding a distribution of cluster-mass statistics emerging from "chance" (i.e., random shuffling of condition labels). The statistical significance of a cluster is the probability of observing a cluster-mass statistic as extreme as the cluster's given the simulated null distribution. 
 
-`jlmerclusterperm` is an interface to regression-based CPAs which supports both wholesale and piecemeal approaches to conducting the test.
+## Package design
+
+![jlmerclusterperm package function design](https://raw.githubusercontent.com/yjunechoe/jlmerclusterperm/main/man/figures/jlmerclusterperm_fn_design.png)
+
+`jlmerclusterperm` provides both a wholesale and a piecemeal approach to conducting a CPA. The main workhorse function in the package is `clusterpermute()`, which is composed of five smaller functions that are called internally in succession. The smaller functions representing the algorithmic steps of a CPA are also exported, to allow more control over the procedure (e.g., for debugging and diagnosing a CPA run).
+
+See the [function documentation](https://yjunechoe.github.io/jlmerclusterperm/reference/index.html#cluster-based-permutation-analysis) for more.
+
+## Organization of vignettes
+
+The package [vignettes](https://yjunechoe.github.io/jlmerclusterperm/articles) are roughly divided into two groups: **topics** and **case studies**. If you are a researcher with data ready for analysis, it is recommended to go through the case studies first and pluck out the relevant bits for your own hypothesis.
+
+In the order of increasing complexity, the **case studies** are:
+
+1) [Garrison et al. 2020](https://yjunechoe.github.io/jlmerclusterperm/articles/Garrison-et-al-2020.html), which introduces the package's interface to CPA and compares a wholesale vs. piecemeal approach to CPA. It also compares the use of linear vs. logistic regression for the calculation of timewise statistics.
+
+2) [Geller et al. 2020](https://yjunechoe.github.io/jlmerclusterperm/articles/Geller-et-al-2020.html), which demonstrates the use of random effects and regression contrasts in the CPA specification. It also compares the use of t vs. chisq timewise statistics.
+
+3) [de Carvalho et al. 2021](https://yjunechoe.github.io/jlmerclusterperm/articles/deCarvalho-et-al-2021.html), which showcases using custom regression contrasts to test the relationship between multiple levels of a factor. It also discusses issues surrounding the complexity of the timewise regression model.
+
+The **topics** are not particular to one type of analysis and instead cover general package features:
+
+- [Tidying output](https://yjunechoe.github.io/jlmerclusterperm/articles/tidying-output.html): `tidy()` and other ways of collecting `jlmerclusterperm` objects as tidy data.
+
+- [Julia interface](https://yjunechoe.github.io/jlmerclusterperm/articles/julia-interface.html): interacting with Julia objects using the [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR) package.
+
+- [Reproducibility](https://yjunechoe.github.io/jlmerclusterperm/articles/reproducibility.html): working with the Julia RNG to make CPA runs reproducible.
+
+- [Asynchronous CPA](https://yjunechoe.github.io/jlmerclusterperm/articles/asynchronous-cpa.html): using the [future](https://future.futureverse.org/) package to run a CPA in a non-blocking background process.
+
+## Compared to other implementations
+
+There are other R packages for cluster-based permutation analysis, such as [clusterperm](https://github.com/dalejbarr/clusterperm/), [eyetrackingR](https://github.com/jwdink/eyetrackingR), [permuco](https://github.com/jaromilfrossard/permuco/), and [permutes](https://github.com/cvoeten/permutes).
+
+Compared to existing implementations, `jlmerclusterperm` is the only package optimized for CPAs based on **mixed-effects regression models**, suitable for typical experimental research data with multiple, crossed grouping structures (e.g., subjects and items). It is also the only package with an interface to the individual algorithmic steps of a CPA. Lastly, thanks to the Julia back-end, `jlmerclusterperm` makes bootstrapping computationally feasible, even for mixed models.
+
+## Further readings
+
+- The original method paper for CPA by [Maris & Oostenveld 2007](https://doi.org/10.1016/j.jneumeth.2007.03.024).
+
+- A more recent paper [Sassenhagen & Draschkow 2019](https://doi.org/10.1111/psyp.13335) on the DOs and DON'Ts of of interpreting and reporting CPA results.
+
+- A review paper for eyetracking analysis methods [Ito & Knoeferle 2022](https://doi.org/10.3758/s13428-022-01969-3) which compares CPA to other statistical techniques for testing difference between groups in time series data.
+
+- The JOSS paper for the permuco package ([Frossard & Renaud 2021](https://www.jstatsoft.org/article/view/v099i15)) and the references therein.
+
+- [Benedikt V. Ehinger's 2016 blog post](https://benediktehinger.de/blog/science/statistics-cluster-permutation-test/), which includes a detailed graphical explainer for the CPA procedure.
