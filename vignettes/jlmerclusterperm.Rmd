@@ -38,7 +38,7 @@ See the [function documentation](https://yjunechoe.github.io/jlmerclusterperm/re
 
 ## Organization of vignettes
 
-The package [vignettes](https://yjunechoe.github.io/jlmerclusterperm/articles) are roughly divided into two groups: **topics** and **case studies**. If you are a researcher with data ready for analysis, it is recommended to go through the case studies first and pluck out the relevant bits for your own hypothesis.
+The package [vignettes](https://yjunechoe.github.io/jlmerclusterperm/articles/) are roughly divided into two groups: **topics** and **case studies**. If you are a researcher with data ready for analysis, it is recommended to go through the case studies first and pluck out the relevant bits for your own hypothesis.
 
 In the order of increasing complexity, the **case studies** are:
 
