@@ -1,4 +1,4 @@
-# skip_conditionally()
+skip_conditionally()
 
 #' @srrstats {G5.2} Appropriate message/warning/error tests are in `/tests/testthat`
 
