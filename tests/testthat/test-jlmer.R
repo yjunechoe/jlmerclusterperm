@@ -1,9 +1,9 @@
-skip_conditionally()
+# skip_conditionally()
 
 #' @srrstats {G5.3} Tests for correctness but no explicit test for NA
 #' @srrstats {G5.4} Tests compare to R `lm()` output.
 
-jlmerclusterperm_setup(verbose = FALSE)
+jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 spec_lm <- make_jlmer_spec(weight ~ 1 + Diet, ChickWeight)
 jlm1 <- to_jlmer(weight ~ 1 + Diet, ChickWeight)

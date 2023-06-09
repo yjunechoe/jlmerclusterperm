@@ -1,6 +1,6 @@
-skip_conditionally()
+# skip_conditionally()
 
-jlmerclusterperm_setup(verbose = FALSE)
+jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 test_that("No side effects when called empty", {
   expect_equal(julia_progress(), julia_progress())

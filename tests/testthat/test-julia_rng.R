@@ -1,6 +1,6 @@
-skip_conditionally()
+# skip_conditionally()
 
-jlmerclusterperm_setup(verbose = FALSE)
+jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 test_that("RNG counter setter/getter", {
   expect_equal(set_rng_state(123), 123)
