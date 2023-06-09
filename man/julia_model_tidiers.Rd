@@ -24,6 +24,7 @@ A data frame
 Tidier methods for Julia regression models
 }
 \examples{
+\dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
 jlmerclusterperm_setup(verbose = FALSE)
@@ -47,5 +48,5 @@ tidy(mod2, effects = "ran_pars")
 \dontshow{
 JuliaConnectoR::stopJulia()
 }
-
+\dontshow{\}) # examplesIf}
 }

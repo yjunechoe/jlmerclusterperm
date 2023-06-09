@@ -30,6 +30,7 @@ A predictor-by-time matrix of cluster statistics, of class \code{timewise_statis
 Fit Julia regression models to each time point of a time series data
 }
 \examples{
+\dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
 jlmerclusterperm_setup(verbose = FALSE)
@@ -64,7 +65,7 @@ to_jlmer(weight ~ 1 + Diet, filter(ChickWeight, Time == 0)) \%>\%
 \dontshow{
 JuliaConnectoR::stopJulia()
 }
-
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=jlmer]{jlmer()}}, \code{\link[=make_jlmer_spec]{make_jlmer_spec()}}

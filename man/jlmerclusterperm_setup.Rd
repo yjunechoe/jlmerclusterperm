@@ -21,6 +21,7 @@ TRUE
 Initial setup for the jlmerclusterperm package
 }
 \examples{
+\dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \donttest{
 options("jlmerclusterperm.nthreads" = 2)
 jlmerclusterperm_setup(verbose = FALSE)
@@ -28,5 +29,5 @@ jlmerclusterperm_setup(verbose = FALSE)
 \dontshow{
 JuliaConnectoR::stopJulia()
 }
-
+\dontshow{\}) # examplesIf}
 }

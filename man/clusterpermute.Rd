@@ -60,6 +60,7 @@ A list of \code{null_cluster_dists} and \code{empirical_clusters} with p-values
 Conduct a cluster-based permutation test
 }
 \examples{
+\dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
 jlmerclusterperm_setup(verbose = FALSE)
@@ -90,7 +91,7 @@ CPA$empirical_clusters
 \dontshow{
 JuliaConnectoR::stopJulia()
 }
-
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=compute_timewise_statistics]{compute_timewise_statistics()}}, \code{\link[=permute_timewise_statistics]{permute_timewise_statistics()}},

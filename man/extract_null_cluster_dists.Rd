@@ -26,6 +26,7 @@ A \code{null_cluster_dists} object.
 Construct a null distribution of cluster-mass statistics
 }
 \examples{
+\dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
 jlmerclusterperm_setup(verbose = FALSE)
@@ -60,7 +61,7 @@ extract_null_cluster_dists(null_statistics, threshold = 3)
 \dontshow{
 JuliaConnectoR::stopJulia()
 }
-
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=permute_timewise_statistics]{permute_timewise_statistics()}}

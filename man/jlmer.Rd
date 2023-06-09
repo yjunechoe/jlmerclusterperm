@@ -22,6 +22,7 @@ A \code{jlmer_mod} object.
 Fit a Julia regression model using jlmer specifications
 }
 \examples{
+\dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
 jlmerclusterperm_setup(verbose = FALSE)
@@ -40,7 +41,7 @@ summary(lm(weight ~ 1 + Diet, ChickWeight))$coef
 \dontshow{
 JuliaConnectoR::stopJulia()
 }
-
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=make_jlmer_spec]{make_jlmer_spec()}}

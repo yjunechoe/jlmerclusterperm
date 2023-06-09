@@ -34,6 +34,7 @@ An \code{empirical_clusters} object.
 Detect largest clusters from a time sequence of predictor statistics
 }
 \examples{
+\dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
 jlmerclusterperm_setup(verbose = FALSE)
@@ -67,7 +68,7 @@ extract_empirical_clusters(empirical_statistics, threshold = 3)
 \dontshow{
 JuliaConnectoR::stopJulia()
 }
-
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=compute_timewise_statistics]{compute_timewise_statistics()}}

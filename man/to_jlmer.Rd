@@ -33,6 +33,7 @@ A \code{jlmer_mod} object.
 Fit a Julia regression model using lme4 syntax
 }
 \examples{
+\dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
 jlmerclusterperm_setup(verbose = FALSE)
@@ -56,7 +57,7 @@ to_jlmer(weight ~ 1 + Diet + (1 | Chick), ChickWeight, REML = TRUE)
 \dontshow{
 JuliaConnectoR::stopJulia()
 }
-
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=jlmer]{jlmer()}}, \code{\link[=make_jlmer_spec]{make_jlmer_spec()}}
