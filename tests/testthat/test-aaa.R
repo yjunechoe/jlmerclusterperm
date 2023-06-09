@@ -6,12 +6,11 @@ test_that("Setup works", {
   expect_true(jlmerclusterperm_setup())
 })
 
-# test_that("Setup with seed works", {
-#   seed_opts <- options("jlmerclusterperm.nthreads" = 2)
-#   expect_true(jlmerclusterperm_setup(verbose = FALSE))
-#   expect_equal(JuliaConnectoR::juliaEval("Threads.nthreads()"), 2)
-#   options(seed_opts)
-# })
+test_that("Setup with seed works (use 2 for testing)", {
+  options("jlmerclusterperm.nthreads" = 2)
+  expect_true(jlmerclusterperm_setup(verbose = FALSE))
+  expect_equal(JuliaConnectoR::juliaEval("Threads.nthreads()"), 2)
+})
 #
 # test_that("Restart as default", {
 #   expect_true(jlmerclusterperm_setup(verbose = FALSE))
