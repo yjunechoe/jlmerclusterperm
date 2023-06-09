@@ -60,9 +60,13 @@ A list of \code{null_cluster_dists} and \code{empirical_clusters} with p-values
 Conduct a cluster-based permutation test
 }
 \examples{
-\dontrun{
+\dontshow{
+options("jlmerclusterperm.nthreads" = 2)
+jlmerclusterperm_setup(verbose = FALSE)
+julia_progress(show = FALSE)
+}
+\donttest{
 library(dplyr, warn.conflicts = FALSE)
-jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 # Specification object
 spec <- make_jlmer_spec(
@@ -82,6 +86,9 @@ sapply(CPA, class)
 # You can extract the individual components for further inspection
 CPA$null_cluster_dists
 CPA$empirical_clusters
+}
+\dontshow{
+JuliaConnectoR::stopJulia()
 }
 
 }

@@ -1,6 +1,6 @@
 skip_conditionally()
 
-jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+jlmerclusterperm_setup(verbose = FALSE)
 reset_rng_state()
 
 spec <- make_jlmer_spec(

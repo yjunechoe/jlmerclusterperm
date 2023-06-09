@@ -33,8 +33,13 @@ A \code{jlmer_mod} object.
 Fit a Julia regression model using lme4 syntax
 }
 \examples{
-\dontrun{
-jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+\dontshow{
+options("jlmerclusterperm.nthreads" = 2)
+jlmerclusterperm_setup(verbose = FALSE)
+julia_progress(show = FALSE)
+}
+\donttest{
+jlmerclusterperm_setup(verbose = FALSE)
 
 # Fitting a regression model with R formula syntax
 to_jlmer(weight ~ 1 + Diet, ChickWeight)
@@ -47,6 +52,9 @@ to_jlmer(weight ~ 1 + Diet + (1 | Chick), ChickWeight)
 
 # Passing MixedModels.jl fit options to the `...`
 to_jlmer(weight ~ 1 + Diet + (1 | Chick), ChickWeight, REML = TRUE)
+}
+\dontshow{
+JuliaConnectoR::stopJulia()
 }
 
 }

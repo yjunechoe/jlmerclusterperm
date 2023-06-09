@@ -20,9 +20,13 @@ is_setup <- function() isTRUE(.jlmerclusterperm$is_setup)
 #'   If `FALSE` and `jlmerclusterperm_setup()` has already been called, nothing happens.
 #' @param verbose Print progress and messages from Julia in the console
 #'
-#' @examples
-#' \dontrun{
-#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' \donttest{
+#' options("jlmerclusterperm.nthreads" = 2)
+#' jlmerclusterperm_setup(verbose = FALSE)
+#' }
+#' \dontshow{
+#' JuliaConnectoR::stopJulia()
 #' }
 #'
 #' @export

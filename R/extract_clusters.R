@@ -12,10 +12,14 @@
 #'
 #' @seealso [compute_timewise_statistics()]
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' \dontshow{
+#' options("jlmerclusterperm.nthreads" = 2)
+#' jlmerclusterperm_setup(verbose = FALSE)
+#' julia_progress(show = FALSE)
+#' }
+#' \donttest{
 #' library(dplyr, warn.conflicts = FALSE)
-#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
 #' # Specification object
 #' spec <- make_jlmer_spec(
@@ -38,6 +42,9 @@
 #'
 #' # A predictor can have zero or multiple clusters associated with it
 #' extract_empirical_clusters(empirical_statistics, threshold = 3)
+#' }
+#' \dontshow{
+#' JuliaConnectoR::stopJulia()
 #' }
 #'
 #' @return An `empirical_clusters` object.
@@ -70,10 +77,14 @@ extract_empirical_clusters <- function(empirical_statistics, threshold, binned =
 #'
 #' @seealso [permute_timewise_statistics()]
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' \dontshow{
+#' options("jlmerclusterperm.nthreads" = 2)
+#' jlmerclusterperm_setup(verbose = FALSE)
+#' julia_progress(show = FALSE)
+#' }
+#' \donttest{
 #' library(dplyr, warn.conflicts = FALSE)
-#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
 #' # Specification object
 #' spec <- make_jlmer_spec(
@@ -97,6 +108,9 @@ extract_empirical_clusters <- function(empirical_statistics, threshold, binned =
 #' # Changing the `threshold` value changes the shape of the null
 #' extract_null_cluster_dists(null_statistics, threshold = 1)
 #' extract_null_cluster_dists(null_statistics, threshold = 3)
+#' }
+#' \dontshow{
+#' JuliaConnectoR::stopJulia()
 #' }
 #'
 #' @return A `null_cluster_dists` object.

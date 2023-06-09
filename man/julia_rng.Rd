@@ -31,9 +31,12 @@ The current seed or counter
 Interface to the Julia RNG
 }
 \examples{
-\dontrun{
-jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
-
+\dontshow{
+options("jlmerclusterperm.nthreads" = 2)
+jlmerclusterperm_setup(verbose = FALSE)
+julia_progress(show = FALSE)
+}
+\donttest{
 # RNG initializes to seed=1 counter=0
 get_rng_seed()
 get_rng_state()
@@ -49,6 +52,9 @@ get_rng_seed()
 # restore to initial setting (seed=1, counter=0)
 set_rng_seed(1)
 set_rng_state(0)
+}
+\dontshow{
+JuliaConnectoR::stopJulia()
 }
 
 }

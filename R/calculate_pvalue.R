@@ -8,10 +8,14 @@
 #'
 #' @seealso [extract_empirical_clusters()], [extract_null_cluster_dists()]
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' \dontshow{
+#' options("jlmerclusterperm.nthreads" = 2)
+#' jlmerclusterperm_setup(verbose = FALSE)
+#' julia_progress(show = FALSE)
+#' }
+#' \donttest{
 #' library(dplyr, warn.conflicts = FALSE)
-#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
 #' # Specification object
 #' spec <- make_jlmer_spec(
@@ -48,6 +52,9 @@
 #' # Check for compatibility with `clusters_are_comparable()`
 #' clusters_are_comparable(empirical_clusters, null_cluster_dists)
 #' clusters_are_comparable(empirical_clusters2, null_cluster_dists)
+#' }
+#' \dontshow{
+#' JuliaConnectoR::stopJulia()
 #' }
 #'
 #' @export

@@ -26,9 +26,13 @@ A \code{null_cluster_dists} object.
 Construct a null distribution of cluster-mass statistics
 }
 \examples{
-\dontrun{
+\dontshow{
+options("jlmerclusterperm.nthreads" = 2)
+jlmerclusterperm_setup(verbose = FALSE)
+julia_progress(show = FALSE)
+}
+\donttest{
 library(dplyr, warn.conflicts = FALSE)
-jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 # Specification object
 spec <- make_jlmer_spec(
@@ -52,6 +56,9 @@ null_cluster_dists_df
 # Changing the `threshold` value changes the shape of the null
 extract_null_cluster_dists(null_statistics, threshold = 1)
 extract_null_cluster_dists(null_statistics, threshold = 3)
+}
+\dontshow{
+JuliaConnectoR::stopJulia()
 }
 
 }

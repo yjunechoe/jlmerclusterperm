@@ -1,6 +1,6 @@
 skip_conditionally()
 
-jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+jlmerclusterperm_setup(verbose = FALSE)
 
 #' @srrstats {G5.0} Uses the built-in `ChickWeight` dataset for tests
 spec <- make_jlmer_spec(

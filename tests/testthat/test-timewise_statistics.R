@@ -1,6 +1,6 @@
 skip_conditionally()
 
-jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+jlmerclusterperm_setup(verbose = FALSE)
 
 spec <- make_jlmer_spec(
   weight ~ 1 + Diet, subset(ChickWeight, Time <= 20),

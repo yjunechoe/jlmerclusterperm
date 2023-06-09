@@ -10,9 +10,14 @@
 #' @srrstats {RE1.0} Uses R formula interface
 #' @srrstats {RE4.0} `jlmer()` and `to_jlmer()` return pointers to Julia model objects.
 #'
-#' @examples
-#' \dontrun{
-#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' \dontshow{
+#' options("jlmerclusterperm.nthreads" = 2)
+#' jlmerclusterperm_setup(verbose = FALSE)
+#' julia_progress(show = FALSE)
+#' }
+#' \donttest{
+#' jlmerclusterperm_setup(verbose = FALSE)
 #'
 #' # Fitting a regression model with R formula syntax
 #' to_jlmer(weight ~ 1 + Diet, ChickWeight)
@@ -25,6 +30,9 @@
 #'
 #' # Passing MixedModels.jl fit options to the `...`
 #' to_jlmer(weight ~ 1 + Diet + (1 | Chick), ChickWeight, REML = TRUE)
+#' }
+#' \dontshow{
+#' JuliaConnectoR::stopJulia()
 #' }
 #'
 #' @return A `jlmer_mod` object.
@@ -45,9 +53,14 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_sp
 #'
 #' @srrstats {RE3.3} Convergence thresholds can be explicitly set by passing the appropriate argument to the `...` of functions that call GLM/MixedModels
 #'
-#' @examples
-#' \dontrun{
-#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' \dontshow{
+#' options("jlmerclusterperm.nthreads" = 2)
+#' jlmerclusterperm_setup(verbose = FALSE)
+#' julia_progress(show = FALSE)
+#' }
+#' \donttest{
+#' jlmerclusterperm_setup(verbose = FALSE)
 #'
 #' # Fitting a regression model with a specification object
 #' spec <- make_jlmer_spec(weight ~ 1 + Diet, ChickWeight)
@@ -55,6 +68,9 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_sp
 #'
 #' # `lm()` equivalent
 #' summary(lm(weight ~ 1 + Diet, ChickWeight))$coef
+#' }
+#' \dontshow{
+#' JuliaConnectoR::stopJulia()
 #' }
 #'
 #' @return A `jlmer_mod` object.

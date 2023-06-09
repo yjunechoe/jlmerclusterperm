@@ -18,9 +18,11 @@ Previous values for \code{show} and \code{width}
 Set/get options for Julia progress bar
 }
 \examples{
-\dontrun{
-jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
-
+\dontshow{
+options("jlmerclusterperm.nthreads" = 2)
+jlmerclusterperm_setup(verbose = FALSE)
+}
+\donttest{
 # Show current progress options
 julia_progress()
 
@@ -35,7 +37,9 @@ identical(julia_progress(), old_progress_opts)
 
 # Alternatively, reset to default settings using this syntax:
 julia_progress(show = TRUE, width = "auto")
-
+}
+\dontshow{
+JuliaConnectoR::stopJulia()
 }
 
 }

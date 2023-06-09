@@ -3,10 +3,12 @@
 #' @param show Whether to show the progress bar. You may also pass in a list of `"show"` and `"width"`.
 #' @param width Width of the progress bar. If `"auto"`, adjusts the progress bar width to fit the console.
 #'
-#' @examples
-#' \dontrun{
-#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
-#'
+#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' \dontshow{
+#' options("jlmerclusterperm.nthreads" = 2)
+#' jlmerclusterperm_setup(verbose = FALSE)
+#' }
+#' \donttest{
 #' # Show current progress options
 #' julia_progress()
 #'
@@ -21,7 +23,9 @@
 #'
 #' # Alternatively, reset to default settings using this syntax:
 #' julia_progress(show = TRUE, width = "auto")
-#'
+#' }
+#' \dontshow{
+#' JuliaConnectoR::stopJulia()
 #' }
 #'
 #' @return Previous values for `show` and `width`

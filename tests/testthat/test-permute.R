@@ -1,6 +1,6 @@
 skip_conditionally()
 
-jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+jlmerclusterperm_setup(verbose = FALSE)
 
 # Example 1
 chickweights_df <- ChickWeight

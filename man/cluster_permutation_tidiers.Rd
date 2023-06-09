@@ -25,9 +25,13 @@ A data frame
 Tidiers for cluster permutation test objects
 }
 \examples{
-\dontrun{
+\dontshow{
+options("jlmerclusterperm.nthreads" = 2)
+jlmerclusterperm_setup(verbose = FALSE)
+julia_progress(show = FALSE)
+}
+\donttest{
 library(dplyr, warn.conflicts = FALSE)
-jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 
 # Specification object
 spec <- make_jlmer_spec(
@@ -55,6 +59,9 @@ tidy(empirical_clusters)
 null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2)
 class(null_cluster_dists)
 tidy(null_cluster_dists)
+}
+\dontshow{
+JuliaConnectoR::stopJulia()
 }
 
 }

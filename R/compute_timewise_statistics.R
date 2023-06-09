@@ -13,10 +13,14 @@
 #' @srrstats {RE3.1} Convergence failures can be retrieved from function outputs, but users are encouraged to watch out for warnings and messages.
 #'  These can be suppressed via the `suppress*()` functions.
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' \dontshow{
+#' options("jlmerclusterperm.nthreads" = 2)
+#' jlmerclusterperm_setup(verbose = FALSE)
+#' julia_progress(show = FALSE)
+#' }
+#' \donttest{
 #' library(dplyr, warn.conflicts = FALSE)
-#' jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 #'
 #' # Specification object
 #' spec <- make_jlmer_spec(
@@ -40,6 +44,9 @@
 #' to_jlmer(weight ~ 1 + Diet, filter(ChickWeight, Time == 0)) %>%
 #'   tidy() %>%
 #'   select(term, statistic)
+#' }
+#' \dontshow{
+#' JuliaConnectoR::stopJulia()
 #' }
 #'
 #' @return A predictor-by-time matrix of cluster statistics, of class `timewise_statistics`.

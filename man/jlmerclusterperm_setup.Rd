@@ -21,8 +21,12 @@ TRUE
 Initial setup for the jlmerclusterperm package
 }
 \examples{
-\dontrun{
-jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+\donttest{
+options("jlmerclusterperm.nthreads" = 2)
+jlmerclusterperm_setup(verbose = FALSE)
+}
+\dontshow{
+JuliaConnectoR::stopJulia()
 }
 
 }
