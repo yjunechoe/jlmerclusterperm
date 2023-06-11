@@ -69,7 +69,7 @@ ts_data_agg <- ts_data |>
 # Data of trial-level fixations to target (0s and 1s)
 ts_data_trials <- ts_data %>%
   filter(!missing) %>%
-  mutate(target = as.integer(target)) %>% 
+  mutate(target = as.integer(target)) %>%
   select(subject_id, age, trial_id, time, target)
 ```
 
@@ -211,7 +211,7 @@ The output is explained more in the next section, but for presented purposes sim
 
 ```{r, echo = FALSE}
 cat(
-"## Summary of Clusters ======
+  "## Summary of Clusters ======
 ##   Cluster Direction SumStatistic StartTime EndTime Probability
 ## 1       1  Positive    74.723687       850    1550       0.051
 ## 2       2  Positive     6.905622      2725    2800       0.405
