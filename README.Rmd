@@ -143,7 +143,7 @@ Iterating over a range of threshold values:
 walk_threshold_steps(empirical_statistics, null_statistics, steps = c(2, 2.5, 3))
 ```
 
-## Acknowledgements
+## Acknowledgments
 
 - The paper [Maris & Oostenveld (2007)](https://doi.org/10.1016/j.jneumeth.2007.03.024) which originally proposed the cluster-based permutation analysis.
 

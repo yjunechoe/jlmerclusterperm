@@ -56,7 +56,7 @@ The basic idea behind this asynchronous CPA strategy is to start a background R 
 
 The `{future}` package allows such asynchronous evaluation of R code. It's a big package implementing a complex topic. You can read more about the project on the [futureverse](https://www.futureverse.org/) but we just show the bare minimum here.
 
-For more advanced users, note that we're use parallelization _only_ for its asynchronous properties (non-blocking evaluation of R code in a background process). It is not recommended to start _multiple R processes_ with each running a CPA because the Julia session is shared abd already multithreaded (if you can spare more cores, set that in `options("jlmerclusterperm.nthreads")` before calling `jlmerclusterperm_setup()`).
+For more advanced users, note that we're use parallelization _only_ for its asynchronous properties (non-blocking evaluation of R code in a background process). It is not recommended to start _multiple R processes_ with each running a CPA because the Julia session is shared and already multithreaded (if you can spare more cores, set that in `options("jlmerclusterperm.nthreads")` before calling `jlmerclusterperm_setup()`).
 
 Later updates to `jlmerclusterperm` may wrap this workflow in a more principled way, but for now this vignette serves as a minimally working example for asynchronously running a CPA.
 

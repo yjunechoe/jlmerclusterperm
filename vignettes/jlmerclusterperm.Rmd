@@ -42,7 +42,7 @@ The package [vignettes](https://yjunechoe.github.io/jlmerclusterperm/articles/) 
 
 In the order of increasing complexity, the **case studies** are:
 
-1) [Garrison et al. 2020](https://yjunechoe.github.io/jlmerclusterperm/articles/Garrison-et-al-2020.html), which introduces the package's functions for running a CPA, demonstrating both wholesale and piecemeal approachrs. It also compares the use of linear vs. logistic regression for the calculation of timewise statistics.
+1) [Garrison et al. 2020](https://yjunechoe.github.io/jlmerclusterperm/articles/Garrison-et-al-2020.html), which introduces the package's functions for running a CPA, demonstrating both wholesale and piecemeal approaches. It also compares the use of linear vs. logistic regression for the calculation of timewise statistics.
 
 2) [Geller et al. 2020](https://yjunechoe.github.io/jlmerclusterperm/articles/Geller-et-al-2020.html), which demonstrates the use of random effects and regression contrasts in the CPA specification. It also compares the use of t vs. chisq timewise statistics.
 
