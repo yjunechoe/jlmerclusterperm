@@ -41,12 +41,13 @@ Test the probability of cluster-mass statistics over a range of threshold values
 }
 \examples{
 \dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\donttest{
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
 jlmerclusterperm_setup(verbose = FALSE)
 julia_progress(show = FALSE)
 }
-\donttest{
+
 library(dplyr, warn.conflicts = FALSE)
 
 # Specification object
@@ -63,9 +64,10 @@ null_statistics <- permute_timewise_statistics(spec, nsim = 100)
 
 # Test cluster mass/probability under different threshold values
 walk_threshold_steps(empirical_statistics, null_statistics, steps = 1:3)
-}
+
 \dontshow{
 JuliaConnectoR::stopJulia()
+}
 }
 \dontshow{\}) # examplesIf}
 }

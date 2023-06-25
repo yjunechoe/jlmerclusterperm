@@ -28,12 +28,13 @@ Permute data while respecting grouping structure(s) of observations
 }
 \examples{
 \dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\donttest{
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
 jlmerclusterperm_setup(verbose = FALSE)
 julia_progress(show = FALSE)
 }
-\donttest{
+
 # Example data setup
 chickweights_df <- ChickWeight
 chickweights_df <- chickweights_df[chickweights_df$Time <= 20, ]
@@ -73,9 +74,10 @@ spec2_perm1 <- permute_by_predictor(chickweights_spec2, predictors = "Diet2")
 reset_rng_state()
 spec2_perm2 <- permute_by_predictor(chickweights_spec2, predictors = c("Diet2", "Diet3", "Diet4"))
 identical(spec2_perm1, spec2_perm2)
-}
+
 \dontshow{
 JuliaConnectoR::stopJulia()
+}
 }
 \dontshow{\}) # examplesIf}
 }

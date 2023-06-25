@@ -37,12 +37,13 @@ Simulate cluster-mass statistics via bootstrapped permutations
 }
 \examples{
 \dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\donttest{
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
 jlmerclusterperm_setup(verbose = FALSE)
 julia_progress(show = FALSE)
 }
-\donttest{
+
 library(dplyr, warn.conflicts = FALSE)
 
 # Specification object
@@ -69,9 +70,10 @@ identical(null_statistics, null_statistics2)
 get_rng_state()
 null_statistics3 <- permute_timewise_statistics(spec, nsim = 3)
 identical(null_statistics, null_statistics3)
-}
+
 \dontshow{
 JuliaConnectoR::stopJulia()
+}
 }
 \dontshow{\}) # examplesIf}
 }

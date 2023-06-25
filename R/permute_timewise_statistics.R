@@ -7,12 +7,13 @@
 #' @seealso [make_jlmer_spec()]
 #'
 #' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
 #' jlmerclusterperm_setup(verbose = FALSE)
 #' julia_progress(show = FALSE)
 #' }
-#' \donttest{
+#'
 #' library(dplyr, warn.conflicts = FALSE)
 #'
 #' # Specification object
@@ -39,9 +40,10 @@
 #' get_rng_state()
 #' null_statistics3 <- permute_timewise_statistics(spec, nsim = 3)
 #' identical(null_statistics, null_statistics3)
-#' }
+#'
 #' \dontshow{
 #' JuliaConnectoR::stopJulia()
+#' }
 #' }
 #'
 #' @return A simulation-by-time-by-predictor 3D array of cluster statistics, of class `timewise_statistics`.

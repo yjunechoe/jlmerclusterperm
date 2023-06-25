@@ -7,12 +7,13 @@
 #' @param progress Whether to display a progress bar
 #'
 #' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
 #' jlmerclusterperm_setup(verbose = FALSE)
 #' julia_progress(show = FALSE)
 #' }
-#' \donttest{
+#'
 #' library(dplyr, warn.conflicts = FALSE)
 #'
 #' # Specification object
@@ -29,9 +30,10 @@
 #'
 #' # Test cluster mass/probability under different threshold values
 #' walk_threshold_steps(empirical_statistics, null_statistics, steps = 1:3)
-#' }
+#'
 #' \dontshow{
 #' JuliaConnectoR::stopJulia()
+#' }
 #' }
 #'
 #' @return A data frame of predictor clusters-mass statistics by threshold.

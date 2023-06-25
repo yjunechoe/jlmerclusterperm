@@ -10,12 +10,13 @@
 #'  [calculate_clusters_pvalues()]
 #'
 #' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
 #' jlmerclusterperm_setup(verbose = FALSE)
 #' julia_progress(show = FALSE)
 #' }
-#' \donttest{
+#'
 #' library(dplyr, warn.conflicts = FALSE)
 #'
 #' # Specification object
@@ -36,9 +37,10 @@
 #' # You can extract the individual components for further inspection
 #' CPA$null_cluster_dists
 #' CPA$empirical_clusters
-#' }
+#'
 #' \dontshow{
 #' JuliaConnectoR::stopJulia()
+#' }
 #' }
 #'
 #' @export

@@ -11,12 +11,13 @@ generics::tidy
 #' @srrstats {RE4.2} Model coefficients via `tidy()`
 #'
 #' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
 #' jlmerclusterperm_setup(verbose = FALSE)
 #' julia_progress(show = FALSE)
 #' }
-#' \donttest{
+#'
 #' # Fixed-effects only model
 #' mod1 <- to_jlmer(weight ~ 1 + Diet, ChickWeight)
 #' tidy(mod1)
@@ -30,9 +31,10 @@ generics::tidy
 #' # Select which of fixed/random effects to return
 #' tidy(mod2, effects = "fixed")
 #' tidy(mod2, effects = "ran_pars")
-#' }
+#'
 #' \dontshow{
 #' JuliaConnectoR::stopJulia()
+#' }
 #' }
 #'
 #' @name julia_model_tidiers
@@ -94,12 +96,13 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
 #' @param ... Unused
 #'
 #' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
 #' jlmerclusterperm_setup(verbose = FALSE)
 #' julia_progress(show = FALSE)
 #' }
-#' \donttest{
+#'
 #' library(dplyr, warn.conflicts = FALSE)
 #'
 #' # Specification object
@@ -128,9 +131,10 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
 #' null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2)
 #' class(null_cluster_dists)
 #' tidy(null_cluster_dists)
-#' }
+#'
 #' \dontshow{
 #' JuliaConnectoR::stopJulia()
+#' }
 #' }
 #'
 #' @name cluster_permutation_tidiers

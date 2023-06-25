@@ -27,12 +27,13 @@ Construct a null distribution of cluster-mass statistics
 }
 \examples{
 \dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\donttest{
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
 jlmerclusterperm_setup(verbose = FALSE)
 julia_progress(show = FALSE)
 }
-\donttest{
+
 library(dplyr, warn.conflicts = FALSE)
 
 # Specification object
@@ -57,9 +58,10 @@ null_cluster_dists_df
 # Changing the `threshold` value changes the shape of the null
 extract_null_cluster_dists(null_statistics, threshold = 1)
 extract_null_cluster_dists(null_statistics, threshold = 3)
-}
+
 \dontshow{
 JuliaConnectoR::stopJulia()
+}
 }
 \dontshow{\}) # examplesIf}
 }

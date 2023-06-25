@@ -32,12 +32,13 @@ Calculate bootstrapped p-values of cluster-mass statistics
 }
 \examples{
 \dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\donttest{
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
 jlmerclusterperm_setup(verbose = FALSE)
 julia_progress(show = FALSE)
 }
-\donttest{
+
 library(dplyr, warn.conflicts = FALSE)
 
 # Specification object
@@ -75,9 +76,10 @@ empirical_clusters2 <- extract_empirical_clusters(empirical_statistics, threshol
 # Check for compatibility with `clusters_are_comparable()`
 clusters_are_comparable(empirical_clusters, null_cluster_dists)
 clusters_are_comparable(empirical_clusters2, null_cluster_dists)
-}
+
 \dontshow{
 JuliaConnectoR::stopJulia()
+}
 }
 \dontshow{\}) # examplesIf}
 }

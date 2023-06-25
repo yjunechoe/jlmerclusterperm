@@ -26,12 +26,13 @@ Tidiers for cluster permutation test objects
 }
 \examples{
 \dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\donttest{
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
 jlmerclusterperm_setup(verbose = FALSE)
 julia_progress(show = FALSE)
 }
-\donttest{
+
 library(dplyr, warn.conflicts = FALSE)
 
 # Specification object
@@ -60,9 +61,10 @@ tidy(empirical_clusters)
 null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2)
 class(null_cluster_dists)
 tidy(null_cluster_dists)
-}
+
 \dontshow{
 JuliaConnectoR::stopJulia()
+}
 }
 \dontshow{\}) # examplesIf}
 }

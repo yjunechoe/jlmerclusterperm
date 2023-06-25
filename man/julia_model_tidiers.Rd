@@ -25,12 +25,13 @@ Tidier methods for Julia regression models
 }
 \examples{
 \dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\donttest{
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
 jlmerclusterperm_setup(verbose = FALSE)
 julia_progress(show = FALSE)
 }
-\donttest{
+
 # Fixed-effects only model
 mod1 <- to_jlmer(weight ~ 1 + Diet, ChickWeight)
 tidy(mod1)
@@ -44,9 +45,10 @@ glance(mod2)
 # Select which of fixed/random effects to return
 tidy(mod2, effects = "fixed")
 tidy(mod2, effects = "ran_pars")
-}
+
 \dontshow{
 JuliaConnectoR::stopJulia()
+}
 }
 \dontshow{\}) # examplesIf}
 }

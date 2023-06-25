@@ -24,9 +24,10 @@ is_setup <- function() isTRUE(.jlmerclusterperm$is_setup)
 #' \donttest{
 #' options("jlmerclusterperm.nthreads" = 2)
 #' jlmerclusterperm_setup(verbose = FALSE)
-#' }
+#'
 #' \dontshow{
 #' JuliaConnectoR::stopJulia()
+#' }
 #' }
 #'
 #' @export

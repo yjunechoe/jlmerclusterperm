@@ -9,12 +9,13 @@
 #' @seealso [extract_empirical_clusters()], [extract_null_cluster_dists()]
 #'
 #' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
 #' jlmerclusterperm_setup(verbose = FALSE)
 #' julia_progress(show = FALSE)
 #' }
-#' \donttest{
+#'
 #' library(dplyr, warn.conflicts = FALSE)
 #'
 #' # Specification object
@@ -52,9 +53,10 @@
 #' # Check for compatibility with `clusters_are_comparable()`
 #' clusters_are_comparable(empirical_clusters, null_cluster_dists)
 #' clusters_are_comparable(empirical_clusters2, null_cluster_dists)
-#' }
+#'
 #' \dontshow{
 #' JuliaConnectoR::stopJulia()
+#' }
 #' }
 #'
 #' @export

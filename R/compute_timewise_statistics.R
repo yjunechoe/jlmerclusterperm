@@ -14,12 +14,13 @@
 #'  These can be suppressed via the `suppress*()` functions.
 #'
 #' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
 #' jlmerclusterperm_setup(verbose = FALSE)
 #' julia_progress(show = FALSE)
 #' }
-#' \donttest{
+#'
 #' library(dplyr, warn.conflicts = FALSE)
 #'
 #' # Specification object
@@ -44,9 +45,10 @@
 #' to_jlmer(weight ~ 1 + Diet, filter(ChickWeight, Time == 0)) %>%
 #'   tidy() %>%
 #'   select(term, statistic)
-#' }
+#'
 #' \dontshow{
 #' JuliaConnectoR::stopJulia()
+#' }
 #' }
 #'
 #' @return A predictor-by-time matrix of cluster statistics, of class `timewise_statistics`.

@@ -6,12 +6,13 @@
 #' @param n Number of permuted samples of the data to generate. Defaults to `1L`.
 #'
 #' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
 #' jlmerclusterperm_setup(verbose = FALSE)
 #' julia_progress(show = FALSE)
 #' }
-#' \donttest{
+#'
 #' # Example data setup
 #' chickweights_df <- ChickWeight
 #' chickweights_df <- chickweights_df[chickweights_df$Time <= 20, ]
@@ -51,9 +52,10 @@
 #' reset_rng_state()
 #' spec2_perm2 <- permute_by_predictor(chickweights_spec2, predictors = c("Diet2", "Diet3", "Diet4"))
 #' identical(spec2_perm1, spec2_perm2)
-#' }
+#'
 #' \dontshow{
 #' JuliaConnectoR::stopJulia()
+#' }
 #' }
 #'
 #' @return A long dataframe of permuted re-samples with `.id` column representing replication IDs.
