@@ -23,12 +23,13 @@ Fit a Julia regression model using jlmer specifications
 }
 \examples{
 \dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\donttest{
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
 jlmerclusterperm_setup(verbose = FALSE)
 julia_progress(show = FALSE)
 }
-\donttest{
+
 jlmerclusterperm_setup(verbose = FALSE)
 
 # Fitting a regression model with a specification object
@@ -37,9 +38,10 @@ jlmer(spec)
 
 # `lm()` equivalent
 summary(lm(weight ~ 1 + Diet, ChickWeight))$coef
-}
+
 \dontshow{
 JuliaConnectoR::stopJulia()
+}
 }
 \dontshow{\}) # examplesIf}
 }

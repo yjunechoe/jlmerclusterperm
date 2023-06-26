@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# jlmerclusterperm <a href="https://yjunechoe.github.io/jlmerclusterperm/"><img src="man/figures/logo.png" align="right" height="200" /></a>
+# jlmerclusterperm <a href="https://yjunechoe.github.io/jlmerclusterperm/"><img src="man/figures/logo.png" align="right" height="150" /></a>
 
 <!-- badges: start -->
 
@@ -18,15 +18,15 @@ coverage](https://codecov.io/gh/yjunechoe/jlmerclusterperm/branch/main/graph/bad
 
 Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and
 [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) based
-implementation of cluster-based permutation analysis for time series
-data, powered by
+implementation of cluster-based permutation test for time series data,
+powered by
 [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR).
 
 ![](man/figures/clusterpermute_slice.png)
 
 ## Installation and usage
 
-You can install the development version of jlmerclusterperm from
+You can install the development version of `jlmerclusterperm` from
 [GitHub](https://github.com/yjunechoe/jlmerclusterperm) with:
 
 ``` r
@@ -34,8 +34,8 @@ You can install the development version of jlmerclusterperm from
 remotes::install_github("yjunechoe/jlmerclusterperm")
 ```
 
-Using `jlmerclusterperm` requires a prior installation of Julia, which
-can be downloaded from either the [official
+Using `jlmerclusterperm` requires a prior installation of the Julia
+programming language, which can be downloaded from either the [official
 website](https://julialang.org/) or using the command line utility
 [juliaup](https://github.com/JuliaLang/juliaup). Julia version \>=1.8 is
 required and
@@ -57,7 +57,7 @@ functions from the package.
 library(jlmerclusterperm)
 system.time(jlmerclusterperm_setup(verbose = FALSE))
 #>    user  system elapsed 
-#>    0.00    0.01   21.60
+#>    0.02    0.01   15.99
 ```
 
 See the [Get
@@ -245,7 +245,7 @@ walk_threshold_steps(empirical_statistics, null_statistics, steps = c(2, 2.5, 3)
 #> 41       3.0     Diet4  1     2   7      6     29.659402 0.00990099
 ```
 
-## Acknowledgements
+## Acknowledgments
 
 - The paper [Maris & Oostenveld
   (2007)](https://doi.org/10.1016/j.jneumeth.2007.03.024) which
