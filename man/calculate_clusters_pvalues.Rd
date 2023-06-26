@@ -70,8 +70,8 @@ clusterpermute(spec, threshold = 2, nsim = 100, progress = FALSE)
 
 # The empirical clusters and the null cluster-mass distribution must be comparable
 empirical_clusters2 <- extract_empirical_clusters(empirical_statistics, threshold = 3)
-# Below code (not run) errors because thresholds are different (2 vs. 3)
-# calculate_clusters_pvalues(empirical_clusters2, null_cluster_dists)
+# For example, below code errors because thresholds are different (2 vs. 3)
+try( calculate_clusters_pvalues(empirical_clusters2, null_cluster_dists) )
 
 # Check for compatibility with `clusters_are_comparable()`
 clusters_are_comparable(empirical_clusters, null_cluster_dists)
