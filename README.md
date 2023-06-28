@@ -25,7 +25,7 @@ powered by
 
 ## Installation and usage
 
-Install the released version of usethis from CRAN:
+Install the released version of jlmerclusterperm from CRAN:
 
 ``` r
 install.packages("jlmerclusterperm")

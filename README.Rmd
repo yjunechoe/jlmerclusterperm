@@ -29,7 +29,7 @@ Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https:
 
 ## Installation and usage
 
-Install the released version of usethis from CRAN:
+Install the released version of jlmerclusterperm from CRAN:
 
 ```{r, eval = FALSE}
 install.packages("jlmerclusterperm")
