@@ -1,3 +1,11 @@
+# jlmerclusterperm 1.0.1
+
+`jlmerclusterperm_setup()` now exits early if Julia version requirement (>=1.8) is not met.
+
+Fixes for CRAN:
+
+- Check Julia version requirement before proceeding to examples and tests
+
 # jlmerclusterperm 1.0.0
 
 ### Breaking changes
