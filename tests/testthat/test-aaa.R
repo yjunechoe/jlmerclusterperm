@@ -8,7 +8,7 @@ skip_conditionally()
 
 test_that("Setup with seed works (use 2 for testing)", {
   options("jlmerclusterperm.nthreads" = 2)
-  expect_true(jlmerclusterperm_setup(verbose = FALSE))
+  expect_true(jlmerclusterperm_setup())
   expect_equal(JuliaConnectoR::juliaEval("Threads.nthreads()"), 2)
 })
 #
