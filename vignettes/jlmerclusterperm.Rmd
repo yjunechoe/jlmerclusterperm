@@ -66,11 +66,11 @@ Compared to existing implementations, `jlmerclusterperm` is the only package opt
 
 ## Further readings
 
-- The original method paper for CPA by [Maris & Oostenveld 2007](https://doi.org/10.1016/j.jneumeth.2007.03.024).
+- The original method paper for CPA by [Maris & Oostenveld 2007](https://doi.org/10.1016/j.jneumeth.2007.03.024) and a more recent overview paper by [Meyer et al. 2021](https://doi-org.proxy.library.upenn.edu/10.1016/j.dcn.2021.101036) (on CPA for EEG research, but applies more broadly)
 
-- A more recent paper [Sassenhagen & Draschkow 2019](https://doi.org/10.1111/psyp.13335) on the DOs and DON'Ts of of interpreting and reporting CPA results.
+- A critical paper [Sassenhagen & Draschkow 2019](https://doi.org/10.1111/psyp.13335) on the DOs and DON'Ts of of interpreting and reporting CPA results.
 
-- A review paper for eyetracking analysis methods [Ito & Knoeferle 2022](https://doi.org/10.3758/s13428-022-01969-3) which compares CPA to other statistical techniques for testing difference between groups in time series data.
+- A review paper on eyetracking analysis methods [Ito & Knoeferle 2022](https://doi.org/10.3758/s13428-022-01969-3) which compares CPA to other statistical techniques for testing difference between groups in time series data.
 
 - The JOSS paper for the [permuco](https://jaromilfrossard.github.io/permuco/) package ([Frossard & Renaud 2021](https://www.jstatsoft.org/article/view/v099i15)) and references therein.
 

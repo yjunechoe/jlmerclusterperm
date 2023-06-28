@@ -10,7 +10,7 @@ Description: An implementation of fast cluster-based permutation analysis
     mixed-effects) regression models for the calculation of timewise
     statistics. Provides both a wholesale and a piecemeal interface to the
     CPA procedure with an emphasis on interpretability and diagnostics.
-    Integrates 'Julia' libraries 'MixedModels.JL' and 'GLM.JL' for
+    Integrates 'Julia' libraries 'MixedModels.jl' and 'GLM.jl' for
     performance improvements, with additional functionalities for
     interfacing with 'Julia' from 'R' powered by the 'JuliaConnectoR'
     package.

@@ -5,9 +5,8 @@
 
 <!-- badges: start -->
 
-[![Project Status: Active – The project has reached a stable, usable
-state and is being actively
-developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/jlmerclusterperm)](https://CRAN.R-project.org/package=jlmerclusterperm)
 [![Development
 Version](https://img.shields.io/badge/devel%20version-1.0.0-check.svg)](https://github.com/yjunechoe/jlmerclusterperm)
 [![R-CMD-check](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml)
@@ -26,8 +25,15 @@ powered by
 
 ## Installation and usage
 
-You can install the development version of `jlmerclusterperm` from
-[GitHub](https://github.com/yjunechoe/jlmerclusterperm) with:
+Install the released version of usethis from CRAN:
+
+``` r
+install.packages("jlmerclusterperm")
+```
+
+Or install the development version from
+[GitHub](%5BGitHub%5D(https://github.com/yjunechoe/jlmerclusterperm))
+with:
 
 ``` r
 # install.packages("remotes")
@@ -55,9 +61,7 @@ functions from the package.
 ``` r
 # Both lines must be run at the start of each new session
 library(jlmerclusterperm)
-system.time(jlmerclusterperm_setup(verbose = FALSE))
-#>    user  system elapsed 
-#>    0.02    0.01   15.99
+jlmerclusterperm_setup()
 ```
 
 See the [Get
@@ -83,7 +87,7 @@ matplot(
 
 <img src="man/figures/README-chickweight-1.png" width="75%" />
 
-Preparing a specification object:
+Preparing a specification object with `make_jlmer_spec()`:
 
 ``` r
 chickweights_spec <- make_jlmer_spec(
@@ -109,7 +113,7 @@ chickweights_spec
 #> ────────────────────────────────────────────────────────────────────────────────
 ```
 
-Cluster-based permutation test:
+Cluster-based permutation test with `clusterpermute()`:
 
 ``` r
 set_rng_state(123L)
@@ -143,7 +147,7 @@ clusterpermute(
 #> ────────────────────────────────────────────────────────────────────────────────
 ```
 
-With random effects:
+Including random effects:
 
 ``` r
 chickweights_re_spec <- make_jlmer_spec(
@@ -262,3 +266,34 @@ walk_threshold_steps(empirical_statistics, null_statistics, steps = c(2, 2.5, 3)
   ([permuco](https://jaromilfrossard.github.io/permuco/),
   [permutes](https://github.com/cvoeten/permutes), etc.) whose designs
   inspired the CPA interface in jlmerclusterperm.
+
+## Citations
+
+If you use jlmerclusterperm for cluster-based permutation test with
+mixed-effects models in your research, please cite one (or more) of the
+following as you see fit.
+
+To cite jlmerclusterperm:
+
+- Choe, J. (2023). jlmerclusterperm: Cluster-Based Permutation Analysis
+  for Densely Sampled Time Data. R package version 1.0.0.
+  <https://cran.r-project.org/package=jlmerclusterperm>.
+
+To cite the cluster-based permutation test:
+
+- Maris, E., & Oostenveld, R. (2007). Nonparametric statistical testing
+  of EEG- and MEG-data. *Journal of Neuroscience Methods, 164*, 177–190.
+  doi: 10.1016/j.jneumeth.2007.03.024.
+
+To cite the Julia programming language:
+
+- Bezanson, J., Edelman, A., Karpinski, S., & Shah, V. B. (2017). Julia:
+  A Fresh Approach to Numerical Computing. *SIAM Review, 59*(1), 65–98.
+  doi: 10.1137/141000671.
+
+To cite the MixedModels.jl Julia library (this example uses v4.14.1
+released in 2023):
+
+- Bates, D., Alday, P., Kleinschmidt, D., Calderón, J. B. S., Zhan, L.,
+  Noack, A., et al. (2023). *JuliaStats/MixedModels.jl: V4.14.1*.
+  Zenodo. doi: 10.5281/zenodo.596435.
