@@ -36,7 +36,7 @@ A simulation-by-time-by-predictor 3D array of cluster statistics, of class \code
 Simulate cluster-mass statistics via bootstrapped permutations
 }
 \examples{
-\dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (julia_setup_ok()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \donttest{
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)

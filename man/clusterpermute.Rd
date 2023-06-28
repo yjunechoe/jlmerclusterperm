@@ -60,7 +60,7 @@ A list of \code{null_cluster_dists} and \code{empirical_clusters} with p-values
 Conduct a cluster-based permutation test
 }
 \examples{
-\dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (julia_setup_ok()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \donttest{
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)

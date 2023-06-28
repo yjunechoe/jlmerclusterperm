@@ -6,7 +6,7 @@
 #'
 #' @seealso [make_jlmer_spec()]
 #'
-#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' @examplesIf julia_setup_ok()
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)

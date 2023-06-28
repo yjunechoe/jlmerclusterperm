@@ -40,7 +40,7 @@ A data frame of predictor clusters-mass statistics by threshold.
 Test the probability of cluster-mass statistics over a range of threshold values
 }
 \examples{
-\dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (julia_setup_ok()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \donttest{
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)

@@ -13,7 +13,7 @@
 #' @srrstats {RE3.1} Convergence failures can be retrieved from function outputs, but users are encouraged to watch out for warnings and messages.
 #'  These can be suppressed via the `suppress*()` functions.
 #'
-#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' @examplesIf julia_setup_ok()
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)

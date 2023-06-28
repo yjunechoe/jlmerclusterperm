@@ -32,8 +32,7 @@ install.packages("jlmerclusterperm")
 ```
 
 Or install the development version from
-[GitHub](%5BGitHub%5D(https://github.com/yjunechoe/jlmerclusterperm))
-with:
+[GitHub](https://github.com/yjunechoe/jlmerclusterperm) with:
 
 ``` r
 # install.packages("remotes")

@@ -11,7 +11,20 @@
   span.fm = list()
 )
 
+# Helpers
+julia_version_compatible <- function() {
+  julia_version <- gsub("julia version ", "", system2("julia", "--version", stdout = TRUE))
+  as.package_version(julia_version) >= 1.8
+}
 is_setup <- function() isTRUE(.jlmerclusterperm$is_setup)
+
+#' Check Julia setup for jlmerclusterperm
+#'
+#' @return Boolean
+#' @export
+julia_setup_ok <- function() {
+  JuliaConnectoR::juliaSetupOk() && julia_version_compatible()
+}
 
 #' Initial setup for the jlmerclusterperm package
 #'
@@ -20,7 +33,7 @@ is_setup <- function() isTRUE(.jlmerclusterperm$is_setup)
 #'   If `FALSE` and `jlmerclusterperm_setup()` has already been called, nothing happens.
 #' @param verbose Print progress and messages from Julia in the console
 #'
-#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' @examplesIf julia_setup_ok()
 #' \donttest{
 #' options("jlmerclusterperm.nthreads" = 2)
 #' jlmerclusterperm_setup(verbose = FALSE)
@@ -33,7 +46,8 @@ is_setup <- function() isTRUE(.jlmerclusterperm$is_setup)
 #' @export
 #' @return TRUE
 jlmerclusterperm_setup <- function(..., restart = TRUE, verbose = TRUE) {
-  if (!JuliaConnectoR::juliaSetupOk()) cli::cli_abort("Cannot set up Julia for {.pkg jlmerclusterperm}.")
+  if (!JuliaConnectoR::juliaSetupOk()) cli::cli_abort("No Julia installation detected.")
+  if (!julia_version_compatible()) cli::cli_abort("Julia version >=1.8 required.")
   if (restart || !is_setup()) {
     JuliaConnectoR::stopJulia()
     setup_with_progress(verbose = verbose)

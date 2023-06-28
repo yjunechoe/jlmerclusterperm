@@ -26,7 +26,7 @@ A \code{null_cluster_dists} object.
 Construct a null distribution of cluster-mass statistics
 }
 \examples{
-\dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (julia_setup_ok()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \donttest{
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)

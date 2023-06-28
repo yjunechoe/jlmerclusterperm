@@ -10,7 +10,7 @@ generics::tidy
 #'
 #' @srrstats {RE4.2} Model coefficients via `tidy()`
 #'
-#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' @examplesIf julia_setup_ok()
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
@@ -95,7 +95,7 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
 #' @param x An object of class `<timewise_statistics>`, `<empirical_clusters>`, or `<null_cluster_dists>`
 #' @param ... Unused
 #'
-#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' @examplesIf julia_setup_ok()
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)

@@ -5,7 +5,7 @@
 #' @param predictor_type Whether the predictor is `"between_participant"` or `"within_participant"`. Defaults to `"guess"`.
 #' @param n Number of permuted samples of the data to generate. Defaults to `1L`.
 #'
-#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' @examplesIf julia_setup_ok()
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)

@@ -35,7 +35,7 @@ Install the released version of jlmerclusterperm from CRAN:
 install.packages("jlmerclusterperm")
 ```
 
-Or install the development version from [GitHub]([GitHub](https://github.com/yjunechoe/jlmerclusterperm)) with:
+Or install the development version from [GitHub](https://github.com/yjunechoe/jlmerclusterperm) with:
 
 ```{r, eval = FALSE}
 # install.packages("remotes")

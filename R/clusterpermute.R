@@ -9,7 +9,7 @@
 #'  [extract_empirical_clusters()], [extract_null_cluster_dists()],
 #'  [calculate_clusters_pvalues()]
 #'
-#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' @examplesIf julia_setup_ok()
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)

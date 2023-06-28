@@ -3,7 +3,7 @@
 #' @param show Whether to show the progress bar. You may also pass in a list of `"show"` and `"width"`.
 #' @param width Width of the progress bar. If `"auto"`, adjusts the progress bar width to fit the console.
 #'
-#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' @examplesIf julia_setup_ok()
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)

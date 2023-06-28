@@ -18,7 +18,7 @@ Previous values for \code{show} and \code{width}
 Set/get options for Julia progress bar
 }
 \examples{
-\dontshow{if (JuliaConnectoR::juliaSetupOk()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (julia_setup_ok()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \donttest{
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)

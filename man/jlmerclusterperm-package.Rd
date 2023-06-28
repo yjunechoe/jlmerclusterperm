@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-An implementation of fast cluster-based permutation analysis (CPA) for densely-sampled time data developed in Maris & Oostenveld, 2007 \doi{10.1016/j.jneumeth.2007.03.024}. Supports (generalized, mixed-effects) regression models for the calculation of timewise statistics. Provides both a wholesale and a piecemeal interface to the CPA procedure with an emphasis on interpretability and diagnostics. Integrates 'Julia' libraries 'MixedModels.JL' and 'GLM.JL' for performance improvements, with additional functionalities for interfacing with 'Julia' from 'R' powered by the 'JuliaConnectoR' package.
+An implementation of fast cluster-based permutation analysis (CPA) for densely-sampled time data developed in Maris & Oostenveld, 2007 \doi{10.1016/j.jneumeth.2007.03.024}. Supports (generalized, mixed-effects) regression models for the calculation of timewise statistics. Provides both a wholesale and a piecemeal interface to the CPA procedure with an emphasis on interpretability and diagnostics. Integrates 'Julia' libraries 'MixedModels.jl' and 'GLM.jl' for performance improvements, with additional functionalities for interfacing with 'Julia' from 'R' powered by the 'JuliaConnectoR' package.
 }
 \seealso{
 Useful links:

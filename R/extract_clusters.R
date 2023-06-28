@@ -12,7 +12,7 @@
 #'
 #' @seealso [compute_timewise_statistics()]
 #'
-#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' @examplesIf julia_setup_ok()
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
@@ -79,7 +79,7 @@ extract_empirical_clusters <- function(empirical_statistics, threshold, binned =
 #'
 #' @seealso [permute_timewise_statistics()]
 #'
-#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' @examplesIf julia_setup_ok()
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)

@@ -6,7 +6,7 @@
 #' @inheritParams calculate_clusters_pvalues
 #' @param progress Whether to display a progress bar
 #'
-#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' @examplesIf julia_setup_ok()
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)

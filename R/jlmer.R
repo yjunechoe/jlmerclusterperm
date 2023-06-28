@@ -10,7 +10,7 @@
 #' @srrstats {RE1.0} Uses R formula interface
 #' @srrstats {RE4.0} `jlmer()` and `to_jlmer()` return pointers to Julia model objects.
 #'
-#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' @examplesIf julia_setup_ok()
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
@@ -55,7 +55,7 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_sp
 #'
 #' @srrstats {RE3.3} Convergence thresholds can be explicitly set by passing the appropriate argument to the `...` of functions that call GLM/MixedModels
 #'
-#' @examplesIf JuliaConnectoR::juliaSetupOk()
+#' @examplesIf julia_setup_ok()
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
