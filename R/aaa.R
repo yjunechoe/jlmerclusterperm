@@ -22,6 +22,8 @@ is_setup <- function() isTRUE(.jlmerclusterperm$is_setup)
 #'
 #' @return Boolean
 #' @export
+#' @examples
+#' julia_setup_ok()
 julia_setup_ok <- function() {
   JuliaConnectoR::juliaSetupOk() && julia_version_compatible()
 }
