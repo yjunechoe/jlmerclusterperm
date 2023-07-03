@@ -16,9 +16,17 @@ template:
 
 reference:
 
-- title: Interface to Julia regression modelling
+- title: Julia setup
+  desc: >
+    Start a Julia session set up for jlmerclusterperm
   contents:
+  - julia_setup_ok
   - jlmerclusterperm_setup
+
+- title: Interface to Julia regression modelling
+  desc: >
+    Making and using the <jlmer_spec> object for model fitting in Julia
+  contents:
   - make_jlmer_spec
   - jlmer
   - to_jlmer
@@ -26,20 +34,20 @@ reference:
 - title: Cluster-based permutation analysis
 - subtitle: Empirical clusters
   desc: >
-    Detect empirical clusters from the observed timeseries data using regression models
+    Detect empirical clusters from the observed data using timewise regression models
   contents:
   - compute_timewise_statistics
   - extract_empirical_clusters
 - subtitle: Null distribution
   desc: >
-    Construct a null distribution of cluster-mass statistics via bootstrapped permutations
+    Construct a null distribution of cluster-mass statistics via bootstrapped permutation
   contents:
   - permute_by_predictor
   - permute_timewise_statistics
   - extract_null_cluster_dists
 - subtitle: Significance test
   desc: >
-    Test the probability of the observed cluster-mass statistic vs. the null distribution
+    Test the probability of the observed cluster-mass statistic vs. null distribution
   contents:
   - calculate_clusters_pvalues
   - walk_threshold_steps
@@ -55,6 +63,8 @@ reference:
   - julia_model_tidiers
 
 - title: Interop utilities
+  desc: >
+    Set and get Julia options from R
   contents:
   - julia_rng
   - julia_progress

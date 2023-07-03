@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">jlmerclusterperm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,9 +62,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="interface-to-julia-regression-modelling">Interface to Julia regression modelling<a class="anchor" aria-label="anchor" href="#interface-to-julia-regression-modelling"></a></h2>
+      <h2 id="julia-setup">Julia setup<a class="anchor" aria-label="anchor" href="#julia-setup"></a></h2>
       
-      
+      <p class="section-desc"></p><p>Start a Julia session set up for jlmerclusterperm</p>
 
       
     </div><div id="" class="section level2">
@@ -74,10 +74,26 @@
 
       <dl><dt>
           
+          <code><a href="julia_setup_ok.html">julia_setup_ok()</a></code> 
+        </dt>
+        <dd>Check Julia setup for jlmerclusterperm</dd>
+      </dl><dl><dt>
+          
           <code><a href="jlmerclusterperm_setup.html">jlmerclusterperm_setup()</a></code> 
         </dt>
         <dd>Initial setup for the jlmerclusterperm package</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="interface-to-julia-regression-modelling">Interface to Julia regression modelling<a class="anchor" aria-label="anchor" href="#interface-to-julia-regression-modelling"></a></h2>
+      
+      <p class="section-desc"></p><p>Making and using the <jlmer_spec> object for model fitting in Julia</jlmer_spec></p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
           <code><a href="make_jlmer_spec.html">make_jlmer_spec()</a></code> 
         </dt>
@@ -101,7 +117,7 @@
     </div><div class="section level2">
       
       <h3 id="empirical-clusters">Empirical clusters<a class="anchor" aria-label="anchor" href="#empirical-clusters"></a></h3>
-      <p class="section-desc"></p><p>Detect empirical clusters from the observed timeseries data using regression models</p>
+      <p class="section-desc"></p><p>Detect empirical clusters from the observed data using timewise regression models</p>
 
       
     </div><div id="" class="section level2">
@@ -122,7 +138,7 @@
       </dl></div><div class="section level2">
       
       <h3 id="null-distribution">Null distribution<a class="anchor" aria-label="anchor" href="#null-distribution"></a></h3>
-      <p class="section-desc"></p><p>Construct a null distribution of cluster-mass statistics via bootstrapped permutations</p>
+      <p class="section-desc"></p><p>Construct a null distribution of cluster-mass statistics via bootstrapped permutation</p>
 
       
     </div><div id="" class="section level2">
@@ -148,7 +164,7 @@
       </dl></div><div class="section level2">
       
       <h3 id="significance-test">Significance test<a class="anchor" aria-label="anchor" href="#significance-test"></a></h3>
-      <p class="section-desc"></p><p>Test the probability of the observed cluster-mass statistic vs. the null distribution</p>
+      <p class="section-desc"></p><p>Test the probability of the observed cluster-mass statistic vs. null distribution</p>
 
       
     </div><div id="" class="section level2">
@@ -206,7 +222,7 @@
       </dl></div><div class="section level2">
       <h2 id="interop-utilities">Interop utilities<a class="anchor" aria-label="anchor" href="#interop-utilities"></a></h2>
       
-      
+      <p class="section-desc"></p><p>Set and get Julia options from R</p>
 
       
     </div><div id="" class="section level2">

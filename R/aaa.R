@@ -18,7 +18,7 @@ julia_version_compatible <- function() {
 }
 is_setup <- function() isTRUE(.jlmerclusterperm$is_setup)
 
-#' Check Julia setup for jlmerclusterperm
+#' Check Julia setup requirements for jlmerclusterperm
 #'
 #' @return Boolean
 #' @export
