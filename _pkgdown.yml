@@ -25,7 +25,7 @@ reference:
 
 - title: Interface to Julia regression modelling
   desc: >
-    Making and using the <jlmer_spec> object for model fitting in Julia
+    Making a jlmer_spec object and fitting models in Julia
   contents:
   - make_jlmer_spec
   - jlmer
