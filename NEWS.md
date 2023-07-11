@@ -1,3 +1,9 @@
+# jlmerclusterperm 1.0.2
+
+### Bug fixes
+
+- `jlmerclusterperm_setup()` now works for rc and alpha builds of Julia
+
 # jlmerclusterperm 1.0.1
 
 `jlmerclusterperm_setup()` now exits early if Julia version requirement (>=1.8) is not met.
