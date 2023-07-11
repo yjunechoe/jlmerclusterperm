@@ -1,4 +1,4 @@
-The package now firstly checks for Julia version requirements (>=v1.8) before proceeding to examples and tests.
+Small patch to fix a failure to parse the Julia version when it's in rc or alpha. Apologies for frequency of resubmission.
 
 ## R CMD check results
 
