@@ -16,3 +16,4 @@
 ^CRAN-SUBMISSION$
 ^doc$
 ^Meta$
+^inst/julia/Manifest.toml$

@@ -4,6 +4,10 @@
 
 - `jlmerclusterperm_setup()` now works for rc and alpha builds of Julia
 
+Fixes for CRAN:
+
+- The exclusion of Manifest.toml is now specified in .Rbuildignore - only Project.toml is bundled as intended.
+
 # jlmerclusterperm 1.0.1
 
 `jlmerclusterperm_setup()` now exits early if Julia version requirement (>=1.8) is not met.
