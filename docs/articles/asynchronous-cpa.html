@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">jlmerclusterperm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -243,8 +243,9 @@ CPA is non-blocking. We are evaluating R code in the interactive session
 <span><span class="co">#&gt; Elapsed: 0.5s </span></span>
 <span><span class="co">#&gt; Elapsed: 1.0s </span></span>
 <span><span class="co">#&gt; Elapsed: 1.5s </span></span>
-<span><span class="co">#&gt; Elapsed: 2.0s</span></span></code></pre></div>
-<p>We reach the end of the while loop at 2 seconds, which is
+<span><span class="co">#&gt; Elapsed: 2.0s </span></span>
+<span><span class="co">#&gt; Elapsed: 2.5s</span></span></code></pre></div>
+<p>We reach the end of the while loop at 2.5 seconds, which is
 approximately how long the CPA took to complete (we confirm this in the
 next section). At this point the future has completed and its result is
 available for collection.</p>
@@ -276,20 +277,20 @@ inspection:</p>
 <code class="sourceCode R"><span><span class="va">CPA_async</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://future.futureverse.org/reference/value.html" class="external-link">value</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Connecting to Julia TCP server at localhost:11980 ...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Detecting empirical clusters and calculating cluster-mass statistics.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Detecting empirical clusters and calculating cluster-mass statistics. <span style="color: #B2B2B2;">[65ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Detecting empirical clusters and calculating cluster-mass statistics. <span style="color: #B2B2B2;">[81ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Sampling cluster-mass statistics from a bootstrapped null distribution.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Sampling cluster-mass statistics from a bootstrapped null distribution. <span style="color: #B2B2B2;">[2s]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Sampling cluster-mass statistics from a bootstrapped null distribution. <span style="color: #B2B2B2;">[2.2s]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Calculating the probability of the observed cluster-mass statistics.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Calculating the probability of the observed cluster-mass statistics. <span style="color: #B2B2B2;">[20ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Calculating the probability of the observed cluster-mass statistics. <span style="color: #B2B2B2;">[26ms]</span></span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
 <p>Note how <code><a href="https://future.futureverse.org/reference/value.html" class="external-link">value()</a></code> also prints the messages encountered
 while executing the CPA code. We see this because we did not specify
 <code>progress = FALSE</code> in the <code><a href="../reference/clusterpermute.html">clusterpermute()</a></code> call
 passed to the future. For our purposes, just note that adding up the
-times from the messages is similar to what we saw from the while loop (2
-seconds).</p>
+times from the messages is similar to what we saw from the while loop
+(2.5 seconds).</p>
 <p>The output of the asynchronous CPA (<code>CPA_async</code>) is
 identical to the initial CPA that we ran at the beginning
 (<code>CPA</code>) because both were ran with the default seed of 1 and
