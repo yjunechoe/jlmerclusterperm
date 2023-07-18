@@ -14,7 +14,7 @@
 # Helpers
 julia_version_compatible <- function() {
   julia_version <- gsub("^.*(\\d+\\.\\d+\\.\\d+).*$", "\\1", system2("julia", "--version", stdout = TRUE))
-  as.package_version(julia_version) >= 1.8
+  as.package_version(julia_version) >= "1.8"
 }
 is_setup <- function() isTRUE(.jlmerclusterperm$is_setup)
 

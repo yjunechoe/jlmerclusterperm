@@ -1,5 +1,8 @@
 # jlmerclusterperm (development version)
 
+Fixes for CRAN:
+
+- Use string for package version comparison
 
 # jlmerclusterperm 1.0.2
 
