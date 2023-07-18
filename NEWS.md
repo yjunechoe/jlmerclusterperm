@@ -1,7 +1,3 @@
-# jlmerclusterperm (development version)
-
-- Switch to native data frame conversion via `JuliaConnectoR:::as.data.frame.JuliaProxy()`
-
 # jlmerclusterperm 1.0.2
 
 ### Bug fixes
