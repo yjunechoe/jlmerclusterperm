@@ -4,8 +4,7 @@ strip_JLTYPE <- function(x) {
 }
 
 df_from_DF <- function(DF) {
-  df_str <- JuliaConnectoR::juliaGet(DF)
-  as.data.frame(df_str$columns, col.names = unlist(df_str$colindex$names, use.names = FALSE))
+  as.data.frame(DF)
 }
 
 prep_for_jlmer <- function(jlmer_spec, family, ...) {
