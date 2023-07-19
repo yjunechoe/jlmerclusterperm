@@ -1,3 +1,5 @@
+# jlmerclusterperm (development version)
+
 # jlmerclusterperm 1.0.3
 
 Fixes for CRAN:

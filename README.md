@@ -273,7 +273,7 @@ following as you see fit.
 To cite jlmerclusterperm:
 
 - Choe, J. (2023). jlmerclusterperm: Cluster-Based Permutation Analysis
-  for Densely Sampled Time Data. R package version 1.0.2.
+  for Densely Sampled Time Data. R package version 1.0.3.
   <https://cran.r-project.org/package=jlmerclusterperm>.
 
 To cite the cluster-based permutation test:
@@ -288,9 +288,8 @@ To cite the Julia programming language:
   A Fresh Approach to Numerical Computing. *SIAM Review, 59*(1), 65–98.
   doi: 10.1137/141000671.
 
-To cite the MixedModels.jl Julia library (this example uses v4.14.1
-released in 2023):
+To cite the GLM.jl and MixedModels.jl Julia libraries, consult their
+Zenodo pages:
 
-- Bates, D., Alday, P., Kleinschmidt, D., Calderón, J. B. S., Zhan, L.,
-  Noack, A., et al. (2023). *JuliaStats/MixedModels.jl: V4.14.1*.
-  Zenodo. doi: 10.5281/zenodo.596435.
+- GLM: <https://doi.org/10.5281/zenodo.3376013>
+- MixedModels: <https://zenodo.org/badge/latestdoi/9106942>

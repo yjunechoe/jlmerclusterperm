@@ -177,7 +177,10 @@ To cite the Julia programming language:
 
 - Bezanson, J., Edelman, A., Karpinski, S., & Shah, V. B. (2017). Julia: A Fresh Approach to Numerical Computing. _SIAM Review, 59_(1), 65–98. doi: 10.1137/141000671.
 
-To cite the MixedModels.jl Julia library, consult the Zenodo page: https://zenodo.org/badge/latestdoi/9106942
+To cite the GLM.jl and MixedModels.jl Julia libraries, consult their Zenodo pages: 
+
+- GLM: https://doi.org/10.5281/zenodo.3376013
+- MixedModels: https://zenodo.org/badge/latestdoi/9106942
 
 
 ```{r close, include = FALSE}
