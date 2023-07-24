@@ -1,4 +1,9 @@
-function _extract_clusters(t_vec::Vector{<:AbstractFloat}, binned::Bool, n::Integer, id::Integer)
+function _extract_clusters(
+    t_vec::Vector{<:AbstractFloat},
+    binned::Bool,
+    n::Integer,
+    id::Integer,
+)
     runs = rle(sign.(t_vec))
     run_inds = vcat(0, cumsum(runs[2]))
     clusters = (:).(run_inds[1:end-1] .+ 1, run_inds[2:end])

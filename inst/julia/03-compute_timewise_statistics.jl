@@ -3,7 +3,7 @@ function compute_timewise_statistics(
     data::DataFrame,
     time::String,
     family::Distribution,
-    contrasts::Union{Nothing, Dict},
+    contrasts::Union{Nothing,Dict},
     term_groups::Tuple,
     statistic::String,
     is_mem::Bool;
@@ -81,9 +81,9 @@ function timewise_lme(
     data::DataFrame,
     time::String,
     family::Distribution,
-    contrasts::Union{Nothing, Dict},
+    contrasts::Union{Nothing,Dict},
     statistic::String,
-    test_opts::Union{Nothing, NamedTuple},
+    test_opts::Union{Nothing,NamedTuple},
     response_var::Symbol,
     fixed::NTuple,
     grouping_vars::Vector{String},
@@ -228,11 +228,11 @@ function timewise_lm(
     time::String,
     family::Distribution,
     statistic::String,
-    test_opts::Union{Nothing, NamedTuple},
+    test_opts::Union{Nothing,NamedTuple},
     response_var::Symbol,
     fixed::NTuple,
     times::Vector{<:Real},
-    n_times::Integer
+    n_times::Integer,
 )
 
     if statistic == "t"

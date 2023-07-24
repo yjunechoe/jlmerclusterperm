@@ -6,7 +6,15 @@ function get_rng_counter()
     Int(rng.ctr1)
 end
 
-reduce_formula = function (to_remove::Vector{Symbol}, enriched_formula::FormulaTerm, is_mem::Bool)
+function chisq_value(lrt::StatsModels.LRTestResult)
+    abs(2 * (lrt.loglikelihood[2] - lrt.loglikelihood[1]))
+end
+
+function reduce_formula(
+    to_remove::Vector{Symbol},
+    enriched_formula::FormulaTerm,
+    is_mem::Bool,
+)
     rhs = enriched_formula.rhs
     if is_mem
         is_fe = [map(x -> x isa MatrixTerm, rhs)...]
@@ -20,8 +28,4 @@ reduce_formula = function (to_remove::Vector{Symbol}, enriched_formula::FormulaT
         new_rhs = StatsModels.collect_matrix_terms(fe_terms[fe_to_keep])
     end
     FormulaTerm(enriched_formula.lhs, new_rhs)
-end
-
-chisq_value = function (lrt::StatsModels.LRTestResult)
-    abs(2 * (lrt.loglikelihood[2] - lrt.loglikelihood[1]))
 end
