@@ -136,7 +136,7 @@ validate_predictors_subset <- function(predictors, r_term_groups) {
       "x" = "Must choose among {.val {predictors_set}}."
     ))
   } else {
-    list(as.list(predictors))
+    list(predictors)
   }
 }
 

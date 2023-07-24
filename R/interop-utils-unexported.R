@@ -34,7 +34,7 @@ prep_for_jlmer <- function(jlmer_spec, family, ...) {
     grouping_vars <- lapply(lme4::findbars(julia_formula), `[[`, 3)
     jlmer_groupings <- JuliaConnectoR::juliaLet("Dict(x .=> [Grouping()])", x = grouping_vars)
   } else {
-    list()
+    NULL
   }
 
   list(jlmer_fm, jlmer_df, time, jmler_family, jlmer_groupings)
