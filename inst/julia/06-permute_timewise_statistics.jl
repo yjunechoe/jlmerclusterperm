@@ -1,16 +1,16 @@
 function permute_timewise_statistics(
-    formula,
-    data,
-    time,
-    family,
-    contrasts,
-    nsim,
-    participant_col,
-    trial_col,
-    term_groups,
-    predictors_subset,
-    statistic,
-    is_mem;
+    formula::FormulaTerm,
+    data::DataFrame,
+    time::String,
+    family::Distribution,
+    contrasts::Union{Nothing, Tuple},
+    nsim::Integer,
+    participant_col::String,
+    trial_col::Union{Missing, String},
+    term_groups::Tuple,
+    predictors_subset::Union{Nothing, Tuple},
+    statistic::String,
+    is_mem::Bool;
     opts...,
 )
 
@@ -19,11 +19,11 @@ function permute_timewise_statistics(
     n_times = length(times)
 
     predictors_exclude = ["(Intercept)"]
-    if length(predictors_subset) > 0
+    if isnothing(predictors_subset)
+        term_groups_est = filter(grp -> !all(in(predictors_exclude), grp.p), term_groups)
+    else
         term_groups_est =
             filter(grp -> any(in(predictors_subset), vcat(grp.p, grp.P)), term_groups)
-    else
-        term_groups_est = filter(grp -> !all(in(predictors_exclude), grp.p), term_groups)
     end
 
     nsims = nsim * length(term_groups_est)
