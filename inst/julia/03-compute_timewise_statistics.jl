@@ -1,12 +1,12 @@
 function compute_timewise_statistics(
-    formula,
-    data,
-    time,
-    family,
-    contrasts,
-    term_groups,
-    statistic,
-    is_mem;
+    formula::FormulaTerm,
+    data::DataFrame,
+    time::String,
+    family::Distribution,
+    contrasts::Union{Nothing, Dict},
+    term_groups::Tuple,
+    statistic::String,
+    is_mem::Bool;
     opts...,
 )
 
@@ -32,7 +32,7 @@ function compute_timewise_statistics(
             [(fm = reduce_formula(Symbol.(x.p), form, is_mem), i = x.i) for x in drop_terms]
         test_opts = (reduced_formula = reduced_formula,)
     elseif statistic == "t"
-        test_opts = Nothing
+        test_opts = nothing
     end
 
     if is_mem
@@ -77,19 +77,19 @@ function compute_timewise_statistics(
 end
 
 function timewise_lme(
-    formula,
-    data,
-    time,
-    family,
-    contrasts,
-    statistic,
-    test_opts,
-    response_var,
-    fixed,
-    grouping_vars,
-    times,
-    n_times,
-    diagnose;
+    formula::FormulaTerm,
+    data::DataFrame,
+    time::String,
+    family::Distribution,
+    contrasts::Union{Nothing, Dict},
+    statistic::String,
+    test_opts::Union{Nothing, NamedTuple},
+    response_var::Symbol,
+    fixed::NTuple,
+    grouping_vars::Vector{String},
+    times::Vector{<:Real},
+    n_times::Integer,
+    diagnose::Bool;
     opts...,
 )
 
@@ -223,16 +223,16 @@ function timewise_lme(
 end
 
 function timewise_lm(
-    formula,
-    data,
-    time,
-    family,
-    statistic,
-    test_opts,
-    response_var,
-    fixed,
-    times,
-    n_times,
+    formula::FormulaTerm,
+    data::DataFrame,
+    time::String,
+    family::Distribution,
+    statistic::String,
+    test_opts::Union{Nothing, NamedTuple},
+    response_var::Symbol,
+    fixed::NTuple,
+    times::Vector{<:Real},
+    n_times::Integer
 )
 
     if statistic == "t"

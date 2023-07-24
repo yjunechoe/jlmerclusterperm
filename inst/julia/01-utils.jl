@@ -1,4 +1,4 @@
-function t_value(mod)
+function t_value(mod::RegressionModel)
     coef(mod) ./ stderror(mod)
 end
 
@@ -6,7 +6,7 @@ function get_rng_counter()
     Int(rng.ctr1)
 end
 
-reduce_formula = function (to_remove, enriched_formula, is_mem)
+reduce_formula = function (to_remove::Vector{Symbol}, enriched_formula::FormulaTerm, is_mem::Bool)
     rhs = enriched_formula.rhs
     if is_mem
         is_fe = [map(x -> x isa MatrixTerm, rhs)...]
@@ -22,6 +22,6 @@ reduce_formula = function (to_remove, enriched_formula, is_mem)
     FormulaTerm(enriched_formula.lhs, new_rhs)
 end
 
-chisq_value = function (lrt)
+chisq_value = function (lrt::StatsModels.LRTestResult)
     abs(2 * (lrt.loglikelihood[2] - lrt.loglikelihood[1]))
 end
