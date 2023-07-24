@@ -52,14 +52,14 @@ function permute_timewise_statistics(
             permute_data,
             predictors,
             participant_col,
-            trial_col == "" ? missing : 3,
+            trial_col == "" ? nothing : 3,
         )
 
         if statistic == "chisq"
             reduced_formula = reduce_formula(Symbol.(predictors), form, is_mem)
             test_opts = (reduced_formula = (fm = reduced_formula, i = term_groups.i),)
         elseif statistic == "t"
-            test_opts = Nothing
+            test_opts = nothing
         end
 
         for i = 1:nsim

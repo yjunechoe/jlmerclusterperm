@@ -2,7 +2,7 @@ function guess_and_shuffle_as!(
     df::DataFrame,
     predictor_cols::Union{String, Vector{String}},
     participant_col::String,
-    trial_col::Union{Missing, Integer, String},
+    trial_col::Union{Nothing, Integer, String},
 )
     shuffle_type = guess_shuffle_as(df, predictor_cols, participant_col, trial_col)
     shuffle_as!(df, predictor_cols, participant_col, trial_col, shuffle_type)
@@ -12,7 +12,7 @@ function guess_shuffle_as(
     df::DataFrame,
     predictor_cols::Union{String, Vector{String}},
     participant_col::String,
-    trial_col::Union{Missing, Integer, String},
+    trial_col::Union{Nothing, Integer, String},
 )
     subj_pred_pair = unique(df[!, vcat(participant_col, predictor_cols)])
     unique_combinations = length(unique(df[!, participant_col])) == nrow(subj_pred_pair)
@@ -32,7 +32,7 @@ function shuffle_as!(
     shuffle_type::String,
     predictor_cols::Union{String, Vector{String}},
     participant_col::String,
-    trial_col::Union{Missing, Integer, String},
+    trial_col::Union{Nothing, Integer, String},
 )
     if shuffle_type == "between_participant"
         subj_pred_pair = unique(df[!, vcat(participant_col, predictor_cols)])
@@ -55,7 +55,7 @@ function permute_by_predictor(
     shuffle_type::String,
     predictor_cols::Union{String, Vector{String}},
     participant_col::String,
-    trial_col::Union{Missing, Integer, String},
+    trial_col::Union{Nothing, Integer, String},
     n::Integer,
 )
     _df = copy(df)
