@@ -1,3 +1,7 @@
+#' @importFrom JuliaConnectoR stopJulia
+#' @export
+JuliaConnectoR::stopJulia()
+
 #' Set/get options for Julia progress bar
 #'
 #' @param show Whether to show the progress bar. You may also pass in a list of `"show"` and `"width"`.
