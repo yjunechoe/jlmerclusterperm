@@ -503,18 +503,27 @@ empirical_statistics_fig
 <details>
 <summary>Plotting code</summary>
 
-```{r empirical_statistics_fig, eval = FALSE, message = FALSE, warning = FALSE}
+```{r empirical_statistics_fig, eval = FALSE}
 ```
 
 </details>
 
 Whereas the largest cluster starts to emerge at 5800ms for `CPA_helm`, it emerges much earlier at 4650ms for `CPA_helm_complex`. When we zoom into the region around 5800ms, we see that timewise statistics for `T vs. RI` in `CPA_helm` suddenly dip below the 1.5 threshold at 5750ms:
 
-```{r interest_range_fig}
+```{r interest_range_fig, echo = FALSE, message = FALSE, warning = FALSE}
 empirical_statistics_fig +
   geom_vline(xintercept = 5750) +
   coord_cartesian(xlim = 5750 + c(-500, 500), ylim = c(1, 2.5))
 ```
+
+<details>
+<summary>Plotting code</summary>
+
+```{r interest_range_fig, eval = FALSE}
+```
+
+</details>
+
 
 So which CPA is better? The existence of dips and spikes does not itself indicate a problem, but it's consistent with the expectation that the simple CPA would be less robust to variance.
 

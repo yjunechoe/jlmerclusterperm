@@ -200,18 +200,24 @@ timewise_chisqs <- compute_timewise_statistics(cursive_agg_spec, statistic = "ch
 library(ggplot2)
 timewise_fig <- ggplot(mapping = aes(x = time, y = statistic)) +
   geom_line(
-    aes(color = "t"),
+    aes(color = "fixed-t"),
     linewidth = 1.5,
     data = tidy(timewise_ts)
   ) +
   geom_line(
-    aes(color = "chisq"),
+    aes(color = "fixed-chisq"),
     linewidth = 1.5,
     data = tidy(timewise_chisqs)
   ) +
   geom_hline(
     aes(yintercept = c(-2, 2, qchisq(.95, df = 1), -qchisq(.95, df = 1))),
     color = rep(c("#00BFC4", "#F8766D"), each = 2), linetype = 2
+  ) +
+  scale_color_manual(
+    values = setNames(
+      c("#E69F00", "#56B4E9", "#009E73", "#F0E442"),
+      c("fixed-t", "fixed-chisq", "re-intercept-chisq", "re-max-chisq")
+    )
   )
 timewise_fig
 ```
