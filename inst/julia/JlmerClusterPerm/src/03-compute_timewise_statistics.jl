@@ -113,7 +113,12 @@ function timewise_lme(
     end
 
     if diagnose
-        pg = Progress(n_times, output = global_opts.pg[:io], barlen = global_opts.pg[:width], showspeed = true)
+        pg = Progress(
+            n_times,
+            output = global_opts.pg[:io],
+            barlen = global_opts.pg[:width],
+            showspeed = true,
+        )
     end
 
     @suppress begin

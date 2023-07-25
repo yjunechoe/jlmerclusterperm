@@ -58,17 +58,17 @@ function permute_by_predictor(
     participant_col::String,
     trial_col::Union{Nothing,Integer,String},
     n::Integer,
-    global_opts::NamedTuple
+    global_opts::NamedTuple,
 )
     _df = copy(df)
     out = insertcols(
         shuffle_as!(
-          _df,
-          shuffle_type,
-          predictor_cols,
-          participant_col,
-          trial_col,
-          global_opts.rng
+            _df,
+            shuffle_type,
+            predictor_cols,
+            participant_col,
+            trial_col,
+            global_opts.rng,
         ),
         :id => 1,
     )
@@ -83,7 +83,7 @@ function permute_by_predictor(
                         predictor_cols,
                         participant_col,
                         trial_col,
-                        global_opts.rng
+                        global_opts.rng,
                     ),
                     :id => i,
                 ),

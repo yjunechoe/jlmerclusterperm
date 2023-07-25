@@ -28,7 +28,12 @@ function permute_timewise_statistics(
     end
 
     nsims = nsim * length(term_groups_est)
-        pg = Progress(n_times, output = global_opts.pg[:io], barlen = global_opts.pg[:width], showspeed = true)
+    pg = Progress(
+        n_times,
+        output = global_opts.pg[:io],
+        barlen = global_opts.pg[:width],
+        showspeed = true,
+    )
 
     if is_mem
         fm_schema = MixedModels.schema(formula, data, contrasts)
@@ -63,7 +68,14 @@ function permute_timewise_statistics(
         end
 
         for i = 1:nsim
-            shuffle_as!(permute_data, shuffle_type, predictors, participant_col, trial_col, global_opts.rng)
+            shuffle_as!(
+                permute_data,
+                shuffle_type,
+                predictors,
+                participant_col,
+                trial_col,
+                global_opts.rng,
+            )
             if is_mem
                 timewise_stats = timewise_lme(
                     formula,
