@@ -2,10 +2,6 @@ function t_value(mod::RegressionModel)
     coef(mod) ./ stderror(mod)
 end
 
-function get_rng_counter()
-    Int(rng.ctr1)
-end
-
 function chisq_value(lrt::StatsModels.LRTestResult)
     abs(2 * (lrt.loglikelihood[2] - lrt.loglikelihood[1]))
 end

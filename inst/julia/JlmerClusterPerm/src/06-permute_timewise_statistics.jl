@@ -10,7 +10,8 @@ function permute_timewise_statistics(
     term_groups::Tuple,
     predictors_subset::Union{Nothing,Dict},
     statistic::String,
-    is_mem::Bool;
+    is_mem::Bool,
+    global_opts::NamedTuple;
     opts...,
 )
 
@@ -27,8 +28,7 @@ function permute_timewise_statistics(
     end
 
     nsims = nsim * length(term_groups_est)
-    counter_states = zeros(nsims)
-    pg = Progress(nsims, output = pg_io, barlen = pg_width, showspeed = true)
+        pg = Progress(n_times, output = global_opts.pg[:io], barlen = global_opts.pg[:width], showspeed = true)
 
     if is_mem
         fm_schema = MixedModels.schema(formula, data, contrasts)
@@ -63,8 +63,7 @@ function permute_timewise_statistics(
         end
 
         for i = 1:nsim
-            counter_states[i] = get_rng_counter()
-            shuffle_as!(permute_data, shuffle_type, predictors, participant_col, trial_col)
+            shuffle_as!(permute_data, shuffle_type, predictors, participant_col, trial_col, global_opts.rng)
             if is_mem
                 timewise_stats = timewise_lme(
                     formula,
@@ -79,7 +78,8 @@ function permute_timewise_statistics(
                     grouping_vars,
                     times,
                     n_times,
-                    false;
+                    false,
+                    global_opts;
                     opts...,
                 )
                 zs = timewise_stats.t_matrix
@@ -109,6 +109,6 @@ function permute_timewise_statistics(
     predictors = vcat(map(terms -> terms.p, term_groups_est)...)
     res = res[:, :, vcat(map(terms -> terms.i, term_groups_est)...)]
 
-    (z_array = res, predictors = predictors, counter_states = counter_states)
+    (z_array = res, predictors = predictors)
 
 end

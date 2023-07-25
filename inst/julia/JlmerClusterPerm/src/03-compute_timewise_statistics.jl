@@ -6,10 +6,10 @@ function compute_timewise_statistics(
     contrasts::Union{Nothing,Dict},
     term_groups::Tuple,
     statistic::String,
-    is_mem::Bool;
+    is_mem::Bool,
+    global_opts::NamedTuple;
     opts...,
 )
-
     response_var = formula.lhs.sym
     times = sort(unique(data[!, time]))
     n_times = length(times)
@@ -49,7 +49,8 @@ function compute_timewise_statistics(
             grouping_vars,
             times,
             n_times,
-            true;
+            true,
+            global_opts;
             opts...,
         )
         timewise_stats
@@ -89,7 +90,8 @@ function timewise_lme(
     grouping_vars::Vector{String},
     times::Vector{<:Real},
     n_times::Integer,
-    diagnose::Bool;
+    diagnose::Bool,
+    global_opts::NamedTuple;
     opts...,
 )
 
@@ -111,7 +113,7 @@ function timewise_lme(
     end
 
     if diagnose
-        pg = Progress(n_times, output = pg_io, barlen = pg_width, showspeed = true)
+        pg = Progress(n_times, output = global_opts.pg[:io], barlen = global_opts.pg[:width], showspeed = true)
     end
 
     @suppress begin

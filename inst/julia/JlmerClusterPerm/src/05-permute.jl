@@ -33,6 +33,7 @@ function shuffle_as!(
     predictor_cols::Union{String,Vector{String}},
     participant_col::String,
     trial_col::Union{Nothing,Integer,String},
+    rng::AbstractRNG,
 )
     if shuffle_type == "between_participant"
         subj_pred_pair = unique(df[!, vcat(participant_col, predictor_cols)])
@@ -57,10 +58,18 @@ function permute_by_predictor(
     participant_col::String,
     trial_col::Union{Nothing,Integer,String},
     n::Integer,
+    global_opts::NamedTuple
 )
     _df = copy(df)
     out = insertcols(
-        shuffle_as!(_df, shuffle_type, predictor_cols, participant_col, trial_col),
+        shuffle_as!(
+          _df,
+          shuffle_type,
+          predictor_cols,
+          participant_col,
+          trial_col,
+          global_opts.rng
+        ),
         :id => 1,
     )
     if (n > 1)
@@ -74,6 +83,7 @@ function permute_by_predictor(
                         predictor_cols,
                         participant_col,
                         trial_col,
+                        global_opts.rng
                     ),
                     :id => i,
                 ),
