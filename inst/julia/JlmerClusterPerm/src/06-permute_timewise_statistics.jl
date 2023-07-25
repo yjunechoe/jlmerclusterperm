@@ -29,7 +29,7 @@ function permute_timewise_statistics(
 
     nsims = nsim * length(term_groups_est)
     pg = Progress(
-        n_times,
+        nsims,
         output = global_opts.pg[:io],
         barlen = global_opts.pg[:width],
         showspeed = true,
