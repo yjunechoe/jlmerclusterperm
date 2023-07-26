@@ -1,3 +1,16 @@
+"""
+    compute_timewise_statistics(formula::FormulaTerm, data::DataFrame, time::String,
+                                family::Distribution, contrasts::Union{Nothing,Dict},
+                                term_groups::Tuple, statistic::String, is_mem::Bool,
+                                global_opts::NamedTuple; opts...)
+
+Compute timewise test statistics from regression models fitted to each time point.
+
+`opts...` are passed to fit() for mixed models (`is_mem = true`)
+
+!!! note
+    Called from R function `jlmerclusterperm::compute_timewise_statistics()`
+"""
 function compute_timewise_statistics(
     formula::FormulaTerm,
     data::DataFrame,

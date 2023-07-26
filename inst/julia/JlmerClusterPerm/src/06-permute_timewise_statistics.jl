@@ -1,3 +1,17 @@
+"""
+    compute_timewise_statistics(formula::FormulaTerm, data::DataFrame, time::String,
+                                family::Distribution, contrasts::Union{Nothing,Dict},
+                                term_groups::Tuple, statistic::String, is_mem::Bool,
+                                global_opts::NamedTuple; opts...)
+
+Generate permutation of the data and compute timewise test statistics
+from regression models fitted to each time point for each permuted sample.
+
+`opts...` are passed to fit() for mixed models (`is_mem = true`)
+
+!!! note
+    Called from R function `jlmerclusterperm::permute_timewise_statistics()`
+"""
 function permute_timewise_statistics(
     formula::FormulaTerm,
     data::DataFrame,

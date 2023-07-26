@@ -1,3 +1,20 @@
+"""
+    extract_clusters(t_matrix::Matrix{<:AbstractFloat}, binned::Bool, n::Integer)
+
+Extract clusters from a predictor-by-time matrix of test statistics.
+
+!!! note
+    Called from R function `jlmerclusterperm::extract_empirical_clusters()`
+    and `jlmerclusterperm::extract_null_cluster_dists()`
+"""
+function extract_clusters(t_matrix::Matrix{<:AbstractFloat}, binned::Bool, n::Integer)
+    out = Vector{DataFrame}(undef, size(t_matrix, 1))
+    for i in 1:length(out)
+        out[i] = _extract_clusters(t_matrix[i, :], binned, n, i)
+    end
+    return vcat(out...)
+end
+
 function _extract_clusters(
     t_vec::Vector{<:AbstractFloat},
     binned::Bool,
@@ -34,12 +51,4 @@ function _extract_clusters(
         out.id .= id
     end
     return out
-end
-
-function extract_clusters(t_matrix::Matrix{<:AbstractFloat}, binned::Bool, n::Integer)
-    out = Vector{DataFrame}(undef, size(t_matrix, 1))
-    for i in 1:length(out)
-        out[i] = _extract_clusters(t_matrix[i, :], binned, n, i)
-    end
-    return vcat(out...)
 end
