@@ -96,13 +96,17 @@ set_projenv <- function(..., verbose = TRUE) {
   JuliaConnectoR::juliaCall("cd", getwd())
   .jlmerclusterperm$opts$seed <- seed
   .jlmerclusterperm$opts$pkgdir <- pkgdir
-  # Define global options
+  define_globals()
+  invisible(TRUE)
+}
+
+define_globals <- function(...) {
   JuliaConnectoR::juliaEval(sprintf(
     "pg = Dict(:width => %i, :io => stderr);
     using Random123;
-    rng = Threefry2x((%i, 20));",
+    const rng = Threefry2x((%i, 20));",
     max(1L, cli::console_width() - 44L),
-    as.integer(seed)
+    as.integer(.jlmerclusterperm$opts$seed)
   ))
   .jlmerclusterperm$get_jl_opts <- function(x) {
     list(JuliaConnectoR::juliaEval("(pg = pg, rng = rng)"))
