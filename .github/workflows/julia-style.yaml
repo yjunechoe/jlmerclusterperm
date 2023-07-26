@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        julia-version: [1.6]
+        julia-version: [1.8]
     steps:
       - uses: julia-actions/setup-julia@latest
         with:
@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v1
       - name: Instantiate `format` environment and format
         run: |
-          julia --project=format -e 'using Pkg; Pkg.instantiate()'
+          julia --project=format -e 'using Pkg; Pkg.instantiate(); Pkg.resolve()'
           julia --project=format 'format/run.jl'
       - uses: reviewdog/action-suggester@v1
         if: github.event_name == 'pull_request'
