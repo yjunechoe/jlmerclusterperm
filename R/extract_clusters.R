@@ -57,7 +57,7 @@ extract_empirical_clusters <- function(empirical_statistics, threshold, binned =
   empirical_statistics <- apply_threshold(empirical_statistics, statistic, threshold)
   predictors <- rownames(empirical_statistics)
   n <- as.integer(max(min(top_n, ncol(empirical_statistics)), 1))
-  largest_clusters <- .jlmerclusterperm$extract_clusters(empirical_statistics, binned, n)
+  largest_clusters <- .jlmerclusterperm$jl$extract_clusters(empirical_statistics, binned, n)
   cluster_dfs <- df_from_DF(largest_clusters)
   empirical_clusters <- split(cluster_dfs[, -5], predictors[cluster_dfs$id])[predictors]
   empirical_clusters <- lapply(empirical_clusters, function(cluster_df) {
@@ -125,7 +125,7 @@ extract_null_cluster_dists <- function(null_statistics, threshold, binned = FALS
   null_statistics <- apply_threshold(null_statistics, statistic, threshold)
   null_cluster_dists <- apply(null_statistics, 3, function(t_matrix) {
     t_matrix <- t_matrix[!is.nan(rowSums(t_matrix)), ]
-    largest_clusters <- df_from_DF(.jlmerclusterperm$extract_clusters(t_matrix, binned, 1L))
+    largest_clusters <- df_from_DF(.jlmerclusterperm$jl$extract_clusters(t_matrix, binned, 1L))
   }, simplify = FALSE)
   structure(null_cluster_dists,
     class = "null_cluster_dists",

@@ -84,7 +84,7 @@ jlmer <- function(jlmer_spec, family = c("gaussian", "binomial"), ..., progress 
   family <- match.arg(family)
   args <- prep_for_jlmer(jlmer_spec, family = family, ...)[-3]
 
-  mod <- do.call(.jlmerclusterperm$jlmer, c(args, jlmer_spec$meta$is_mem, progress = progress, ...))
+  mod <- do.call(.jlmerclusterperm$jl$jlmer, c(args, jlmer_spec$meta$is_mem, progress = progress, ...))
   structure(mod, class = c("jlmer_mod", class(mod)))
 }
 

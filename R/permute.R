@@ -68,7 +68,7 @@ permute_by_predictor <- function(jlmer_spec, predictors, predictor_type = c("gue
   time <- jlmer_spec$meta$time
   predictor_type <- match.arg(predictor_type)
   if (predictor_type == "guess") {
-    predictor_type <- .jlmerclusterperm$guess_shuffle_as(df_jl, predictors, subject, trial)
+    predictor_type <- .jlmerclusterperm$jl$guess_shuffle_as(df_jl, predictors, subject, trial)
     cli::cli_alert_info("Guessed {.arg predictor_type} to be {.val {predictor_type}}")
   }
   predictor_group <- Filter(function(x) any(predictors %in% x), jlmer_spec$meta$term_groups)
@@ -81,7 +81,9 @@ permute_by_predictor <- function(jlmer_spec, predictors, predictor_type = c("gue
     }
     predictors <- predictor_group
   }
-  shuffled <- df_from_DF(.jlmerclusterperm$permute_by_predictor(df_jl, predictor_type, predictors, subject, trial, as.integer(n)))
+  shuffled <- df_from_DF(.jlmerclusterperm$jl$permute_by_predictor(
+    df_jl, predictor_type, predictors, subject, trial, as.integer(n), .jlmerclusterperm$get_jl_opts()[[1]]
+  ))
   class(shuffled) <- class(df)
   shuffled
 }

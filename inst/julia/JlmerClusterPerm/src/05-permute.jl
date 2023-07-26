@@ -5,7 +5,7 @@ function guess_and_shuffle_as!(
     trial_col::Union{Nothing,Integer,String},
 )
     shuffle_type = guess_shuffle_as(df, predictor_cols, participant_col, trial_col)
-    shuffle_as!(df, predictor_cols, participant_col, trial_col, shuffle_type)
+    return shuffle_as!(df, predictor_cols, participant_col, trial_col, shuffle_type)
 end
 
 function guess_shuffle_as(
@@ -33,12 +33,13 @@ function shuffle_as!(
     predictor_cols::Union{String,Vector{String}},
     participant_col::String,
     trial_col::Union{Nothing,Integer,String},
+    rng::AbstractRNG,
 )
     if shuffle_type == "between_participant"
         subj_pred_pair = unique(df[!, vcat(participant_col, predictor_cols)])
         shuffle!(rng, subj_pred_pair[!, participant_col])
         select!(df, Not(predictor_cols))
-        leftjoin!(df, subj_pred_pair, on = participant_col)
+        leftjoin!(df, subj_pred_pair; on=participant_col)
     elseif shuffle_type == "within_participant"
         trial_pred_pair = unique(df[!, vcat(participant_col, trial_col, predictor_cols)])
         combine(
@@ -46,7 +47,7 @@ function shuffle_as!(
             sdf -> shuffle!(rng, sdf[!, trial_col]),
         )
         select!(df, Not(predictor_cols))
-        leftjoin!(df, trial_pred_pair, on = [participant_col, trial_col])
+        leftjoin!(df, trial_pred_pair; on=[participant_col, trial_col])
     end
 end
 
@@ -57,14 +58,22 @@ function permute_by_predictor(
     participant_col::String,
     trial_col::Union{Nothing,Integer,String},
     n::Integer,
+    global_opts::NamedTuple,
 )
     _df = copy(df)
     out = insertcols(
-        shuffle_as!(_df, shuffle_type, predictor_cols, participant_col, trial_col),
+        shuffle_as!(
+            _df,
+            shuffle_type,
+            predictor_cols,
+            participant_col,
+            trial_col,
+            global_opts.rng
+        ),
         :id => 1,
     )
     if (n > 1)
-        for i = 2:n
+        for i in 2:n
             append!(
                 out,
                 insertcols(
@@ -74,11 +83,12 @@ function permute_by_predictor(
                         predictor_cols,
                         participant_col,
                         trial_col,
+                        global_opts.rng,
                     ),
                     :id => i,
                 ),
             )
         end
     end
-    select!(out, :id, Not(:id))
+    return select!(out, :id, Not(:id))
 end

@@ -17,3 +17,5 @@
 ^doc$
 ^Meta$
 ^inst/julia/Manifest.toml$
+^inst/julia/JlmerClusterPerm/Manifest.toml$
+^format/

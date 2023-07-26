@@ -40,19 +40,19 @@ julia_progress <- function(show, width) {
   show_missing <- missing(show)
   both_missing <- show_missing && missing(width)
   opts_is_list <- !show_missing && is.list(show) && identical(names(show), c("show", "width"))
-  old_opts <- JuliaConnectoR::juliaGet(JuliaConnectoR::juliaEval("(show = !(pg_io isa Base.DevNull), width = pg_width)"))
+  old_opts <- JuliaConnectoR::juliaGet(JuliaConnectoR::juliaEval("(show = pg[:io] != devnull, width = pg[:width])"))
   if (!show_missing) {
     if (opts_is_list) {
       width <- show$width
       show <- show$show
     }
-    JuliaConnectoR::juliaEval(paste0("pg_io = ", if (show) "stderr" else "devnull"))
+    JuliaConnectoR::juliaEval(paste0("pg[:io] = ", if (show) "stderr" else "devnull"))
   }
   if (!missing(width)) {
     if (width == "auto") {
       width <- max(1L, cli::console_width() - 44L)
     }
-    JuliaConnectoR::juliaEval(paste0("pg_width = ", width))
+    JuliaConnectoR::juliaEval(paste0("pg[:width] = ", width))
   }
   out <- strip_JLTYPE(old_opts)
   if (both_missing) {

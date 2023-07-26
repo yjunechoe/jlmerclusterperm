@@ -7,7 +7,7 @@ function jlmer(
     opts...,
 )
     if is_mem
-        fit(MixedModel, formula, data, family; contrasts = contrasts, opts...)
+        fit(MixedModel, formula, data, family; contrasts=contrasts, opts...)
     else
         glm(formula, data, family)
     end

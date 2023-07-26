@@ -29,7 +29,8 @@
 #' null_statistics <- permute_timewise_statistics(spec, nsim = 100)
 #'
 #' # Test cluster mass/probability under different threshold values
-#' walk_threshold_steps(empirical_statistics, null_statistics, steps = 1:3)
+#' walk_threshold_steps(empirical_statistics, null_statistics, steps = 1:3,
+#'                      progress = FALSE)
 #'
 #' \dontshow{
 #' JuliaConnectoR::stopJulia()

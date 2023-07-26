@@ -10,10 +10,10 @@ function permute_timewise_statistics(
     term_groups::Tuple,
     predictors_subset::Union{Nothing,Dict},
     statistic::String,
-    is_mem::Bool;
+    is_mem::Bool,
+    global_opts::NamedTuple;
     opts...,
 )
-
     response_var = formula.lhs.sym
     times = sort(unique(data[!, time]))
     n_times = length(times)
@@ -22,13 +22,18 @@ function permute_timewise_statistics(
     if isnothing(predictors_subset)
         term_groups_est = filter(grp -> !all(in(predictors_exclude), grp.p), term_groups)
     else
-        term_groups_est =
-            filter(grp -> any(in(predictors_subset), vcat(grp.p, grp.P)), term_groups)
+        term_groups_est = filter(
+            grp -> any(in(predictors_subset), vcat(grp.p, grp.P)), term_groups
+        )
     end
 
     nsims = nsim * length(term_groups_est)
-    counter_states = zeros(nsims)
-    pg = Progress(nsims, output = pg_io, barlen = pg_width, showspeed = true)
+    pg = Progress(
+        nsims;
+        output=global_opts.pg[:io],
+        barlen=global_opts.pg[:width],
+        showspeed=true
+    )
 
     if is_mem
         fm_schema = MixedModels.schema(formula, data, contrasts)
@@ -52,19 +57,25 @@ function permute_timewise_statistics(
             permute_data,
             predictors,
             participant_col,
-            trial_col == "" ? nothing : 3,
+            trial_col == "" ? nothing : 3
         )
 
         if statistic == "chisq"
             reduced_formula = reduce_formula(Symbol.(predictors), form, is_mem)
-            test_opts = (reduced_formula = (fm = reduced_formula, i = term_groups.i),)
+            test_opts = (reduced_formula=(fm=reduced_formula, i=term_groups.i),)
         elseif statistic == "t"
             test_opts = nothing
         end
 
-        for i = 1:nsim
-            counter_states[i] = get_rng_counter()
-            shuffle_as!(permute_data, shuffle_type, predictors, participant_col, trial_col)
+        for i in 1:nsim
+            shuffle_as!(
+                permute_data,
+                shuffle_type,
+                predictors,
+                participant_col,
+                trial_col,
+                global_opts.rng,
+            )
             if is_mem
                 timewise_stats = timewise_lme(
                     formula,
@@ -79,7 +90,8 @@ function permute_timewise_statistics(
                     grouping_vars,
                     times,
                     n_times,
-                    false;
+                    false,
+                    global_opts;
                     opts...,
                 )
                 zs = timewise_stats.t_matrix
@@ -105,10 +117,8 @@ function permute_timewise_statistics(
         end
     end
 
-
     predictors = vcat(map(terms -> terms.p, term_groups_est)...)
     res = res[:, :, vcat(map(terms -> terms.i, term_groups_est)...)]
 
-    (z_array = res, predictors = predictors, counter_states = counter_states)
-
+    return (z_array=res, predictors=predictors)
 end

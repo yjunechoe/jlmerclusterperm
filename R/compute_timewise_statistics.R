@@ -69,8 +69,8 @@ compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
 
 
   out <- JuliaConnectoR::juliaGet(do.call(
-    .jlmerclusterperm$compute_timewise_statistics,
-    c(args, term_groups$jl, statistic, is_mem, opts)
+    .jlmerclusterperm$jl$compute_timewise_statistics,
+    c(args, term_groups$jl, statistic, is_mem, .jlmerclusterperm$get_jl_opts(), opts)
   ))
 
   alert_diagnostics(jlmer_spec, out)

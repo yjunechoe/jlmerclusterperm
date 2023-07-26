@@ -206,7 +206,6 @@ printed progress bar.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"julia/Project.toml"</span>, package <span class="op">=</span> <span class="st">"jlmerclusterperm"</span><span class="op">)</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [deps]</span></span>
 <span><span class="co">#&gt; DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"</span></span>
-<span><span class="co">#&gt; Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"</span></span>
 <span><span class="co">#&gt; GLM = "38e38edf-8417-5370-95a0-9cbb8c7f171a"</span></span>
 <span><span class="co">#&gt; MixedModels = "ff71e718-51f3-5ec2-a782-8ffcbfa3c316"</span></span>
 <span><span class="co">#&gt; ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"</span></span>
@@ -226,12 +225,6 @@ printed progress bar.</p>
 <span><span class="co">#&gt; StatsModels = "0.7"</span></span>
 <span><span class="co">#&gt; Suppressor = "0.2.1"</span></span>
 <span><span class="co">#&gt; julia = "1.8"</span></span></code></pre></div>
-<p>If you wish to use other Julia packages not listed here like <a href="https://github.com/beacon-biosignals/Effects.jl" class="external-link">Effects.jl</a>,
-it is recommend to install them in the global library in a fresh Julia
-session as opposed to <code>Pkg.add()</code>-ing using the <a href="https://github.com/stefan-m-lenz/JuliaConnectoR" class="external-link">JuliaConnectoR</a>
-interface, as that may pollute the <code>jlmerclusterperm</code> project
-environment (if you suspect that this has happened, just re-install the
-package).</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

@@ -1,8 +1,12 @@
+name = "JlmerClusterPerm"
+uuid = "2a59065a-9564-4903-82dd-0e42ce19d0e1"
+authors = ["June Choe <yjchoe@sas.upenn.edu>"]
+version = "0.1.0"
+
 [deps]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 GLM = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
-JlmerClusterPerm = "2a59065a-9564-4903-82dd-0e42ce19d0e1"
 MixedModels = "ff71e718-51f3-5ec2-a782-8ffcbfa3c316"
 ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"

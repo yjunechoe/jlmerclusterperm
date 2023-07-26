@@ -70,15 +70,10 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
   }
 
   out <- JuliaConnectoR::juliaGet(do.call(
-    .jlmerclusterperm$permute_timewise_statistics,
-    c(args, nsim, participant_col, trial_col, term_groups$jl, predictors_subset, statistic, is_mem, opts)
+    .jlmerclusterperm$jl$permute_timewise_statistics,
+    c(args, nsim, participant_col, trial_col, term_groups$jl,
+      predictors_subset, statistic, is_mem, .jlmerclusterperm$get_jl_opts(), opts)
   ))
-
-  # shuffle_predictor_groups <- Filter(function(x) !identical(x, "(Intercept)"), jlmer_spec$meta$term_groups)
-  # counter_states <- split(out$counter_states, rep(names(shuffle_predictor_groups), each = nsim))
-  # counter_states[] <- lapply(names(counter_states), function(x) {
-  #   list(predictors = shuffle_predictor_groups[[x]], counter = counter_states[[x]])
-  # })
 
   dimnames(out$z_array) <- list(
     Sim = as.factor(zero_pad(1:nsim)),
