@@ -1,15 +1,15 @@
 function t_value(mod::RegressionModel)
-    coef(mod) ./ stderror(mod)
+    return coef(mod) ./ stderror(mod)
 end
 
 function chisq_value(lrt::StatsModels.LRTestResult)
-    abs(2 * (lrt.loglikelihood[2] - lrt.loglikelihood[1]))
+    return abs(2 * (lrt.loglikelihood[2] - lrt.loglikelihood[1]))
 end
 
 function reduce_formula(
     to_remove::Vector{Symbol},
     enriched_formula::FormulaTerm,
-    is_mem::Bool,
+    is_mem::Bool
 )
     rhs = enriched_formula.rhs
     if is_mem
@@ -23,5 +23,5 @@ function reduce_formula(
         fe_to_keep = findall(!in(to_remove), Symbol.(fe_terms))
         new_rhs = StatsModels.collect_matrix_terms(fe_terms[fe_to_keep])
     end
-    FormulaTerm(enriched_formula.lhs, new_rhs)
+    return FormulaTerm(enriched_formula.lhs, new_rhs)
 end

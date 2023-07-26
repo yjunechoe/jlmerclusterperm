@@ -14,7 +14,6 @@ function permute_timewise_statistics(
     global_opts::NamedTuple;
     opts...,
 )
-
     response_var = formula.lhs.sym
     times = sort(unique(data[!, time]))
     n_times = length(times)
@@ -23,16 +22,17 @@ function permute_timewise_statistics(
     if isnothing(predictors_subset)
         term_groups_est = filter(grp -> !all(in(predictors_exclude), grp.p), term_groups)
     else
-        term_groups_est =
-            filter(grp -> any(in(predictors_subset), vcat(grp.p, grp.P)), term_groups)
+        term_groups_est = filter(
+            grp -> any(in(predictors_subset), vcat(grp.p, grp.P)), term_groups
+        )
     end
 
     nsims = nsim * length(term_groups_est)
     pg = Progress(
-        nsims,
-        output = global_opts.pg[:io],
-        barlen = global_opts.pg[:width],
-        showspeed = true,
+        nsims;
+        output=global_opts.pg[:io],
+        barlen=global_opts.pg[:width],
+        showspeed=true
     )
 
     if is_mem
@@ -57,17 +57,17 @@ function permute_timewise_statistics(
             permute_data,
             predictors,
             participant_col,
-            trial_col == "" ? nothing : 3,
+            trial_col == "" ? nothing : 3
         )
 
         if statistic == "chisq"
             reduced_formula = reduce_formula(Symbol.(predictors), form, is_mem)
-            test_opts = (reduced_formula = (fm = reduced_formula, i = term_groups.i),)
+            test_opts = (reduced_formula=(fm=reduced_formula, i=term_groups.i),)
         elseif statistic == "t"
             test_opts = nothing
         end
 
-        for i = 1:nsim
+        for i in 1:nsim
             shuffle_as!(
                 permute_data,
                 shuffle_type,
@@ -117,10 +117,8 @@ function permute_timewise_statistics(
         end
     end
 
-
     predictors = vcat(map(terms -> terms.p, term_groups_est)...)
     res = res[:, :, vcat(map(terms -> terms.i, term_groups_est)...)]
 
-    (z_array = res, predictors = predictors)
-
+    return (z_array=res, predictors=predictors)
 end

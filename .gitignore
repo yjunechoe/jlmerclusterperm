@@ -5,6 +5,7 @@
 .DS_Store
 inst/julia/Manifest.toml
 inst/julia/JlmerClusterPerm/Manifest.toml
+format/Manifest.toml$
 ^CRAN-SUBMISSION$
 inst/doc
 /doc/
