@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, master, julia-codecov]
   pull_request:
-    branches: [main, master]
+    branches: [main, master, julia-codecov]
 
 name: test-coverage
 
