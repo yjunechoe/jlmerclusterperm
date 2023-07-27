@@ -37,6 +37,11 @@ jobs:
           )
         shell: Rscript {0}
 
+      - name: Show Julia files
+        run: |
+          ls inst/julia -R
+        shell: bash
+
       - name: Show testthat output
         if: always()
         run: |
