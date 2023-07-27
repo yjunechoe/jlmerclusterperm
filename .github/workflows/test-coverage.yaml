@@ -28,7 +28,9 @@ jobs:
 
       - name: Test coverage
         run: |
+          Sys.setenv(JULIACONNECTOR_JULIAOPTS = "--code-coverage")
           covr::codecov(
+            type = "tests",
             quiet = FALSE,
             clean = FALSE,
             install_path = file.path(Sys.getenv("RUNNER_TEMP"), "package")
