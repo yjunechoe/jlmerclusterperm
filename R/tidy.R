@@ -136,8 +136,8 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
 #' JuliaConnectoR::stopJulia()
 #' }
 #' }
-#'
 #' @name cluster_permutation_tidiers
+NULL
 
 #' @rdname cluster_permutation_tidiers
 #' @method tidy timewise_statistics
