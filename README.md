@@ -11,12 +11,14 @@ status](https://www.r-pkg.org/badges/version/jlmerclusterperm)](https://CRAN.R-p
 [![pkgcheck](https://github.com/yjunechoe/jlmerclusterperm/workflows/pkgcheck/badge.svg)](https://github.com/yjunechoe/jlmerclusterperm/actions?query=workflow%3Apkgcheck)
 [![Codecov test
 coverage](https://codecov.io/gh/yjunechoe/jlmerclusterperm/branch/main/graph/badge.svg)](https://app.codecov.io/gh/yjunechoe/jlmerclusterperm?branch=main)
+[![CRAN
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/jlmerclusterperm)](https://cranlogs.r-pkg.org/badges/grand-total/jlmerclusterperm)
 <!-- badges: end -->
 
 Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and
 [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) based
-implementation of cluster-based permutation test for time series data,
-powered by
+implementation of the cluster-based permutation test for time series
+data, powered by
 [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR).
 
 ![](man/figures/clusterpermute_slice.png)
