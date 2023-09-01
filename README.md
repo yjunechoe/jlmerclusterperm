@@ -275,7 +275,7 @@ following as you see fit.
 To cite jlmerclusterperm:
 
 - Choe, J. (2023). jlmerclusterperm: Cluster-Based Permutation Analysis
-  for Densely Sampled Time Data. R package version 1.0.3.
+  for Densely Sampled Time Data. R package version 1.0.4.
   <https://cran.r-project.org/package=jlmerclusterperm>.
 
 To cite the cluster-based permutation test:
