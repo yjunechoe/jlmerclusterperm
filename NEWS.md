@@ -1,5 +1,11 @@
 # jlmerclusterperm (development version)
 
+# jlmerclusterperm 1.0.4
+
+No user-visible changes
+
+- Restructured internal Julia code into a module (`JlmerClusterPerm.jl`)
+
 # jlmerclusterperm 1.0.3
 
 Fixes for CRAN:
