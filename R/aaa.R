@@ -86,8 +86,14 @@ start_with_threads <- function(..., max_threads = 7, verbose = TRUE) {
 set_projenv <- function(..., verbose = TRUE) {
   if (verbose) cli::cli_progress_step("Activating package environment")
   pkgdir <- system.file("julia/", package = "jlmerclusterperm")
+  if (file.access(pkgdir, mode = 2) == 0) {
+    projdir <- pkgdir
+  } else {
+    file.copy(pkgdir, tempdir(), recursive = TRUE)
+    projdir <- file.path(tempdir(), "julia")
+  }
   seed <- as.integer(getOption("jlmerclusterperm.seed", 1L))
-  JuliaConnectoR::juliaCall("cd", pkgdir)
+  JuliaConnectoR::juliaCall("cd", projdir)
   JuliaConnectoR::juliaEval("using Pkg")
   JuliaConnectoR::juliaEval('Pkg.activate(".", io = devnull)')
   JuliaConnectoR::juliaEval('Pkg.develop(path = "JlmerClusterPerm", io = devnull)')
@@ -95,7 +101,7 @@ set_projenv <- function(..., verbose = TRUE) {
   JuliaConnectoR::juliaEval("Pkg.resolve(io = devnull)")
   JuliaConnectoR::juliaCall("cd", getwd())
   .jlmerclusterperm$opts$seed <- seed
-  .jlmerclusterperm$opts$pkgdir <- pkgdir
+  .jlmerclusterperm$opts$projdir <- projdir
   define_globals()
   invisible(TRUE)
 }
@@ -115,7 +121,7 @@ define_globals <- function(...) {
 }
 
 source_jl <- function(..., verbose = TRUE) {
-  jl_pkgs <- readLines(file.path(.jlmerclusterperm$opts$pkgdir, "load-pkgs.jl"))
+  jl_pkgs <- readLines(file.path(.jlmerclusterperm$opts$projdir, "load-pkgs.jl"))
   i <- 1L
   if (verbose) cli::cli_progress_step("Running package setup scripts ({i}/{length(jl_pkgs) + 1})")
   for (i in (seq_along(jl_pkgs) + 1)) {
