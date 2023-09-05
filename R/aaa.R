@@ -87,15 +87,15 @@ start_with_threads <- function(..., max_threads = 7, verbose = TRUE) {
 set_projenv <- function(..., verbose = TRUE) {
   if (verbose) cli::cli_progress_step("Activating package environment")
   pkgdir <- system.file("julia/", package = "jlmerclusterperm")
-  userdir <- tools::R_user_dir("jlmerclusterperm", which = "cache")
+  cachedir <- tools::R_user_dir("jlmerclusterperm", which = "cache")
+  userdir <- if (exists(dirname(cachedir))) cachedir else tempdir()
   projdir <- file.path(userdir, "julia")
   manifest <- file.path(projdir, "Manifest.toml")
   from_manifest <- file.exists(manifest)
   if (!dir.exists(userdir)) {
     dir.create(userdir)
   } else if (!from_manifest) {
-    unlink(userdir, recursive = TRUE)
-    dir.create(userdir)
+    unlink(dir(userdir, full.names = TRUE), recursive = TRUE)
   }
   file.copy(from = pkgdir, to = userdir, recursive = TRUE)
   JuliaConnectoR::juliaCall("cd", projdir)
