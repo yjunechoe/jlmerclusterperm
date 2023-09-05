@@ -64,6 +64,7 @@ setup_with_progress <- function(..., verbose = TRUE) {
   start_with_threads(verbose = verbose)
   set_projenv(verbose = verbose)
   source_jl(verbose = verbose)
+  cleanup_jl()
   invisible(TRUE)
 }
 
@@ -86,34 +87,40 @@ start_with_threads <- function(..., max_threads = 7, verbose = TRUE) {
 set_projenv <- function(..., verbose = TRUE) {
   if (verbose) cli::cli_progress_step("Activating package environment")
   pkgdir <- system.file("julia/", package = "jlmerclusterperm")
-  if (file.access(pkgdir, mode = 2) == 0) {
-    projdir <- pkgdir
-  } else {
-    file.copy(pkgdir, tempdir(), recursive = TRUE)
-    projdir <- file.path(tempdir(), "julia")
+  userdir <- tools::R_user_dir("jlmerclusterperm", which = "cache")
+  projdir <- file.path(userdir, "julia")
+  manifest <- file.path(projdir, "Manifest.toml")
+  from_manifest <- file.exists(manifest)
+  if (!dir.exists(userdir)) {
+    dir.create(userdir)
+  } else if (!from_manifest) {
+    unlink(userdir, recursive = TRUE)
+    dir.create(userdir)
   }
-  seed <- as.integer(getOption("jlmerclusterperm.seed", 1L))
+  file.copy(from = pkgdir, to = userdir, recursive = TRUE)
   JuliaConnectoR::juliaCall("cd", projdir)
   JuliaConnectoR::juliaEval("using Pkg")
   JuliaConnectoR::juliaEval('Pkg.activate(".", io = devnull)')
   JuliaConnectoR::juliaEval('Pkg.develop(path = "JlmerClusterPerm", io = devnull)')
-  JuliaConnectoR::juliaEval("Pkg.instantiate()") # io = devnull
+  io <- if (from_manifest) "io = devnull" else ""
+  JuliaConnectoR::juliaEval(sprintf("Pkg.instantiate(%s)", io))
   JuliaConnectoR::juliaEval("Pkg.resolve(io = devnull)")
   JuliaConnectoR::juliaCall("cd", getwd())
-  .jlmerclusterperm$opts$seed <- seed
   .jlmerclusterperm$opts$projdir <- projdir
   define_globals()
   invisible(TRUE)
 }
 
 define_globals <- function(...) {
+  seed <- as.integer(getOption("jlmerclusterperm.seed", 1L))
   JuliaConnectoR::juliaEval(sprintf(
     "pg = Dict(:width => %i, :io => stderr);
     using Random123;
     const rng = Threefry2x((%i, 20));",
     max(1L, cli::console_width() - 44L),
-    as.integer(.jlmerclusterperm$opts$seed)
+    as.integer(seed)
   ))
+  .jlmerclusterperm$opts$seed <- seed
   .jlmerclusterperm$get_jl_opts <- function(x) {
     list(JuliaConnectoR::juliaEval("(pg = pg, rng = rng)"))
   }
@@ -133,4 +140,8 @@ source_jl <- function(..., verbose = TRUE) {
     }
   }
   invisible(TRUE)
+}
+
+cleanup_jl <- function(...) {
+  unlink(dir(.jlmerclusterperm$opts$projdir, pattern = "[^Manifest.toml]", full.names = TRUE), recursive = TRUE)
 }
