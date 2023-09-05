@@ -1,5 +1,8 @@
 skip_conditionally()
 
+# Log
+system2("julia", '-e "using InteractiveUtils; println(versioninfo());"')
+
 #' @srrstats {G5.2} Appropriate message/warning/error tests are in `/tests/testthat`
 
 # test_that("Setup works", {
