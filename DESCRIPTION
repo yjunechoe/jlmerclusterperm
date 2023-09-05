@@ -27,6 +27,7 @@ Imports:
     lme4,
     parallel,
     stats,
+    tools,
     utils
 Suggests:
     broom,
