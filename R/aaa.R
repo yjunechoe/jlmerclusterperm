@@ -11,10 +11,13 @@
   span.fm = list()
 )
 
-# Helpers
+# Setup helpers
 julia_version_compatible <- function() {
   julia_version <- gsub("^.*(\\d+\\.\\d+\\.\\d+).*$", "\\1", system2("julia", "--version", stdout = TRUE))
   as.package_version(julia_version) >= "1.8"
+}
+julia_detect_cores <- function() {
+  as.integer(system2("julia", '-q -e "println(Sys.CPU_THREADS);"', stdout = TRUE))
 }
 is_setup <- function() isTRUE(.jlmerclusterperm$is_setup)
 
@@ -68,10 +71,10 @@ setup_with_progress <- function(..., verbose = TRUE) {
   invisible(TRUE)
 }
 
-start_with_threads <- function(..., max_threads = 7, verbose = TRUE) {
+start_with_threads <- function(..., max_threads = 7L, verbose = TRUE) {
   JULIA_NUM_THREADS <- Sys.getenv("JULIA_NUM_THREADS")
   nthreads <- getOption("jlmerclusterperm.nthreads", JULIA_NUM_THREADS) %|0|%
-    (min(max_threads, parallel::detectCores() - 1))
+    (min(max_threads, julia_detect_cores() - 1L))
   if (verbose) cli::cli_progress_step("Starting Julia with {nthreads} thread{?s}")
   if (nthreads > 1) {
     Sys.setenv("JULIA_NUM_THREADS" = nthreads)

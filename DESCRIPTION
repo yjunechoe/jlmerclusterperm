@@ -25,7 +25,6 @@ Imports:
     generics,
     JuliaConnectoR,
     lme4,
-    parallel,
     stats,
     tools,
     utils
