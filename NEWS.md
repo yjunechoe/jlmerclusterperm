@@ -6,6 +6,8 @@ No user-visible changes
 
 - Restructured internal Julia code into a module (`JlmerClusterPerm.jl`)
 
+- Upon activating project, Manifest.toml is cached to `tools::R_user_dir()` to speed up pre-compilation.
+
 # jlmerclusterperm 1.0.3
 
 Fixes for CRAN:
