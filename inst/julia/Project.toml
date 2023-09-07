@@ -1,4 +1,5 @@
 [deps]
+DataAPI = "9a962f9c-6df0-11e9-0e5d-c546b8b5ee8a"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 GLM = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
