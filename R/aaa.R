@@ -91,7 +91,7 @@ set_projenv <- function(..., verbose = TRUE) {
   if (verbose) cli::cli_progress_step("Activating package environment")
   pkgdir <- system.file("julia/", package = "jlmerclusterperm")
   cachedir <- tools::R_user_dir("jlmerclusterperm", which = "cache")
-  userdir <- if (exists(dirname(cachedir))) cachedir else tempdir()
+  userdir <- if (dir.exists(dirname(cachedir))) cachedir else tempdir()
   projdir <- file.path(userdir, "julia")
   manifest <- file.path(projdir, "Manifest.toml")
   from_manifest <- file.exists(manifest)
