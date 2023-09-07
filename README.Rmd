@@ -87,19 +87,18 @@ chickweights_spec
 
 Cluster-based permutation test with `clusterpermute()`:
 
-```{r CPA}
+```{r CPA, message = FALSE}
 set_rng_state(123L)
 clusterpermute(
   chickweights_spec,
   threshold = 2.5,
-  nsim = 100,
-  progress = FALSE
+  nsim = 100
 )
 ```
 
 Including random effects:
 
-```{r chickweights_re_spec}
+```{r chickweights_re_spec, message = FALSE}
 chickweights_re_spec <- make_jlmer_spec(
   formula = weight ~ 1 + Diet + (1 | Chick),
   data = chickweights,
@@ -109,8 +108,7 @@ set_rng_state(123L)
 clusterpermute(
   chickweights_re_spec,
   threshold = 2.5,
-  nsim = 100,
-  progress = FALSE
+  nsim = 100
 )$empirical_clusters
 ```
 
@@ -148,7 +146,7 @@ calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1 = TRUE)
 
 Iterating over a range of threshold values:
 
-```{r walk_threshold_steps}
+```{r walk_threshold_steps, message = FALSE}
 walk_threshold_steps(empirical_statistics, null_statistics, steps = c(2, 2.5, 3))
 ```
 

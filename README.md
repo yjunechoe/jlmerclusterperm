@@ -119,8 +119,7 @@ set_rng_state(123L)
 clusterpermute(
   chickweights_spec,
   threshold = 2.5,
-  nsim = 100,
-  progress = FALSE
+  nsim = 100
 )
 #> $null_cluster_dists
 #> ── Null cluster-mass distribution (t > 2.5) ──────────── <null_cluster_dists> ──
@@ -158,8 +157,7 @@ set_rng_state(123L)
 clusterpermute(
   chickweights_re_spec,
   threshold = 2.5,
-  nsim = 100,
-  progress = FALSE
+  nsim = 100
 )$empirical_clusters
 #> ── Empirical clusters (t > 2.5) ──────────────────────── <empirical_clusters> ──
 #> Diet2
