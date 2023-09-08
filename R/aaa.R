@@ -63,7 +63,7 @@ jlmerclusterperm_setup <- function(..., restart = TRUE, verbose = TRUE) {
     setup_with_progress(verbose = verbose)
     .jlmerclusterperm$is_setup <- TRUE
   } else {
-    if (verbose) cli::cli_inform("Julia instance already running - skipping setup.")
+    cli::cli_inform("Julia instance already running - skipping setup.")
   }
   invisible(TRUE)
 }
@@ -72,6 +72,7 @@ setup_with_progress <- function(..., verbose = TRUE) {
   start_with_threads(verbose = verbose)
   set_projenv(verbose = verbose)
   source_jl(verbose = verbose)
+  define_globals()
   cleanup_jl()
   invisible(TRUE)
 }
@@ -95,7 +96,7 @@ start_with_threads <- function(..., max_threads = 7L, verbose = TRUE) {
 set_projenv <- function(..., verbose = TRUE) {
   if (verbose) cli::cli_progress_step("Activating package environment")
   pkgdir <- system.file("julia/", package = "jlmerclusterperm")
-  cachedir <- tools::R_user_dir("jlmerclusterperm", which = "cache")
+  cachedir <- R_user_dir("jlmerclusterperm", which = "cache")
   userdir <- if (dir.exists(dirname(cachedir))) cachedir else tempdir()
   projdir <- file.path(userdir, "julia")
   manifest <- file.path(projdir, "Manifest.toml")
@@ -115,7 +116,6 @@ set_projenv <- function(..., verbose = TRUE) {
   JuliaConnectoR::juliaEval("Pkg.resolve(io = devnull)")
   JuliaConnectoR::juliaCall("cd", getwd())
   .jlmerclusterperm$opts$projdir <- projdir
-  define_globals()
   invisible(TRUE)
 }
 
