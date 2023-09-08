@@ -1,9 +1,15 @@
 #' @keywords internal
 "_PACKAGE"
 
-## usethis namespace: start
+## jlmerclusterperm namespace: start
 #' @importFrom stats setNames
-## usethis namespace: end
+#' @rawNamespace
+#' if (getRversion() >= "4.0.0") {
+#'   importFrom(tools, R_user_dir)
+#' } else {
+#'   importFrom(backports, R_user_dir)
+#' }
+## jlmerclusterperm namespace: end
 NULL
 
 # nocov start
