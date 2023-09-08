@@ -12,9 +12,14 @@
 )
 
 # Setup helpers
+parse_julia_version <- function(version) {
+  gsub("^.*(\\d+\\.\\d+\\.\\d+).*$", "\\1", version)
+}
+julia_version <- function() {
+  parse_julia_version(system2("julia", "--version", stdout = TRUE))
+}
 julia_version_compatible <- function() {
-  julia_version <- gsub("^.*(\\d+\\.\\d+\\.\\d+).*$", "\\1", system2("julia", "--version", stdout = TRUE))
-  as.package_version(julia_version) >= "1.8"
+  as.package_version(julia_version()) >= "1.8"
 }
 julia_detect_cores <- function() {
   as.integer(system2("julia", '-q -e "println(Sys.CPU_THREADS);"', stdout = TRUE))
@@ -94,10 +99,10 @@ set_projenv <- function(..., verbose = TRUE) {
   userdir <- if (dir.exists(dirname(cachedir))) cachedir else tempdir()
   projdir <- file.path(userdir, "julia")
   manifest <- file.path(projdir, "Manifest.toml")
-  from_manifest <- file.exists(manifest)
+  manifest_cached <- file.exists(manifest) && (parse_julia_version(readLines(manifest)[3]) == julia_version())
   if (!dir.exists(userdir)) {
     dir.create(userdir)
-  } else if (!from_manifest) {
+  } else if (!manifest_cached) {
     unlink(dir(userdir, full.names = TRUE), recursive = TRUE)
   }
   file.copy(from = pkgdir, to = userdir, recursive = TRUE)
@@ -105,7 +110,7 @@ set_projenv <- function(..., verbose = TRUE) {
   JuliaConnectoR::juliaEval("using Pkg")
   JuliaConnectoR::juliaEval('Pkg.activate(".", io = devnull)')
   JuliaConnectoR::juliaEval('Pkg.develop(path = "JlmerClusterPerm", io = devnull)')
-  io <- if (from_manifest) "io = devnull" else ""
+  io <- if (manifest_cached || !verbose) "io = devnull" else ""
   JuliaConnectoR::juliaEval(sprintf("Pkg.instantiate(%s)", io))
   JuliaConnectoR::juliaEval("Pkg.resolve(io = devnull)")
   JuliaConnectoR::juliaCall("cd", getwd())
