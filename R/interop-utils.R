@@ -1,6 +1,6 @@
 #' @importFrom JuliaConnectoR stopJulia
 #' @export
-JuliaConnectoR::stopJulia()
+JuliaConnectoR::stopJulia
 
 #' Set/get options for Julia progress bar
 #'

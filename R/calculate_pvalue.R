@@ -79,7 +79,6 @@ calculate_clusters_pvalues <- function(empirical_clusters, null_cluster_dists, a
 
 #' @param error Whether to throw an error if incompatible
 #' @rdname calculate_clusters_pvalues
-#' @export
 clusters_are_comparable <- function(empirical_clusters, null_cluster_dists, error = FALSE) {
   if (!inherits(empirical_clusters, "empirical_clusters") || !inherits(null_cluster_dists, "null_cluster_dists")) {
     cli::cli_abort("Can only compare object of class {.cls empirical_clusters} against object of class {.cls null_cluster_dists}")
