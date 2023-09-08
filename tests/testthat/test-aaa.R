@@ -1,7 +1,11 @@
 skip_conditionally()
 
-# Log
+# Logging
 system2("julia", '-e "using InteractiveUtils; println(versioninfo());"')
+start_with_threads(verbose = TRUE)
+set_projenv(verbose = TRUE)
+cat(readLines(file.path(jlmerclusterperm:::.jlmerclusterperm$opts$projdir, "Manifest.toml")), sep = "\n")
+stopJulia()
 
 #' @srrstats {G5.2} Appropriate message/warning/error tests are in `/tests/testthat`
 
