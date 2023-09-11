@@ -1,5 +1,13 @@
 # jlmerclusterperm (development version)
 
+# jlmerclusterperm 1.0.5
+
+No user-visible changes
+
+Fixes for CRAN:
+
+- Ensure minimum version requirements for Tables.jl and DataAPI.jl are met
+
 # jlmerclusterperm 1.0.4
 
 No user-visible changes

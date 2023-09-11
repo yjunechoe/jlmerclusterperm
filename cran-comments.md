@@ -1,4 +1,6 @@
-* User-specific Manifest.toml is now cached in R_user_dir instead of /lib
+Fixes for CRAN:
+
+* Specified version requirement for a downstream Julia dependency (Tables.jl and DataAPI.jl) to fix error precompiling DataFrames.jl
 
 ## R CMD check results
 
