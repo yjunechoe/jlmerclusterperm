@@ -147,14 +147,9 @@ function timewise_lme(
                 end
             else
                 try
-                    time_mod = fit(
-                        MixedModel,
-                        formula,
-                        data_at_time,
-                        family;
-                        contrasts=contrasts,
-                        opts...,
-                    )
+                    time_mod = MixedModel(formula, data_at_time, family; contrasts)
+                    time_mod.optsum.ftol_rel = 1e-8
+                    fit!(time_mod; opts...)
                     # test statistic
                     if statistic == "chisq"
                         if drop_formula isa Vector
