@@ -25,3 +25,10 @@ function reduce_formula(
     end
     return FormulaTerm(enriched_formula.lhs, new_rhs)
 end
+
+# backports DF.jl
+function insertcolval(df::DataFrame, key::Symbol, val::Any)
+    _df = copy(df)
+    _df[!, key] .= val
+    return _df
+end

@@ -31,11 +31,11 @@ function _extract_clusters(
     rename!(clusters_df, :1 => :cluster_start, :2 => :cluster_end)
     clusters_df.statistic = sum_t
     filter!(:statistic => !≈(0), clusters_df)
-    transform!(clusters_df, :statistic => ByRow(abs) => :abs_stat)
+    clusters_df.abs_stat = abs.(clusters_df.statistic)
     if !binned
         filter!([:cluster_end, :cluster_start] => !=, clusters_df)
     end
-    transform!(clusters_df, eachindex => :cluster_id)
+    clusters_df.cluster_id = 1:nrow(clusters_df)
     sort!(clusters_df, :abs_stat; rev=true)
     select!(clusters_df, [:cluster_id, :cluster_start, :cluster_end, :statistic])
     if nrow(clusters_df) == 0
