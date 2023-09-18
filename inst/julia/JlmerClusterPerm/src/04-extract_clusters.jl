@@ -31,7 +31,7 @@ function _extract_clusters(
     rename!(clusters_df, :1 => :cluster_start, :2 => :cluster_end)
     clusters_df.statistic = sum_t
     filter!(:statistic => !≈(0), clusters_df)
-    transform!(clusters_df, :statistic => ByRow(abs) => :abs_stat)
+    clusters_df.abs_stat = abs.(clusters_df.statistic)
     if !binned
         filter!([:cluster_end, :cluster_start] => !=, clusters_df)
     end
