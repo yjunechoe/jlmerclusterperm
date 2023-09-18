@@ -30,5 +30,5 @@ end
 function insertcolval(df::DataFrame, key::Symbol, val::Any)
     _df = copy(df)
     _df[!, key] .= val
-    _df
+    return _df
 end
