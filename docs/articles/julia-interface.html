@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">jlmerclusterperm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -148,7 +148,8 @@ already have installed. For example, <a href="https://github.com/beacon-biosigna
 for its <a href="https://github.com/vincentarelbundock/marginaleffects" class="external-link"><code>marginaleffects</code></a>/<a href="https://github.com/rvlenth/emmeans" class="external-link"><code>emmeans</code></a>-like
 features:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/JuliaConnectoR/man/juliaEval.html" class="external-link">juliaEval</a></span><span class="op">(</span><span class="st">"using Effects"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># juliaEval('using Pkg; Pkg.activate(); Pkg.add("Effects")')</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/JuliaConnectoR/man/juliaEval.html" class="external-link">juliaEval</a></span><span class="op">(</span><span class="st">"using Effects"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/JuliaConnectoR/man/juliaLet.html" class="external-link">juliaLet</a></span><span class="op">(</span><span class="st">"effects(x.namedelements, y)"</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Days <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">jmod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;Julia object of type DataFrame&gt;</span></span>
 <span><span class="co">#&gt; 4×5 DataFrame</span></span>
@@ -231,6 +232,24 @@ printed progress bar.</p>
 <span><span class="co">#&gt; Suppressor = "0.2.1"</span></span>
 <span><span class="co">#&gt; Tables = "1.9"</span></span>
 <span><span class="co">#&gt; julia = "1.8"</span></span></code></pre></div>
+<p>For speed-ups in model fitting, install <a href="https://github.com/JuliaLinearAlgebra/MKL.jl" class="external-link">MKL.jl</a> (Intel
+core) or <a href="https://github.com/JuliaLinearAlgebra/AppleAccelerate.jl" class="external-link">AppleAccelerate.jl</a>
+(Mac) and load it on start by modifying the <code>startup.jl</code>
+file.</p>
+</div>
+<div class="section level2">
+<h2 id="optional-configurations">Optional configurations<a class="anchor" aria-label="anchor" href="#optional-configurations"></a>
+</h2>
+<p>For example, on my Windows machine the startup file is located
+at:</p>
+<pre>
+JuliaConnectoR::juliaCall("Base._local_julia_startup_file")
+#&gt; "C:/Users/jchoe/.julia/config/startup.jl"
+</pre>
+<p>And there I load MKL.jl:</p>
+<pre>
+using MKL
+</pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
