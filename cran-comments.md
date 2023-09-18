@@ -1,6 +1,6 @@
 Fixes for CRAN:
 
-* Specified version requirement for a downstream Julia dependency (Tables.jl and DataAPI.jl) to fix error precompiling DataFrames.jl
+* Restructured Julia backend internals to resolve test errors on Windows
 
 ## R CMD check results
 
