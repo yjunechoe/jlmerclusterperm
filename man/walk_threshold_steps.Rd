@@ -48,18 +48,15 @@ jlmerclusterperm_setup(verbose = FALSE)
 julia_progress(show = FALSE)
 }
 
-library(dplyr, warn.conflicts = FALSE)
-
 # Specification object
 spec <- make_jlmer_spec(
-  weight ~ 1 + Diet, filter(ChickWeight, Time <= 20),
+  weight ~ 1 + Diet, subset(ChickWeight, Time <= 20),
   subject = "Chick", time = "Time"
 )
 spec
 
 # Compute timewise statistics for the observed and permuted data
 empirical_statistics <- compute_timewise_statistics(spec)
-reset_rng_state()
 null_statistics <- permute_timewise_statistics(spec, nsim = 100)
 
 # Test cluster mass/probability under different threshold values
