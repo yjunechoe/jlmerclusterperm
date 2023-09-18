@@ -44,7 +44,7 @@ walk_threshold_steps <- function(empirical_statistics, null_statistics, steps,
       return(NULL)
     }
     null <- extract_null_cluster_dists(null_statistics, threshold = threshold, binned = binned)
-    out <- tidy(calculate_clusters_pvalues(empirical, null, add1 = TRUE))
+    out <- tidy(calculate_clusters_pvalues(empirical, null, add1 = add1))
     out[!is.na(out$pvalue), ]
   }
   if (progress) {
