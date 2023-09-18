@@ -35,7 +35,7 @@ function _extract_clusters(
     if !binned
         filter!([:cluster_end, :cluster_start] => !=, clusters_df)
     end
-    transform!(clusters_df, eachindex => :cluster_id)
+    clusters_df.cluster_id = 1:nrow(clusters_df)
     sort!(clusters_df, :abs_stat; rev=true)
     select!(clusters_df, [:cluster_id, :cluster_start, :cluster_end, :statistic])
     if nrow(clusters_df) == 0
