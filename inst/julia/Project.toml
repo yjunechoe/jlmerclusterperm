@@ -18,6 +18,7 @@ Suppressor = "fd094767-a336-5f1f-9728-57cf17d0bbfb"
 [compat]
 DataFrames = "< 1.4"
 GLM = "1.8"
+JlmerClusterPerm = "=1.1"
 MixedModels = "4"
 ProgressMeter = "1.7"
 Random123 = "1.6"
