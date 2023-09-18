@@ -28,7 +28,7 @@ end
 
 # backports DF.jl
 function insertcolval(df::DataFrame, key::Symbol, val::Any)
-  _df = copy(df)
-  _df[!, key] .= val
-  _df
+    _df = copy(df)
+    _df[!, key] .= val
+    _df
 end
