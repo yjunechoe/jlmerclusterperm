@@ -158,7 +158,7 @@ walk_threshold_steps(empirical_statistics, null_statistics, steps = c(2, 2.5, 3)
 
 - The Julia packages [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) for fast implementations of (mixed effects) regression models.
 
-- Existing implementations of CPA in R ([permuco](https://jaromilfrossard.github.io/permuco/), [permutes](https://github.com/cvoeten/permutes), etc.) whose designs inspired the CPA interface in jlmerclusterperm.
+- Existing implementations of CPA in R ([permuco](https://jaromilfrossard.github.io/permuco/), [permutes](https://cran.r-project.org/web/packages/permutes), etc.) whose designs inspired the CPA interface in jlmerclusterperm.
 
 ## Citations
 
