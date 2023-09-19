@@ -113,16 +113,16 @@ The following packages are loaded into the Julia environment via `jlmerclusterpe
 cat(readLines(system.file("julia/Project.toml", package = "jlmerclusterperm")), sep = "\n")
 ```
 
-For speed-ups in model fitting, install [MKL.jl](https://github.com/JuliaLinearAlgebra/MKL.jl) (Intel core) or [AppleAccelerate.jl](https://github.com/JuliaLinearAlgebra/AppleAccelerate.jl) (Mac) and load it on start by modifying the `startup.jl` file.
-
 ## Optional configurations
+
+For speed-ups in model fitting, install [MKL.jl](https://github.com/JuliaLinearAlgebra/MKL.jl) (Intel core) or [AppleAccelerate.jl](https://github.com/JuliaLinearAlgebra/AppleAccelerate.jl) (Mac) and load it on start by modifying the `startup.jl` file.
 
 For example, on my Windows machine the startup file is located at:
 
-<pre>
+```{r startup-file, eval = FALSE}
 JuliaConnectoR::juliaCall("Base._local_julia_startup_file")
 #> "C:/Users/jchoe/.julia/config/startup.jl"
-</pre>
+```
 
 And there I load MKL.jl:
 
