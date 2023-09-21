@@ -14,18 +14,15 @@
 #' julia_progress(show = FALSE)
 #' }
 #'
-#' library(dplyr, warn.conflicts = FALSE)
-#'
 #' # Specification object
 #' spec <- make_jlmer_spec(
-#'   weight ~ 1 + Diet, filter(ChickWeight, Time <= 20),
+#'   weight ~ 1 + Diet, subset(ChickWeight, Time <= 20),
 #'   subject = "Chick", time = "Time"
 #' )
 #' spec
 #'
 #' # Compute timewise statistics for the observed and permuted data
 #' empirical_statistics <- compute_timewise_statistics(spec)
-#' reset_rng_state()
 #' null_statistics <- permute_timewise_statistics(spec, nsim = 100)
 #'
 #' # Test cluster mass/probability under different threshold values
@@ -47,7 +44,7 @@ walk_threshold_steps <- function(empirical_statistics, null_statistics, steps,
       return(NULL)
     }
     null <- extract_null_cluster_dists(null_statistics, threshold = threshold, binned = binned)
-    out <- tidy(calculate_clusters_pvalues(empirical, null, add1 = TRUE))
+    out <- tidy(calculate_clusters_pvalues(empirical, null, add1 = add1))
     out[!is.na(out$pvalue), ]
   }
   if (progress) {

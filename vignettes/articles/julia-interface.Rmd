@@ -59,6 +59,7 @@ juliaCall("issingular", jmod)
 You can also call functions from other Julia packages that you already have installed. For example, [Effects.jl](https://github.com/beacon-biosignals/Effects.jl) for its [`marginaleffects`](https://github.com/vincentarelbundock/marginaleffects)/[`emmeans`](https://github.com/rvlenth/emmeans)-like features:
 
 ```{r effects-jl}
+# juliaEval('using Pkg; Pkg.activate(); Pkg.add("Effects")')
 juliaEval("using Effects")
 juliaLet("effects(x.namedelements, y)", x = list(Days = 2:5), y = jmod)
 #> <Julia object of type DataFrame>
@@ -111,3 +112,20 @@ The following packages are loaded into the Julia environment via `jlmerclusterpe
 ```{r proj-toml, eval = TRUE}
 cat(readLines(system.file("julia/Project.toml", package = "jlmerclusterperm")), sep = "\n")
 ```
+
+## Optional configurations
+
+For speed-ups in model fitting, install [MKL.jl](https://github.com/JuliaLinearAlgebra/MKL.jl) (Intel core) or [AppleAccelerate.jl](https://github.com/JuliaLinearAlgebra/AppleAccelerate.jl) (Mac) and load it on start by modifying the `startup.jl` file.
+
+For example, on my Windows machine the startup file is located at:
+
+```{r startup-file, eval = FALSE}
+JuliaConnectoR::juliaCall("Base._local_julia_startup_file")
+#> "C:/Users/jchoe/.julia/config/startup.jl"
+```
+
+And there I load MKL.jl:
+
+<pre>
+using MKL
+</pre>

@@ -20,7 +20,7 @@ function permute_by_predictor(
     global_opts::NamedTuple,
 )
     _df = copy(df)
-    out = insertcols(
+    out = insertcolval(
         shuffle_as!(
             _df,
             shuffle_type,
@@ -29,13 +29,13 @@ function permute_by_predictor(
             trial_col,
             global_opts.rng
         ),
-        :id => 1,
+        :id, 1,
     )
     if (n > 1)
         for i in 2:n
             append!(
                 out,
-                insertcols(
+                insertcolval(
                     shuffle_as!(
                         _df,
                         shuffle_type,
@@ -44,7 +44,7 @@ function permute_by_predictor(
                         trial_col,
                         global_opts.rng,
                     ),
-                    :id => i,
+                    :id, i,
                 ),
             )
         end

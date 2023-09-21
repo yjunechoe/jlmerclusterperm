@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">jlmerclusterperm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,6 +65,13 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="jlmerclusterperm-development-version">jlmerclusterperm (development version)<a class="anchor" aria-label="anchor" href="#jlmerclusterperm-development-version"></a></h2>
 </div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.6" id="jlmerclusterperm-106">jlmerclusterperm 1.0.6<a class="anchor" aria-label="anchor" href="#jlmerclusterperm-106"></a></h2><p class="text-muted">CRAN release: 2023-09-19</p>
+<ul><li><p>Fixed bug where <code>add1</code> argument to <code><a href="../reference/walk_threshold_steps.html">walk_threshold_steps()</a></code> was not being passed down properly</p></li>
+<li><p>R &lt; 4.0 falls back to using <a href="https://github.com/r-lib/backports" class="external-link">backports</a> for <code>R_user_dir()</code></p></li>
+</ul><p>Fixes for CRAN:</p>
+<ul><li>Downgrade DataFrames.jl dependency to 1.3 to avoid a mysterious pre-compilation failure on CRAN windows checks</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.5" id="jlmerclusterperm-105">jlmerclusterperm 1.0.5<a class="anchor" aria-label="anchor" href="#jlmerclusterperm-105"></a></h2><p class="text-muted">CRAN release: 2023-09-10</p>
 <p>No user-visible changes</p>

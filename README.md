@@ -261,8 +261,8 @@ walk_threshold_steps(empirical_statistics, null_statistics, steps = c(2, 2.5, 3)
 
 - Existing implementations of CPA in R
   ([permuco](https://jaromilfrossard.github.io/permuco/),
-  [permutes](https://github.com/cvoeten/permutes), etc.) whose designs
-  inspired the CPA interface in jlmerclusterperm.
+  [permutes](https://cran.r-project.org/package=permutes), etc.) whose
+  designs inspired the CPA interface in jlmerclusterperm.
 
 ## Citations
 
@@ -273,7 +273,7 @@ following as you see fit.
 To cite jlmerclusterperm:
 
 - Choe, J. (2023). jlmerclusterperm: Cluster-Based Permutation Analysis
-  for Densely Sampled Time Data. R package version 1.0.4.
+  for Densely Sampled Time Data. R package version 1.0.6.
   <https://cran.r-project.org/package=jlmerclusterperm>.
 
 To cite the cluster-based permutation test:

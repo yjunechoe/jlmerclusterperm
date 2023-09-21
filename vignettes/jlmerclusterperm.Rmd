@@ -60,7 +60,7 @@ The **topics** cover general package features:
 
 ## Compared to other implementations
 
-There are other R packages for cluster-based permutation analysis, such as [clusterperm](https://github.com/dalejbarr/clusterperm/), [eyetrackingR](https://github.com/jwdink/eyetrackingR), [permuco](https://github.com/jaromilfrossard/permuco/), and [permutes](https://github.com/cvoeten/permutes).
+There are other R packages for cluster-based permutation analysis, such as [clusterperm](https://github.com/dalejbarr/clusterperm/), [eyetrackingR](https://github.com/jwdink/eyetrackingR), [permuco](https://github.com/jaromilfrossard/permuco/), and [permutes](https://cran.r-project.org/package=permutes).
 
 Compared to existing implementations, `jlmerclusterperm` is the only package optimized for CPAs based on **mixed-effects regression models**, suitable for typical experimental research data with multiple, crossed grouping structures (e.g., subjects and items). It is also the only package with an interface to the individual algorithmic steps of a CPA. Lastly, thanks to the Julia back-end, bootstrapping is fast even for mixed models.
 
