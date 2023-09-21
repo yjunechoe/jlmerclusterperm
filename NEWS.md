@@ -1,5 +1,15 @@
 # jlmerclusterperm (development version)
 
+# jlmerclusterperm 1.0.6
+
+- Fixed bug where `add1` argument to `walk_threshold_steps()` was not being passed down properly
+
+- R < 4.0 falls back to using `{backports}` for `R_user_dir()`
+
+Fixes for CRAN:
+
+- Downgrade DataFrames.jl dependency to 1.3 to avoid a mysterious pre-compilation failure on CRAN windows checks
+
 # jlmerclusterperm 1.0.5
 
 No user-visible changes
