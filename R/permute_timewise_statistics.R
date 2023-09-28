@@ -86,10 +86,10 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
     #   out$z_array <- out$z_array[, , predictors_keep, drop = FALSE]
     # }
   } else if (statistic == "chisq") {
-    Predictors <- Filter(function(x) any(dimnames(out$z_array)$Predictor %in% x), jlmer_spec$meta$term_groups)
-    pruned <- which(!duplicated(rep(names(Predictors), lengths(Predictors))))
+    predictors <- Filter(function(x) any(dimnames(out$z_array)$Predictor %in% x), jlmer_spec$meta$term_groups)
+    pruned <- which(!duplicated(rep(names(predictors), lengths(predictors))))
     out$z_array <- out$z_array[, , pruned, drop = FALSE]
-    dimnames(out$z_array)$Predictor <- names(Predictors)
+    dimnames(out$z_array)$Predictor <- names(predictors)
   }
 
   if (is.null(dimnames(out$z_array)$Predictor)) {
