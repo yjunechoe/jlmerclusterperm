@@ -65,7 +65,6 @@ permute_by_predictor <- function(jlmer_spec, predictors, predictor_type = c("gue
   df_jl <- JuliaConnectoR::juliaCall("DataFrame", as.data.frame(df))
   subject <- jlmer_spec$meta$subject
   trial <- jlmer_spec$meta$trial
-  time <- jlmer_spec$meta$time
   predictor_type <- match.arg(predictor_type)
   if (predictor_type == "guess") {
     predictor_type <- .jlmerclusterperm$jl$guess_shuffle_as(df_jl, predictors, subject, trial)

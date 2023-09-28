@@ -1,6 +1,6 @@
 library(ggplot2)
 
-df <- data.frame(x = (1:25 * 4)/100)
+df <- data.frame(x = (1:25 * 4) / 100)
 df$y1 <- plogis(df$x * 3 - 1)
 df$y2 <- plogis(df$x * 6 - 1.5)
 df
@@ -11,7 +11,7 @@ p <- ggplot(df, aes(x)) +
   geom_ribbon(
     aes(ymin = y1, ymax = y2),
     fill = alpha("black", .5),
-    data = ~ .x[10:18,]
+    data = ~ .x[10:18, ]
   ) +
   geom_line(
     aes(y = y1),
