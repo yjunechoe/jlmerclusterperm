@@ -103,7 +103,7 @@ function timewise_lme(
     grouping_vars::Vector{String},
     times::Vector{<:Real},
     n_times::Integer,
-    diagnose::Bool,
+    is_compute::Bool,
     global_opts::NamedTuple;
     opts...,
 )
@@ -119,12 +119,12 @@ function timewise_lme(
     end
 
     convergence_failures = zeros(Bool, n_times)
-    if diagnose
+    if is_compute
         singular_fits = zeros(Bool, n_times)
         rePCA_95_matrix = zeros(length(grouping_vars), n_times)
     end
 
-    if diagnose
+    if is_compute
         pg = Progress(
             n_times;
             output=global_opts.pg[:io],
@@ -141,14 +141,16 @@ function timewise_lme(
             if all(==(response[1]), response)
                 t_matrix[:, i] .= response[1] == 1 ? Inf : -Inf
                 convergence_failures[i] = missing
-                if diagnose
+                if is_compute
                     singular_fits[i] = missing
                     rePCA_95_matrix[:, i] .= missing
                 end
             else
                 try
                     time_mod = MixedModel(formula, data_at_time, family; contrasts)
-                    time_mod.optsum.ftol_rel = 1e-8
+                    if !is_compute
+                      time_mod.optsum.ftol_rel = 1e-8
+                    end
                     fit!(time_mod; opts...)
                     # test statistic
                     if statistic == "chisq"
@@ -200,7 +202,7 @@ function timewise_lme(
                         t_matrix[:, i] = t_value(time_mod)
                     end
 
-                    if diagnose
+                    if is_compute
                         singular_fits[i] = issingular(time_mod)
                         rePCA_95_matrix[:, i] = [
                             all(isnan, x) ? 0 : findfirst(>(0.95), x) for
@@ -213,13 +215,13 @@ function timewise_lme(
                 end
             end
 
-            if diagnose
+            if is_compute
                 next!(pg)
             end
         end
     end
 
-    if diagnose
+    if is_compute
         (
             singular_fits=singular_fits,
             convergence_failures=convergence_failures,
