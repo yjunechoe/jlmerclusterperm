@@ -1,13 +1,4 @@
-skip_conditionally()
-
-# Logging
-stopJulia()
-system2("julia", '-e "using InteractiveUtils; println(versioninfo());"')
-start_with_threads(max_threads = 2, verbose = TRUE)
-set_projenv(verbose = TRUE)
-cat(JuliaConnectoR::juliaCall("Pkg.status"))
-cat(readLines(file.path(jlmerclusterperm:::.jlmerclusterperm$opts$projdir, "Manifest.toml")), sep = "\n")
-stopJulia()
+testthat::skip_on_cran()
 
 #' @srrstats {G5.2} Appropriate message/warning/error tests are in `/tests/testthat`
 
@@ -17,7 +8,7 @@ stopJulia()
 
 test_that("Setup with seed works (use 2 for testing)", {
   options("jlmerclusterperm.nthreads" = 2)
-  expect_true(jlmerclusterperm_setup())
+  expect_true(jlmerclusterperm_setup(restart = TRUE))
   expect_equal(JuliaConnectoR::juliaEval("Threads.nthreads()"), 2)
 })
 #

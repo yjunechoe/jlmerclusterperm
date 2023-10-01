@@ -1,4 +1,4 @@
-skip_conditionally()
+testthat::skip_on_cran()
 
 #' @srrstats {G5.3} Tests for correctness but no explicit test for NA
 #' @srrstats {G5.4} Tests compare to R `lm()` output.
