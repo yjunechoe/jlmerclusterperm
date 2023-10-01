@@ -96,7 +96,7 @@ start_with_threads <- function(..., max_threads = 7L, verbose = TRUE) {
 set_projenv <- function(..., verbose = TRUE) {
   if (verbose) cli::cli_progress_step("Activating package environment")
   pkgdir <- system.file("julia/", package = "jlmerclusterperm")
-  cachedir <- backports::R_user_dir("jlmerclusterperm", which = "cache")
+  cachedir <- R_user_dir("jlmerclusterperm", which = "cache")
   userdir <- if (dir.exists(dirname(cachedir))) cachedir else tempdir()
   projdir <- file.path(userdir, "julia")
   manifest <- file.path(projdir, "Manifest.toml")
