@@ -101,7 +101,7 @@ make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = 
   }
 
   terms_compact <- fe_term_labels
-  terms_expanded <- colnames(model_matrix)
+  # terms_expanded <- colnames(model_matrix)
   terms_grouping <- setNames(attr(model_matrix, "assign"), colnames(model_matrix))
   has_intercept <- 0 %in% terms_grouping
   if (has_intercept) {

@@ -126,6 +126,7 @@ extract_null_cluster_dists <- function(null_statistics, threshold, binned = FALS
   null_cluster_dists <- apply(null_statistics, 3, function(t_matrix) {
     t_matrix <- t_matrix[!is.nan(rowSums(t_matrix)), ]
     largest_clusters <- df_from_DF(.jlmerclusterperm$jl$extract_clusters(t_matrix, binned, 1L))
+    largest_clusters
   }, simplify = FALSE)
   structure(null_cluster_dists,
     class = "null_cluster_dists",
