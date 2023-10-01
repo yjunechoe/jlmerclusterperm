@@ -149,7 +149,7 @@ function timewise_lme(
                 try
                     time_mod = MixedModel(formula, data_at_time, family; contrasts)
                     if !is_compute
-                      time_mod.optsum.ftol_rel = 1e-8
+                        time_mod.optsum.ftol_rel = 1e-8
                     end
                     fit!(time_mod; opts...)
                     # test statistic
