@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">jlmerclusterperm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -179,7 +179,6 @@ Code to reproduce data and plot
 <p>Code for Figure 7 plots</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: package 'ggplot2' was built under R version 4.3.1</span></span>
 <span><span class="va">make_fig7_plot</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">conditions</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">E2_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Condition</span>, <span class="va">Time</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -216,13 +215,12 @@ Code to reproduce data and plot
 <span></span>
 <span><span class="co"># Figure 7 combined plots</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: package 'patchwork' was built under R version 4.3.1</span></span>
 <span><span class="va">p_top</span> <span class="op">&lt;-</span> <span class="va">fig7</span><span class="op">$</span><span class="va">A</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/breaks_width.html" class="external-link">breaks_width</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span>
 <span><span class="va">p_bot</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">fig7</span><span class="op">$</span><span class="va">B</span> <span class="op">+</span> <span class="va">fig7</span><span class="op">$</span><span class="va">C</span> <span class="op">+</span> <span class="va">fig7</span><span class="op">$</span><span class="va">D</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>color <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_none.html" class="external-link">guide_none</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">fig7_combined</span> <span class="op">&lt;-</span> <span class="va">p_top</span> <span class="op">/</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/guide_area.html" class="external-link">guide_area</a></span><span class="op">(</span><span class="op">)</span> <span class="op">/</span> <span class="va">p_bot</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"collect"</span>, heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">.1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"collect"</span>, heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">.1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span></span></code></pre></div>
 </details><p>Below is the data from the original study (as close as I could
 reproduce it). The <code>E2_data_agg</code> dataframe has the following
@@ -715,8 +713,13 @@ Plotting code
 <span>    panel.grid.major.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="va">fig7A_v2</span> <span class="op">/</span> <span class="va">clusters_annotation</span> <span class="op">&amp;</span></span>
-<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">design</span> <span class="op">&lt;-</span> <span class="st">"</span></span>
+<span><span class="st">  11</span></span>
+<span><span class="st">  11</span></span>
+<span><span class="st">  22</span></span>
+<span><span class="st">"</span></span>
+<span><span class="va">fig7A_v2</span> <span class="op">+</span> <span class="va">clusters_annotation</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>design <span class="op">=</span> <span class="va">design</span><span class="op">)</span></span></code></pre></div>
 </details>
 </div>
 </div>
@@ -799,7 +802,7 @@ formula:</p>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (t &gt; <span style="color: #0000BB;">1.5</span>) ──────────── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">ConditionHelmRvsI</span> (n = 100)</span></span>
 <span><span class="co">#&gt;   Mean (SD): 1.791 (31.12)</span></span>
-<span><span class="co">#&gt;   Coverage intervals: 95% [-60.956, 80.602]</span></span>
+<span><span class="co">#&gt;   Coverage intervals: 95% [-60.956, 80.601]</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">ConditionHelmTvsRI</span> (n = 100)</span></span>
 <span><span class="co">#&gt;   Mean (SD): 2.704 (28.90)</span></span>
 <span><span class="co">#&gt;   Coverage intervals: 95% [-54.636, 62.925]</span></span>
@@ -809,7 +812,7 @@ formula:</p>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Empirical clusters</span> (t &gt; <span style="color: #0000BB;">1.5</span>) ──────────────────────── <span style="color: #0000BB;">&lt;empirical_clusters&gt;</span> ──</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">ConditionHelmRvsI</span></span></span>
 <span><span class="co">#&gt;   [2100, 3450]: 69.563 <span style="font-style: italic;">(p=0.0495)</span></span></span>
-<span><span class="co">#&gt;   [4200, 5050]: 40.461 <span style="color: #B2B2B2; font-style: italic;">(p=0.1584)</span></span></span>
+<span><span class="co">#&gt;   [4200, 5050]: 40.460 <span style="color: #B2B2B2; font-style: italic;">(p=0.1584)</span></span></span>
 <span><span class="co">#&gt;   [5150, 5350]: 8.379 <span style="color: #B2B2B2; font-style: italic;">(p=0.7228)</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">ConditionHelmTvsRI</span></span></span>
 <span><span class="co">#&gt;   [350, 800]: 19.358 <span style="color: #B2B2B2; font-style: italic;">(p=0.4158)</span></span></span>
