@@ -27,7 +27,6 @@ Imports:
     JuliaConnectoR,
     lme4,
     stats,
-    tools,
     utils
 Suggests:
     broom,
