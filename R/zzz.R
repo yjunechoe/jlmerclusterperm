@@ -1,3 +1,3 @@
 .onLoad <- function(...) {
-  # jlmerclusterperm_setup()
+  backports::import(pkgname, "R_user_dir")
 }
