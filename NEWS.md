@@ -1,5 +1,15 @@
 # jlmerclusterperm (development version)
 
+# jlmerclusterperm 1.1.0
+
+Minor breaking change:
+
+- Slightly loosened the default convergence criterion for `permute_timewise_statistics()`
+
+Fixes for CRAN:
+
+- Specified importing `R_user_dir()` from `{backports}` which was missing previously
+
 # jlmerclusterperm 1.0.6
 
 - Fixed bug where `add1` argument to `walk_threshold_steps()` was not being passed down properly

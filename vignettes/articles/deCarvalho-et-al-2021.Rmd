@@ -63,7 +63,7 @@ E2_data_agg
 
 Code for Figure 7 plots
 
-```{r plot-replication}
+```{r plot-replication, fig.height=10}
 library(ggplot2)
 make_fig7_plot <- function(conditions) {
   E2_data %>%
@@ -106,7 +106,7 @@ p_top <- fig7$A +
   theme(legend.position = "bottom")
 p_bot <- (fig7$B + fig7$C + fig7$D) & guides(color = guide_none())
 fig7_combined <- p_top / guide_area() / p_bot +
-  plot_layout(guides = "collect", heights = c(2, .1, 1)) +
+  plot_layout(guides = "collect", heights = c(3, .1, 1)) +
   plot_annotation(tag_levels = "A")
 ```
 
@@ -379,8 +379,13 @@ clusters_annotation <- tidy(CPA_helm$empirical_clusters) %>%
     panel.grid.major.y = element_blank()
   )
 
-fig7A_v2 / clusters_annotation &
-  plot_layout(heights = c(4, 1))
+design <- "
+  11
+  11
+  22
+"
+fig7A_v2 + clusters_annotation +
+  plot_layout(design = design)
 ```
 
 <details>

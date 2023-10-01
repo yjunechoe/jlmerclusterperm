@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">jlmerclusterperm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -161,7 +161,6 @@ trials.</p>
 <p>The following reproduces the figure from the tutorial:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: package 'ggplot2' was built under R version 4.3.1</span></span>
 <span><span class="va">script_fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">cursive_agg_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">timebins</span>, <span class="va">aggbaseline</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_summary.html" class="external-link">stat_summary</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>linetype <span class="op">=</span> <span class="va">script</span><span class="op">)</span>, geom <span class="op">=</span> <span class="st">"line"</span>, linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">script_fig</span></span></code></pre></div>
@@ -479,7 +478,7 @@ regression, but specifying random intercepts by subject with
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.04    0.11   14.19</span></span>
+<span><span class="co">#&gt;    0.03    0.03   12.27</span></span>
 <span><span class="va">re_CPA</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (chisq p &lt; <span style="color: #0000BB;">0.05</span>) ───── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
@@ -558,7 +557,7 @@ Notice how the results are identical to the intercept-only
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.06    0.00    4.47</span></span>
+<span><span class="co">#&gt;    0.01    0.01    4.04</span></span>
 <span><span class="va">re_max_CPA</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (chisq p &lt; <span style="color: #0000BB;">0.05</span>) ───── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>
@@ -572,7 +571,7 @@ Notice how the results are identical to the intercept-only
 <span><span class="co">#&gt; <span style="color: #00BB00;">script</span> (<span style="font-style: italic;">df = 1</span>)</span></span>
 <span><span class="co">#&gt;   [0, 100]: -9.770 <span style="color: #B2B2B2; font-style: italic;">(p=0.1881)</span></span></span>
 <span><span class="co">#&gt;   [900, 1000]: 8.521 <span style="color: #B2B2B2; font-style: italic;">(p=0.2475)</span></span></span>
-<span><span class="co">#&gt;   [1900, 2500]: -73.439 <span style="font-style: italic;">(p=0.0099)</span></span></span>
+<span><span class="co">#&gt;   [1900, 2500]: -73.440 <span style="font-style: italic;">(p=0.0099)</span></span></span>
 <span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span></code></pre></div>
 <div class="callout" style="font-size:0.9em">
 <p>We run the above maximal mixed model CPA purely for demonstration
@@ -714,7 +713,7 @@ intercept-only model with the new treatment coding of
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.04    0.08   13.03</span></span>
+<span><span class="co">#&gt;    0.05    0.07   10.66</span></span>
 <span><span class="va">final_CPA</span></span>
 <span><span class="co">#&gt; $null_cluster_dists</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Null cluster-mass distribution</span> (chisq p &lt; <span style="color: #0000BB;">0.05</span>) ───── <span style="color: #0000BB;">&lt;null_cluster_dists&gt;</span> ──</span></span>

@@ -1,6 +1,6 @@
 Fixes for CRAN:
 
-* Restructured Julia backend internals to resolve test errors on Windows
+* Specified importing from backports which was missing previously
 
 ## R CMD check results
 

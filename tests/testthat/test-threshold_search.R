@@ -1,4 +1,4 @@
-skip_conditionally()
+testthat::skip_on_cran()
 
 jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
 reset_rng_state()
