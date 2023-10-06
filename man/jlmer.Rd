@@ -30,8 +30,6 @@ jlmerclusterperm_setup(verbose = FALSE)
 julia_progress(show = FALSE)
 }
 
-jlmerclusterperm_setup(verbose = FALSE)
-
 # Fitting a regression model with a specification object
 spec <- make_jlmer_spec(weight ~ 1 + Diet, ChickWeight)
 jlmer(spec)

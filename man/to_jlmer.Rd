@@ -41,8 +41,6 @@ jlmerclusterperm_setup(verbose = FALSE)
 julia_progress(show = FALSE)
 }
 
-jlmerclusterperm_setup(verbose = FALSE)
-
 # Fitting a regression model with R formula syntax
 to_jlmer(weight ~ 1 + Diet, ChickWeight)
 
