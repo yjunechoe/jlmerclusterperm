@@ -22,7 +22,7 @@ julia_version_compatible <- function() {
   as.package_version(julia_version()) >= "1.8"
 }
 julia_detect_cores <- function() {
-  as.integer(system2("julia", '-q -e "println(Sys.CPU_THREADS);"', stdout = TRUE))
+  as.integer(system2("julia", '-q --startup-file="no" -e "println(Sys.CPU_THREADS);"', stdout = TRUE))
 }
 is_setup <- function() isTRUE(.jlmerclusterperm$is_setup)
 
