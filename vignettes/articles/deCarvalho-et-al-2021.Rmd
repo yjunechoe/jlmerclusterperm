@@ -379,13 +379,8 @@ clusters_annotation <- tidy(CPA_helm$empirical_clusters) %>%
     panel.grid.major.y = element_blank()
   )
 
-design <- "
-  11
-  11
-  22
-"
-fig7A_v2 + clusters_annotation +
-  plot_layout(design = design)
+fig7A_v2 / clusters_annotation +
+  plot_layout(heights = c(4, 1))
 ```
 
 <details>
