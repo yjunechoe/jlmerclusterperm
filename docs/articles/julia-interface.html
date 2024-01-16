@@ -248,7 +248,9 @@ at:</p>
 <span><span class="co">#&gt; "C:/Users/jchoe/.julia/config/startup.jl"</span></span></code></pre></div>
 <p>And there I load MKL.jl:</p>
 <pre>
-using MKL
+if contains(first(Sys.cpu_info()).model, "Intel")
+  using MKL
+end
 </pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
