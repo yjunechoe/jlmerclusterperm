@@ -44,26 +44,26 @@ ps_data <- aoi_timepoints %>%
   filter(!between(age, 14, 16)) %>%
   mutate(age_binned = ifelse(age < 14, "Younger", "Older"))
 ## Filter for time window of interest
-ts_window <- ps_data |>
+ts_window <- ps_data %>%
   filter(t_norm >= 0, t_norm < 4000)
 ## Identify trials to exclude (trackloss in >25% of samples)
-to_exclude <- ts_window |>
-  group_by(subject_id, trial_id) |>
-  summarize(prop = mean(aoi == "missing"), .groups = "drop") |>
+to_exclude <- ts_window %>%
+  group_by(subject_id, trial_id) %>%
+  summarize(prop = mean(aoi == "missing"), .groups = "drop") %>%
   filter(prop > 0.25)
 ## Exclude disqualifying trials and keep information relevant for CPA
-ts_data <- ts_window |>
-  anti_join(to_exclude, by = c("subject_id", "trial_id")) |>
+ts_data <- ts_window %>%
+  anti_join(to_exclude, by = c("subject_id", "trial_id")) %>%
   mutate(
     target = aoi == "target",
     missing = aoi == "missing",
     age = factor(age_binned, c("Younger", "Older"))
-  ) |>
+  ) %>%
   select(subject_id, age, trial_id, time = t_norm, target, missing)
 
 # Data of subject mean proportions of fixations to target
-ts_data_agg <- ts_data |>
-  group_by(subject_id, age, time) |>
+ts_data_agg <- ts_data %>%
+  group_by(subject_id, age, time) %>%
   summarize(prop = sum(target) / sum(!missing), .groups = "drop")
 
 # Data of trial-level fixations to target (0s and 1s)

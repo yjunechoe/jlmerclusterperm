@@ -127,5 +127,7 @@ JuliaConnectoR::juliaCall("Base._local_julia_startup_file")
 And there I load MKL.jl:
 
 <pre>
-using MKL
+if contains(first(Sys.cpu_info()).model, "Intel")
+  using MKL
+end
 </pre>
