@@ -64,7 +64,7 @@ make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = 
       cli::cli_alert_warning(
         "Grouping column{?s} {.val {special_cols}} do{?es/} not uniquely identify rows in the data."
       )
-      predvar <- attr(terms(lme4::subbars(fm)), "term.labels")
+      predvar <- attr(stats::terms(lme4::subbars(fm)), "term.labels")
       predvar1 <- length(predvar) == 1L
       if (predvar1 && is.null(trial) && !anyDuplicated(data[, c(special_cols, predvar)])) {
         cli::cli_bullets(c(
