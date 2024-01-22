@@ -58,12 +58,19 @@ make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = 
   # Validate grouping structure
   if (!is.null(special_cols)) {
     if (!all(special_cols %in% colnames(data))) {
-      cli::cli_abort("Column{?s} {.val {special_cols[!special_cols %in% colnames(data)]}} not found in {.arg data}")
+      cli::cli_abort("Column{?s} {.val {special_cols[!special_cols %in% colnames(data)]}} not found in {.arg data}.")
     }
-    if (nrow(data) != nrow(unique(data[, special_cols, drop = FALSE]))) {
-      cli::cli_alert_warning(c(
-        "Grouping column{?s} {.val {special_cols}} do{?es/} not uniquely identify rows in the data"
-      ))
+    if (anyDuplicated(data[, special_cols, drop = FALSE])) {
+      cli::cli_alert_warning(
+        "Grouping column{?s} {.val {special_cols}} do{?es/} not uniquely identify rows in the data."
+      )
+      predvar <- attr(terms(lme4::subbars(fm)), "term.labels")
+      predvar1 <- length(predvar) == 1L
+      if (predvar1 && is.null(trial) && !anyDuplicated(data[, c(special_cols, predvar)])) {
+        cli::cli_bullets(c(
+          " " = '└─ Is the data aggregated by the predictor? Try specifying {.code trial = {.val {predvar}}}.'
+        ))
+      }
     }
   }
   if (!is.null(time)) {
