@@ -1,0 +1,295 @@
+---
+title: "Comparison to eyetrackingR"
+description: |
+  Translating eyetrackingR code for CPA with jlmerclusterperm
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This article replicates the cluster-based permutation analysis in the `{eyetrackingR}` vignette ["Divergence"](http://www.eyetracking-r.com/vignettes/divergence).
+
+See more tutorials and vignettes on the [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles) page.
+
+## Setup
+
+The following collapsed code chunk runs the code in the ["Prerequisites"](http://www.eyetracking-r.com/vignettes/divergence#prerequisites) section of the original `{eyetrackingR}` vignette:
+
+<details>
+<summary>"Prerequisites" setup code</summary>
+
+```{r prerequisites, message=FALSE, warning=FALSE}
+set.seed(42)
+
+library("Matrix")
+library("lme4")
+library("ggplot2")
+library("eyetrackingR")
+
+data("word_recognition")
+data <- make_eyetrackingr_data(word_recognition, 
+                       participant_column = "ParticipantName",
+                       trial_column = "Trial",
+                       time_column = "TimeFromTrialOnset",
+                       trackloss_column = "TrackLoss",
+                       aoi_columns = c('Animate','Inanimate'),
+                       treat_non_aoi_looks_as_missing = TRUE
+                )
+
+# subset to response window post word-onset
+response_window <- subset_by_window(data, 
+                                    window_start_time = 15500, 
+                                    window_end_time = 21000, 
+                                    rezero = FALSE)
+
+# analyze amount of trackloss by subjects and trials
+(trackloss <- trackloss_analysis(data = response_window))
+
+# remove trials with > 25% of trackloss
+response_window_clean <- clean_by_trackloss(data = response_window,
+                                            trial_prop_thresh = .25)
+
+# create Target condition column
+response_window_clean$Target <- as.factor( ifelse(test = grepl('(Spoon|Bottle)', response_window_clean$Trial), 
+                                       yes = 'Inanimate', 
+                                       no  = 'Animate') )
+
+response_time <- make_time_sequence_data(response_window_clean,
+                                  time_bin_size = 100, 
+                                  predictor_columns = c("Target"),
+                                  aois = "Animate",
+                                  summarize_by = "ParticipantName" )
+```
+
+</details>
+
+We pick up from where the `response_time` dataframe is created. By this stage, the data has been filtered for track loss and aggregated by subject and by time bins, among other things.
+
+A fuller description of the experiment and the research hypothesis can be found in the original `{eyetrackingR}` vignette. For the purposes of this exercise, we note the following minimal facts about the analysis:
+
+1) The hypothesis is `Prop ~ Target`. A t-test is used to estimate the effect of `Target` on `Prop`
+2) `Target` is the experiment condition. It is a two-level factor (`"Animate"` vs. `"Inanimate"`)
+3) `Prop` is the response variable. It is a continuous measure of the proportion (0-1) of looks to the area of interest
+4) `ParticipantName` is the column that identifies each participant
+5) `TimeBin` represents the time, binned in 100ms windows
+
+Additionally, we keep the following columns as they are necessary metadata for the `{eyetrackingR}` approach, though they can be dropped for the `{jlmerclusterperm}` approach.
+
+6) `Time` is the continuous, raw (i.e., un-binned) measure of time
+7) `AOI` is the identity of the area of interest
+
+For simplicity, we subset `response_time` to include only the columns of interest for the cluster-based permutation analysis.
+
+```{r}
+response_time <- response_time %>% 
+  select(Prop, Target, TimeBin, ParticipantName,
+         Time, AOI)
+dplyr::glimpse(response_time)
+```
+
+Lastly, we replicate the plot from the original vignette:
+
+```{r}
+# visualize timecourse
+plot(response_time, predictor_column = "Target") + 
+  theme_light() +
+  coord_cartesian(ylim = c(0,1))
+```
+
+## CPA in `{eyetrackingR}`
+
+Continuing with the `response_time` dataframe, we jump to the ["Bootstrapped cluster-based permutation analysis"](http://www.eyetracking-r.com/vignettes/divergence#bootstrapped-cluster-based-permutation-analysis) of the original vignette.
+
+<details>
+<summary>Choosing the threshold</summary>
+
+The original vignette uses the following heuristic of choosing a threshold:
+
+```{r}
+num_sub = length(unique((response_window_clean$ParticipantName)))
+threshold_t = qt(p = 1 - .05/2, df = num_sub-1)
+threshold_t
+```
+
+How to choose a threshold is outside the scope of this article - we will simply use this value for both approaches.
+
+</details>
+
+In `{eyetrackingR}`, CPA is conducted in two steps:
+
+1) Prepare data for CPA with `make_time_cluster_data()`:
+
+    ```{r}
+    df_timeclust <- make_time_cluster_data(response_time, 
+                                          test= "t.test", paired=TRUE,
+                                          predictor_column = "Target", 
+                                          threshold = threshold_t)
+    ```
+    
+    This step computes the timewise statistics from the data and identifies the empirical clusters, which can be inspected with a `plot()` and `summary()` method:
+    
+    ```{r}
+    plot(df_timeclust)
+    ```
+    
+    ```{r}
+    summary(df_timeclust)
+    ```
+
+2) Run the permutation test on the cluster data with `analyze_time_clusters()`:
+
+    ```{r}
+    system.time({
+      
+      clust_analysis <- analyze_time_clusters(
+        df_timeclust,
+        within_subj = TRUE,
+        paired = TRUE,
+        samples = 150,
+        quiet = TRUE
+      )
+      
+    })
+    ```
+    
+    This simulates a null distribution of cluster-mass statistics. The output, when printed, is essentially the output of `summary(df_timeclust)` with p-values (the `Probability` column)
+    
+    ```{r}
+    clust_analysis
+    ```
+    
+    The null distribution (and the extremety of the empirical clusters in that context) can be visualized with a `plot()` method:
+    
+    ```{r}
+    plot(clust_analysis)
+    ```
+
+## CPA in `{jlmerclusterperm}`
+
+First, we set up jlmerclusterperm. For comparability, we use a single thread:
+
+```{r, message = FALSE, warning = FALSE}
+library(jlmerclusterperm)
+options("jlmerclusterperm.nthreads" = 1)
+system.time({
+  
+  # Note the overhead for initializing the Julia session
+  jlmerclusterperm_setup()
+  
+})
+```
+
+In `{jlmerclusterpm}`, CPA can also be conducted in two steps:
+
+1) Make the specification object with `make_jlmer_spec()`
+
+    We first specify the formula, data, and grouping columns of the data. Instead of a paired t-test, we specify a linear model with the formula `Prop ~ Target`.
+    
+    ```{r}
+    spec <- make_jlmer_spec(
+      formula = Prop ~ Target,
+      data = response_time,
+      subject = "ParticipantName",
+      trial = "Target",
+      time = "TimeBin"
+    )
+    ```
+    
+    The output prepares the data for CPA by subsetting it and applying the contrast coding schemes, among other things:
+    
+    ```{r}
+    spec
+    ```
+
+2) Run the permutation test with the specification using `clusterpermute()`
+
+    ```{r, message = FALSE, warning = FALSE}
+    system.time({
+      cpa <- clusterpermute(spec, threshold = threshold_t, nsim = 150)
+    })
+    ```
+    
+    The same kinds of information are returned:
+    
+    ```{r}
+    cpa
+    ```
+    
+    The different pieces of information are available for further inspection using `tidy()`, which returns the dataframe underlying the summary:
+    
+    ```{r}
+    null_distribution <- tidy(cpa$null_cluster_dists)
+    null_distribution
+    ```
+    
+    ```{r}
+    empirical_clusters <- tidy(cpa$empirical_clusters)
+    empirical_clusters
+    ```
+    
+In contrast to `{eyetrackingR}`, `{jlmerclusterperm}` does not provide a custom `plot()` method. However, the same kinds of plots can be replicated with a few lines of ggplot code:
+    
+```{r}
+# We flip the sign of the statistic here for visual equivalence
+cpa_plot <- null_distribution %>% 
+  ggplot(aes(-sum_statistic)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    binwidth = 3
+  ) +
+  geom_density() +
+  geom_vline(
+    aes(xintercept = -sum_statistic, color = id),
+    data = empirical_clusters,
+    linetype = 2,
+    linewidth = 1
+  )
+cpa_plot
+```
+
+<div class="callout" style="font-size:0.9em">
+Note that while the sign of the clusters is (originally) flipped between the two approaches, this is a trivial difference that simply reflects the default choice of baseline in `t.text()` vs. regression contrasts. This can be addressed by setting contrasts prior to running the CPA (see related issue in [another article](https://yjunechoe.github.io/jlmerclusterperm/articles/Geller-et-al-2020.html#e-contrast-coding)).
+</div>
+
+Lastly, a side-by-side comparison of the results:
+
+```{r}
+library(patchwork)
+plot(clust_analysis) + cpa_plot
+```
+
+## Performance
+
+`{jlmerclusterperm}` scales easily to a higher number of simulations, especially for fixed-effects models:
+
+```{r, message = FALSE, warning = FALSE}
+system.time({
+  clusterpermute(spec, threshold = threshold_t, nsim = 1000)
+})
+```
+
+While `{eyetrackingR}` does have an option for parallelization, it has limited support and is platform dependent. In contrast, `{jlmerclusterperm}` leverages Julia's built-in multi-threading support which is more performant and consistent:
+
+```{r}
+options("jlmerclusterperm.nthreads" = 7)
+system.time({
+  jlmerclusterperm_setup(restart = TRUE, verbose = FALSE)
+})
+```
+
+10,000 simulations with 7 threads:
+
+```{r, message = FALSE, warning = FALSE}
+system.time({
+  clusterpermute(spec, threshold = threshold_t, nsim = 10000)
+})
+```
+
+```{r cleanup, include = FALSE}
+options("jlmerclusterperm.nthreads" = NULL)
+```
+

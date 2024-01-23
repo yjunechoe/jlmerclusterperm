@@ -58,6 +58,8 @@ The **topics** cover general package features:
 
 - [Asynchronous CPA](https://yjunechoe.github.io/jlmerclusterperm/articles/asynchronous-cpa.html): running a CPA in a background process using the [future](https://future.futureverse.org/) package.
 
+- [Comparison to eyetrackingR](https://yjunechoe.github.io/jlmerclusterperm/articles/eyetrackingR-comparison.html): Translating [eyetrackingR](http://www.eyetracking-r.com/) code for CPA with `jlmerclusterperm.`
+
 ## Compared to other implementations
 
 There are other R packages for cluster-based permutation analysis, such as [clusterperm](https://github.com/dalejbarr/clusterperm/), [eyetrackingR](https://github.com/jwdink/eyetrackingR), [permuco](https://github.com/jaromilfrossard/permuco/), and [permutes](https://cran.r-project.org/package=permutes).

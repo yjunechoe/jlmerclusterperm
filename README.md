@@ -45,7 +45,7 @@ website](https://julialang.org/) or using the command line utility
 [juliaup](https://github.com/JuliaLang/juliaup). Julia version \>=1.8 is
 required and
 [1.9](https://julialang.org/blog/2023/04/julia-1.9-highlights/#caching_of_native_code)
-is preferred for its substantial speed improvements.
+or higher is preferred for the substantial speed improvements.
 
 Before using functions from `jlmerclusterperm`, an initial setup is
 required via calling `jlmerclusterperm_setup()`. The very first call on
