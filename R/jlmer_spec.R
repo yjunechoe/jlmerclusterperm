@@ -68,7 +68,7 @@ make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = 
       predvar1 <- length(predvar) == 1L
       if (predvar1 && is.null(trial) && !anyDuplicated(data[, c(special_cols, predvar)])) {
         cli::cli_bullets(c(
-          " " = '└─ Is the data aggregated by the predictor? Try specifying {.code trial = {.val {predvar}}}.'
+          " " = 'Is the data aggregated by the predictor? Try specifying {.code trial = {.val {predvar}}}.'
         ))
       }
     }
