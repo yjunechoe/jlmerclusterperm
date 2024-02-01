@@ -110,7 +110,7 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
 check_convergence_failures <- function(z_array) {
   convergence_failures_pos <- is.nan(z_array)
   if (any(convergence_failures_pos)) {
-    convergence_failures <- unique(which(convergence_failures_pos, arr.ind = TRUE)[, c("Predictor", "Sim")])
+    convergence_failures <- unique(which(convergence_failures_pos, arr.ind = TRUE)[, c("Predictor", "Sim"), drop = FALSE])
     convergence_failure_table <- table(convergence_failures[, "Predictor"])
     names(convergence_failure_table) <- dimnames(z_array)$Predictor[as.integer(names(convergence_failure_table))]
     cli::cli_alert_info("Convergence errors encountered (out of {.arg nsim = {.val {nrow(z_array)}}}) while bootstrapping the following {cli::qty(names(convergence_failure_table))}predictor{?s}:")
