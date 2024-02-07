@@ -16,7 +16,7 @@ julia_cli <- function(x) {
   utils::tail(system2("julia", x, stdout = TRUE), 1L)
 }
 parse_julia_version <- function(version) {
-  gsub("^julia version .*(\\d+\\.\\d+\\.\\d+).*$", "\\1", version)
+  gsub("^julia.version .*(\\d+\\.\\d+\\.\\d+).*$", "\\1", version)
 }
 julia_version <- function() {
   parse_julia_version(julia_cli("--version"))
