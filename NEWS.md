@@ -1,4 +1,4 @@
-# jlmerclusterperm (development version)
+# jlmerclusterperm 1.1.1
 
 # jlmerclusterperm 1.1.1
 
