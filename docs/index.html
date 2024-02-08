@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="index.html">jlmerclusterperm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -108,7 +108,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"yjunechoe/jlmerclusterperm"</span><span class="op">)</span></span></code></pre></div>
-<p>Using <code>jlmerclusterperm</code> requires a prior installation of the Julia programming language, which can be downloaded from either the <a href="https://julialang.org/" class="external-link">official website</a> or using the command line utility <a href="https://github.com/JuliaLang/juliaup" class="external-link">juliaup</a>. Julia version &gt;=1.8 is required and <a href="https://julialang.org/blog/2023/04/julia-1.9-highlights/#caching_of_native_code" class="external-link">1.9</a> is preferred for its substantial speed improvements.</p>
+<p>Using <code>jlmerclusterperm</code> requires a prior installation of the Julia programming language, which can be downloaded from either the <a href="https://julialang.org/" class="external-link">official website</a> or using the command line utility <a href="https://github.com/JuliaLang/juliaup" class="external-link">juliaup</a>. Julia version &gt;=1.8 is required and <a href="https://julialang.org/blog/2023/04/julia-1.9-highlights/#caching_of_native_code" class="external-link">1.9</a> or higher is preferred for the substantial speed improvements.</p>
 <p>Before using functions from <code>jlmerclusterperm</code>, an initial setup is required via calling <code><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup()</a></code>. The very first call on a system will install necessary dependencies (this only happens once and takes around 10-15 minutes).</p>
 <p>Subsequent calls to <code><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup()</a></code> incur a small overhead of around 30 seconds, plus slight delays for first-time function calls. You pay up front for start-up and warm-up costs and get blazingly-fast functions from the package.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -288,7 +288,7 @@
 <p>If you use jlmerclusterperm for cluster-based permutation test with mixed-effects models in your research, please cite one (or more) of the following as you see fit.</p>
 <p>To cite jlmerclusterperm:</p>
 <ul>
-<li>Choe, J. (2023). jlmerclusterperm: Cluster-Based Permutation Analysis for Densely Sampled Time Data. R package version 1.1.0. <a href="https://cran.r-project.org/package=jlmerclusterperm" class="external-link uri">https://cran.r-project.org/package=jlmerclusterperm</a>.</li>
+<li>Choe, J. (2023). jlmerclusterperm: Cluster-Based Permutation Analysis for Densely Sampled Time Data. R package version 1.1.1. <a href="https://cran.r-project.org/package=jlmerclusterperm" class="external-link uri">https://cran.r-project.org/package=jlmerclusterperm</a>.</li>
 </ul>
 <p>To cite the cluster-based permutation test:</p>
 <ul>
