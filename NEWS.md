@@ -1,4 +1,12 @@
-# jlmerclusterperm (development version)
+# jlmerclusterperm 1.1.1
+
+# jlmerclusterperm 1.1.1
+
+- More informative warnings when constructing a spec object
+
+- Fixed minor bugs when interfacing with Julia
+
+- Fixed bug with reporting convergence warnings when only one is encountered
 
 # jlmerclusterperm 1.1.0
 
