@@ -131,47 +131,47 @@ In `{eyetrackingR}`, CPA is conducted in two steps:
 1) Prepare data for CPA with `make_time_cluster_data()`:
 
     ```{r}
-df_timeclust <- make_time_cluster_data(response_time,
-  test = "t.test", paired = TRUE,
-  predictor_column = "Target",
-  threshold = threshold_t
-)
+    df_timeclust <- make_time_cluster_data(response_time,
+      test = "t.test", paired = TRUE,
+      predictor_column = "Target",
+      threshold = threshold_t
+    )
     ```
     
     This step computes the timewise statistics from the data and identifies the empirical clusters, which can be inspected with a `plot()` and `summary()` method:
     
     ```{r}
-plot(df_timeclust)
+    plot(df_timeclust)
     ```
     
     ```{r}
-summary(df_timeclust)
+    summary(df_timeclust)
     ```
 
 2) Run the permutation test on the cluster data with `analyze_time_clusters()`:
 
     ```{r}
-system.time({
-  clust_analysis <- analyze_time_clusters(
-    df_timeclust,
-    within_subj = TRUE,
-    paired = TRUE,
-    samples = 150,
-    quiet = TRUE
-  )
-})
+    system.time({
+      clust_analysis <- analyze_time_clusters(
+        df_timeclust,
+        within_subj = TRUE,
+        paired = TRUE,
+        samples = 150,
+        quiet = TRUE
+      )
+    })
     ```
     
     This simulates a null distribution of cluster-mass statistics. The output, when printed, is essentially the output of `summary(df_timeclust)` with p-values (the `Probability` column)
     
     ```{r}
-clust_analysis
+    clust_analysis
     ```
     
     The null distribution (and the extremety of the empirical clusters in that context) can be visualized with a `plot()` method:
     
     ```{r}
-plot(clust_analysis)
+    plot(clust_analysis)
     ```
 
 ## CPA in `{jlmerclusterperm}`
@@ -194,45 +194,45 @@ In `{jlmerclusterpm}`, CPA can also be conducted in two steps:
     We first specify the formula, data, and grouping columns of the data. Instead of a paired t-test, we specify a linear model with the formula `Prop ~ Target`.
     
     ```{r}
-spec <- make_jlmer_spec(
-  formula = Prop ~ Target,
-  data = response_time,
-  subject = "ParticipantName",
-  trial = "Target",
-  time = "TimeBin"
-)
+    spec <- make_jlmer_spec(
+      formula = Prop ~ Target,
+      data = response_time,
+      subject = "ParticipantName",
+      trial = "Target",
+      time = "TimeBin"
+    )
     ```
     
     The output prepares the data for CPA by subsetting it and applying the contrast coding schemes, among other things:
     
     ```{r}
-spec
+    spec
     ```
 
 2) Run the permutation test with the specification using `clusterpermute()`
 
     ```{r, message = FALSE, warning = FALSE}
-system.time({
-  cpa <- clusterpermute(spec, threshold = threshold_t, nsim = 150)
-})
+    system.time({
+      cpa <- clusterpermute(spec, threshold = threshold_t, nsim = 150)
+    })
     ```
     
     The same kinds of information are returned:
     
     ```{r}
-cpa
+    cpa
     ```
     
     The different pieces of information are available for further inspection using `tidy()`, which returns the dataframe underlying the summary:
     
     ```{r}
-null_distribution <- tidy(cpa$null_cluster_dists)
-null_distribution
+    null_distribution <- tidy(cpa$null_cluster_dists)
+    null_distribution
     ```
     
     ```{r}
-empirical_clusters <- tidy(cpa$empirical_clusters)
-empirical_clusters
+    empirical_clusters <- tidy(cpa$empirical_clusters)
+    empirical_clusters
     ```
     
 In contrast to `{eyetrackingR}`, `{jlmerclusterperm}` does not provide a custom `plot()` method. However, the same kinds of plots can be replicated with a few lines of ggplot code:
@@ -296,4 +296,3 @@ system.time({
 ```{r cleanup, include = FALSE}
 options("jlmerclusterperm.nthreads" = NULL)
 ```
-

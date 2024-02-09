@@ -293,7 +293,7 @@ identifies the empirical clusters, which can be inspected with a
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   13.22    0.10   39.03</span></span></code></pre></div>
+<span><span class="co">#&gt;   50.03    0.58  123.34</span></span></code></pre></div>
 <p>This simulates a null distribution of cluster-mass statistics. The
 output, when printed, is essentially the output of
 <code>summary(df_timeclust)</code> with p-values (the
@@ -332,7 +332,7 @@ thread:</p>
 <span>  <span class="fu"><a href="../reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.04    0.01   32.76</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.14    0.01   72.99</span></span></code></pre></div>
 <p>In <code>{jlmerclusterpm}</code>, CPA can also be conducted in two
 steps:</p>
 <ol style="list-style-type: decimal">
@@ -381,7 +381,7 @@ the contrast coding schemes, among other things:</p>
 <span>  <span class="va">cpa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clusterpermute.html">clusterpermute</a></span><span class="op">(</span><span class="va">spec</span>, threshold <span class="op">=</span> <span class="va">threshold_t</span>, nsim <span class="op">=</span> <span class="fl">150</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.03    0.00   16.05</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.06    0.08   51.34</span></span></code></pre></div>
 <p>The same kinds of information are returned:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cpa</span></span>
@@ -473,7 +473,7 @@ simulations, especially for fixed-effects models:</p>
 <span>  <span class="fu"><a href="../reference/clusterpermute.html">clusterpermute</a></span><span class="op">(</span><span class="va">spec</span>, threshold <span class="op">=</span> <span class="va">threshold_t</span>, nsim <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.06    0.05   11.44</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.17    0.24   52.61</span></span></code></pre></div>
 <p>While <a href="http://samforbes.me/eyetrackingR/" class="external-link">eyetrackingR</a> does have an option for
 parallelization, it has limited support and is platform dependent. In
 contrast, <a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">jlmerclusterperm</a> leverages Julia’s built-in
@@ -484,14 +484,14 @@ multi-threading support which is more performant and consistent:</p>
 <span>  <span class="fu"><a href="../reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>restart <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.14    0.01   23.20</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.19    0.03   47.69</span></span></code></pre></div>
 <p>10,000 simulations with 7 threads:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/clusterpermute.html">clusterpermute</a></span><span class="op">(</span><span class="va">spec</span>, threshold <span class="op">=</span> <span class="va">threshold_t</span>, nsim <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.29    0.99   54.15</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.95    2.08  146.65</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
