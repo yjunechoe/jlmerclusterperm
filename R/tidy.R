@@ -14,7 +14,7 @@ generics::tidy
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
-#' jlmerclusterperm_setup(verbose = FALSE)
+#' jlmerclusterperm_setup(cache_dir = tempdir(), verbose = FALSE)
 #' julia_progress(show = FALSE)
 #' }
 #'
@@ -99,7 +99,7 @@ tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
-#' jlmerclusterperm_setup(verbose = FALSE)
+#' jlmerclusterperm_setup(cache_dir = tempdir(), verbose = FALSE)
 #' julia_progress(show = FALSE)
 #' }
 #'

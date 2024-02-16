@@ -4,10 +4,14 @@
 \alias{jlmerclusterperm_setup}
 \title{Initial setup for the jlmerclusterperm package}
 \usage{
-jlmerclusterperm_setup(..., restart = TRUE, verbose = TRUE)
+jlmerclusterperm_setup(..., cache_dir = NULL, restart = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{...}{Ignored.}
+
+\item{cache_dir}{The location to write out package cache files (namely, Manifest.toml).
+If \code{NULL} (default), attempts to write to the package's cache directory discovered via
+\code{R_user_dir()} and falls back to \code{tempdir()}.}
 
 \item{restart}{Whether to set up a fresh Julia session, given that one is already running.
 If \code{FALSE} and \code{jlmerclusterperm_setup()} has already been called, nothing happens.}
@@ -24,7 +28,7 @@ Initial setup for the jlmerclusterperm package
 \dontshow{if (julia_setup_ok()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \donttest{
 options("jlmerclusterperm.nthreads" = 2)
-jlmerclusterperm_setup(verbose = FALSE)
+jlmerclusterperm_setup(cache_dir = tempdir(), verbose = FALSE)
 
 \dontshow{
 JuliaConnectoR::stopJulia()
