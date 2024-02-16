@@ -31,7 +31,11 @@ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
 }
 
 #toc > .nav .nav-link .active {
-  background-color: #d1e7f5
+  background-color: #d1e7f5;
+}
+
+.nav-text {
+  color: white;
 }
 
 .navbar-brand {
@@ -52,7 +56,7 @@ details {
   padding: 1rem 1rem 0.5rem 1rem;
 }
 
-p.caption {
+.caption {
   text-align: center;
   color: grey;
   font-size: .9em;
