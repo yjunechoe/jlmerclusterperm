@@ -1,4 +1,10 @@
-# jlmerclusterperm 1.1.1
+# jlmerclusterperm 1.1.2
+
+No user-visible changes
+
+Fixes for CRAN:
+
+- Write cache to `tempdir()` for the purposes of running examples and tests.
 
 # jlmerclusterperm 1.1.1
 
