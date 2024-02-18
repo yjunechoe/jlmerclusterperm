@@ -16,7 +16,7 @@
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
-#' jlmerclusterperm_setup(verbose = FALSE)
+#' jlmerclusterperm_setup(cache_dir = tempdir(), verbose = FALSE)
 #' julia_progress(show = FALSE)
 #' }
 #'
@@ -83,7 +83,7 @@ extract_empirical_clusters <- function(empirical_statistics, threshold, binned =
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
-#' jlmerclusterperm_setup(verbose = FALSE)
+#' jlmerclusterperm_setup(cache_dir = tempdir(), verbose = FALSE)
 #' julia_progress(show = FALSE)
 #' }
 #'

@@ -1,4 +1,10 @@
-# jlmerclusterperm 1.1.1
+# jlmerclusterperm 1.1.2
+
+- `jlmerclusterperm()` exposes a `cache_dir` argument for manually specifying the cache directory. This was added largely for the convenience of testing. The default value of `cache_dir = NULL` preserves old behavior.
+
+Fixes for CRAN:
+
+- Write cache to `tempdir()` for the purposes of running examples and tests.
 
 # jlmerclusterperm 1.1.1
 

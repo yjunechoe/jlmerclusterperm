@@ -37,7 +37,7 @@ Fit a Julia regression model using lme4 syntax
 \donttest{
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
-jlmerclusterperm_setup(verbose = FALSE)
+jlmerclusterperm_setup(cache_dir = tempdir(), verbose = FALSE)
 julia_progress(show = FALSE)
 }
 

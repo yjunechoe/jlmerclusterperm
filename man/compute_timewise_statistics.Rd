@@ -34,7 +34,7 @@ Fit Julia regression models to each time point of a time series data
 \donttest{
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
-jlmerclusterperm_setup(verbose = FALSE)
+jlmerclusterperm_setup(cache_dir = tempdir(), verbose = FALSE)
 julia_progress(show = FALSE)
 }
 

@@ -14,7 +14,7 @@
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
-#' jlmerclusterperm_setup(verbose = FALSE)
+#' jlmerclusterperm_setup(cache_dir = tempdir(), verbose = FALSE)
 #' julia_progress(show = FALSE)
 #' }
 #'
@@ -57,7 +57,7 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_sp
 #' \donttest{
 #' \dontshow{
 #' options("jlmerclusterperm.nthreads" = 2)
-#' jlmerclusterperm_setup(verbose = FALSE)
+#' jlmerclusterperm_setup(cache_dir = tempdir(), verbose = FALSE)
 #' julia_progress(show = FALSE)
 #' }
 #'

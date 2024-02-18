@@ -22,7 +22,7 @@ Set/get options for Julia progress bar
 \donttest{
 \dontshow{
 options("jlmerclusterperm.nthreads" = 2)
-jlmerclusterperm_setup(verbose = FALSE)
+jlmerclusterperm_setup(cache_dir = tempdir(), verbose = FALSE)
 }
 
 # Show current progress options
