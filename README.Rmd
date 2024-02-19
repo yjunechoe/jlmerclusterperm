@@ -8,8 +8,16 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
+  fig.align = "center",
   fig.path = "man/figures/README-",
-  out.width = "75%"
+  asciicast_theme = if (Sys.getenv("IN_PKGDOWN") == "true") "pkgdown" else "readme"
+)
+asciicast::init_knitr_engine(
+  echo = TRUE,
+  echo_input = FALSE,
+  timeout = 60,
+  record_env = c("asciicast_cols" = 80),
+  same_process = TRUE
 )
 ```
 
@@ -48,14 +56,17 @@ Before using functions from `jlmerclusterperm`, an initial setup is required via
 
 Subsequent calls to `jlmerclusterperm_setup()` incur a small overhead of around 30 seconds, plus slight delays for first-time function calls. You pay up front for start-up and warm-up costs and get blazingly-fast functions from the package.
 
-```{r setup, eval = FALSE}
+```{r setup, include = FALSE}
+library(jlmerclusterperm)
+jlmerclusterperm_setup()
+```
+
+```{asciicast setup-io}
 # Both lines must be run at the start of each new session
 library(jlmerclusterperm)
 jlmerclusterperm_setup()
 ```
 
-```{r setup, include = FALSE}
-```
 
 See the [Get Started](https://yjunechoe.github.io/jlmerclusterperm/articles/jlmerclusterperm.html) page on the [package website](https://yjunechoe.github.io/jlmerclusterperm/) for background and tutorials.
 
@@ -65,7 +76,7 @@ See the [Get Started](https://yjunechoe.github.io/jlmerclusterperm/articles/jlme
 
 A time series data:
 
-```{r chickweight, message = FALSE}
+```{r chickweight, out.width = "75%"}
 chickweights <- ChickWeight
 chickweights$Time <- as.integer(factor(chickweights$Time))
 matplot(
@@ -74,9 +85,22 @@ matplot(
 )
 ```
 
+```{asciicast chickweight-io, include = FALSE}
+chickweights <- ChickWeight
+chickweights$Time <- as.integer(factor(chickweights$Time))
+```
+
 Preparing a specification object with `make_jlmer_spec()`:
 
-```{r chickweights_spec}
+```{r spec, include = FALSE}
+chickweights_spec <- make_jlmer_spec(
+  formula = weight ~ 1 + Diet,
+  data = chickweights,
+  subject = "Chick", time = "Time"
+)
+```
+
+```{asciicast spec-io}
 chickweights_spec <- make_jlmer_spec(
   formula = weight ~ 1 + Diet,
   data = chickweights,
@@ -87,7 +111,11 @@ chickweights_spec
 
 Cluster-based permutation test with `clusterpermute()`:
 
-```{r CPA, message = FALSE}
+```{asciicast JIT, include = FALSE}
+clusterpermute(chickweights_spec, threshold = 1, nsim = 1)
+```
+
+```{asciicast CPA-io}
 set_rng_state(123L)
 clusterpermute(
   chickweights_spec,
@@ -98,7 +126,7 @@ clusterpermute(
 
 Including random effects:
 
-```{r chickweights_re_spec, message = FALSE}
+```{asciicast reCPA-io}
 chickweights_re_spec <- make_jlmer_spec(
   formula = weight ~ 1 + Diet + (1 | Chick),
   data = chickweights,
@@ -116,22 +144,26 @@ clusterpermute(
 
 Computing time-wise statistics of the observed data:
 
-```{r empirical_statistics}
+```{r empirical_statistics, out.width = "75%"}
 empirical_statistics <- compute_timewise_statistics(chickweights_spec)
 matplot(t(empirical_statistics), type = "b", pch = 1, lwd = 3, ylab = "t-statistic")
 abline(h = 2.5, lty = 3)
 ```
 
+```{asciicast empirical_statistics-io, include = FALSE}
+empirical_statistics <- compute_timewise_statistics(chickweights_spec)
+```
+
 Identifying empirical clusters:
 
-```{r empirical_clusters}
+```{asciicast empirical_clusters}
 empirical_clusters <- extract_empirical_clusters(empirical_statistics, threshold = 2.5)
 empirical_clusters
 ```
 
 Simulating the null distribution:
 
-```{r null_statistics}
+```{asciicast null_statistics}
 set_rng_state(123L)
 null_statistics <- permute_timewise_statistics(chickweights_spec, nsim = 100)
 null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2.5)
@@ -140,13 +172,13 @@ null_cluster_dists
 
 Significance testing the cluster-mass statistic:
 
-```{r calculate_clusters_pvalues}
+```{asciicast calculate_clusters_pvalues}
 calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1 = TRUE)
 ```
 
 Iterating over a range of threshold values:
 
-```{r walk_threshold_steps, message = FALSE}
+```{asciicast walk_threshold_steps, message = FALSE}
 walk_threshold_steps(empirical_statistics, null_statistics, steps = c(2, 2.5, 3))
 ```
 
@@ -181,6 +213,10 @@ To cite the GLM.jl and MixedModels.jl Julia libraries, consult their Zenodo page
 - GLM: https://doi.org/10.5281/zenodo.3376013
 - MixedModels: https://zenodo.org/badge/latestdoi/9106942
 
+
+```{asciicast close-io, include = FALSE}
+JuliaConnectoR::stopJulia()
+```
 
 ```{r close, include = FALSE}
 JuliaConnectoR::stopJulia()
