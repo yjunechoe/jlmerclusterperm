@@ -63,6 +63,11 @@ library(jlmerclusterperm)
 jlmerclusterperm_setup()
 ```
 
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/setup-io-dark.svg">
+<img src="man/figures/README-/setup-io.svg" style="display: block; margin: auto;" />
+</picture>
+
 See the [Get
 Started](https://yjunechoe.github.io/jlmerclusterperm/articles/jlmerclusterperm.html)
 page on the [package
@@ -84,7 +89,7 @@ matplot(
 )
 ```
 
-<img src="man/figures/README-chickweight-1.png" width="75%" />
+<img src="man/figures/README-chickweight-1.png" width="75%" style="display: block; margin: auto;" />
 
 Preparing a specification object with `make_jlmer_spec()`:
 
@@ -95,22 +100,12 @@ chickweights_spec <- make_jlmer_spec(
   subject = "Chick", time = "Time"
 )
 chickweights_spec
-#> ── jlmer specification ───────────────────────────────────────── <jlmer_spec> ──
-#> Formula: weight ~ 1 + Diet2 + Diet3 + Diet4
-#> Predictors:
-#>   Diet: Diet2, Diet3, Diet4
-#> Groupings:
-#>   Subject: Chick
-#>   Trial:
-#>   Time: Time
-#> Data:
-#>   weight Diet2 Diet3 Diet4 Chick Time
-#> 1     42     0     0     0     1    1
-#> 2     51     0     0     0     1    2
-#> 3     59     0     0     0     1    3
-#>  [ reached 'max' / getOption("max.print") -- omitted 575 rows ]
-#> ────────────────────────────────────────────────────────────────────────────────
 ```
+
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/spec-io-dark.svg">
+<img src="man/figures/README-/spec-io.svg" style="display: block; margin: auto;" />
+</picture>
 
 Cluster-based permutation test with `clusterpermute()`:
 
@@ -121,29 +116,12 @@ clusterpermute(
   threshold = 2.5,
   nsim = 100
 )
-#> $null_cluster_dists
-#> ── Null cluster-mass distribution (t > 2.5) ──────────── <null_cluster_dists> ──
-#> Diet2 (n = 100)
-#>   Mean (SD): -0.039 (1.89)
-#>   Coverage intervals: 95% [-2.862, 0.000]
-#> Diet3 (n = 100)
-#>   Mean (SD): -0.129 (2.02)
-#>   Coverage intervals: 95% [0.000, 0.000]
-#> Diet4 (n = 100)
-#>   Mean (SD): 0.296 (3.21)
-#>   Coverage intervals: 95% [0.000, 5.797]
-#> ────────────────────────────────────────────────────────────────────────────────
-#> 
-#> $empirical_clusters
-#> ── Empirical clusters (t > 2.5) ──────────────────────── <empirical_clusters> ──
-#> Diet2
-#>   [3, 4]: 6.121 (p=0.0495)
-#> Diet3
-#>   [3, 12]: 35.769 (p=0.0099)
-#> Diet4
-#>   [2, 8]: 32.442 (p=0.0099)
-#> ────────────────────────────────────────────────────────────────────────────────
 ```
+
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/CPA-io-dark.svg">
+<img src="man/figures/README-/CPA-io.svg" style="display: block; margin: auto;" />
+</picture>
 
 Including random effects:
 
@@ -159,15 +137,12 @@ clusterpermute(
   threshold = 2.5,
   nsim = 100
 )$empirical_clusters
-#> ── Empirical clusters (t > 2.5) ──────────────────────── <empirical_clusters> ──
-#> Diet2
-#>   [3, 4]: 6.387 (p=0.0594)
-#> Diet3
-#>   [2, 12]: 39.919 (p=0.0099)
-#> Diet4
-#>   [2, 8]: 33.853 (p=0.0099)
-#> ────────────────────────────────────────────────────────────────────────────────
 ```
+
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/reCPA-io-dark.svg">
+<img src="man/figures/README-/reCPA-io.svg" style="display: block; margin: auto;" />
+</picture>
 
 ### Piecemeal approach to CPA
 
@@ -179,22 +154,19 @@ matplot(t(empirical_statistics), type = "b", pch = 1, lwd = 3, ylab = "t-statist
 abline(h = 2.5, lty = 3)
 ```
 
-<img src="man/figures/README-empirical_statistics-1.png" width="75%" />
+<img src="man/figures/README-empirical_statistics-1.png" width="75%" style="display: block; margin: auto;" />
 
 Identifying empirical clusters:
 
 ``` r
 empirical_clusters <- extract_empirical_clusters(empirical_statistics, threshold = 2.5)
 empirical_clusters
-#> ── Empirical clusters (t > 2.5) ──────────────────────── <empirical_clusters> ──
-#> Diet2
-#>   [3, 4]: 6.121
-#> Diet3
-#>   [3, 12]: 35.769
-#> Diet4
-#>   [2, 8]: 32.442
-#> ────────────────────────────────────────────────────────────────────────────────
 ```
+
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/empirical_clusters-dark.svg">
+<img src="man/figures/README-/empirical_clusters.svg" style="display: block; margin: auto;" />
+</picture>
 
 Simulating the null distribution:
 
@@ -203,48 +175,34 @@ set_rng_state(123L)
 null_statistics <- permute_timewise_statistics(chickweights_spec, nsim = 100)
 null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2.5)
 null_cluster_dists
-#> ── Null cluster-mass distribution (t > 2.5) ──────────── <null_cluster_dists> ──
-#> Diet2 (n = 100)
-#>   Mean (SD): -0.039 (1.89)
-#>   Coverage intervals: 95% [-2.862, 0.000]
-#> Diet3 (n = 100)
-#>   Mean (SD): -0.129 (2.02)
-#>   Coverage intervals: 95% [0.000, 0.000]
-#> Diet4 (n = 100)
-#>   Mean (SD): 0.296 (3.21)
-#>   Coverage intervals: 95% [0.000, 5.797]
-#> ────────────────────────────────────────────────────────────────────────────────
 ```
+
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/null_statistics-dark.svg">
+<img src="man/figures/README-/null_statistics.svg" style="display: block; margin: auto;" />
+</picture>
 
 Significance testing the cluster-mass statistic:
 
 ``` r
 calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1 = TRUE)
-#> ── Empirical clusters (t > 2.5) ──────────────────────── <empirical_clusters> ──
-#> Diet2
-#>   [3, 4]: 6.121 (p=0.0495)
-#> Diet3
-#>   [3, 12]: 35.769 (p=0.0099)
-#> Diet4
-#>   [2, 8]: 32.442 (p=0.0099)
-#> ────────────────────────────────────────────────────────────────────────────────
 ```
+
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/calculate_clusters_pvalues-dark.svg">
+<img src="man/figures/README-/calculate_clusters_pvalues.svg" style="display: block; margin: auto;" />
+</picture>
 
 Iterating over a range of threshold values:
 
 ``` r
 walk_threshold_steps(empirical_statistics, null_statistics, steps = c(2, 2.5, 3))
-#>    threshold predictor id start end length sum_statistic     pvalue
-#> 1        2.0     Diet2  1     3   5      3      8.496376 0.07920792
-#> 2        2.0     Diet3  1     2  12     11     38.216035 0.00990099
-#> 3        2.0     Diet4  1     2  12     11     41.651468 0.00990099
-#> 4        2.5     Diet2  1     3   4      2      6.121141 0.04950495
-#> 5        2.5     Diet3  1     3  12     10     35.768957 0.00990099
-#> 6        2.5     Diet4  1     2   8      7     32.442352 0.00990099
-#> 31       3.0     Diet3  1     3   5      3     12.719231 0.00990099
-#> 21       3.0     Diet3  2     9  12      4     14.037622 0.00990099
-#> 41       3.0     Diet4  1     2   7      6     29.659402 0.00990099
 ```
+
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/walk_threshold_steps-dark.svg">
+<img src="man/figures/README-/walk_threshold_steps.svg" style="display: block; margin: auto;" />
+</picture>
 
 ## Acknowledgments
 
