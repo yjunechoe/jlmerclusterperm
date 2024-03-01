@@ -6,5 +6,5 @@ using StatsModels
 using Distributions
 using GLM
 using MixedModels
-using DataFrames
 using ProgressMeter
+using DataFrames
