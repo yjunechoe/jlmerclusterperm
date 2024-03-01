@@ -1,4 +1,3 @@
-using DataFrames
 using Suppressor
 using Random
 using Random123
@@ -8,3 +7,4 @@ using Distributions
 using GLM
 using MixedModels
 using ProgressMeter
+using DataFrames
