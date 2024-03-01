@@ -16,7 +16,7 @@ If \code{NULL} (default), attempts to write to the package's cache directory dis
 \item{restart}{Whether to set up a fresh Julia session, given that one is already running.
 If \code{FALSE} and \code{jlmerclusterperm_setup()} has already been called, nothing happens.}
 
-\item{verbose}{Print progress and messages from Julia in the console}
+\item{verbose}{Whether to print progress and messages from Julia in the console}
 }
 \value{
 TRUE
