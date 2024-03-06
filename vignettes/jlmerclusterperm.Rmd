@@ -30,7 +30,9 @@ The CPA procedure identifies empirical clusters in a time series data and tests 
 
 ## Package design
 
-![jlmerclusterperm package function design](https://raw.githubusercontent.com/yjunechoe/jlmerclusterperm/main/man/figures/jlmerclusterperm_fn_design.png)
+```{r, echo = FALSE, out.width="100%"}
+knitr::include_graphics("https://raw.githubusercontent.com/yjunechoe/jlmerclusterperm/main/man/figures/jlmerclusterperm_fn_design.png")
+```
 
 `jlmerclusterperm` provides both a wholesale and a piecemeal approach to conducting a CPA. The main workhorse function in the package is `clusterpermute()`, which is composed of five smaller functions that are called internally in succession. The smaller functions representing the algorithmic steps of a CPA are also exported, to allow more control over the procedure (e.g., for debugging and diagnosing a CPA run).
 
