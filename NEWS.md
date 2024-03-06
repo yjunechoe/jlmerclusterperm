@@ -1,3 +1,13 @@
+# jlmerclusterperm (development version)
+
+# jlmerclusterperm 1.1.3
+
+No user-visible changes
+
+Fixes for CRAN:
+
+- Stricter specification of package versions in `Project.toml` to avoid version conflicts.
+
 # jlmerclusterperm 1.1.2
 
 - `jlmerclusterperm()` exposes a `cache_dir` argument for manually specifying the cache directory. This was added largely for the convenience of testing. The default value of `cache_dir = NULL` preserves old behavior.
