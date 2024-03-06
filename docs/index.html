@@ -29,15 +29,15 @@
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-
+    
 
     <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary"><div class="container">
-
+    
     <a class="navbar-brand me-2" href="index.html">jlmerclusterperm</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.3</small>
 
-
+    
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -78,19 +78,19 @@
 <li class="nav-item">
   <a class="external-link nav-link" href="https://github.com/yjunechoe/jlmerclusterperm/" aria-label="github">
     <span class="fab fa fab fa-github fa-lg"></span>
-
+     
   </a>
 </li>
       </ul>
 </div>
 
-
+    
   </div>
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="jlmerclusterperm-">jlmerclusterperm
+<img src="logo.png" class="logo" alt=""><h1 id="jlmerclusterperm-">jlmerclusterperm 
 <a class="anchor" aria-label="anchor" href="#jlmerclusterperm-"></a>
 </h1>
 </div>
@@ -115,7 +115,7 @@
 <code class="sourceCode R"><span><span class="co"># Both lines must be run at the start of each new session</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">jlmerclusterperm</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><picture><source media="(prefers-color-scheme: dark)" srcset="reference/figures/README-/setup-io-dark.svg"><img src="reference/figures/README-/setup-io.svg" style="display: block; margin: auto;"></source></picture></p>
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/setup-io-dark.svg"><img src="reference/figures/README-/setup-io.svg" style="display: block; margin: auto;"></source></picture></p>
 <p>See the <a href="https://yjunechoe.github.io/jlmerclusterperm/articles/jlmerclusterperm.html">Get Started</a> page on the <a href="https://yjunechoe.github.io/jlmerclusterperm/">package website</a> for background and tutorials.</p>
 </div>
 <div class="section level2">
@@ -142,7 +142,7 @@
 <span>  subject <span class="op">=</span> <span class="st">"Chick"</span>, time <span class="op">=</span> <span class="st">"Time"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">chickweights_spec</span></span></code></pre></div>
-<p><picture><source media="(prefers-color-scheme: dark)" srcset="reference/figures/README-/spec-io-dark.svg"><img src="reference/figures/README-/spec-io.svg" style="display: block; margin: auto;"></source></picture></p>
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/spec-io-dark.svg"><img src="reference/figures/README-/spec-io.svg" style="display: block; margin: auto;"></source></picture></p>
 <p>Cluster-based permutation test with <code><a href="reference/clusterpermute.html">clusterpermute()</a></code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/julia_rng.html">set_rng_state</a></span><span class="op">(</span><span class="fl">123L</span><span class="op">)</span></span>
@@ -151,7 +151,7 @@
 <span>  threshold <span class="op">=</span> <span class="fl">2.5</span>,</span>
 <span>  nsim <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><picture><source media="(prefers-color-scheme: dark)" srcset="reference/figures/README-/CPA-io-dark.svg"><img src="reference/figures/README-/CPA-io.svg" style="display: block; margin: auto;"></source></picture></p>
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/CPA-io-dark.svg"><img src="reference/figures/README-/CPA-io.svg" style="display: block; margin: auto;"></source></picture></p>
 <p>Including random effects:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chickweights_re_spec</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/make_jlmer_spec.html">make_jlmer_spec</a></span><span class="op">(</span></span>
@@ -165,7 +165,7 @@
 <span>  threshold <span class="op">=</span> <span class="fl">2.5</span>,</span>
 <span>  nsim <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span><span class="op">$</span><span class="va">empirical_clusters</span></span></code></pre></div>
-<p><picture><source media="(prefers-color-scheme: dark)" srcset="reference/figures/README-/reCPA-io-dark.svg"><img src="reference/figures/README-/reCPA-io.svg" style="display: block; margin: auto;"></source></picture></p>
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/reCPA-io-dark.svg"><img src="reference/figures/README-/reCPA-io.svg" style="display: block; margin: auto;"></source></picture></p>
 </div>
 <div class="section level3">
 <h3 id="piecemeal-approach-to-cpa">Piecemeal approach to CPA<a class="anchor" aria-label="anchor" href="#piecemeal-approach-to-cpa"></a>
@@ -180,22 +180,22 @@
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">empirical_clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/extract_empirical_clusters.html">extract_empirical_clusters</a></span><span class="op">(</span><span class="va">empirical_statistics</span>, threshold <span class="op">=</span> <span class="fl">2.5</span><span class="op">)</span></span>
 <span><span class="va">empirical_clusters</span></span></code></pre></div>
-<p><picture><source media="(prefers-color-scheme: dark)" srcset="reference/figures/README-/empirical_clusters-dark.svg"><img src="reference/figures/README-/empirical_clusters.svg" style="display: block; margin: auto;"></source></picture></p>
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/empirical_clusters-dark.svg"><img src="reference/figures/README-/empirical_clusters.svg" style="display: block; margin: auto;"></source></picture></p>
 <p>Simulating the null distribution:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/julia_rng.html">set_rng_state</a></span><span class="op">(</span><span class="fl">123L</span><span class="op">)</span></span>
 <span><span class="va">null_statistics</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/permute_timewise_statistics.html">permute_timewise_statistics</a></span><span class="op">(</span><span class="va">chickweights_spec</span>, nsim <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">null_cluster_dists</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/extract_null_cluster_dists.html">extract_null_cluster_dists</a></span><span class="op">(</span><span class="va">null_statistics</span>, threshold <span class="op">=</span> <span class="fl">2.5</span><span class="op">)</span></span>
 <span><span class="va">null_cluster_dists</span></span></code></pre></div>
-<p><picture><source media="(prefers-color-scheme: dark)" srcset="reference/figures/README-/null_statistics-dark.svg"><img src="reference/figures/README-/null_statistics.svg" style="display: block; margin: auto;"></source></picture></p>
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/null_statistics-dark.svg"><img src="reference/figures/README-/null_statistics.svg" style="display: block; margin: auto;"></source></picture></p>
 <p>Significance testing the cluster-mass statistic:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/calculate_clusters_pvalues.html">calculate_clusters_pvalues</a></span><span class="op">(</span><span class="va">empirical_clusters</span>, <span class="va">null_cluster_dists</span>, add1 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><picture><source media="(prefers-color-scheme: dark)" srcset="reference/figures/README-/calculate_clusters_pvalues-dark.svg"><img src="reference/figures/README-/calculate_clusters_pvalues.svg" style="display: block; margin: auto;"></source></picture></p>
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/calculate_clusters_pvalues-dark.svg"><img src="reference/figures/README-/calculate_clusters_pvalues.svg" style="display: block; margin: auto;"></source></picture></p>
 <p>Iterating over a range of threshold values:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/walk_threshold_steps.html">walk_threshold_steps</a></span><span class="op">(</span><span class="va">empirical_statistics</span>, <span class="va">null_statistics</span>, steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2.5</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><picture><source media="(prefers-color-scheme: dark)" srcset="reference/figures/README-/walk_threshold_steps-dark.svg"><img src="reference/figures/README-/walk_threshold_steps.svg" style="display: block; margin: auto;"></source></picture></p>
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="man/figures/README-/walk_threshold_steps-dark.svg"><img src="reference/figures/README-/walk_threshold_steps.svg" style="display: block; margin: auto;"></source></picture></p>
 </div>
 </div>
 <div class="section level2">
@@ -214,7 +214,7 @@
 <p>If you use jlmerclusterperm for cluster-based permutation test with mixed-effects models in your research, please cite one (or more) of the following as you see fit.</p>
 <p>To cite jlmerclusterperm:</p>
 <ul>
-<li>Choe, J. (2023). jlmerclusterperm: Cluster-Based Permutation Analysis for Densely Sampled Time Data. R package version 1.1.2. <a href="https://cran.r-project.org/package=jlmerclusterperm" class="external-link uri">https://cran.r-project.org/package=jlmerclusterperm</a>.</li>
+<li>Choe, J. (2023). jlmerclusterperm: Cluster-Based Permutation Analysis for Densely Sampled Time Data. R package version 1.1.3. <a href="https://cran.r-project.org/package=jlmerclusterperm" class="external-link uri">https://cran.r-project.org/package=jlmerclusterperm</a>.</li>
 </ul>
 <p>To cite the cluster-based permutation test:</p>
 <ul>
@@ -301,9 +301,9 @@
     </footer>
 </div>
 
+  
 
-
-
+  
 
   </body>
 </html>
