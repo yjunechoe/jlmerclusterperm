@@ -29,7 +29,7 @@ julia_detect_cores <- function() {
 }
 is_setup <- function() isTRUE(.jlmerclusterperm$is_setup)
 
-#' Check Julia setup requirements for jlmerclusterperm
+#' Check Julia requirements for jlmerclusterperm
 #'
 #' @return Boolean
 #' @export
@@ -47,7 +47,7 @@ julia_setup_ok <- function() {
 #'   `R_user_dir()` and falls back to `tempdir()`.
 #' @param restart Whether to set up a fresh Julia session, given that one is already running.
 #'   If `FALSE` and `jlmerclusterperm_setup()` has already been called, nothing happens.
-#' @param verbose Print progress and messages from Julia in the console
+#' @param verbose Whether to print progress and messages from Julia in the console
 #'
 #' @examplesIf julia_setup_ok()
 #' \donttest{
@@ -77,10 +77,25 @@ jlmerclusterperm_setup <- function(..., cache_dir = NULL, restart = TRUE, verbos
 setup_with_progress <- function(..., cache_dir = NULL, verbose = TRUE) {
   start_with_threads(verbose = verbose)
   set_projenv(cache_dir = cache_dir, verbose = verbose)
-  source_jl(verbose = verbose)
-  define_globals()
-  cleanup_jl()
-  invisible(TRUE)
+  source_success <- withCallingHandlers(
+    source_jl(verbose = verbose),
+    error = function(...) {
+      cli::cli_alert_danger(c(
+        "Failed to compile {.pkg jlmerclusterperm}. ",
+        "Please submit an issue to {.url https://github.com/yjunechoe/jlmerclusterperm/issues}."
+      ))
+      JuliaConnectoR::stopJulia()
+      .jlmerclusterperm$is_setup <- FALSE
+      return(FALSE)
+    }
+  )
+  if (source_success) {
+    define_globals()
+    cleanup_jl()
+    invisible(TRUE)
+  } else {
+    invisible(FALSE)
+  }
 }
 
 start_with_threads <- function(..., max_threads = 7L, verbose = TRUE) {

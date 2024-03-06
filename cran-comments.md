@@ -1,6 +1,6 @@
 Fixes for CRAN:
 
-* Write cache to `tempdir()` for the purposes of running examples and tests.
+* Use stricter versioning of dependencies to avoid conflicts
 
 ## R CMD check results
 

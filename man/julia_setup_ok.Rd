@@ -2,7 +2,7 @@
 % Please edit documentation in R/aaa.R
 \name{julia_setup_ok}
 \alias{julia_setup_ok}
-\title{Check Julia setup requirements for jlmerclusterperm}
+\title{Check Julia requirements for jlmerclusterperm}
 \usage{
 julia_setup_ok()
 }
@@ -10,7 +10,7 @@ julia_setup_ok()
 Boolean
 }
 \description{
-Check Julia setup requirements for jlmerclusterperm
+Check Julia requirements for jlmerclusterperm
 }
 \examples{
 julia_setup_ok()
