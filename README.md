@@ -21,7 +21,7 @@ implementation of the cluster-based permutation test for time series
 data, powered by
 [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR).
 
-![](man/figures/clusterpermute_slice.png)
+<img src="man/figures/clusterpermute_animation.gif" style="display: block; margin: auto;" />
 
 ## Installation and usage
 

@@ -33,7 +33,15 @@ asciicast::init_knitr_engine(
 
 Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) based implementation of the cluster-based permutation test for time series data, powered by [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR).
 
-![](man/figures/clusterpermute_slice.png)
+```{r, echo = FALSE}
+is_markdown_output <- grepl("markdown", knitr::opts_knit$get("out.format"))
+fig <- if (is_markdown_output) {
+  "man/figures/clusterpermute_animation.gif"
+} else {
+  "man/figures/clusterpermute_slice.png"
+}
+knitr::include_graphics(fig, error = FALSE)
+```
 
 ## Installation and usage
 
