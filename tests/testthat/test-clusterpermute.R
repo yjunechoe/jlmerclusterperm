@@ -51,6 +51,13 @@ test_that("Errors on no predictors", {
   expect_error(permute_timewise_statistics(spec_intercept, threshold = 1.5, nsim = 1), "No predictors to permute")
 })
 
+# clusterpermute with mixed model
+spec_re <- make_jlmer_spec(
+  weight ~ 1 + Diet + (1 | Chick), subset(ChickWeight, Time <= 20),
+  subject = "Chick", time = "Time"
+)
+CPA_re <- clusterpermute(spec_re, threshold = 2, progress = FALSE)
+
 # Coverage
 lapply(list(empirical_statistics, empirical_clusters, null_statistics, null_cluster_dists, empirical_clusters_tested), tidy)
 lapply(list(spec, empirical_statistics, empirical_clusters, null_statistics, null_cluster_dists, empirical_clusters_tested), print)
