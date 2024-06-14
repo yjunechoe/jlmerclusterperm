@@ -4,15 +4,12 @@
 # jlmerclusterperm <a href="https://yjunechoe.github.io/jlmerclusterperm/"><img src="man/figures/logo.png" align="right" height="150" /></a>
 
 <!-- badges: start -->
-
-[![CRAN
-status](https://www.r-pkg.org/badges/version/jlmerclusterperm)](https://CRAN.R-project.org/package=jlmerclusterperm)
+[![CRAN status](https://www.r-pkg.org/badges/version/jlmerclusterperm)](https://CRAN.R-project.org/package=jlmerclusterperm)
+[![jlmerclusterperm status badge](https://yjunechoe.r-universe.dev/badges/jlmerclusterperm)](https://yjunechoe.r-universe.dev/jlmerclusterperm)
 [![R-CMD-check](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml)
 [![pkgcheck](https://github.com/yjunechoe/jlmerclusterperm/workflows/pkgcheck/badge.svg)](https://github.com/yjunechoe/jlmerclusterperm/actions?query=workflow%3Apkgcheck)
-[![Codecov test
-coverage](https://codecov.io/gh/yjunechoe/jlmerclusterperm/branch/main/graph/badge.svg)](https://app.codecov.io/gh/yjunechoe/jlmerclusterperm?branch=main)
-[![CRAN
-downloads](https://cranlogs.r-pkg.org/badges/grand-total/jlmerclusterperm)](https://cranlogs.r-pkg.org/badges/grand-total/jlmerclusterperm)
+[![Codecov test coverage](https://codecov.io/gh/yjunechoe/jlmerclusterperm/branch/main/graph/badge.svg)](https://app.codecov.io/gh/yjunechoe/jlmerclusterperm?branch=main)
+[![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/jlmerclusterperm)](https://cranlogs.r-pkg.org/badges/grand-total/jlmerclusterperm)
 <!-- badges: end -->
 
 Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and
@@ -230,9 +227,9 @@ following as you see fit.
 
 To cite jlmerclusterperm:
 
-- Choe, J. (2023). jlmerclusterperm: Cluster-Based Permutation Analysis
+- Choe, J. (2024). jlmerclusterperm: Cluster-Based Permutation Analysis
   for Densely Sampled Time Data. R package version 1.1.3.
-  <https://cran.r-project.org/package=jlmerclusterperm>.
+  <https://doi.org/10.32614/CRAN.package.jlmerclusterperm>
 
 To cite the cluster-based permutation test:
 

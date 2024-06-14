@@ -25,6 +25,7 @@ asciicast::init_knitr_engine(
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/jlmerclusterperm)](https://CRAN.R-project.org/package=jlmerclusterperm)
+[![jlmerclusterperm status badge](https://yjunechoe.r-universe.dev/badges/jlmerclusterperm)](https://yjunechoe.r-universe.dev/jlmerclusterperm)
 [![R-CMD-check](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/jlmerclusterperm/actions/workflows/R-CMD-check.yaml)
 [![pkgcheck](https://github.com/yjunechoe/jlmerclusterperm/workflows/pkgcheck/badge.svg)](https://github.com/yjunechoe/jlmerclusterperm/actions?query=workflow%3Apkgcheck)
 [![Codecov test coverage](https://codecov.io/gh/yjunechoe/jlmerclusterperm/branch/main/graph/badge.svg)](https://app.codecov.io/gh/yjunechoe/jlmerclusterperm?branch=main)
@@ -34,13 +35,7 @@ asciicast::init_knitr_engine(
 Julia [GLM.jl](https://github.com/JuliaStats/GLM.jl) and [MixedModels.jl](https://github.com/JuliaStats/MixedModels.jl) based implementation of the cluster-based permutation test for time series data, powered by [JuliaConnectoR](https://github.com/stefan-m-lenz/JuliaConnectoR).
 
 ```{r, echo = FALSE}
-is_markdown_output <- grepl("markdown", knitr::opts_knit$get("out.format"))
-fig <- if (is_markdown_output) {
-  "man/figures/clusterpermute_animation.gif"
-} else {
-  "man/figures/clusterpermute_slice.png"
-}
-knitr::include_graphics(fig, error = FALSE)
+knitr::include_graphics("man/figures/clusterpermute_animation.gif", error = FALSE)
 ```
 
 ## Installation and usage
@@ -120,7 +115,7 @@ chickweights_spec
 Cluster-based permutation test with `clusterpermute()`:
 
 ```{asciicast JIT, include = FALSE}
-clusterpermute(chickweights_spec, threshold = 1, nsim = 1)
+clusterpermute(chickweights_spec, threshold = 2.5, nsim = 2)
 ```
 
 ```{asciicast CPA-io}
@@ -206,7 +201,7 @@ If you use jlmerclusterperm for cluster-based permutation test with mixed-effect
 
 To cite jlmerclusterperm:
 
-- Choe, J. (2023). jlmerclusterperm: Cluster-Based Permutation Analysis for Densely Sampled Time Data. R package version `r as.character(utils::packageVersion('jlmerclusterperm'))`. https://cran.r-project.org/package=jlmerclusterperm.
+- Choe, J. (`format(Sys.Date(), "%Y")`). jlmerclusterperm: Cluster-Based Permutation Analysis for Densely Sampled Time Data. R package version `r as.character(utils::packageVersion('jlmerclusterperm'))`. [10.32614/CRAN.package.jlmerclusterperm](https://doi.org/10.32614/CRAN.package.jlmerclusterperm).
 
 To cite the cluster-based permutation test:
 
