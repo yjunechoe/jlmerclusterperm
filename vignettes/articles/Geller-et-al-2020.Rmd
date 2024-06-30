@@ -25,7 +25,7 @@ The data from the package (`cursive_agg_data`) looks slightly different from tha
 
 ```{r data, message = FALSE}
 library(dplyr)
-cursive_agg_data <- as_tibble(read.csv("https://raw.githubusercontent.com/jgeller112/drjasongeller/main/content/blog/2020-07-10-CBPT/blog_data.csv"))
+cursive_agg_data <- as_tibble(read.csv("https://raw.githubusercontent.com/jgeller112/drjasongeller/a612056bd50e7f1e9280880cbb81016e2ca11511/blog/posts/2020-07-10-CBPT/blog_data.csv"))
 cursive_agg_data
 ```
 
