@@ -201,7 +201,7 @@ If you use jlmerclusterperm for cluster-based permutation test with mixed-effect
 
 To cite jlmerclusterperm:
 
-- Choe, J. (`format(Sys.Date(), "%Y")`). jlmerclusterperm: Cluster-Based Permutation Analysis for Densely Sampled Time Data. R package version `r as.character(utils::packageVersion('jlmerclusterperm'))`. [10.32614/CRAN.package.jlmerclusterperm](https://doi.org/10.32614/CRAN.package.jlmerclusterperm).
+- Choe, J. (`r format(Sys.Date(), "%Y")`). jlmerclusterperm: Cluster-Based Permutation Analysis for Densely Sampled Time Data. R package version `r as.character(utils::packageVersion('jlmerclusterperm'))`. [10.32614/CRAN.package.jlmerclusterperm](https://doi.org/10.32614/CRAN.package.jlmerclusterperm).
 
 To cite the cluster-based permutation test:
 
