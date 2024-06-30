@@ -1,6 +1,6 @@
 Fixes for CRAN:
 
-* Use stricter versioning of dependencies to avoid conflicts
+* Ensure nothing is written out to cache while running tests and examples
 
 ## R CMD check results
 
