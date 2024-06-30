@@ -1,0 +1,63 @@
+.navbar {
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+}
+
+.template-home .page-header {
+  min-height: auto;
+}
+
+.row > main, .row > aside {
+  margin-top: 75px;
+}
+
+h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.section > h2 {
+  border-bottom: 3px solid #cdcdcd;
+  padding-bottom: 5px;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.section > h3 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  border-left: 5px solid #4385c7;
+  padding-left: 10px;
+}
+
+#toc > .nav .nav-link .active {
+  background-color: #d1e7f5;
+}
+
+.nav-text.text-muted {
+  color: white !important;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+}
+
+a {
+  color: #009680;
+}
+
+pre {
+  padding: 0.5rem 0.5rem;
+}
+
+details {
+  background-color: #008bff0f;
+  outline: 2px solid #38566F;
+  padding: 1rem 1rem 0.5rem 1rem;
+}
+
+.caption {
+  text-align: center;
+  color: grey;
+  font-size: .9em;
+}

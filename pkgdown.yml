@@ -1,0 +1,17 @@
+pandoc: 3.1.11
+pkgdown: 2.0.9.9000
+pkgdown_sha: a98c134518cc9f5006f9ce17d4b6fc29ea37b56b
+articles:
+  articles/asynchronous-cpa: asynchronous-cpa.html
+  articles/deCarvalho-et-al-2021: deCarvalho-et-al-2021.html
+  articles/eyetrackingR-comparison: eyetrackingR-comparison.html
+  articles/Garrison-et-al-2020: Garrison-et-al-2020.html
+  articles/Geller-et-al-2020: Geller-et-al-2020.html
+  jlmerclusterperm: jlmerclusterperm.html
+  articles/julia-interface: julia-interface.html
+  articles/reproducibility: reproducibility.html
+  articles/tidying-output: tidying-output.html
+last_built: 2024-06-30T04:20Z
+urls:
+  reference: https://yjunechoe.github.io/jlmerclusterperm/reference
+  article: https://yjunechoe.github.io/jlmerclusterperm/articles
