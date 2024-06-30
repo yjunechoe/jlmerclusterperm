@@ -49,6 +49,7 @@
 make_jlmer_spec <- function(formula, data, subject = NULL, trial = NULL, time = NULL, drop_terms = NULL, ...) {
   # Old names
   fm <- formula
+  JuliaFormulae::julia_formula(fm)
   df <- data
 
   # Validation

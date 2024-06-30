@@ -1,6 +1,7 @@
 testthat::skip_on_cran()
 
-jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+jlmerclusterperm_setup(cache_dir = tempdir(), restart = FALSE, verbose = FALSE)
+
 reset_rng_state()
 
 spec <- make_jlmer_spec(

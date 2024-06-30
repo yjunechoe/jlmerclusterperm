@@ -1,6 +1,6 @@
 testthat::skip_on_cran()
 
-jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+jlmerclusterperm_setup(cache_dir = tempdir(), restart = FALSE, verbose = FALSE)
 
 test_that("RNG counter setter/getter", {
   expect_equal(set_rng_state(123), 123)

@@ -2,10 +2,6 @@ skip_conditionally()
 
 #' @srrstats {G5.2} Appropriate message/warning/error tests are in `/tests/testthat`
 
-# test_that("Setup works", {
-#   expect_true(jlmerclusterperm_setup())
-# })
-
 test_that("Setup with seed works (use 2 for testing)", {
   options("jlmerclusterperm.nthreads" = 2)
   expect_true(jlmerclusterperm_setup(cache_dir = tempdir(), restart = TRUE))

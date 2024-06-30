@@ -1,6 +1,6 @@
 testthat::skip_on_cran()
 
-jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+jlmerclusterperm_setup(cache_dir = tempdir(), restart = FALSE, verbose = FALSE)
 
 test_that("No side effects when called empty", {
   expect_equal(julia_progress(), julia_progress())

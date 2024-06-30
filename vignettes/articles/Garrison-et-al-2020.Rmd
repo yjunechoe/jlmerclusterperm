@@ -119,9 +119,14 @@ D) Using logistic regression over trial-level data of 1s and 0s
 
 Load the package and start the Julia instance with `jlmerclusterperm_setup()` before proceeding.
 
-```{r pkg-setup}
+```{r pkg-setup, eval = FALSE}
 library(jlmerclusterperm)
 jlmerclusterperm_setup(verbose = FALSE)
+```
+
+```{r pkg-setup-tempdir, echo = FALSE}
+library(jlmerclusterperm)
+jlmerclusterperm_setup(verbose = FALSE, cache_dir = tempdir())
 ```
 
 

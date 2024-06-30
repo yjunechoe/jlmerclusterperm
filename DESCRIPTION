@@ -25,6 +25,7 @@ Imports:
     cli,
     generics,
     JuliaConnectoR,
+    JuliaFormulae,
     lme4,
     stats,
     tools,

@@ -61,7 +61,7 @@ Subsequent calls to `jlmerclusterperm_setup()` incur a small overhead of around 
 
 ```{r setup, include = FALSE}
 library(jlmerclusterperm)
-jlmerclusterperm_setup()
+jlmerclusterperm_setup(cache_dir = tempdir())
 ```
 
 ```{asciicast setup-io}

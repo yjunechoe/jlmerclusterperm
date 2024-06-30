@@ -1,6 +1,6 @@
 testthat::skip_on_cran()
 
-jlmerclusterperm_setup(restart = FALSE, verbose = FALSE)
+jlmerclusterperm_setup(cache_dir = tempdir(), restart = FALSE, verbose = FALSE)
 
 singularity_spec <- make_jlmer_spec(
   formula = weight ~ 1 + Diet + (1 + Diet | Chick),

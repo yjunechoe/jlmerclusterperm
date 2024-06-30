@@ -145,10 +145,16 @@ The rest of this vignette is organized as follows:
 
 Load the package and start the Julia instance with `jlmerclusterperm_setup()` before proceeding.
 
-```{r pkg-setup}
+```{r pkg-setup, eval = FALSE}
 library(jlmerclusterperm)
 jlmerclusterperm_setup(verbose = FALSE)
 ```
+
+```{r pkg-setup-tempdir, echo = FALSE}
+library(jlmerclusterperm)
+jlmerclusterperm_setup(verbose = FALSE, cache_dir = tempdir())
+```
+
 
 ## Replicating the pairwise CPAs
 

@@ -178,12 +178,21 @@ In `{eyetrackingR}`, CPA is conducted in two steps:
 
 First, we set up jlmerclusterperm. For comparability, we use a single thread:
 
-```{r, message = FALSE, warning = FALSE}
+```{r, eval = FALSE}
 library(jlmerclusterperm)
 options("jlmerclusterperm.nthreads" = 1)
 system.time({
   # Note the overhead for initializing the Julia session
   jlmerclusterperm_setup()
+})
+```
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE}
+library(jlmerclusterperm)
+options("jlmerclusterperm.nthreads" = 1)
+system.time({
+  # Note the overhead for initializing the Julia session
+  jlmerclusterperm_setup(cache_dir = tempdir())
 })
 ```
 
