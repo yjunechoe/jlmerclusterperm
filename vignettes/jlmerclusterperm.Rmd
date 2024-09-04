@@ -68,7 +68,7 @@ The **topics** cover general package features:
 
 There are other R packages for cluster-based permutation analysis, such as [clusterperm](https://github.com/dalejbarr/clusterperm/), [eyetrackingR](https://github.com/jwdink/eyetrackingR), [permuco](https://github.com/jaromilfrossard/permuco/), and [permutes](https://cran.r-project.org/package=permutes).
 
-Compared to existing implementations, `jlmerclusterperm` is the only package optimized for CPAs based on **mixed-effects regression models**, suitable for typical experimental research data with multiple, crossed grouping structures (e.g., subjects and items). It is also the only package with an interface to the individual algorithmic steps of a CPA. Lastly, thanks to the Julia back-end, bootstrapping is fast even for mixed models.
+Compared to existing implementations, `jlmerclusterperm` is designed to be maximally faithful to (ex: no approximations) and optimized for (ex: multi-threading) CPAs based on **mixed-effects regression models**, suitable for typical experimental research data with multiple, crossed grouping structures (e.g., subjects and items). It is also the only package with a modular interface to all the individual algorithmic steps of a CPA.
 
 ## Further readings
 
@@ -76,7 +76,7 @@ Compared to existing implementations, `jlmerclusterperm` is the only package opt
 
 - A critical paper [Sassenhagen & Draschkow 2019](https://doi.org/10.1111/psyp.13335) on the DOs and DON'Ts of of interpreting and reporting CPA results.
 
-- A review paper on eyetracking analysis methods [Ito & Knoeferle 2022](https://doi.org/10.3758/s13428-022-01969-3) which compares CPA to other statistical techniques for testing difference between groups in time series data.
+- A review paper on eyetracking analysis methods [Ito & Knoeferle 2023](https://doi.org/10.3758/s13428-022-01969-3) which compares CPA to other statistical techniques for testing difference between groups in time series data.
 
 - The JOSS paper for the [permuco](https://jaromilfrossard.github.io/permuco/) package ([Frossard & Renaud 2021](https://www.jstatsoft.org/article/view/v099i15)) and references therein.
 
