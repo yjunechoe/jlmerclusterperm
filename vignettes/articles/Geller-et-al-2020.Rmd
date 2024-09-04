@@ -21,7 +21,7 @@ The data comes from a lexical decision task using pupilometry (specifically, mea
 
 We will follow [Jason Geller's tutorial](https://www.drjasongeller.com/blog/2020-gp-pup/) which used the [clusterperm](https://github.com/dalejbarr/clusterperm/) package to conduct a cluster-based permutation analysis (CPA) of differences in pupil size between the print and cursive conditions.
 
-The data from the package (`cursive_agg_data`) looks slightly different from that used in the tutorial, so to ensure full reproducibility we use the [exact data](https://raw.githubusercontent.com/jgeller112/drjasongeller/main/content/blog/2020-07-10-CBPT/blog_data.csv) that the tutorial used:
+The data from the package (`cursive_agg_data`) looks slightly different from that used in the tutorial, so to ensure full reproducibility we use the [exact data](https://raw.githubusercontent.com/jgeller112/drjasongeller/9500528d7e3c3e149648ea7f01fe38450abefa76/blog/posts/2020-07-10-CBPT/blog_data.csv) that the tutorial used:
 
 ```{r data, message = FALSE}
 library(dplyr)
