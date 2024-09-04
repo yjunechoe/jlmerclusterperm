@@ -1,0 +1,517 @@
+---
+title: "Ito et al. 2018"
+description: |
+  Interpreting main effects and interaction effects in a CPA
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This tutorial is a guide on interpreting main effects and interaction effects in a CPA.
+
+See more tutorials and vignettes on the [Articles](https://yjunechoe.github.io/jlmerclusterperm/articles) page.
+
+## Background
+
+The data is from an eyetracking study by [Ito, Pickering, & Corley (2018)](https://doi.org/10.1016/j.jml.2017.09.002) "Investigating the time-course of phonological prediction in native and non-native speakers of English: A visual world eye-tracking study". The data file comes by way of a [CPA tutorial by Aine Ito](https://github.com/aineito/stats.VWP/blob/main/inst/tutorials/CPA/CPA.Rmd), as part of a complement to a large survey paper on eyetracking data analysis methods ([Ito & Knoeferle (2023)](https://doi.org/10.3758/s13428-022-01969-3).
+
+```{r data-setup, message=FALSE}
+library(jlmerclusterperm)
+jlmerclusterperm_setup(verbose = FALSE)
+
+# Other packages for this tutorial
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(patchwork)
+library(ggbraid) # remotes::install_github("nsgrantham/ggbraid")
+
+# Download data (called `fix.50bin`)
+local({
+  url <- "https://raw.githubusercontent.com/aineito/stats.VWP/main/data/fix.50bin.rda"
+  datafile <- tempfile()
+  download.file(url, datafile)
+  load(datafile, envir = globalenv())
+})
+
+glimpse(fix.50bin)
+```
+
+The complete data dictionary is reproduced from the original tutorial in the collapsible details below:
+
+<details>
+<summary>Data dictionary of `fix.50bin`</summary>
+
+Column        |Description
+:-------------|:----------------------------------------------------------
+Subject       |Subject ID
+Trial         |Trial number
+Time          |Time relative to the target word onset (Time -1000 contains 50 ms from the time -1000 ms)
+allSample     |The sum of all samples in the corresponding time bin
+Count         |Right-eye sample count on the critical object
+BlinkCount    |The total number of right-eye samples that were in a blink event
+OffScreenCount|The total number of right-eye samples that fall outside of the display boundary (off screen)
+FixP          |Fixation proportion
+Condition     |Condition (Targ=target, Eng=English competitor, Jap=Japanese competitor, Unr=unrelated)
+Item          |Item ID
+Lang          |Language group (L1=native English speakers, L2=native Japanese, non-native English speakers)
+
+</details>
+
+For the purposes of this vignette, we take a subset of the data to focus on just the effects of interest. We first derive the response variable used in the original tutorial `elogFix` for the "empirical logit" ([Barr, 2013](https://doi.org/10.1016/j.jml.2007.09.002); but see [Donnelly & Verkuilen, 2017](https://doi.org/10.1016/j.jml.2016.10.005)) and then also subset the levels of `Condition` (target `"Targ"` vs. unrelated `"Unr"`) and `Lang` (native `"L1"` vs. non-native `"L2"` speakers) for a 2-by-2 analysis.
+
+```{r fix_50bin}
+fix_50bin <- fix.50bin %>% 
+  as_tibble() %>% 
+  mutate(
+    elogFix = log((Count+.5)/
+              (allSample-BlinkCount-OffScreenCount-Count+.5))
+  ) %>% 
+  select(elogFix, Condition, Lang, Time, Subject, Item) %>%
+  filter(Lang %in% c("L1", "L2"), Condition %in% c("Targ", "Unr")) %>%
+  droplevels()
+fix_50bin
+```
+
+Note that the [original tutorial](https://github.com/aineito/stats.VWP/blob/main/inst/tutorials/CPA/CPA.Rmd) conducted two separate CPAs, testing for the effect of `Condition` within the `Lang=="L1"` group and within the `Lang=="L2"` group. By comparison, `{jlmerclusterperm}` allows us to estimate the main effects of both predictors simultaneously, as well as an interaction effect between the two.
+
+The `fix_50bin` data prepared for this complete 2-by-2 analysis is plotted below:
+
+```{r p_base}
+p_base <- fix_50bin %>% 
+  ggplot(aes(Time, elogFix, color = Lang, linetype = Condition)) +
+  stat_summary(geom = "line", linewidth = 2, fun.data = mean_se) +
+  coord_cartesian(ylim = c(-4, 1.5)) +
+  theme_classic()
+p_base
+```
+
+## Contrast coding and CPA specification
+
+Prior to the CPA, we first apply sum coding to the predictors, to render the terms in the model matrix orthogonal to each other. This is important because it allows the model to estimate the main and interaction effects in the 2-by-2 without losing statistical power.
+
+```{r contrasts-cond}
+contrasts(fix_50bin$Condition) <- contr.sum(2)
+contrasts(fix_50bin$Condition)
+```
+
+```{r contrasts-lang}
+contrasts(fix_50bin$Lang) <- contr.sum(2)
+contrasts(fix_50bin$Lang)
+```
+
+Using this data, we construct a specification object with `make_jlmer_spec()` using the formula `elogFix ~ Condition * Lang`. We also include random intercepts by `Subject` and `Item` as in the original tutorial. Lastly, we specify the grouping structure of observations in the data, where each row is uniquely identified by a combination of `Subject`, `Item`, and `Time`.
+
+```{r elogit-spec}
+spec <- make_jlmer_spec(
+  elogFix ~ Condition * Lang + (1 | Subject) + (1 | Item),
+  data = fix_50bin,
+  subject = "Subject", trial = "Item", time = "Time"
+)
+```
+
+As a sanity check, we first fit a global model collapsing the time dimension.
+
+```{r global-jlmer}
+jlmer(spec)
+```
+
+The original tutorial hypothesized a main effect of `Condition`, but no meaningful differences by `Lang` (hence the simpler split analysis). The plot and the model results from above corroborate this as well.
+
+However, notice that there also seems to be a potential interaction effect, where the difference in the effect of `Condition` appears larger within the `Lang=="L1"` group than within the `Lang=="L2"` group, at least in the aggregate:
+
+<details>
+<summary>Plotting code</summary>
+
+```{r 2by2-aggregate, eval = FALSE}
+```
+
+</details>
+
+```{r 2by2-aggregate, echo = FALSE}
+fix_50bin %>% 
+  ggplot(aes(Lang, elogFix, fill = Condition)) +
+  stat_summary(
+    geom = "bar",
+    position = position_dodge(),
+    width = .8,
+    linewidth = 2,
+    fun.data = mean_se
+  ) +
+  stat_summary(
+    geom = "errorbar",
+    position = position_dodge(width = .8),
+    width = .4,
+    fun.data = mean_se
+  ) +
+  labs(title = "Global difference in means", y = "elogFix (reversed)") +
+  scale_y_reverse()
+```
+
+Supposing that this relationship is theoretically interesting, we can use CPA to test for this interaction effect between `Condition` and `Lang`, as well as the main effect of `Condition`.
+
+## Conducting the CPA
+
+To stick close to the analysis performed in the original tutorial (via `{permutes}`), we conduct a CPA using `statistic = "chisq"` and `threshold = 0.05`. This makes the CPA use the difference in likelihood as the timewise statistic, counting only those differences that come out as p<0.05 in a likelihood ratio (i.e., chi-squared) test.
+
+```{r elogit-cpa-fit}
+set_rng_state(123L)
+system.time({
+  CPA <- clusterpermute(
+    spec,
+    statistic = "chisq",
+    threshold = 0.05,
+    nsim = 1000L,
+    progress = FALSE
+  )
+})
+```
+
+<details>
+<summary>See full summary of results from `CPA`</summary>
+
+```{r elogit-cpa}
+CPA
+```
+
+</details>
+
+The clusters detected from the 1,000-simulation run are shown below:
+
+```{r elogit-cpa-clusters}
+CPA$empirical_clusters
+```
+
+We note that:
+
+- For `Condition`, the CPA detects one large cluster spanning [-600, 950] which comes out as significant.
+
+- For `Lang`, the CPA detects two small, non-significant clusters: [-600, -550] and [-450, -400]. Note that both clusters span across just two time bins (given the 50ms binning of the data).
+
+- For `Conditino:Lang`, the CPA detects two significant clusters spanning [-600, -350] and [0, 250].
+
+In the following sections we recruit some visual aids to help guide our interpretation of what exactly the results of the CPA mean in the context of the data.
+
+## Interpreting the effects from the CPA
+
+As a reminder, here is what the shape of the data looks like in the 2-by-2 design:
+
+```{r p_base-again}
+p_base
+```
+
+See the code in the collapsible details if you want to follow along and reproduce the plots.
+
+<details>
+<summary>Some setup for the plotting code</summary>
+
+```{r plot-setup}
+# Data frame of detected clusters to annotate on the plots
+clusters <- tidy(CPA$empirical_clusters) %>% 
+  mutate(color = ifelse(pvalue < 0.05, "steelblue", "grey50"))
+
+# Transparent version of `p_base` to overlay with the effect-plots below
+p_bg <- p_base +
+  scale_color_manual(values = alpha(scales::hue_pal()(2), .2)) +
+  theme_void() +
+  theme(legend.position = "none")
+```
+
+</details>
+
+### Main effect of `Condition`
+
+Given our prior sum coding, the main effect of `Condition` estimates the difference in means between `Condition=="Targ"` vs. `Condition="Unr"`. These were differentiated by line type (solid vs. dashed) in the plot of the data.
+
+One way to visualize this effect is to take the average of the solid lines and the average of the dashed lines. This shows the difference in `elogFix` that is solely on the basis of `Condition`.
+
+<details>
+<summary>Code to plot the `Condition` main effect</summary>
+
+```{r p_cond, eval = FALSE}
+p_cond <- fix_50bin %>% 
+  ggplot(aes(Time, elogFix, linetype = Condition)) +
+  stat_summary(geom = "line", linewidth = 2, fun.data = mean_se) +
+  geom_segment(
+    aes(x = start, xend = end, y = I(0), color = I(color)),
+    linewidth = 5,
+    inherit.aes = FALSE,
+    data = clusters %>% 
+      filter(predictor == "Condition")
+  ) +
+  labs(title = "Main effect of Condition") +
+  coord_cartesian(ylim = c(-4, 1.5)) +
+  theme_classic()
+
+p_cond +
+  inset_element(p_bg, 0, 0, 1, 1, align_to = "panel")
+```
+
+</details>
+
+```{r p_cond, echo = FALSE}
+```
+
+The one large cluster detected in the CPA (annotated in blue at the bottom) is consistent with the difference between the `Condition` lines we see in the plot: the two lines start out similar but diverge early on, and the large gap between the two is sustained throughout. This corresponds to the significant cluster spanning [-600, 950].
+
+```{r elogit-cpa-clusters}
+```
+
+### Main effect of `Lang`
+
+Similarly, the main effect of `Lang` estimates the difference in means between `Lang=="L1"` vs. `Lang="L2"`. These were differentiated by line color (red vs. blue) in the plot of the data.
+
+One way to visualize this effect is to take the average of the red lines and the average of the blue lines. This shows the difference in `elogFix` that is solely on the basis of `Lang`.
+
+<details>
+<summary>Code to plot the `Lang` main effect</summary>
+
+```{r p_lang, eval = FALSE}
+p_lang <- fix_50bin %>% 
+  ggplot(aes(Time, elogFix, color = Lang)) +
+  stat_summary(geom = "line", linewidth = 2, fun.data = mean_se) +
+  geom_segment(
+    aes(x = start, xend = end, y = I(0), color = I(color)),
+    linewidth = 5,
+    inherit.aes = FALSE,
+    data = clusters %>% 
+      filter(predictor == "Lang")
+  ) +
+  labs(title = "Main effect of Language") +
+  coord_cartesian(ylim = c(-4, 1.5)) +
+  theme_classic()
+
+p_lang +
+  inset_element(p_bg, 0, 0, 1, 1, align_to = "panel")
+```
+
+</details>
+
+```{r p_lang, echo = FALSE}
+```
+
+Two small clusters are annotated in grey around the -500ms mark. From eye-balling the plot, the clusters appear over regions where the two lines diverge slightly more than in other places along the time dimension, but they don't seem to point out a meaningful pattern of difference. These correspond to the two non-significant clusters spanning [-600, -550] and [-450, -400].
+
+```{r elogit-cpa-clusters}
+```
+
+As an aside, you may have noticed in the plot that there's actually an even larger divergence between lines around the 200ms mark, where the blue line for L2 speakers noticeably dip. Part of the reason why this is not detected as a cluster is because the difference at that region is not robust after accounting for variability due to the the random effects. See the collapsible details below for a proof.
+
+<details>
+<summary>Clusters identified using fixed-effect models</summary>
+
+A less sensitive CPA using fixed-effect models will actually pick out that numerically larger difference between the `Lang` lines, over the region [100, 350].
+
+```{r spec_lm}
+spec_lm <- make_jlmer_spec(
+  elogFix ~ Condition * Lang,
+  data = fix_50bin,
+  subject = "Subject", trial = "Item", time = "Time"
+)
+timewise_lm <- compute_timewise_statistics(spec_lm, statistic = "chisq")
+extract_empirical_clusters(timewise_lm, threshold = 0.05)
+```
+
+To assess what's going on, we can zoom in and fit models on the data over that region.
+
+```{r fit-100-350}
+fix_50bin_100_350 <- fix_50bin %>%
+  filter(between(Time, 100, 350))
+
+spec_lm_100_350 <- make_jlmer_spec(
+  elogFix ~ Condition * Lang,
+  data = fix_50bin_100_350,
+  subject = "Subject", trial = "Item", time = "Time"
+)
+lm_100_350 <- jlmer(spec_lm_100_350)
+
+spec_lmer_100_350 <- make_jlmer_spec(
+  elogFix ~ Condition * Lang + (1 | Subject) + (1 | Item),
+  data = fix_50bin_100_350,
+  subject = "Subject", trial = "Item", time = "Time"
+)
+lmer_100_350 <- jlmer(spec_lmer_100_350)
+```
+
+As expected, there's a much larger standard error for `Lang` in the mixed model compared to the fixed model:
+
+```{r tidy-100-350}
+bind_rows(
+  lm = tidy(lm_100_350),
+  lmer = tidy(lmer_100_350),
+  .id = "model"
+) %>% 
+  filter(term == "Lang1") %>% 
+  select(model:statistic)
+```
+
+The estimates on the coefficient are otherwise similar, so the random effects must be soaking up some of the variation that the fixed model is (unwittingly) attributing to the effect of `Lang`. (Or if you'd prefer it said the other way, the random effects must be preventing the fixed effect from soaking up the residual variation).
+
+Indeed, beyond the shared estimate for the residual standard deviation of around 3, the mixed model is additionally attributes a large effect of 1.3 for by-subject intercepts.
+
+```{r ranef-100-350}
+tidy(lmer_100_350, effects = "ran_pars") %>% 
+  mutate(model = "lmer", .before = 1L) %>% 
+  add_row(
+    model = "lm",
+    group = "Residual",
+    term = "sd__Observation",
+    estimate = glance(lm_100_350)$sigma
+  )
+```
+
+As a last sanity check, we compare goodness-of-fit and err on the side of mixed models:
+
+```{r glance-100-350}
+bind_rows(
+  lm = glance(lm_100_350),
+  lmer = glance(lmer_100_350),
+  .id = "model"
+) %>% 
+  select(model, df, logLik, AIC, BIC)
+```
+
+</details>
+
+
+### Interaction effect of `Condition:Lang`
+
+The interaction effect can be slightly trickier to interpret, but one intuitive way to think about it here is: "Does `Condition` show different effects between the `Lang=="L1"` group and the `Lang=="L2"` group?". You could also frame this the other way around as "Is the effect of `Lang` different between `Condition` groups?", but the original framing makes more sense in the context of the study.
+
+One way to visualize this is to first plot the difference between lines as shaded areas. Then, we can inspect whether the area of difference within the `Lang=="L1"` group is larger/smaller than the area of difference within the `Lang=="L2"` group.
+
+<details>
+<summary>Code to plot the `Condition:Lang` interaction effect</summary>
+
+```{r p_interaction, eval = FALSE}
+# For drawing areas
+braid_layer <- function(Lang_group = c("L1", "L2")) {
+  Lang_group <- match.arg(Lang_group)
+  geom_braid(
+    aes(Time, ymin = Unr, ymax = Targ,
+        fill = ifelse(Targ > Unr, "grey", "grey30")),
+    alpha = .5,
+    method = "line",
+    inherit.aes = FALSE,
+    data = fix_50bin %>% 
+      pivot_wider(
+        id_cols = c(Lang, Time),
+        names_from = "Condition",
+        values_from = "elogFix",
+        values_fn = mean
+      ) %>% 
+      filter(Lang == .env$Lang_group)
+  )
+}
+
+p_interaction <- fix_50bin %>% 
+  ggplot(aes(Time, elogFix, color = Lang, linetype = Condition)) +
+  stat_summary(geom = "line", linewidth = 2, fun.data = mean_se) +
+  braid_layer("L1") +
+  braid_layer("L2") +
+  geom_segment(
+    aes(x = start, xend = end, y = I(0)),
+    linewidth = 5,
+    color = "steelblue",
+    inherit.aes = FALSE,
+    data = clusters %>% 
+      filter(predictor == "Condition:Lang")
+  ) +
+  labs(title = "Interaction between Condition and Language") +
+  scale_fill_identity() +
+  coord_cartesian(ylim = c(-4, 1.5)) +
+  theme_classic()
+
+p_interaction
+```
+
+</details>
+
+```{r p_interaction, echo = FALSE}
+```
+
+Overall, we see a larger effect of `Condition` materialize within `Lang=="L1"` (area between red lines) than within `Lang=="L2"` (area between blue lines). The two clusters for the interaction effect are detected over the regions where this difference in area is the most pronounced. These correspond to the two significant clusters spanning [-600, -350] and [0, 250].
+
+```{r elogit-cpa-clusters}
+```
+
+## Comparison to a split approach
+
+At the beginning of this tutorial we discussed an alternative approach of splitting the data by one factor and then testing the effect of the other factor within each level of the first factor. In this section we replicate this approach from the original tutorial for this dataset, where the effect of `Condition` was tested separately for each group of `Lang`.
+
+We first split the data by `Lang` and construct a specification object for each. Note that `Condition` is now the sole predictor in the formulae.
+
+```{r spec_L1L2}
+spec_L1 <- make_jlmer_spec(
+  elogFix ~ Condition + (1 | Subject) + (1 | Item),
+  data = fix_50bin %>% 
+    filter(Lang == "L1"),
+  subject = "Subject", trial = "Item", time = "Time"
+)
+
+spec_L2 <- make_jlmer_spec(
+  elogFix ~ Condition + (1 | Subject) + (1 | Item),
+  data = fix_50bin %>% 
+    filter(Lang == "L2"),
+  subject = "Subject", trial = "Item", time = "Time"
+)
+```
+
+Then, we conduct a CPA for each, using the same `clusterpermute()` syntax.
+
+```{r CPA_L1}
+set_rng_state(123L)
+system.time({
+  CPA_L1 <- clusterpermute(
+    spec_L1,
+    statistic = "chisq",
+    threshold = 0.05,
+    nsim = 1000L,
+    progress = FALSE
+  )
+})
+```
+
+```{r CPA_L2}
+set_rng_state(123L)
+system.time({
+  CPA_L2 <- clusterpermute(
+    spec_L2,
+    statistic = "chisq",
+    threshold = 0.05,
+    nsim = 1000L,
+    progress = FALSE
+  )
+})
+```
+
+Finally we inspect the result of the CPA on the splits:
+
+For the L1 group, we detect one significant cluster spanning [-650, 950], which has the same range as the cluster detected for the `Condition` main effect in the combined CPA.
+
+```{r CPA_L1-clusters}
+CPA_L1$empirical_clusters
+```
+
+For the L2 group, we again detect one significant cluster but now spanning a slightly shorter range of [-350, 950].
+
+```{r CPA_L2-clusters}
+CPA_L2$empirical_clusters
+```
+
+It is important to note that within this split analysis, we cannot compare the `Condition` effect across `Lang` groups. This is not just on the basis of such a comparison being a post-hoc test, thus carrying less weight as a piece of evidence. Instead, there is a more fundamental problem in the fact that the magnitude of the effect (i.e., the cluster-mass statistic) is an abstraction over the shape of the data (and permutations of the data) as a *time series*, which cannot be recovered post-hoc.
+
+```{r L2L2-clustermass, echo = FALSE}
+L1_clustermass <- round(CPA_L1$empirical_clusters$Condition$statistic)
+L2_clustermass <- round(CPA_L2$empirical_clusters$Condition$statistic)
+```
+
+More simply put, given the cluster-mass of `r L1_clustermass` over [-650, 950] for native speakers and the cluster-mass of `r L2_clustermass` over [-350, 950] for non-native speakers, we cannot conclude a difference in cluster-mass of `r L1_clustermass - L2_clustermass` over the non-intersecting region [-650, -350].
+
+Here, we already know that this isn't the case: the complete 2-by-2 CPA from above detected significant clusters for the interaction effect at [-600, -350] and [0, 250], each with a smaller cluster-mass. Thus, we can only get an estimate this effect if the comparison is specified at the start and baked into the CPA procedure itself (here, in the form of an interaction term, with the appropriate contrast coding schemes).
+
+Lastly, as also noted elsewhere on the package website, be careful of making statements about the timecourse of an effect from a CPA ([Sassenhagen & Draschkow, 2019](https://doi.org/10.1111/psyp.13335)).
