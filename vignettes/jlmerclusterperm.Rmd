@@ -50,6 +50,8 @@ In the order of increasing complexity, the **case studies** are:
 
 3) [de Carvalho et al. 2021](https://yjunechoe.github.io/jlmerclusterperm/articles/deCarvalho-et-al-2021.html), which showcases using custom regression contrasts to test the relationship between multiple levels of a factor. It also discusses issues surrounding the complexity of the timewise regression model.
 
+4) [Ito-et-al-2018](https://yjunechoe.github.io/jlmerclusterperm/articles/Ito-et-al-2018.html), which presents a visual guide on the interpretation of results when a CPA involves multiple predictors and their interactions. It especially focuses on the interpretation of interaction terms and their special nature in a CPA.
+
 The **topics** cover general package features:
 
 - [Tidying output](https://yjunechoe.github.io/jlmerclusterperm/articles/tidying-output.html): `tidy()` and other ways of collecting `jlmerclusterperm` objects as tidy data.
