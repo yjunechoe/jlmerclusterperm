@@ -13,7 +13,8 @@
 
 # Setup helpers
 julia_cli <- function(x) {
-  utils::tail(system2("julia", x, stdout = TRUE), 1L)
+  julia_cmd <- asNamespace("JuliaConnectoR")$getJuliaExecutablePath()
+  utils::tail(system2(julia_cmd, x, stdout = TRUE), 1L)
 }
 parse_julia_version <- function(version) {
   gsub("^julia.version .*(\\d+\\.\\d+\\.\\d+).*$", "\\1", version)
