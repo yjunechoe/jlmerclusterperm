@@ -9,4 +9,5 @@ format/Manifest.toml$
 ^CRAN-SUBMISSION$
 inst/doc
 /doc/
+/docs/
 /Meta/
