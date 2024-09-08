@@ -42,7 +42,7 @@
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../articles/jlmerclusterperm.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
+<li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><hr class="dropdown-divider"></li>
@@ -57,6 +57,7 @@
     <li><a class="dropdown-item" href="../articles/Garrison-et-al-2020.html">Garrison et al. 2020</a></li>
     <li><a class="dropdown-item" href="../articles/Geller-et-al-2020.html">Geller et al. 2020</a></li>
     <li><a class="dropdown-item" href="../articles/deCarvalho-et-al-2021.html">de Carvalho et al. 2021</a></li>
+    <li><a class="dropdown-item" href="../articles/Ito-et-al-2018.html">Ito et al. 2018</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -228,11 +229,8 @@ CPA is non-blocking. We are evaluating R code in the interactive session
 <span><span class="op">}</span></span>
 <span><span class="co">#&gt; Elapsed: 0.5s </span></span>
 <span><span class="co">#&gt; Elapsed: 1.0s </span></span>
-<span><span class="co">#&gt; Elapsed: 1.5s </span></span>
-<span><span class="co">#&gt; Elapsed: 2.0s </span></span>
-<span><span class="co">#&gt; Elapsed: 2.5s </span></span>
-<span><span class="co">#&gt; Elapsed: 3.0s</span></span></code></pre></div>
-<p>We reach the end of the while loop at 3 seconds, which is
+<span><span class="co">#&gt; Elapsed: 1.5s</span></span></code></pre></div>
+<p>We reach the end of the while loop at 1.5 seconds, which is
 approximately how long the CPA took to complete (we confirm this in the
 next section). At this point the future has completed and its result is
 available for collection.</p>
@@ -262,22 +260,22 @@ results from the future and assign it to a variable for further
 inspection:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">CPA_async</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://future.futureverse.org/reference/value.html" class="external-link">value</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Connecting to Julia TCP server at localhost:11982 ...</span></span>
+<span><span class="co">#&gt; Connecting to Julia TCP server at localhost:11984 ...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Detecting empirical clusters and calculating cluster-mass statistics.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Detecting empirical clusters and calculating cluster-mass statistics. <span style="color: #B2B2B2;">[123ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Detecting empirical clusters and calculating cluster-mass statistics. <span style="color: #B2B2B2;">[56ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Sampling cluster-mass statistics from a bootstrapped null distribution.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Sampling cluster-mass statistics from a bootstrapped null distribution. <span style="color: #B2B2B2;">[2.7s]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Sampling cluster-mass statistics from a bootstrapped null distribution. <span style="color: #B2B2B2;">[985m</span>…</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Calculating the probability of the observed cluster-mass statistics.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Calculating the probability of the observed cluster-mass statistics. <span style="color: #B2B2B2;">[33ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Calculating the probability of the observed cluster-mass statistics. <span style="color: #B2B2B2;">[18ms]</span></span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
 <p>Note how <code><a href="https://future.futureverse.org/reference/value.html" class="external-link">value()</a></code> also prints the messages encountered
 while executing the CPA code. We see this because we did not specify
 <code>progress = FALSE</code> in the <code><a href="../reference/clusterpermute.html">clusterpermute()</a></code> call
 passed to the future. For our purposes, just note that adding up the
-times from the messages is similar to what we saw from the while loop (3
-seconds).</p>
+times from the messages is similar to what we saw from the while loop
+(1.5 seconds).</p>
 <p>The output of the asynchronous CPA (<code>CPA_async</code>) is
 identical to the initial CPA that we ran at the beginning
 (<code>CPA</code>) because both were ran with the default seed of 1 and
@@ -304,7 +302,7 @@ RNG</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.9000.</p>
 </div>
 
     </footer>

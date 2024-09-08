@@ -42,7 +42,7 @@
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../articles/jlmerclusterperm.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
+<li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><hr class="dropdown-divider"></li>
@@ -57,6 +57,7 @@
     <li><a class="dropdown-item" href="../articles/Garrison-et-al-2020.html">Garrison et al. 2020</a></li>
     <li><a class="dropdown-item" href="../articles/Geller-et-al-2020.html">Geller et al. 2020</a></li>
     <li><a class="dropdown-item" href="../articles/deCarvalho-et-al-2021.html">de Carvalho et al. 2021</a></li>
+    <li><a class="dropdown-item" href="../articles/Ito-et-al-2018.html">Ito et al. 2018</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -281,7 +282,7 @@ identifies the empirical clusters, which can be inspected with a
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;   29.47    0.47   69.07</span></span></code></pre></div>
+<span><span class="co">#&gt;   22.87    0.17   26.87</span></span></code></pre></div>
 <p>This simulates a null distribution of cluster-mass statistics. The
 output, when printed, is essentially the output of
 <code>summary(df_timeclust)</code> with p-values (the
@@ -320,7 +321,7 @@ thread:</p>
 <span>  <span class="fu"><a href="../reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.11    0.03   35.75</span></span></code></pre>
+<span><span class="co">#&gt;    0.02    0.00   18.33</span></span></code></pre>
 <p>In <code>{jlmerclusterpm}</code>, CPA can also be conducted in two
 steps:</p>
 <ol style="list-style-type: decimal">
@@ -369,7 +370,7 @@ the contrast coding schemes, among other things:</p>
 <span>  <span class="va">cpa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clusterpermute.html">clusterpermute</a></span><span class="op">(</span><span class="va">spec</span>, threshold <span class="op">=</span> <span class="va">threshold_t</span>, nsim <span class="op">=</span> <span class="fl">150</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.11    0.03   26.04</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.01    0.00   12.58</span></span></code></pre></div>
 <p>The same kinds of information are returned:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cpa</span></span>
@@ -461,7 +462,7 @@ simulations, especially for fixed-effects models:</p>
 <span>  <span class="fu"><a href="../reference/clusterpermute.html">clusterpermute</a></span><span class="op">(</span><span class="va">spec</span>, threshold <span class="op">=</span> <span class="va">threshold_t</span>, nsim <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.11    0.27   16.45</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.03    0.01    7.49</span></span></code></pre></div>
 <p>While <a href="http://samforbes.me/eyetrackingR/" class="external-link">eyetrackingR</a> does have an option for
 parallelization, it has limited support and is platform dependent. In
 contrast, <a href="https://github.com/yjunechoe/jlmerclusterperm" class="external-link">jlmerclusterperm</a> leverages Julia’s built-in
@@ -472,14 +473,14 @@ multi-threading support which is more performant and consistent:</p>
 <span>  <span class="fu"><a href="../reference/jlmerclusterperm_setup.html">jlmerclusterperm_setup</a></span><span class="op">(</span>restart <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    0.14    0.07   30.89</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.10    0.01   17.83</span></span></code></pre></div>
 <p>10,000 simulations with 7 threads:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/clusterpermute.html">clusterpermute</a></span><span class="op">(</span><span class="va">spec</span>, threshold <span class="op">=</span> <span class="va">threshold_t</span>, nsim <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    user  system elapsed </span></span>
-<span><span class="co">#&gt;    1.29    2.27   84.19</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.26    0.24   33.39</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -492,7 +493,7 @@ multi-threading support which is more performant and consistent:</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.9000.</p>
 </div>
 
     </footer>
