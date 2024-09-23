@@ -1,4 +1,10 @@
+# jlmerclusterperm (development version)
+
+* Better detection of Julia executable
+
 # jlmerclusterperm 1.1.4
+
+- Imports `{JuliaFormulae}` package for parsing R formula into Julia formula
 
 # jlmerclusterperm 1.1.3
 
