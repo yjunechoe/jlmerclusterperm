@@ -92,7 +92,6 @@ setup_with_progress <- function(..., cache_dir = NULL, verbose = TRUE) {
   )
   if (source_success) {
     define_globals()
-    cleanup_jl()
     invisible(TRUE)
   } else {
     invisible(FALSE)
@@ -134,6 +133,7 @@ set_projenv <- function(..., cache_dir = NULL, verbose = TRUE) {
     unlink(manifest)
   }
   pkgdir <- system.file("julia/", package = "jlmerclusterperm")
+  cleanup_jl(projdir)
   file.copy(from = pkgdir, to = userdir, recursive = TRUE)
   JuliaConnectoR::juliaCall("cd", projdir)
   JuliaConnectoR::juliaEval("using Pkg")
@@ -172,12 +172,20 @@ source_jl <- function(..., verbose = TRUE) {
     if (i <= length(jl_pkgs)) {
       JuliaConnectoR::juliaEval(jl_pkgs[i])
     } else {
+      if (using_load_all()) {
+        JuliaConnectoR::juliaEval("using Revise")
+        JuliaConnectoR::juliaEval("using JlmerClusterPerm")
+      }
       .jlmerclusterperm$jl <- JuliaConnectoR::juliaImport("JlmerClusterPerm")
     }
   }
   invisible(TRUE)
 }
 
-cleanup_jl <- function(...) {
-  unlink(dir(.jlmerclusterperm$opts$projdir, pattern = "[^Manifest.toml]", full.names = TRUE), recursive = TRUE)
+cleanup_jl <- function(projdir) {
+  unlink(dir(projdir, pattern = "[^Manifest.toml]", full.names = TRUE), recursive = TRUE)
+}
+
+using_load_all <- function() {
+  interactive() && exists(".__DEVTOOLS__", asNamespace("jlmerclusterperm"))
 }
