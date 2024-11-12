@@ -1,4 +1,4 @@
-# jlmerclusterperm (development version)
+# jlmerclusterperm 1.1.5
 
 * Better detection of Julia executable
 
