@@ -27,6 +27,16 @@ data, powered by
 
 ## Installation and usage
 
+### Zero-setup test drive
+
+As of March 2025, **Google Colab** supports Julia. This means `{jlmerclusterperm}`
+*just works* out of the box. Try it out in a
+[demo notebook](https://colab.research.google.com/drive/1pTXGbuoQKka5Tm8qnyaHrMHs0Z-ALD7k?usp=sharing)
+that runs some of the code from the
+[Ito et al. 2018 case study vignette](https://yjunechoe.github.io/jlmerclusterperm/articles/Ito-et-al-2018.html).
+
+### Local setup
+
 Install the released version of jlmerclusterperm from CRAN:
 
 ``` r
