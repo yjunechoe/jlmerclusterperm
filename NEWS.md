@@ -1,4 +1,8 @@
-# jlmerclusterperm (development version)
+# jlme (development version)
+
+# jlmerclusterperm 1.1.5
+
+* Bump `{JuliaConnectoR}` dependency to v1.1.4
 
 * Better detection of Julia executable
 

@@ -1,6 +1,6 @@
 Package: jlmerclusterperm
 Title: Cluster-Based Permutation Analysis for Densely Sampled Time Data
-Version: 1.1.4
+Version: 1.1.5
 Authors@R: 
     person("June", "Choe", , "jchoe001@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-0701-921X"))
@@ -24,7 +24,7 @@ Imports:
     backports (>= 1.1.7),
     cli,
     generics,
-    JuliaConnectoR,
+    JuliaConnectoR (>= 1.1.4),
     JuliaFormulae,
     lme4,
     stats,
