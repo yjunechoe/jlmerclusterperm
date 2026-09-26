@@ -37,7 +37,17 @@ is_setup <- function() isTRUE(.jlmerclusterperm$is_setup)
 #' @examples
 #' julia_setup_ok()
 julia_setup_ok <- function() {
-  JuliaConnectoR::juliaSetupOk() && julia_version_compatible()
+  julia_found() && isTRUE(tryCatch(julia_version_compatible(), error = function(e) FALSE))
+}
+
+# Unlike `JuliaConnectoR::juliaSetupOk()`, does not start a Julia server (JuliaConnectoR >= 1.1.6),
+# which would leave a connection open (e.g., in examples conditioned on `julia_setup_ok()`)
+julia_found <- function() {
+  julia_cmd <- tryCatch(
+    asNamespace("JuliaConnectoR")$getJuliaExecutablePath(),
+    error = function(e) NULL
+  )
+  !is.null(julia_cmd)
 }
 
 #' Initial setup for the jlmerclusterperm package
@@ -63,7 +73,7 @@ julia_setup_ok <- function() {
 #' @export
 #' @return TRUE
 jlmerclusterperm_setup <- function(..., cache_dir = NULL, restart = TRUE, verbose = TRUE) {
-  if (!JuliaConnectoR::juliaSetupOk()) cli::cli_abort("No Julia installation detected.")
+  if (!julia_found()) cli::cli_abort("No Julia installation detected.")
   if (!julia_version_compatible()) cli::cli_abort("Julia version >=1.8 required.")
   if (restart || !is_setup()) {
     JuliaConnectoR::stopJulia()

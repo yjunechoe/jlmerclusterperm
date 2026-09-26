@@ -2,6 +2,8 @@
 
 * Better detection of Julia executable
 
+* `julia_setup_ok()` no longer starts a Julia session. `JuliaConnectoR::juliaSetupOk()` starts one as of JuliaConnectoR 1.1.6, which left connections open in examples.
+
 * `clusterpermute()` is faster because the permuted timewise statistics now stay in Julia, and only the null cluster-mass distribution is returned to R. Results are identical to the piecemeal workflow.
 
 * Faster permutation of predictors (up to ~2x faster `clusterpermute()` for GLMs). Results are identical to previous versions under the same RNG state.
