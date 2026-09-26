@@ -69,6 +69,10 @@ reference:
   - julia_rng
   - julia_progress
 
+- title: Data
+  contents:
+  - vwp_sim
+
 articles:
 - title: Topics
   navbar: Topics

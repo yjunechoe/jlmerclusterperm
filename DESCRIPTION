@@ -1,6 +1,6 @@
 Package: jlmerclusterperm
 Title: Cluster-Based Permutation Analysis for Densely Sampled Time Data
-Version: 1.1.4
+Version: 1.1.4.9000
 Authors@R: 
     person("June", "Choe", , "jchoe001@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-0701-921X"))
@@ -51,6 +51,7 @@ VignetteBuilder:
     knitr
 Config/testthat/edition: 3
 Encoding: UTF-8
+LazyData: true
 Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd",
     "srr::srr_stats_roclet"))
 RoxygenNote: 7.3.2
@@ -75,3 +76,4 @@ Collate:
     'tidy.R'
     'zzz.R'
     'srr-stats-standards.R'
+    'data.R'

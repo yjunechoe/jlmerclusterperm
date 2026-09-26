@@ -29,11 +29,11 @@ data, powered by
 
 ### Zero-setup test drive
 
-As of March 2025, **Google Colab** supports Julia. This means `{jlmerclusterperm}`
-*just works* out of the box. Try it out in a
-[demo notebook](https://colab.research.google.com/drive/1pTXGbuoQKka5Tm8qnyaHrMHs0Z-ALD7k?usp=sharing)
-that runs some of the code from the
-[Ito et al. 2018 case study vignette](https://yjunechoe.github.io/jlmerclusterperm/articles/Ito-et-al-2018.html).
+As of March 2025, **Google Colab** supports Julia. This means
+`{jlmerclusterperm}` *just works* out of the box. Try it out in a [demo
+notebook](https://colab.research.google.com/drive/1pTXGbuoQKka5Tm8qnyaHrMHs0Z-ALD7k?usp=sharing)
+that runs some of the code from the [Ito et al. 2018 case study
+vignette](https://yjunechoe.github.io/jlmerclusterperm/articles/Ito-et-al-2018.html).
 
 ### Local setup
 
@@ -90,28 +90,42 @@ and tutorials.
 
 ### Wholesale CPA with `clusterpermute()`
 
-A time series data:
+A time series data: the simulated eyetracking experiment `vwp_sim`,
+where adults and children hear a word while viewing its picture
+alongside either a similar-sounding competitor or only unrelated
+objects. The true effects are known, so we can check what the CPA finds
+against them (see `?vwp_sim`):
+
+- a main effect of `Age`: adults look at the target earlier and more,
+  from around 200ms onward
+- a main effect of `Condition`: a related competitor temporarily draws
+  looks away from the target, from around 400ms to 1300ms
+- an interaction of `Condition` and `Age`: competition is larger and
+  longer for children, from around 450ms to 1300ms
 
 ``` r
-chickweights <- ChickWeight
-chickweights$Time <- as.integer(factor(chickweights$Time))
+vwp <- vwp_sim
+vwp$elog <- log((vwp$Fixations + 0.5) / (vwp$Samples - vwp$Fixations + 0.5))
+contrasts(vwp$Condition) <- contr.sum(2)
+contrasts(vwp$Age) <- contr.sum(2)
 matplot(
-  tapply(chickweights$weight, chickweights[c("Time", "Diet")], mean),
-  type = "b", lwd = 3, ylab = "Weight", xlab = "Time"
+  unique(vwp$Time), tapply(vwp$elog, list(vwp$Time, interaction(vwp$Age, vwp$Condition)), mean),
+  type = "l", col = 1:2, lty = rep(1:2, each = 2), lwd = 3, ylab = "Looks to target", xlab = "Time"
 )
+legend("bottomright", c("Adult Unrelated", "Adult Related", "Child Unrelated", "Child Related"), col = c(1, 1, 2, 2), lty = c(2, 1, 2, 1), lwd = 3)
 ```
 
-<img src="man/figures/README-chickweight-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="man/figures/README-vwp-1.png" width="75%" style="display: block; margin: auto;" />
 
 Preparing a specification object with `make_jlmer_spec()`:
 
 ``` r
-chickweights_spec <- make_jlmer_spec(
-  formula = weight ~ 1 + Diet,
-  data = chickweights,
-  subject = "Chick", time = "Time"
+vwp_spec <- make_jlmer_spec(
+  formula = elog ~ 1 + Condition * Age,
+  data = vwp,
+  subject = "Subject", trial = "Item", time = "Time"
 )
-chickweights_spec
+vwp_spec
 ```
 
 <picture>
@@ -124,8 +138,8 @@ Cluster-based permutation test with `clusterpermute()`:
 ``` r
 set_rng_state(123L)
 clusterpermute(
-  chickweights_spec,
-  threshold = 2.5,
+  vwp_spec,
+  threshold = 2,
   nsim = 100
 )
 ```
@@ -138,15 +152,16 @@ clusterpermute(
 Including random effects:
 
 ``` r
-chickweights_re_spec <- make_jlmer_spec(
-  formula = weight ~ 1 + Diet + (1 | Chick),
-  data = chickweights,
-  subject = "Chick", time = "Time"
+vwp_re_spec <- make_jlmer_spec(
+  formula = elog ~ 1 + Condition * Age +
+    (1 + Condition | Subject) + (1 + Condition | Item),
+  data = vwp,
+  subject = "Subject", trial = "Item", time = "Time"
 )
 set_rng_state(123L)
 clusterpermute(
-  chickweights_re_spec,
-  threshold = 2.5,
+  vwp_re_spec,
+  threshold = 2,
   nsim = 100
 )$empirical_clusters
 ```
@@ -161,9 +176,10 @@ clusterpermute(
 Computing time-wise statistics of the observed data:
 
 ``` r
-empirical_statistics <- compute_timewise_statistics(chickweights_spec)
-matplot(t(empirical_statistics), type = "b", pch = 1, lwd = 3, ylab = "t-statistic")
-abline(h = 2.5, lty = 3)
+empirical_statistics <- compute_timewise_statistics(vwp_spec)
+matplot(unique(vwp$Time), t(empirical_statistics), type = "l", lty = 1, lwd = 3, ylab = "t-statistic", xlab = "Time")
+abline(h = c(-2, 2), lty = 3)
+legend("topright", rownames(empirical_statistics), col = 1:3, lwd = 3)
 ```
 
 <img src="man/figures/README-empirical_statistics-1.png" width="75%" style="display: block; margin: auto;" />
@@ -171,7 +187,7 @@ abline(h = 2.5, lty = 3)
 Identifying empirical clusters:
 
 ``` r
-empirical_clusters <- extract_empirical_clusters(empirical_statistics, threshold = 2.5)
+empirical_clusters <- extract_empirical_clusters(empirical_statistics, threshold = 2)
 empirical_clusters
 ```
 
@@ -184,8 +200,8 @@ Simulating the null distribution:
 
 ``` r
 set_rng_state(123L)
-null_statistics <- permute_timewise_statistics(chickweights_spec, nsim = 100)
-null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2.5)
+null_statistics <- permute_timewise_statistics(vwp_spec, nsim = 100)
+null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2)
 null_cluster_dists
 ```
 
@@ -208,7 +224,7 @@ calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1 = TRUE)
 Iterating over a range of threshold values:
 
 ``` r
-walk_threshold_steps(empirical_statistics, null_statistics, steps = c(2, 2.5, 3))
+walk_threshold_steps(empirical_statistics, null_statistics, steps = c(1.5, 2, 2.5))
 ```
 
 <picture>
@@ -242,9 +258,8 @@ following as you see fit.
 
 To cite jlmerclusterperm:
 
-- Choe, J. (2024). jlmerclusterperm: Cluster-Based
-  Permutation Analysis for Densely Sampled Time Data. R package version
-  1.1.4.
+- Choe, J. (2026). jlmerclusterperm: Cluster-Based Permutation Analysis
+  for Densely Sampled Time Data. R package version 1.1.4.
   [10.32614/CRAN.package.jlmerclusterperm](https://doi.org/10.32614/CRAN.package.jlmerclusterperm).
 
 To cite the cluster-based permutation test:

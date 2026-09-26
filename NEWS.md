@@ -1,5 +1,7 @@
 # jlmerclusterperm (development version)
 
+* New dataset `vwp_sim`: a simulated visual world eyetracking experiment with known main and interaction effects, now used in the README.
+
 * Better detection of Julia executable
 
 * `julia_setup_ok()` no longer starts a Julia session. `JuliaConnectoR::juliaSetupOk()` starts one as of JuliaConnectoR 1.1.6, which left connections open in examples.
