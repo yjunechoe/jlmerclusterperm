@@ -61,10 +61,10 @@ function permute_timewise_statistics(
         predictors = term_groups.p
         permute_data = copy(data)
         shuffle_type = guess_shuffle_as(
-            permute_data,
-            predictors,
-            participant_col,
-            trial_col == "" ? nothing : 3
+            permute_data, predictors, participant_col, trial_col
+        )
+        shuffler = UnitShuffler(
+            permute_data, shuffle_type, predictors, participant_col, trial_col
         )
 
         if statistic == "chisq"
@@ -75,14 +75,7 @@ function permute_timewise_statistics(
         end
 
         for i in 1:nsim
-            shuffle_as!(
-                permute_data,
-                shuffle_type,
-                predictors,
-                participant_col,
-                trial_col,
-                global_opts.rng,
-            )
+            shuffle_units!(permute_data, shuffler, global_opts.rng)
             if is_mem
                 timewise_stats = timewise_lme(
                     formula,
@@ -146,7 +139,8 @@ end
                                family::Distribution, contrasts::Union{Nothing,Dict},
                                nsim::Integer, participant_col::String,
                                trial_col::Union{Missing,String}, term_groups::Tuple,
-                               predictors_subset::Union{Nothing,AbstractVector}, statistic::String,
+                               predictors_subset::Union{Nothing,AbstractVector},
+                               statistic::String,
                                is_mem::Bool, global_opts::NamedTuple,
                                thresholds::Dict, binned::Bool; opts...)
 

@@ -56,3 +56,57 @@ test_that("levels of a category shuffled together", {
   spec2_perm2 <- permute_by_predictor(chickweights_spec2, predictors = c("Diet2", "Diet3", "Diet4"), predictor_type = "between_participant")
   expect_equal(spec2_perm1, spec2_perm2)
 })
+
+# Example 2: a within-participant predictor constant within (Chick, Trial) units
+chickweights_df2 <- transform(chickweights_df, Trial = ifelse(Time %% 4 < 2, "a", "b"))
+chickweights_df2$Half <- ifelse(xor(chickweights_df2$Trial == "a", chickweights_df2$DietInt %% 2 == 0), -0.5, 0.5)
+chickweights_spec3 <- make_jlmer_spec(
+  formula = weight ~ 1 + Half,
+  data = chickweights_df2,
+  subject = "Chick", trial = "Trial", time = "Time"
+)
+
+test_that("within-participant shuffling preserves trial and participant structure", {
+  expect_message(permuted <- permute_by_predictor(chickweights_spec3, predictors = "Half", n = 5), "within_participant")
+  for (sim in split(permuted, permuted$id)) {
+    # each trial keeps a single value across its time series
+    expect_true(all(tapply(sim$Half, paste(sim$Chick, sim$Trial), function(x) length(unique(x))) == 1))
+    # each participant keeps the same set of values
+    original <- chickweights_spec3$data
+    values_by_chick <- function(df) {
+      out <- lapply(split(df$Half, as.character(df$Chick)), function(x) sort(unique(x)))
+      out[order(names(out))]
+    }
+    expect_equal(values_by_chick(sim), values_by_chick(original))
+  }
+})
+
+test_that("informative errors when a predictor is not constant within shuffled units", {
+  # within-participant predictor forced to be shuffled between participants
+  expect_error(
+    permute_by_predictor(chickweights_spec3, predictors = "Half", predictor_type = "between_participant"),
+    "values vary within Chick"
+  )
+  # predictor varies over time within a trial
+  chickweights_df3 <- transform(chickweights_df2, Half = ifelse(Time %% 8 < 4, -0.5, 0.5))
+  chickweights_spec4 <- make_jlmer_spec(
+    formula = weight ~ 1 + Half,
+    data = chickweights_df3,
+    subject = "Chick", trial = "Trial", time = "Time"
+  )
+  expect_error(
+    permute_by_predictor(chickweights_spec4, predictors = "Half", predictor_type = "within_participant"),
+    "values vary within Chick x Trial"
+  )
+  # within-participant shuffling without a trial column
+  chickweights_spec5 <- make_jlmer_spec(
+    formula = weight ~ 1 + Half,
+    data = chickweights_df2,
+    subject = "Chick", time = "Time"
+  )
+  expect_error(
+    permute_by_predictor(chickweights_spec5, predictors = "Half", predictor_type = "within_participant"),
+    "requires a column for `trial`"
+  )
+  expect_error(permute_by_predictor(chickweights_spec5, predictors = "Half"), "no column for `trial`")
+})

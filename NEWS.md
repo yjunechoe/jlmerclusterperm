@@ -4,6 +4,10 @@
 
 * `clusterpermute()` is faster because the permuted timewise statistics now stay in Julia, and only the null cluster-mass distribution is returned to R. Results are identical to the piecemeal workflow.
 
+* Faster permutation of predictors (up to ~2x faster `clusterpermute()` for GLMs). Results are identical to previous versions under the same RNG state.
+
+* `permute_by_predictor()` and `permute_timewise_statistics()` give an informative error when a predictor is not constant within the units being shuffled (participants, or trials within participants).
+
 * Fixed the `predictors` argument of `permute_timewise_statistics()` and `clusterpermute()`, which previously always errored.
 
 * `extract_null_cluster_dists()` no longer drops simulations whose statistics mix `Inf` and `-Inf`.
