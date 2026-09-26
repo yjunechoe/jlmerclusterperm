@@ -102,6 +102,9 @@ simulate_vwp <- function(n_subjects = 40, n_items = 16,
     Samples = n_samples,
     Fixations = stats::rbinom(n_trials * n_time, n_samples, stats::plogis(as.vector(eta)))
   )
+  out$elog <- log((out$Fixations + 0.5) / (out$Samples - out$Fixations + 0.5))
+  contrasts(out$Age) <- contr.sum(2)
+  contrasts(out$Condition) <- contr.sum(2)
   out <- out[order(out$Subject, out$Item, out$Time), ]
   rownames(out) <- NULL
   out
@@ -110,9 +113,8 @@ simulate_vwp <- function(n_subjects = 40, n_items = 16,
 vwp_sim <- simulate_vwp(seed = 1)
 
 # Sanity check: mean empirical logit of looks to the target by Age and Condition
-elog <- with(vwp_sim, log((Fixations + 0.5) / (Samples - Fixations + 0.5)))
 matplot(
-  unique(vwp_sim$Time), matrix(tapply(elog, vwp_sim[c("Time", "Age", "Condition")], mean), ncol = 4),
+  unique(vwp_sim$Time), matrix(tapply(vwp_sim$elog, vwp_sim[c("Time", "Age", "Condition")], mean), ncol = 4),
   type = "l", col = 1:2, lty = rep(1:2, each = 2), lwd = 3,
   xlab = "Time (ms)", ylab = "Looks to target (empirical logit)"
 )

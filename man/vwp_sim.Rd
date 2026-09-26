@@ -5,17 +5,20 @@
 \alias{vwp_sim}
 \title{Simulated visual world eyetracking data}
 \format{
-A data frame with 26,240 rows and 7 columns:
+A data frame with 26,240 rows and 8 columns:
 \describe{
 \item{Subject}{Participant ID (40 participants)}
-\item{Age}{Age group of the participant (\code{"Adult"} or \code{"Child"}), between participants}
+\item{Age}{Age group of the participant (\code{"Adult"} or \code{"Child"}), between participants.
+Sum-coded.}
 \item{Item}{Item ID (16 items)}
 \item{Condition}{Whether the display contains a related competitor (\code{"Related"}) or only
 unrelated objects (\code{"Unrelated"}), within participants and items. Each participant
-sees each item once, counterbalanced across participants.}
+sees each item once, counterbalanced across participants. Sum-coded.}
 \item{Time}{Time from word onset in milliseconds, in 50ms bins from 0 to 2000}
 \item{Samples}{Number of eyetracking samples in the time bin}
 \item{Fixations}{Number of samples on the target}
+\item{elog}{Empirical logit of looks to the target,
+\code{log((Fixations + 0.5) / (Samples - Fixations + 0.5))}}
 }
 }
 \usage{
@@ -46,12 +49,8 @@ interaction of \code{Condition} and \code{Age}, from around 450ms to 1300ms).
 See \code{data-raw/vwp_sim.R} in the package source on GitHub for the simulation code.
 }
 \examples{
-# Empirical logit of looks to the target
-vwp <- vwp_sim
-vwp$elog <- with(vwp, log((Fixations + 0.5) / (Samples - Fixations + 0.5)))
-
-# Mean time course by Age and Condition
-means <- tapply(vwp$elog, vwp[c("Time", "Age", "Condition")], mean)
+# Mean time course of looks to the target by Age and Condition
+means <- tapply(vwp_sim$elog, vwp_sim[c("Time", "Age", "Condition")], mean)
 matplot(
   as.integer(rownames(means)), matrix(means, nrow = nrow(means)),
   type = "l", lty = rep(1:2, each = 2), col = 1:2, lwd = 3,

@@ -90,26 +90,13 @@ and tutorials.
 
 ### Wholesale CPA with `clusterpermute()`
 
-A time series data: the simulated eyetracking experiment `vwp_sim`,
-where adults and children hear a word while viewing its picture
-alongside either a similar-sounding competitor or only unrelated
-objects. The true effects are known, so we can check what the CPA finds
-against them (see `?vwp_sim`):
-
-- a main effect of `Age`: adults look at the target earlier and more,
-  from around 200ms onward
-- a main effect of `Condition`: a related competitor temporarily draws
-  looks away from the target, from around 400ms to 1300ms
-- an interaction of `Condition` and `Age`: competition is larger and
-  longer for children, from around 450ms to 1300ms
+A time series data: `vwp_sim`, a simulated eyetracking experiment of
+looks to a target (`elog`, the empirical logit of `Fixations`) by `Age`
+(adult vs. child) and `Condition` (a related vs. unrelated competitor).
 
 ``` r
-vwp <- vwp_sim
-vwp$elog <- log((vwp$Fixations + 0.5) / (vwp$Samples - vwp$Fixations + 0.5))
-contrasts(vwp$Condition) <- contr.sum(2)
-contrasts(vwp$Age) <- contr.sum(2)
 matplot(
-  unique(vwp$Time), tapply(vwp$elog, list(vwp$Time, interaction(vwp$Age, vwp$Condition)), mean),
+  unique(vwp_sim$Time), tapply(vwp_sim$elog, list(vwp_sim$Time, interaction(vwp_sim$Age, vwp_sim$Condition)), mean),
   type = "l", col = 1:2, lty = rep(1:2, each = 2), lwd = 3, ylab = "Looks to target", xlab = "Time"
 )
 legend("bottomright", c("Adult Unrelated", "Adult Related", "Child Unrelated", "Child Related"), col = c(1, 1, 2, 2), lty = c(2, 1, 2, 1), lwd = 3)
@@ -122,7 +109,7 @@ Preparing a specification object with `make_jlmer_spec()`:
 ``` r
 vwp_spec <- make_jlmer_spec(
   formula = elog ~ 1 + Condition * Age,
-  data = vwp,
+  data = vwp_sim,
   subject = "Subject", trial = "Item", time = "Time"
 )
 vwp_spec
@@ -137,11 +124,12 @@ Cluster-based permutation test with `clusterpermute()`:
 
 ``` r
 set_rng_state(123L)
-clusterpermute(
+CPA <- clusterpermute(
   vwp_spec,
   threshold = 2,
   nsim = 100
 )
+CPA
 ```
 
 <picture>
@@ -149,13 +137,36 @@ clusterpermute(
 <img src="man/figures/README-/CPA-io.svg" style="display: block; margin: auto;" />
 </picture>
 
+Collecting results as data frames with `tidy()`, e.g., to plot clusters:
+
+``` r
+clusters <- tidy(CPA$empirical_clusters)
+clusters
+#> # A tibble: 3 × 7
+#>   predictor        id    start   end length sum_statistic  pvalue
+#>   <chr>            <fct> <dbl> <dbl>  <dbl>         <dbl>   <dbl>
+#> 1 Condition1       1       450  1350     19        -114.  0.00990
+#> 2 Age1             1       100  2000     39         595.  0.00990
+#> 3 Condition1__Age1 1       650  1250     13          55.9 0.00990
+```
+
+``` r
+par(mar = c(4, 10, 1, 1))
+plot(NA, xlim = range(vwp_sim$Time), ylim = c(0.5, 3.5), yaxt = "n", xlab = "Time", ylab = "")
+segments(clusters$start, as.integer(factor(clusters$predictor)), clusters$end, lwd = 15, lend = "butt",
+         col = ifelse(clusters$pvalue < 0.05, "steelblue", "grey70"))
+axis(2, at = 1:3, labels = levels(factor(clusters$predictor)), las = 1)
+```
+
+<img src="man/figures/README-clusters-1.png" width="75%" style="display: block; margin: auto;" />
+
 Including random effects:
 
 ``` r
 vwp_re_spec <- make_jlmer_spec(
   formula = elog ~ 1 + Condition * Age +
     (1 + Condition | Subject) + (1 + Condition | Item),
-  data = vwp,
+  data = vwp_sim,
   subject = "Subject", trial = "Item", time = "Time"
 )
 set_rng_state(123L)
@@ -177,7 +188,7 @@ Computing time-wise statistics of the observed data:
 
 ``` r
 empirical_statistics <- compute_timewise_statistics(vwp_spec)
-matplot(unique(vwp$Time), t(empirical_statistics), type = "l", lty = 1, lwd = 3, ylab = "t-statistic", xlab = "Time")
+matplot(unique(vwp_sim$Time), t(empirical_statistics), type = "l", lty = 1, lwd = 3, ylab = "t-statistic", xlab = "Time")
 abline(h = c(-2, 2), lty = 3)
 legend("topright", rownames(empirical_statistics), col = 1:3, lwd = 3)
 ```
@@ -259,7 +270,7 @@ following as you see fit.
 To cite jlmerclusterperm:
 
 - Choe, J. (2026). jlmerclusterperm: Cluster-Based Permutation Analysis
-  for Densely Sampled Time Data. R package version 1.1.4.
+  for Densely Sampled Time Data. R package version 1.1.4.9000.
   [10.32614/CRAN.package.jlmerclusterperm](https://doi.org/10.32614/CRAN.package.jlmerclusterperm).
 
 To cite the cluster-based permutation test:

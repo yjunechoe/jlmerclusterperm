@@ -84,29 +84,14 @@ See the [Get Started](https://yjunechoe.github.io/jlmerclusterperm/articles/jlme
 
 ### Wholesale CPA with `clusterpermute()`
 
-A time series data: the simulated eyetracking experiment `vwp_sim`, where adults and children hear a word while viewing its picture alongside either a similar-sounding competitor or only unrelated objects. The true effects are known, so we can check what the CPA finds against them (see `?vwp_sim`):
-
-- a main effect of `Age`: adults look at the target earlier and more, from around 200ms onward
-- a main effect of `Condition`: a related competitor temporarily draws looks away from the target, from around 400ms to 1300ms
-- an interaction of `Condition` and `Age`: competition is larger and longer for children, from around 450ms to 1300ms
+A time series data: `vwp_sim`, a simulated eyetracking experiment of looks to a target (`elog`, the empirical logit of `Fixations`) by `Age` (adult vs. child) and `Condition` (a related vs. unrelated competitor).
 
 ```{r vwp, out.width = "75%"}
-vwp <- vwp_sim
-vwp$elog <- log((vwp$Fixations + 0.5) / (vwp$Samples - vwp$Fixations + 0.5))
-contrasts(vwp$Condition) <- contr.sum(2)
-contrasts(vwp$Age) <- contr.sum(2)
 matplot(
-  unique(vwp$Time), tapply(vwp$elog, list(vwp$Time, interaction(vwp$Age, vwp$Condition)), mean),
+  unique(vwp_sim$Time), tapply(vwp_sim$elog, list(vwp_sim$Time, interaction(vwp_sim$Age, vwp_sim$Condition)), mean),
   type = "l", col = 1:2, lty = rep(1:2, each = 2), lwd = 3, ylab = "Looks to target", xlab = "Time"
 )
 legend("bottomright", c("Adult Unrelated", "Adult Related", "Child Unrelated", "Child Related"), col = c(1, 1, 2, 2), lty = c(2, 1, 2, 1), lwd = 3)
-```
-
-```{asciicast vwp-io, include = FALSE}
-vwp <- vwp_sim
-vwp$elog <- log((vwp$Fixations + 0.5) / (vwp$Samples - vwp$Fixations + 0.5))
-contrasts(vwp$Condition) <- contr.sum(2)
-contrasts(vwp$Age) <- contr.sum(2)
 ```
 
 Preparing a specification object with `make_jlmer_spec()`:
@@ -114,7 +99,7 @@ Preparing a specification object with `make_jlmer_spec()`:
 ```{r spec, include = FALSE}
 vwp_spec <- make_jlmer_spec(
   formula = elog ~ 1 + Condition * Age,
-  data = vwp,
+  data = vwp_sim,
   subject = "Subject", trial = "Item", time = "Time"
 )
 ```
@@ -122,7 +107,7 @@ vwp_spec <- make_jlmer_spec(
 ```{asciicast spec-io}
 vwp_spec <- make_jlmer_spec(
   formula = elog ~ 1 + Condition * Age,
-  data = vwp,
+  data = vwp_sim,
   subject = "Subject", trial = "Item", time = "Time"
 )
 vwp_spec
@@ -136,11 +121,29 @@ clusterpermute(vwp_spec, threshold = 2, nsim = 2)
 
 ```{asciicast CPA-io}
 set_rng_state(123L)
-clusterpermute(
+CPA <- clusterpermute(
   vwp_spec,
   threshold = 2,
   nsim = 100
 )
+CPA
+```
+
+Collecting results as data frames with `tidy()`, e.g., to plot clusters:
+
+```{r CPA, include = FALSE}
+set_rng_state(123L)
+CPA <- clusterpermute(vwp_spec, threshold = 2, nsim = 100, progress = FALSE)
+```
+
+```{r clusters, out.width = "75%"}
+clusters <- tidy(CPA$empirical_clusters)
+clusters
+par(mar = c(4, 10, 1, 1))
+plot(NA, xlim = range(vwp_sim$Time), ylim = c(0.5, 3.5), yaxt = "n", xlab = "Time", ylab = "")
+segments(clusters$start, as.integer(factor(clusters$predictor)), clusters$end, lwd = 15, lend = "butt",
+         col = ifelse(clusters$pvalue < 0.05, "steelblue", "grey70"))
+axis(2, at = 1:3, labels = levels(factor(clusters$predictor)), las = 1)
 ```
 
 Including random effects:
@@ -149,7 +152,7 @@ Including random effects:
 vwp_re_spec <- make_jlmer_spec(
   formula = elog ~ 1 + Condition * Age +
     (1 + Condition | Subject) + (1 + Condition | Item),
-  data = vwp,
+  data = vwp_sim,
   subject = "Subject", trial = "Item", time = "Time"
 )
 set_rng_state(123L)
@@ -166,7 +169,7 @@ Computing time-wise statistics of the observed data:
 
 ```{r empirical_statistics, out.width = "75%"}
 empirical_statistics <- compute_timewise_statistics(vwp_spec)
-matplot(unique(vwp$Time), t(empirical_statistics), type = "l", lty = 1, lwd = 3, ylab = "t-statistic", xlab = "Time")
+matplot(unique(vwp_sim$Time), t(empirical_statistics), type = "l", lty = 1, lwd = 3, ylab = "t-statistic", xlab = "Time")
 abline(h = c(-2, 2), lty = 3)
 legend("topright", rownames(empirical_statistics), col = 1:3, lwd = 3)
 ```
