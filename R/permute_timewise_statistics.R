@@ -53,26 +53,13 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
                                         nsim = 100L, predictors = NULL, ...) {
   check_arg_class(jlmer_spec, "jlmer_spec")
   statistic <- match.arg(statistic)
-  is_mem <- jlmer_spec$meta$is_mem
-  participant_col <- jlmer_spec$meta$subject
-  trial_col <- jlmer_spec$meta$trial %|0|% ""
-  term_groups <- augment_term_groups(jlmer_spec, statistic)
-  predictors_subset <- validate_predictors_subset(predictors, term_groups$r)
-
   family <- match.arg(family)
-  args <- prep_for_jlmer(jlmer_spec, family = family, ...)
-  nsim <- as.integer(nsim)
-
-  opts <- list(...)
-  opts <- utils::modifyList(list(progress = FALSE), opts)
-  if (family == "binomial") {
-    opts <- utils::modifyList(list(fast = TRUE), opts)
-  }
+  prepped <- prep_permutation(jlmer_spec, family, statistic, nsim, predictors, ...)
+  term_groups <- prepped$term_groups
 
   out <- JuliaConnectoR::juliaGet(do.call(
     .jlmerclusterperm$jl$permute_timewise_statistics,
-    c(args, nsim, participant_col, trial_col, term_groups$jl,
-      predictors_subset, statistic, is_mem, .jlmerclusterperm$get_jl_opts(), opts)
+    c(prepped$args, prepped$opts)
   ))
 
   dimnames(out$z_array) <- list(
@@ -92,12 +79,7 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
     dimnames(out$z_array)$Predictor <- names(predictors)
   }
 
-  if (is.null(dimnames(out$z_array)$Predictor)) {
-    cli::cli_abort(c(
-      "No predictors to permute.",
-      i = if (!is.null(predictors)) "{.val {predictors}} {?is/are} not among model terms."
-    ))
-  }
+  abort_if_no_predictors(dimnames(out$z_array)$Predictor, predictors)
 
   convergence_failures <- check_convergence_failures(out$z_array)
 
@@ -107,20 +89,49 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
   )
 }
 
+prep_permutation <- function(jlmer_spec, family, statistic, nsim, predictors, ...) {
+  term_groups <- augment_term_groups(jlmer_spec, statistic)
+  predictors_subset <- validate_predictors_subset(predictors, term_groups$r)
+  args <- c(
+    prep_for_jlmer(jlmer_spec, family = family, ...),
+    as.integer(nsim), jlmer_spec$meta$subject, jlmer_spec$meta$trial %|0|% "",
+    term_groups$jl, predictors_subset, statistic, jlmer_spec$meta$is_mem,
+    .jlmerclusterperm$get_jl_opts()
+  )
+  list(args = args, opts = jl_fit_opts(family, ...), term_groups = term_groups)
+}
+
+abort_if_no_predictors <- function(permuted_predictors, predictors) {
+  if (length(permuted_predictors) == 0) {
+    cli::cli_abort(c(
+      "No predictors to permute.",
+      i = if (!is.null(predictors)) "{.val {predictors}} {?is/are} not among model terms."
+    ))
+  }
+}
+
 check_convergence_failures <- function(z_array) {
   convergence_failures_pos <- is.nan(z_array)
   if (any(convergence_failures_pos)) {
     convergence_failures <- unique(which(convergence_failures_pos, arr.ind = TRUE)[, c("Predictor", "Sim"), drop = FALSE])
-    convergence_failure_table <- table(convergence_failures[, "Predictor"])
-    names(convergence_failure_table) <- dimnames(z_array)$Predictor[as.integer(names(convergence_failure_table))]
-    cli::cli_alert_info("Convergence errors encountered (out of {.arg nsim = {.val {nrow(z_array)}}}) while bootstrapping the following {cli::qty(names(convergence_failure_table))}predictor{?s}:")
-    cli::cli_div(theme = .jlmerclusterperm$cli_theme)
-    cli::cli_ul()
-    cli::cli_dl(as.list(convergence_failure_table), labels = paste0("{.el ", names(convergence_failure_table), "}"))
-    cli::cli_end()
-    cli::cli_end()
+    predictors <- dimnames(z_array)$Predictor
+    failure_counts <- tabulate(convergence_failures[, "Predictor"], nbins = length(predictors))
+    report_convergence_failures(stats::setNames(failure_counts, predictors), nrow(z_array))
     convergence_failures[do.call(order, asplit(convergence_failures, 2)), ]
   }
+}
+
+report_convergence_failures <- function(failure_counts, nsim) {
+  convergence_failure_table <- failure_counts[failure_counts > 0]
+  if (length(convergence_failure_table) == 0) {
+    return(invisible())
+  }
+  cli::cli_alert_info("Convergence errors encountered (out of {.arg nsim = {.val {nsim}}}) while bootstrapping the following {cli::qty(names(convergence_failure_table))}predictor{?s}:")
+  cli::cli_div(theme = .jlmerclusterperm$cli_theme)
+  cli::cli_ul()
+  cli::cli_dl(as.list(convergence_failure_table), labels = paste0("{.el ", names(convergence_failure_table), "}"))
+  cli::cli_end()
+  cli::cli_end()
 }
 
 validate_predictors_subset <- function(predictors, r_term_groups) {
@@ -131,7 +142,8 @@ validate_predictors_subset <- function(predictors, r_term_groups) {
       "x" = "Must choose among {.val {predictors_set}}."
     ))
   } else {
-    list(predictors)
+    # Wrapped so that it is passed to Julia as a vector (or `nothing`)
+    list(if (!is.null(predictors)) as.list(predictors))
   }
 }
 

@@ -2,6 +2,18 @@
 
 * Better detection of Julia executable
 
+* `clusterpermute()` is faster because the permuted timewise statistics now stay in Julia, and only the null cluster-mass distribution is returned to R. Results are identical to the piecemeal workflow.
+
+* Fixed the `predictors` argument of `permute_timewise_statistics()` and `clusterpermute()`, which previously always errored.
+
+* `extract_null_cluster_dists()` no longer drops simulations whose statistics mix `Inf` and `-Inf`.
+
+* Cluster data frames now have a consistent column order (`cluster_id`, `cluster_start`, `cluster_end`, `statistic`) regardless of whether the first predictor or simulation contains a cluster.
+
+* Fixed crash in mixed-effects models when the response is constant at a time point.
+
+* Fixed cluster-mass statistics being returned as a list when a cluster spans a time point with a constant response.
+
 # jlmerclusterperm 1.1.4
 
 - Imports `{JuliaFormulae}` package for parsing R formula into Julia formula

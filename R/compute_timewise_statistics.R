@@ -61,12 +61,7 @@ compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
   term_groups <- augment_term_groups(jlmer_spec, statistic)
   args <- prep_for_jlmer(jlmer_spec, family = family, ...)
 
-  opts <- list(...)
-  opts <- utils::modifyList(list(progress = FALSE), opts)
-  if (family == "binomial") {
-    opts <- utils::modifyList(list(fast = TRUE), opts)
-  }
-
+  opts <- jl_fit_opts(family, ...)
 
   out <- JuliaConnectoR::juliaGet(do.call(
     .jlmerclusterperm$jl$compute_timewise_statistics,
@@ -106,7 +101,7 @@ alert_diagnostics <- function(jlmer_spec, out) {
     })
     if (mean(singular_fits) > .2 && any(re_n_terms > 1)) {
       cli::cli_alert_info("Average number of components estimated to capture 95% of RE variance:")
-      rePCs <- rowMeans(out$rePCA_95_matrix)
+      rePCs <- rowMeans(out$rePCA_95_matrix, na.rm = TRUE)
       cli::cli_ul()
       lapply(seq_along(out$Grouping), function(i) {
         if (re_n_terms[out$Grouping[i]] > 1) cli::cli_li("{out$Grouping[i]}: {sprintf('%.01f', rePCs[i])}")

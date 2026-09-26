@@ -25,7 +25,7 @@ function _extract_clusters(
     run_inds = vcat(0, cumsum(runs[2]))
     clusters = (:).(run_inds[1:(end - 1)] .+ 1, run_inds[2:end])
     run_groups = getindex.(Ref(t_vec), clusters)
-    sum_t = (sum.(x -> isinf(x) ? 0 : x, run_groups))
+    sum_t = (sum.(x -> isinf(x) ? zero(x) : x, run_groups))
     cluster_ranges = extrema.(clusters)
     clusters_df = DataFrame(cluster_ranges)
     rename!(clusters_df, :1 => :cluster_start, :2 => :cluster_end)
@@ -40,10 +40,10 @@ function _extract_clusters(
     select!(clusters_df, [:cluster_id, :cluster_start, :cluster_end, :statistic])
     if nrow(clusters_df) == 0
         out = DataFrame(;
+            cluster_id=0,
             cluster_start=0,
             cluster_end=0,
-            statistic=0,
-            cluster_id=0,
+            statistic=zero(eltype(t_vec)),
             id=id,
         )
     else

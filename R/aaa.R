@@ -183,7 +183,8 @@ source_jl <- function(..., verbose = TRUE) {
 }
 
 cleanup_jl <- function(projdir) {
-  unlink(dir(projdir, pattern = "[^Manifest.toml]", full.names = TRUE), recursive = TRUE)
+  to_remove <- setdiff(dir(projdir), "Manifest.toml")
+  unlink(file.path(projdir, to_remove), recursive = TRUE)
 }
 
 using_load_all <- function() {

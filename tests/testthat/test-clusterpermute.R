@@ -36,6 +36,32 @@ test_that("Piecemeal and wholesale CPAs are identical", {
   expect_equal(tidy(wholesale$empirical_clusters), tidy(empirical_clusters_tested))
 })
 
+#' Wholesale `clusterpermute()` extracts null clusters inside Julia, so check
+#' it against the piecemeal R path across statistics and options
+test_that("Wholesale null distribution matches piecemeal across options", {
+  cases <- list(
+    list(statistic = "t", threshold = 1.5, binned = TRUE, predictors = NULL),
+    list(statistic = "t", threshold = 2, binned = FALSE, predictors = "Diet3"),
+    list(statistic = "chisq", threshold = 0.05, binned = FALSE, predictors = NULL)
+  )
+  for (case in cases) {
+    reset_rng_state()
+    wholesale <- clusterpermute(
+      spec,
+      statistic = case$statistic, threshold = case$threshold, binned = case$binned,
+      predictors = case$predictors, nsim = 20, progress = FALSE
+    )
+    reset_rng_state()
+    invisible(compute_timewise_statistics(spec, statistic = case$statistic))
+    null_statistics <- permute_timewise_statistics(
+      spec,
+      statistic = case$statistic, predictors = case$predictors, nsim = 20
+    )
+    piecemeal <- extract_null_cluster_dists(null_statistics, threshold = case$threshold, binned = case$binned)
+    expect_equal(wholesale$null_cluster_dists, piecemeal, label = paste(unlist(case), collapse = ", "))
+  }
+})
+
 test_that("Errors on incompatible clusters", {
   expect_error(calculate_clusters_pvalues(extract_empirical_clusters(empirical_statistics, threshold = 3), null_cluster_dists))
   expect_error(calculate_clusters_pvalues(extract_empirical_clusters(compute_timewise_statistics(spec, statistic = "chisq"), threshold = .05), null_cluster_dists))

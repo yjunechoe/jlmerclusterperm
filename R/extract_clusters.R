@@ -124,15 +124,67 @@ extract_null_cluster_dists <- function(null_statistics, threshold, binned = FALS
   statistic <- attr(null_statistics, "statistic")
   null_statistics <- apply_threshold(null_statistics, statistic, threshold)
   null_cluster_dists <- apply(null_statistics, 3, function(t_matrix) {
-    t_matrix <- t_matrix[!is.nan(rowSums(t_matrix)), ]
+    # Drop simulations with convergence failures
+    t_matrix <- t_matrix[rowSums(is.nan(t_matrix)) == 0, , drop = FALSE]
     largest_clusters <- df_from_DF(.jlmerclusterperm$jl$extract_clusters(t_matrix, binned, 1L))
     largest_clusters
   }, simplify = FALSE)
+  new_null_cluster_dists(
+    null_cluster_dists, statistic, threshold, binned, time,
+    attr(null_statistics, "term_groups")
+  )
+}
+
+new_null_cluster_dists <- function(null_cluster_dists, statistic, threshold, binned, time, term_groups) {
   structure(null_cluster_dists,
     class = "null_cluster_dists",
     statistic = statistic, threshold = threshold, binned = binned, time = time,
-    term_groups = attr(null_statistics, "term_groups")
+    term_groups = term_groups
   )
+}
+
+# Equivalent to `extract_null_cluster_dists(permute_timewise_statistics(...))`,
+# but the simulation-by-time-by-predictor array never leaves Julia
+permute_null_cluster_dists <- function(jlmer_spec, family, statistic, threshold, nsim,
+                                       predictors, binned, ...) {
+  prepped <- prep_permutation(jlmer_spec, family, statistic, nsim, predictors, ...)
+  term_groups <- prepped$term_groups
+  thresholds <- null_thresholds(term_groups$r, statistic, threshold)
+  thresholds_jl <- JuliaConnectoR::juliaLet(
+    "Dict(String.(k) .=> Float64.(v))",
+    k = as.list(names(thresholds)), v = as.list(unname(thresholds))
+  )
+
+  out <- JuliaConnectoR::juliaGet(do.call(
+    .jlmerclusterperm$jl$permute_null_cluster_dists,
+    c(prepped$args, thresholds_jl, binned, prepped$opts)
+  ))
+
+  permuted_predictors <- unlist(out$predictors)
+  abort_if_no_predictors(permuted_predictors, predictors)
+
+  report_convergence_failures(stats::setNames(out$nan_counts, permuted_predictors), nsim)
+
+  clusters <- as.data.frame(out$clusters)
+  null_cluster_dists <- lapply(seq_along(permuted_predictors), function(k) {
+    predictor_clusters <- clusters[clusters$predictor == k, names(clusters) != "predictor"]
+    rownames(predictor_clusters) <- NULL
+    predictor_clusters
+  })
+  names(null_cluster_dists) <- permuted_predictors
+
+  time <- as.character(sort(unique(jlmer_spec$data[[jlmer_spec$meta$time]])))
+  new_null_cluster_dists(null_cluster_dists, statistic, threshold, binned, time, term_groups$r)
+}
+
+null_thresholds <- function(term_groups, statistic, threshold) {
+  if (statistic == "t") {
+    terms <- unlist(term_groups, use.names = FALSE)
+    stats::setNames(rep(threshold, length(terms)), terms)
+  } else if (statistic == "chisq") {
+    threshold_dict <- chisq_threshold_dict(term_groups, threshold)
+    stats::setNames(threshold_dict$threshold, threshold_dict$term)
+  }
 }
 
 #' @keywords internal

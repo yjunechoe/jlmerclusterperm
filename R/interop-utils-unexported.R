@@ -39,3 +39,11 @@ prep_for_jlmer <- function(jlmer_spec, family, ...) {
 
   list(jlmer_fm, jlmer_df, time, jmler_family, jlmer_groupings)
 }
+
+jl_fit_opts <- function(family, ...) {
+  opts <- utils::modifyList(list(progress = FALSE), list(...))
+  if (family == "binomial") {
+    opts <- utils::modifyList(list(fast = TRUE), opts)
+  }
+  opts
+}

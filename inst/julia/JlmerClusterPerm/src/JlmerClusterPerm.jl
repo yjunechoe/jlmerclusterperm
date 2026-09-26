@@ -16,6 +16,7 @@ export compute_timewise_statistics
 export extract_clusters
 export permute_by_predictor
 export permute_timewise_statistics
+export permute_null_cluster_dists
 
 include("01-utils.jl")
 include("02-jlmer.jl")

@@ -22,7 +22,7 @@ function permute_timewise_statistics(
     participant_col::String,
     trial_col::Union{Missing,String},
     term_groups::Tuple,
-    predictors_subset::Union{Nothing,Dict},
+    predictors_subset::Union{Nothing,AbstractVector},
     statistic::String,
     is_mem::Bool,
     global_opts::NamedTuple;
@@ -32,14 +32,7 @@ function permute_timewise_statistics(
     times = sort(unique(data[!, time]))
     n_times = length(times)
 
-    predictors_exclude = ["(Intercept)"]
-    if isnothing(predictors_subset)
-        term_groups_est = filter(grp -> !all(in(predictors_exclude), grp.p), term_groups)
-    else
-        term_groups_est = filter(
-            grp -> any(in(predictors_subset), vcat(grp.p, grp.P)), term_groups
-        )
-    end
+    term_groups_est = estimable_term_groups(term_groups, predictors_subset)
 
     nsims = nsim * length(term_groups_est)
     pg = Progress(
@@ -135,4 +128,102 @@ function permute_timewise_statistics(
     res = res[:, :, vcat(map(terms -> terms.i, term_groups_est)...)]
 
     return (z_array=res, predictors=predictors)
+end
+
+function estimable_term_groups(
+    term_groups::Tuple, predictors_subset::Union{Nothing,AbstractVector}
+)
+    predictors_exclude = ["(Intercept)"]
+    if isnothing(predictors_subset)
+        filter(grp -> !all(in(predictors_exclude), grp.p), term_groups)
+    else
+        filter(grp -> any(in(predictors_subset), vcat(grp.p, grp.P)), term_groups)
+    end
+end
+
+"""
+    permute_null_cluster_dists(formula::FormulaTerm, data::DataFrame, time::String,
+                               family::Distribution, contrasts::Union{Nothing,Dict},
+                               nsim::Integer, participant_col::String,
+                               trial_col::Union{Missing,String}, term_groups::Tuple,
+                               predictors_subset::Union{Nothing,AbstractVector}, statistic::String,
+                               is_mem::Bool, global_opts::NamedTuple,
+                               thresholds::Dict, binned::Bool; opts...)
+
+Fused `permute_timewise_statistics()` and `extract_clusters()` which keeps the
+simulation-by-time-by-predictor array in Julia and only returns the largest
+cluster from each simulation.
+
+!!! note
+    Called from R function `jlmerclusterperm::clusterpermute()`
+"""
+function permute_null_cluster_dists(
+    formula::FormulaTerm,
+    data::DataFrame,
+    time::String,
+    family::Distribution,
+    contrasts::Union{Nothing,Dict},
+    nsim::Integer,
+    participant_col::String,
+    trial_col::Union{Missing,String},
+    term_groups::Tuple,
+    predictors_subset::Union{Nothing,AbstractVector},
+    statistic::String,
+    is_mem::Bool,
+    global_opts::NamedTuple,
+    thresholds::Dict,
+    binned::Bool;
+    opts...,
+)
+    z_array = permute_timewise_statistics(
+        formula,
+        data,
+        time,
+        family,
+        contrasts,
+        nsim,
+        participant_col,
+        trial_col,
+        term_groups,
+        predictors_subset,
+        statistic,
+        is_mem,
+        global_opts;
+        opts...,
+    ).z_array
+
+    # One slice per term for t, one slice per term group for chisq
+    term_groups_est = estimable_term_groups(term_groups, predictors_subset)
+    if statistic == "t"
+        predictors = vcat(map(grp -> grp.p, term_groups_est)...)
+        slices = collect(1:length(predictors))
+    else
+        predictors = [grp.P for grp in term_groups_est]
+        group_sizes = [length(grp.i) for grp in term_groups_est]
+        slices = cumsum(group_sizes) .- group_sizes .+ 1
+    end
+    # JuliaConnectoR hangs translating empty vectors, so avoid returning any
+    if isempty(predictors)
+        return (clusters=nothing, predictors=nothing, nan_counts=nothing)
+    end
+
+    clusters = DataFrame[]
+    # Number of simulations with convergence failures per predictor
+    nan_counts = zeros(Int, length(predictors))
+    for (k, predictor) in enumerate(predictors)
+        threshold = abs(thresholds[predictor])
+        t_matrix = map(x -> abs(x) <= threshold ? zero(x) : x, z_array[:, :, slices[k]])
+        has_nan = vec(any(isnan, t_matrix; dims=2))
+        nan_counts[k] = count(has_nan)
+        predictor_clusters = extract_clusters(t_matrix[.!has_nan, :], binned, 1)
+        predictor_clusters.predictor .= k
+        push!(clusters, predictor_clusters)
+    end
+    clusters_df = vcat(clusters...; cols=:setequal)
+
+    return (
+        clusters=(; (Symbol(col) => clusters_df[!, col] for col in names(clusters_df))...),
+        predictors=predictors,
+        nan_counts=nan_counts,
+    )
 end

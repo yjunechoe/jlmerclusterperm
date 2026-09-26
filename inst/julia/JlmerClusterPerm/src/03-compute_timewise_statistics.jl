@@ -139,11 +139,10 @@ function timewise_lme(
             response = data_at_time[!, response_var]
 
             if all(==(response[1]), response)
+                # no model is fit, so this is neither a convergence failure nor a singular fit
                 t_matrix[:, i] .= response[1] == 1 ? Inf : -Inf
-                convergence_failures[i] = missing
                 if is_compute
-                    singular_fits[i] = missing
-                    rePCA_95_matrix[:, i] .= missing
+                    rePCA_95_matrix[:, i] .= NaN
                 end
             else
                 try
