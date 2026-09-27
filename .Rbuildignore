@@ -20,3 +20,4 @@
 ^inst/julia/JlmerClusterPerm/Manifest.toml$
 ^format/
 ^tests\README\.md$
+^data-raw$

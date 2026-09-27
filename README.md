@@ -29,11 +29,11 @@ data, powered by
 
 ### Zero-setup test drive
 
-As of March 2025, **Google Colab** supports Julia. This means `{jlmerclusterperm}`
-*just works* out of the box. Try it out in a
-[demo notebook](https://colab.research.google.com/drive/1pTXGbuoQKka5Tm8qnyaHrMHs0Z-ALD7k?usp=sharing)
-that runs some of the code from the
-[Ito et al. 2018 case study vignette](https://yjunechoe.github.io/jlmerclusterperm/articles/Ito-et-al-2018.html).
+As of March 2025, **Google Colab** supports Julia. This means
+`{jlmerclusterperm}` *just works* out of the box. Try it out in a [demo
+notebook](https://colab.research.google.com/drive/1pTXGbuoQKka5Tm8qnyaHrMHs0Z-ALD7k?usp=sharing)
+that runs some of the code from the [Ito et al. 2018 case study
+vignette](https://yjunechoe.github.io/jlmerclusterperm/articles/Ito-et-al-2018.html).
 
 ### Local setup
 
@@ -90,28 +90,29 @@ and tutorials.
 
 ### Wholesale CPA with `clusterpermute()`
 
-A time series data:
+A time series data: `vwp_sim`, a simulated eyetracking experiment of
+looks to a target (`elog`, the empirical logit of `Fixations`) by `Age`
+(adult vs. child) and `Condition` (a related vs. unrelated competitor).
 
 ``` r
-chickweights <- ChickWeight
-chickweights$Time <- as.integer(factor(chickweights$Time))
 matplot(
-  tapply(chickweights$weight, chickweights[c("Time", "Diet")], mean),
-  type = "b", lwd = 3, ylab = "Weight", xlab = "Time"
+  unique(vwp_sim$Time), tapply(vwp_sim$elog, list(vwp_sim$Time, interaction(vwp_sim$Age, vwp_sim$Condition)), mean),
+  type = "l", col = 1:2, lty = rep(1:2, each = 2), lwd = 3, ylab = "Looks to target", xlab = "Time"
 )
+legend("bottomright", c("Adult Unrelated", "Adult Related", "Child Unrelated", "Child Related"), col = c(1, 1, 2, 2), lty = c(2, 1, 2, 1), lwd = 3)
 ```
 
-<img src="man/figures/README-chickweight-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="man/figures/README-vwp-1.png" width="75%" style="display: block; margin: auto;" />
 
 Preparing a specification object with `make_jlmer_spec()`:
 
 ``` r
-chickweights_spec <- make_jlmer_spec(
-  formula = weight ~ 1 + Diet,
-  data = chickweights,
-  subject = "Chick", time = "Time"
+vwp_spec <- make_jlmer_spec(
+  formula = elog ~ 1 + Condition * Age,
+  data = vwp_sim,
+  subject = "Subject", trial = "Item", time = "Time"
 )
-chickweights_spec
+vwp_spec
 ```
 
 <picture>
@@ -123,11 +124,12 @@ Cluster-based permutation test with `clusterpermute()`:
 
 ``` r
 set_rng_state(123L)
-clusterpermute(
-  chickweights_spec,
-  threshold = 2.5,
+CPA <- clusterpermute(
+  vwp_spec,
+  threshold = 2,
   nsim = 100
 )
+CPA
 ```
 
 <picture>
@@ -135,18 +137,42 @@ clusterpermute(
 <img src="man/figures/README-/CPA-io.svg" style="display: block; margin: auto;" />
 </picture>
 
+Collecting results as data frames with `tidy()`, e.g., to plot clusters:
+
+``` r
+clusters <- tidy(CPA$empirical_clusters)
+clusters
+#> # A tibble: 3 × 7
+#>   predictor        id    start   end length sum_statistic  pvalue
+#>   <chr>            <fct> <dbl> <dbl>  <dbl>         <dbl>   <dbl>
+#> 1 Condition1       1       450  1350     19        -114.  0.00990
+#> 2 Age1             1       100  2000     39         595.  0.00990
+#> 3 Condition1__Age1 1       650  1250     13          55.9 0.00990
+```
+
+``` r
+par(mar = c(4, 10, 1, 1))
+plot(NA, xlim = range(vwp_sim$Time), ylim = c(0.5, 3.5), yaxt = "n", xlab = "Time", ylab = "")
+segments(clusters$start, as.integer(factor(clusters$predictor)), clusters$end, lwd = 15, lend = "butt",
+         col = ifelse(clusters$pvalue < 0.05, "steelblue", "grey70"))
+axis(2, at = 1:3, labels = levels(factor(clusters$predictor)), las = 1)
+```
+
+<img src="man/figures/README-clusters-1.png" width="75%" style="display: block; margin: auto;" />
+
 Including random effects:
 
 ``` r
-chickweights_re_spec <- make_jlmer_spec(
-  formula = weight ~ 1 + Diet + (1 | Chick),
-  data = chickweights,
-  subject = "Chick", time = "Time"
+vwp_re_spec <- make_jlmer_spec(
+  formula = elog ~ 1 + Condition * Age +
+    (1 + Condition | Subject) + (1 + Condition | Item),
+  data = vwp_sim,
+  subject = "Subject", trial = "Item", time = "Time"
 )
 set_rng_state(123L)
 clusterpermute(
-  chickweights_re_spec,
-  threshold = 2.5,
+  vwp_re_spec,
+  threshold = 2,
   nsim = 100
 )$empirical_clusters
 ```
@@ -161,9 +187,10 @@ clusterpermute(
 Computing time-wise statistics of the observed data:
 
 ``` r
-empirical_statistics <- compute_timewise_statistics(chickweights_spec)
-matplot(t(empirical_statistics), type = "b", pch = 1, lwd = 3, ylab = "t-statistic")
-abline(h = 2.5, lty = 3)
+empirical_statistics <- compute_timewise_statistics(vwp_spec)
+matplot(unique(vwp_sim$Time), t(empirical_statistics), type = "l", lty = 1, lwd = 3, ylab = "t-statistic", xlab = "Time")
+abline(h = c(-2, 2), lty = 3)
+legend("topright", rownames(empirical_statistics), col = 1:3, lwd = 3)
 ```
 
 <img src="man/figures/README-empirical_statistics-1.png" width="75%" style="display: block; margin: auto;" />
@@ -171,7 +198,7 @@ abline(h = 2.5, lty = 3)
 Identifying empirical clusters:
 
 ``` r
-empirical_clusters <- extract_empirical_clusters(empirical_statistics, threshold = 2.5)
+empirical_clusters <- extract_empirical_clusters(empirical_statistics, threshold = 2)
 empirical_clusters
 ```
 
@@ -184,8 +211,8 @@ Simulating the null distribution:
 
 ``` r
 set_rng_state(123L)
-null_statistics <- permute_timewise_statistics(chickweights_spec, nsim = 100)
-null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2.5)
+null_statistics <- permute_timewise_statistics(vwp_spec, nsim = 100)
+null_cluster_dists <- extract_null_cluster_dists(null_statistics, threshold = 2)
 null_cluster_dists
 ```
 
@@ -208,7 +235,7 @@ calculate_clusters_pvalues(empirical_clusters, null_cluster_dists, add1 = TRUE)
 Iterating over a range of threshold values:
 
 ``` r
-walk_threshold_steps(empirical_statistics, null_statistics, steps = c(2, 2.5, 3))
+walk_threshold_steps(empirical_statistics, null_statistics, steps = c(1.5, 2, 2.5))
 ```
 
 <picture>
@@ -242,9 +269,8 @@ following as you see fit.
 
 To cite jlmerclusterperm:
 
-- Choe, J. (2024). jlmerclusterperm: Cluster-Based
-  Permutation Analysis for Densely Sampled Time Data. R package version
-  1.1.4.
+- Choe, J. (2026). jlmerclusterperm: Cluster-Based Permutation Analysis
+  for Densely Sampled Time Data. R package version 1.1.4.9000.
   [10.32614/CRAN.package.jlmerclusterperm](https://doi.org/10.32614/CRAN.package.jlmerclusterperm).
 
 To cite the cluster-based permutation test:

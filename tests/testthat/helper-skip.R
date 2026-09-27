@@ -1,4 +1,4 @@
-no_julia <- !julia_found()
+no_julia <- !jlmerclusterperm:::julia_found()
 skip_conditionally <- function() {
   # skip_on_cran()
   if (no_julia) {
