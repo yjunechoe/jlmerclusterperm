@@ -76,7 +76,10 @@ julia_found <- function() {
 #'   If `NULL` (default), attempts to write to the package's cache directory discovered via
 #'   `R_user_dir()` and falls back to `tempdir()`.
 #' @param restart Whether to set up a fresh Julia session, given that one is already running.
-#'   If `FALSE` and `jlmerclusterperm_setup()` has already been called, nothing happens.
+#'   If `FALSE`, setup is skipped when the current Julia session is already set up for
+#'   jlmerclusterperm, and runs otherwise (e.g., if the session was stopped). Use
+#'   `jlmerclusterperm_setup(restart = FALSE)` at the top of a script to make sure Julia is
+#'   ready without restarting a session that is.
 #' @param verbose Whether to print progress and messages from Julia in the console
 #'
 #' @examplesIf julia_setup_ok()
@@ -90,17 +93,24 @@ julia_found <- function() {
 #' }
 #'
 #' @export
-#' @return TRUE
+#' @return Invisibly, `TRUE` if Julia is set up for jlmerclusterperm.
 jlmerclusterperm_setup <- function(..., cache_dir = NULL, restart = TRUE, verbose = TRUE) {
   if (!julia_found()) cli::cli_abort("No Julia installation detected.")
   if (!julia_version_compatible()) cli::cli_abort("Julia version >=1.8 required.")
   if (restart || !is_setup()) {
     JuliaConnectoR::stopJulia()
     setup_with_progress(cache_dir = cache_dir, verbose = verbose)
+    # Catches `is_setup()` going out of sync with what setup defines in Julia
+    if (!is_setup()) {
+      cli::cli_abort(c(
+        "Setup finished, but Julia is not ready for {.pkg jlmerclusterperm}.",
+        i = "Please report this at {.url https://github.com/yjunechoe/jlmerclusterperm/issues}."
+      ))
+    }
   } else {
     cli::cli_inform("Julia instance already running - skipping setup.")
   }
-  invisible(TRUE)
+  invisible(is_setup())
 }
 
 setup_with_progress <- function(..., cache_dir = NULL, verbose = TRUE) {

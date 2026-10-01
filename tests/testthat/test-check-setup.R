@@ -26,8 +26,15 @@ test_that("Julia functions error informatively in a Julia session not started by
 })
 
 test_that("setup with `restart = FALSE` sets up a session that is not ready", {
-  jlmerclusterperm_setup(cache_dir = tempdir(), restart = FALSE, verbose = FALSE)
+  expect_true(jlmerclusterperm_setup(cache_dir = tempdir(), restart = FALSE, verbose = FALSE))
   expect_true(is_setup())
+})
+
+test_that("setup with `restart = FALSE` skips a session that is ready", {
+  expect_message(
+    expect_true(jlmerclusterperm_setup(cache_dir = tempdir(), restart = FALSE, verbose = FALSE)),
+    "skipping setup"
+  )
 })
 
 # Leave a working session for the remaining test files
