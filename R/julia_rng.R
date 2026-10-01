@@ -38,6 +38,7 @@ NULL
 #' @rdname julia_rng
 #' @export
 set_rng_state <- function(i) {
+  check_setup()
   JuliaConnectoR::juliaLet("set_counter!(rng, Int(i))", i = i)
   invisible(i)
 }
@@ -45,6 +46,7 @@ set_rng_state <- function(i) {
 #' @rdname julia_rng
 #' @export
 reset_rng_state <- function() {
+  check_setup()
   JuliaConnectoR::juliaEval("set_counter!(rng, 0)")
   invisible(0)
 }
@@ -52,6 +54,7 @@ reset_rng_state <- function() {
 #' @rdname julia_rng
 #' @export
 get_rng_state <- function() {
+  check_setup()
   as.double(JuliaConnectoR::juliaEval("Int(rng.ctr1)"))
 }
 
@@ -59,6 +62,7 @@ get_rng_state <- function() {
 #' @param seed Seed
 #' @export
 set_rng_seed <- function(seed) {
+  check_setup()
   seed_missing <- missing(seed)
   if (seed_missing) {
     seed <- as.double(JuliaConnectoR::juliaEval("Int(Random123.gen_seed(UInt32, 1)[1])"))

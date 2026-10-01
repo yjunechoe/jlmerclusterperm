@@ -52,6 +52,7 @@
 #' @return An `empirical_clusters` object.
 #' @export
 extract_empirical_clusters <- function(empirical_statistics, threshold, binned = FALSE, top_n = Inf) {
+  check_setup()
   time <- dimnames(empirical_statistics)$Time
   statistic <- attr(empirical_statistics, "statistic")
   empirical_statistics <- apply_threshold(empirical_statistics, statistic, threshold)
@@ -120,6 +121,7 @@ extract_empirical_clusters <- function(empirical_statistics, threshold, binned =
 #' @return A `null_cluster_dists` object.
 #' @export
 extract_null_cluster_dists <- function(null_statistics, threshold, binned = FALSE) {
+  check_setup()
   time <- dimnames(null_statistics)$Time
   statistic <- attr(null_statistics, "statistic")
   null_statistics <- apply_threshold(null_statistics, statistic, threshold)

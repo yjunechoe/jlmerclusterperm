@@ -37,6 +37,7 @@ JuliaConnectoR::stopJulia
 #' @return Previous values for `show` and `width`
 #' @export
 julia_progress <- function(show, width) {
+  check_setup()
   show_missing <- missing(show)
   both_missing <- show_missing && missing(width)
   opts_is_list <- !show_missing && is.list(show) && identical(names(show), c("show", "width"))

@@ -61,6 +61,7 @@
 #' @return A long dataframe of permuted re-samples with `.id` column representing replication IDs.
 #' @export
 permute_by_predictor <- function(jlmer_spec, predictors, predictor_type = c("guess", "between_participant", "within_participant"), n = 1L) {
+  check_setup()
   df <- jlmer_spec$data
   df_jl <- JuliaConnectoR::juliaCall("DataFrame", as.data.frame(df))
   subject <- jlmer_spec$meta$subject

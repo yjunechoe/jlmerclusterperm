@@ -51,6 +51,7 @@
 permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "binomial"),
                                         statistic = c("t", "chisq"),
                                         nsim = 100L, predictors = NULL, ...) {
+  check_setup()
   check_arg_class(jlmer_spec, "jlmer_spec")
   statistic <- match.arg(statistic)
   family <- match.arg(family)

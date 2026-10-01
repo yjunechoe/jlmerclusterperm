@@ -76,6 +76,7 @@ to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_sp
 #' @return A `jlmer_mod` object.
 #' @export
 jlmer <- function(jlmer_spec, family = c("gaussian", "binomial"), ..., progress = FALSE) {
+  check_setup()
   check_arg_class(jlmer_spec, "jlmer_spec")
   family <- match.arg(family)
   args <- prep_for_jlmer(jlmer_spec, family = family, ...)[-3]
@@ -97,6 +98,7 @@ print.jlmer_mod <- function(x, ...) {
 
 #' @export
 format.jlmer_mod <- function(x, ...) {
+  check_setup()
   cat("<Julia object of type ", JuliaConnectoR::juliaLet("typeof(x).name.wrapper", x = x), ">\n", sep = "")
   if (JuliaConnectoR::juliaLet("x isa MixedModel", x = x)) {
     re <- gsub("\n\n$", "\n", showobj_reformat(JuliaConnectoR::juliaCall("VarCorr", x)))
