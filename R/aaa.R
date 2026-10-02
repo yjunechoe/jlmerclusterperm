@@ -79,8 +79,8 @@ julia_found <- function() {
 #' @param restart Whether to set up a fresh Julia session, given that one is already running.
 #'   If `FALSE`, setup is skipped when the current Julia session is already set up for
 #'   jlmerclusterperm, and runs otherwise (e.g., if the session was stopped). Use
-#'   `jlmerclusterperm_setup(restart = FALSE)` at the top of a script to make sure Julia is
-#'   ready without restarting a session that is.
+#'   `jlmerclusterperm_setup(restart = FALSE)` at the top of a script to set up Julia only
+#'   if it is not already set up.
 #' @param verbose Whether to print progress and messages from Julia in the console
 #'
 #' @examplesIf julia_setup_ok()
@@ -123,7 +123,7 @@ setup_with_progress <- function(..., cache_dir = NULL, verbose = TRUE) {
   )
   if (source_success) {
     define_globals()
-    # Marks the session as set up (read by `is_setup()`); must be the last step
+    # Marks the session as set up, for `is_setup()`. Must be the last step.
     JuliaConnectoR::juliaEval("const jlmerclusterperm_ready = true")
     invisible(TRUE)
   } else {
