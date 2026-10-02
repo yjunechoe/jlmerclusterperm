@@ -39,7 +39,7 @@
 #' @export
 to_jlmer <- function(formula, data, family = c("gaussian", "binomial"), jlmer_spec_opts = list(), ..., progress = FALSE) {
   jlmer_spec <- do.call(make_jlmer_spec, utils::modifyList(jlmer_spec_opts, list(formula = formula, data = data)))
-  jlmer(jlmer_spec, family, ...)
+  jlmer(jlmer_spec, family, ..., progress = progress)
 }
 
 #' Fit a Julia regression model using jlmer specifications

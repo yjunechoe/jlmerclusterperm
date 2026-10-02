@@ -1,6 +1,6 @@
 #' Simulate cluster-mass statistics via bootstrapped permutations
 #'
-#' @param nsim Number of simulations description
+#' @param nsim Number of simulations
 #' @param predictors (Optional) a subset of predictors to test. Defaults to `NULL` which tests all predictors.
 #' @inheritParams compute_timewise_statistics
 #'
@@ -74,10 +74,10 @@ permute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "bino
     #   out$z_array <- out$z_array[, , predictors_keep, drop = FALSE]
     # }
   } else if (statistic == "chisq") {
-    predictors <- Filter(function(x) any(dimnames(out$z_array)$Predictor %in% x), jlmer_spec$meta$term_groups)
-    pruned <- which(!duplicated(rep(names(predictors), lengths(predictors))))
+    permuted_groups <- Filter(function(x) any(dimnames(out$z_array)$Predictor %in% x), jlmer_spec$meta$term_groups)
+    pruned <- which(!duplicated(rep(names(permuted_groups), lengths(permuted_groups))))
     out$z_array <- out$z_array[, , pruned, drop = FALSE]
-    dimnames(out$z_array)$Predictor <- names(predictors)
+    dimnames(out$z_array)$Predictor <- names(permuted_groups)
   }
 
   abort_if_no_predictors(dimnames(out$z_array)$Predictor, predictors)

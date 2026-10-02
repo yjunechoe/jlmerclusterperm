@@ -8,7 +8,7 @@
 #' @param binned Whether the data has been aggregated/collapsed into time bins. Defaults to `FALSE`,
 #'  which requires a cluster to span at least two time points. If `TRUE`, allows length-1 clusters to exist.
 #' @param top_n How many clusters to return, in the order of the size of the cluster-mass statistic.
-#'  Defaults to `Inf` which return all detected clusters.
+#'  Defaults to `Inf` which returns all detected clusters.
 #'
 #' @seealso [compute_timewise_statistics()]
 #'

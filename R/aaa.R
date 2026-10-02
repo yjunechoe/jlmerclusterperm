@@ -110,25 +110,21 @@ jlmerclusterperm_setup <- function(..., cache_dir = NULL, restart = TRUE, verbos
 setup_with_progress <- function(..., cache_dir = NULL, verbose = TRUE) {
   start_with_threads(verbose = verbose)
   set_projenv(cache_dir = cache_dir, verbose = verbose)
-  source_success <- withCallingHandlers(
+  # Alerts and stops Julia on failure, then lets the error propagate
+  withCallingHandlers(
     source_jl(verbose = verbose),
-    error = function(...) {
+    error = function(e) {
       cli::cli_alert_danger(c(
         "Failed to compile {.pkg jlmerclusterperm}. ",
         "Please submit an issue to {.url https://github.com/yjunechoe/jlmerclusterperm/issues}."
       ))
       JuliaConnectoR::stopJulia()
-      return(FALSE)
     }
   )
-  if (source_success) {
-    define_globals()
-    # Marks the session as set up, for `is_setup()`. Must be the last step.
-    JuliaConnectoR::juliaEval("const jlmerclusterperm_ready = true")
-    invisible(TRUE)
-  } else {
-    invisible(FALSE)
-  }
+  define_globals()
+  # Marks the session as set up, for `is_setup()`. Must be the last step.
+  JuliaConnectoR::juliaEval("const jlmerclusterperm_ready = true")
+  invisible(TRUE)
 }
 
 start_with_threads <- function(..., max_threads = 7L, verbose = TRUE) {

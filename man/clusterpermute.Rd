@@ -34,7 +34,7 @@ Interpretation differs on the choice of statistic (more below):
 \item If \code{statistic = "chisq"}, the threshold for the p-value of chi-squared statistics from likelihood ratio tests.
 }}
 
-\item{nsim}{Number of simulations description}
+\item{nsim}{Number of simulations}
 
 \item{predictors}{(Optional) a subset of predictors to test. Defaults to \code{NULL} which tests all predictors.}
 
@@ -42,7 +42,7 @@ Interpretation differs on the choice of statistic (more below):
 which requires a cluster to span at least two time points. If \code{TRUE}, allows length-1 clusters to exist.}
 
 \item{top_n}{How many clusters to return, in the order of the size of the cluster-mass statistic.
-Defaults to \code{Inf} which return all detected clusters.}
+Defaults to \code{Inf} which returns all detected clusters.}
 
 \item{add1}{Whether to add 1 to the numerator and denominator when calculating the p-value.
 Use \code{TRUE} to effectively count the observed statistic as part of the permuted

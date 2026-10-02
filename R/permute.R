@@ -1,7 +1,7 @@
 #' Permute data while respecting grouping structure(s) of observations
 #'
 #' @inheritParams jlmer
-#' @param predictors A vector of terms from the model. If multiple, the must form the levels of one predictor.
+#' @param predictors A vector of terms from the model. If multiple, they must form the levels of one predictor.
 #' @param predictor_type Whether the predictor is `"between_participant"` or `"within_participant"`. Defaults to `"guess"`.
 #' @param n Number of permuted samples of the data to generate. Defaults to `1L`.
 #'
