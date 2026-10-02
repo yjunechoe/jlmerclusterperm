@@ -28,13 +28,14 @@ julia_version_compatible <- function() {
 julia_detect_cores <- function() {
   as.integer(julia_cli('-q -e "println(Sys.CPU_THREADS);"'))
 }
-# Live check (~1ms) of whether Julia is set up for jlmerclusterperm. Checks the
-# connection first, since calling Julia without one would start a bare Julia session.
+# Live check (~1ms) of whether Julia is set up for jlmerclusterperm, by looking for the
+# marker that setup defines in Julia as its last step. Checks the connection first,
+# since calling Julia without one would start a bare Julia session.
 is_setup <- function() {
   if (is.null(asNamespace("JuliaConnectoR")$pkgLocal$con)) {
     return(FALSE)
   }
-  ready <- "isdefined(Main, :JlmerClusterPerm) && isdefined(Main, :rng) && isdefined(Main, :pg)"
+  ready <- "isdefined(Main, :jlmerclusterperm_ready)"
   isTRUE(tryCatch(JuliaConnectoR::juliaEval(ready), error = function(e) FALSE))
 }
 
@@ -100,13 +101,6 @@ jlmerclusterperm_setup <- function(..., cache_dir = NULL, restart = TRUE, verbos
   if (restart || !is_setup()) {
     JuliaConnectoR::stopJulia()
     setup_with_progress(cache_dir = cache_dir, verbose = verbose)
-    # Catches `is_setup()` going out of sync with what setup defines in Julia
-    if (!is_setup()) {
-      cli::cli_abort(c(
-        "Setup finished, but Julia is not ready for {.pkg jlmerclusterperm}.",
-        i = "Please report this at {.url https://github.com/yjunechoe/jlmerclusterperm/issues}."
-      ))
-    }
   } else {
     cli::cli_inform("Julia instance already running - skipping setup.")
   }
@@ -129,6 +123,8 @@ setup_with_progress <- function(..., cache_dir = NULL, verbose = TRUE) {
   )
   if (source_success) {
     define_globals()
+    # Marks the session as set up (read by `is_setup()`); must be the last step
+    JuliaConnectoR::juliaEval("const jlmerclusterperm_ready = true")
     invisible(TRUE)
   } else {
     invisible(FALSE)
