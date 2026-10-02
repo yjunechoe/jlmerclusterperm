@@ -25,7 +25,7 @@ Interpretation differs on the choice of statistic (more below):
 which requires a cluster to span at least two time points. If \code{TRUE}, allows length-1 clusters to exist.}
 
 \item{top_n}{How many clusters to return, in the order of the size of the cluster-mass statistic.
-Defaults to \code{Inf} which return all detected clusters.}
+Defaults to \code{Inf} which returns all detected clusters.}
 }
 \value{
 An \code{empirical_clusters} object.

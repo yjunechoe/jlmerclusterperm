@@ -54,6 +54,7 @@
 #' @return A predictor-by-time matrix of cluster statistics, of class `timewise_statistics`.
 #' @export
 compute_timewise_statistics <- function(jlmer_spec, family = c("gaussian", "binomial"), statistic = c("t", "chisq"), ...) {
+  check_setup()
   check_arg_class(jlmer_spec, "jlmer_spec")
   family <- match.arg(family)
   statistic <- match.arg(statistic)

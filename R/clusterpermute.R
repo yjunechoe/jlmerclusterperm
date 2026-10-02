@@ -56,6 +56,7 @@ clusterpermute <- function(jlmer_spec,
                            add1 = TRUE,
                            ...,
                            progress = TRUE) {
+  check_setup()
   family <- match.arg(family)
   statistic <- match.arg(statistic)
   jlmer_spec$.backdoor$prepped_for_jlmer <- prep_for_jlmer(jlmer_spec, family, ...)

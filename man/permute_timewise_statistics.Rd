@@ -22,7 +22,7 @@ permute_timewise_statistics(
 Can be one of \code{"t"} (default) from the regression model output or
 \code{"chisq"} from a likelihood ratio test (takes about twice as long to calculate).}
 
-\item{nsim}{Number of simulations description}
+\item{nsim}{Number of simulations}
 
 \item{predictors}{(Optional) a subset of predictors to test. Defaults to \code{NULL} which tests all predictors.}
 

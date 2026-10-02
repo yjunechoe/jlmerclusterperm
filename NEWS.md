@@ -2,6 +2,8 @@
 
 * New dataset `vwp_sim`: a simulated visual world eyetracking experiment with known main and interaction effects, now used in the README.
 
+* Functions that use Julia now error with a clear message if `jlmerclusterperm_setup()` has not been run or the Julia session was stopped. `jlmerclusterperm_setup(restart = FALSE)` now sets up again in these cases.
+
 * Better detection of Julia executable
 
 * `julia_setup_ok()` no longer starts a Julia session. `JuliaConnectoR::juliaSetupOk()` starts one as of JuliaConnectoR 1.1.6, which left connections open in examples.

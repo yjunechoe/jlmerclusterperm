@@ -45,6 +45,7 @@ NULL
 #' @method tidy jlmer_mod
 #' @export
 tidy.jlmer_mod <- function(x, effects = c("var_model", "ran_pars", "fixed"), ...) {
+  check_setup()
   out <- df_from_DF(JuliaConnectoR::juliaLet("DataFrame(coeftable(x))", x = x))[, 1:5]
   colnames(out) <- c("term", "estimate", "std.error", "statistic", "p.value")
   out$term <- backtrans_interaction(out$term)
@@ -211,6 +212,7 @@ generics::glance
 #' @method glance jlmer_mod
 #' @export
 glance.jlmer_mod <- function(x, ...) {
+  check_setup()
   is_mixed <- JuliaConnectoR::juliaLet("x isa MixedModel", x = x)
   is_reml <- is_mixed && JuliaConnectoR::juliaLet("x.optsum.REML", x = x)
   nobs <- JuliaConnectoR::juliaCall("nobs", x)

@@ -14,7 +14,7 @@ permute_by_predictor(
 \arguments{
 \item{jlmer_spec}{Data prepped for jlmer from \code{make_jlmer_spec()}}
 
-\item{predictors}{A vector of terms from the model. If multiple, the must form the levels of one predictor.}
+\item{predictors}{A vector of terms from the model. If multiple, they must form the levels of one predictor.}
 
 \item{predictor_type}{Whether the predictor is \code{"between_participant"} or \code{"within_participant"}. Defaults to \code{"guess"}.}
 

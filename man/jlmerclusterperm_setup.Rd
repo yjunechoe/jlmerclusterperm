@@ -14,12 +14,15 @@ If \code{NULL} (default), attempts to write to the package's cache directory dis
 \code{R_user_dir()} and falls back to \code{tempdir()}.}
 
 \item{restart}{Whether to set up a fresh Julia session, given that one is already running.
-If \code{FALSE} and \code{jlmerclusterperm_setup()} has already been called, nothing happens.}
+If \code{FALSE}, setup is skipped when the current Julia session is already set up for
+jlmerclusterperm, and runs otherwise (e.g., if the session was stopped). Use
+\code{jlmerclusterperm_setup(restart = FALSE)} at the top of a script to set up Julia only
+if it is not already set up.}
 
 \item{verbose}{Whether to print progress and messages from Julia in the console}
 }
 \value{
-TRUE
+Invisibly, \code{TRUE} if Julia is set up for jlmerclusterperm.
 }
 \description{
 Initial setup for the jlmerclusterperm package
